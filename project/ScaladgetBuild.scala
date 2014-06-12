@@ -45,37 +45,3 @@ object ScaladgetBuild extends Build {
   )
 
 }
-
-
-/*
-  lazy val examples = Project(
-    "examples",
-    file("./examples"),
-    settings = Defaults.defaultSettings ++ scalaJSSettings ++ Seq(
-      version := Version,
-      scalaVersion := ScalaVersion,
-      resolvers += Classpaths.typesafeReleases,
-      libraryDependencies ++= Seq(
-        "org.scala-lang.modules.scalajs" %% "scalajs-dom" % "0.4",
-        "org.scala-lang.modules.scalajs" %% "scalajs-jquery" % "0.4"
-      )
-    )
-  )
-
-  lazy val all = Project("all",
-    file("."),
-    settings = Defaults.defaultSettings ++ scalaJSSettings ++ Seq(
-      js := {
-        val optfile = (optimizeJS in Compile).toTask.value
-        val optFilename = optfile.getName
-        val preoptFileName = optFilename.replace("opt", "preopt")
-        IO.copyFile(optfile, new java.io.File((sourceDirectory in scaladget).toTask.value, (sourceDirectory in examples) / "main/resources/js/" + optFilename))
-        IO.copyFile(new java.io.File(optfile.getParentFile, preoptFileName), new java.io.File((sourceDirectory in scaladget).toTask.value, (sourceDirectory in examples) / "main/resources/js/" + preoptFileName))
-      },
-      runExample <<= (js in Compile,copyResources in Compile, compile in Compile) map {
-          (j,c, p) =>
-        }
-    )
-  ) dependsOn(scaladget, examples)
-
-}*/
