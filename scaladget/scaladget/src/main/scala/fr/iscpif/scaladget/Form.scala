@@ -26,15 +26,15 @@ object Form {
   def form(parent: Selection) = {
     val root = parent.div.clazz("container")
       .div.clazz("row")
-      .div.clazz("col-xs-12 col-sm-8 col-md-6")
+      .div.clazz("col-xs-12 col-md-8 col-md-6")
       .form.role("form")
       .style("font-size", "13")
       .div.clazz("well")
     new Form(root, root)
   }
 
-  def accordion(selection: Selection, components: Tuple3[String, String, Selection => Selection]*): Selection = {
-    val root = selection.div.clazz("container").div.clazz("row").div.clazz("col-sm-12").div.clazz("panel-group").id("accordion").attr("width", "200px")
+  def accordion(selection: Selection, width: Int, components: Tuple3[String, String, Selection => Selection]*): Selection = {
+    val root = selection.div.clazz("container").div.clazz("row")./*div.clazz("col-md-1"+ {if(width<=12) width else 12}).*/div.clazz("panel-group").id("accordion")
     components.foreach { case (id, name, f) =>
       val paneldefault = root.div.clazz("panel panel-default")
       paneldefault.div.clazz("panel-heading").h4.clazz("panel-title").a.datatoggle("collapse").dataparent("#accordion").href("#" + id).html(name)
@@ -65,6 +65,7 @@ object Form {
 
 }
 
+import Form._
 import Form.State._
 
 /*nbCol is the number of columns dedicated for each element of the line.
@@ -75,7 +76,7 @@ protected class Form(val root: Selection, val selection: Selection) {
   implicit def selectionToForm(s: Any): Form = this
 
   private def column(colIndice: Int): Selection = {
-    if (colIndice > 0) selection.div.clazz("col-sm-" + colIndice).div.clazz("form-group")
+    if (colIndice > 0) selection.div.clazz("col-md-" + colIndice).div.clazz("form-group")
     else selection
   }
 
@@ -106,6 +107,8 @@ protected class Form(val root: Selection, val selection: Selection) {
     selection
   }
 
+  def accordion(selection: Selection, width: Int, components: Tuple3[String, String, Selection => Selection]*): Selection =
+    Form.accordion(selection, width, components.toSeq:_*)
 
   //  def table(header: Seq[String], lines: Seq[String]*) = selection.
 }

@@ -13,8 +13,8 @@ object ExampleBuild extends Build {
     file("examples"),
     settings = Defaults.defaultSettings ++ jsManagerSettings ++ Seq(
       libraryDependencies += "fr.iscpif" %% "scaladget" % "0.1.0-SNAPSHOT",
-      jsCall := "Example1().run();",
-      outputPath := "/tmp"
+      jsCall := "Accordion().run();"
+      //outputPath := "/tmp"
       )
   )
 }

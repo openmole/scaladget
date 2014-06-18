@@ -23,7 +23,7 @@ import fr.iscpif.scaladget.Form._
 import fr.iscpif.scaladget.DomUtil._
 
 @JSExport
-object Example1 {
+object Form {
 
   @JSExport
   def run() {

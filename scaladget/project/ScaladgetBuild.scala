@@ -16,9 +16,11 @@ object ScaladgetBuild extends Build {
       organization := "fr.iscpif",
       version := Version,
       sbtPlugin := true,
-      publishTo <<= isSnapshot(if (_) Some("ISC-PIF Snapshot" at "http://maven.iscpif.fr/snapshots")
-      else Some("Openmole Releas" at "http://maven.iscpif.fr/releases")),
-      credentials += Credentials(Path.userHome / ".sbt" / "iscpif.credentials"),
+      publishTo <<= isSnapshot { snapshot =>
+        val nexus = "https://oss.sonatype.org/"
+        if (snapshot) Some("snapshots" at nexus + "content/repositories/snapshots")
+        else Some("releases" at nexus + "service/local/staging/deploy/maven2")
+      },
       libraryDependencies ++= Seq("com.github.scala-incubator.io" %% "scala-io-file" % "0.4.2",
         "org.scala-lang.modules.scalajs" %% "scalajs-jquery" % "0.4"),
       addSbtPlugin("org.scala-lang.modules.scalajs" % "scalajs-sbt-plugin" % "0.4.0")
@@ -38,8 +40,11 @@ object ScaladgetBuild extends Build {
         "org.scala-lang.modules.scalajs" %% "scalajs-jquery" % "0.4"
       ),
       addSbtPlugin("org.scala-lang.modules.scalajs" % "scalajs-sbt-plugin" % "0.4.0"),
-      publishTo <<= isSnapshot(if (_) Some("ISC-PIF Snapshot" at "http://maven.iscpif.fr/snapshots")
-      else Some("Openmole Releas" at "http://maven.iscpif.fr/releases")),
+      publishTo <<= isSnapshot { snapshot =>
+        val nexus = "https://oss.sonatype.org/"
+        if (snapshot) Some("snapshots" at nexus + "content/repositories/snapshots")
+        else Some("releases" at nexus + "service/local/staging/deploy/maven2")
+      },
       credentials += Credentials(Path.userHome / ".sbt" / "iscpif.credentials")
     )
   )
