@@ -19,44 +19,63 @@ package fr.iscpif.scaladget
 import d3.d3._
 import d3mapping.Selection
 
-
-/**
- * Created by mathieu on 11/06/14.
- */
 object DomUtil {
- implicit def selectionToDomUtil(s: Selection): DomUtil = new DomUtil(s)
+  implicit def selectionToDomUtil(s: Selection): DomUtil = new DomUtil(s)
 
- def body: Selection = select("body")
- def title(t: String): Selection = select("head").append("title").html(t)
-//  implicit def domUtilToSelection(d: DomUtil): Selection = d.selection
+  def body: Selection = select("body")
+
+  def title(t: String): Selection = select("head").append("title").html(t)
+
+  //  implicit def domUtilToSelection(d: DomUtil): Selection = d.selection
 }
 
 class DomUtil(val selection: Selection) {
 
   private def append(value: String) = selection.append(value)
+
   def div: Selection = append("div")
+
   def form: Selection = append("form")
+
   def input: Selection = append("input")
+
   def button: Selection = append("button")
+
   def ul: Selection = append("ul")
+
   def h1: Selection = append("h1")
+
   def h2: Selection = append("h2")
+
   def h3: Selection = append("h3")
+
   def h4: Selection = append("h4")
+
   def a: Selection = append("a")
 
-  private def attr(key: String, value: String) = selection.attr(key,value)
-  def clazz(value: String): Selection = attr("class",value)
-  def role(value: String): Selection = attr("role",value)
-  def tyype(value: String): Selection = attr("type",value)
-  def id(value: String): Selection = attr("id",value)
+  private def attr(key: String, value: String) = selection.attr(key, value)
+
+  def clazz(value: String): Selection = attr("class", value)
+
+  def role(value: String): Selection = attr("role", value)
+
+  def tyype(value: String): Selection = attr("type", value)
+
+  def id(value: String): Selection = attr("id", value)
+
   def placeholder(value: String): Selection = attr("placeholder", value)
+
   def value(value: String): Selection = attr("value", value)
+
   def href(value: String): Selection = attr("href", value)
+
   def datatoggle(value: String): Selection = attr("data-toggle", value)
+
   def dataparent(value: String): Selection = attr("data-parent", value)
 
-  private def style(key: String, value: String) = selection.style(key,value)
-  def color(value: String) = style("color",value)
-  def backgroundColor(value: String) = style("background-color",value)
+  private def style(key: String, value: String) = selection.style(key, value)
+
+  def color(value: String) = style("color", value)
+
+  def backgroundColor(value: String) = style("background-color", value)
 }

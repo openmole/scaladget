@@ -28,8 +28,11 @@ object Example1 {
   @JSExport
   def run() {
     title("My first html page with Scala !")
-    body.backgroundColor("#d4d4d4").color("#000")
-    body.h1.html("A Scaladget form example")
+
+    body
+      .backgroundColor("#d4d4d4")
+      .color("#000")
+      .h1.html("A Scaladget form example")
 
     form(body)
       .line.input("name", "Name", "", 6).input("email", "Email", "", 6)

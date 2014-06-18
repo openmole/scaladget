@@ -37,11 +37,11 @@ object Form {
     new Form(root, root)
   }
 
-  def accordion(selection: Selection, components: Tuple3[String, String,Selection=>Selection]*): Selection = {
-    val root = selection.div.clazz("container").div.clazz("row").div.clazz("col-sm-12").div.clazz("panel-group").id("accordion").attr("width","200px")
-    components.foreach { case (id, name,f) =>
+  def accordion(selection: Selection, components: Tuple3[String, String, Selection => Selection]*): Selection = {
+    val root = selection.div.clazz("container").div.clazz("row").div.clazz("col-sm-12").div.clazz("panel-group").id("accordion").attr("width", "200px")
+    components.foreach { case (id, name, f) =>
       val paneldefault = root.div.clazz("panel panel-default")
-      paneldefault.div.clazz("panel-heading").h4.clazz("panel-title").a.datatoggle("collapse").dataparent("#accordion").href("#"+id).html(name)
+      paneldefault.div.clazz("panel-heading").h4.clazz("panel-title").a.datatoggle("collapse").dataparent("#accordion").href("#" + id).html(name)
       val bodypanel = paneldefault.div.id(id).clazz("panel-collapse collapse in")
       f(bodypanel)
     }
@@ -89,7 +89,7 @@ protected class Form(val root: Selection, val selection: Selection) {
 
   def well: Form = {
     val w = root.div.clazz("well")
-    new Form(w,w)
+    new Form(w, w)
   }
 
   def input(id: String, default: String, init: String, nbCol: Int = 12): Form = column(nbCol)

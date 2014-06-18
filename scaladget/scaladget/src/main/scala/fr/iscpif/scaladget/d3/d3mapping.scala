@@ -122,8 +122,9 @@ trait Base extends Selectors {
   def text(url: js.String, mime: js.String, callback: js.Function1[js.String, Unit]): Xhr = ???
 
   //var json: js.Function2[js.String, js.Function2[js.Any, js.Any, Unit], Xhr] = ???
-  def json: js.Function2[js.String, js.Function2[_<:js.Any, _<:js.Any, _<:Any], Xhr] = ???
-    ///[S,T]: js.Function2[js.String, js.Function2[S, T, Unit], Xhr] = ???
+  def json: js.Function2[js.String, js.Function2[_ <: js.Any, _ <: js.Any, _ <: Any], Xhr] = ???
+
+  ///[S,T]: js.Function2[js.String, js.Function2[S, T, Unit], Xhr] = ???
   //def json[S,T](filePath: js.String, err: S, values: T, Unit]) : Xhr = ???
 
   //def json[S,T]: js.Function2[js.String, js.Function2[S, T, Unit], Xhr] = ???
@@ -269,7 +270,7 @@ trait Selection extends Selectors {
 
   def attr(name: js.String, value: js.Any): Selection = ???
 
-  def attr(name: js.String, valueFunction: js.Function2[_<:js.Any, js.Number, js.Any]): Selection = ???
+  def attr(name: js.String, valueFunction: js.Function2[_ <: js.Any, js.Number, js.Any]): Selection = ???
 
   def attr(attrValueMap: Object): Selection = ???
 
@@ -283,8 +284,9 @@ trait Selection extends Selectors {
 
   def style(name: js.String, value: js.String): Selection = ???
 
-  def style(name: js.String, valueFunction: js.Function2[_<: js.Any,js.Number, _<:js.Any]): Selection = ???
-//  def style(name: js.String, valueFunction: (js.Any, js.Number)=> js.Any): Selection = ???
+  def style(name: js.String, valueFunction: js.Function2[_ <: js.Any, js.Number, _ <: js.Any]): Selection = ???
+
+  //  def style(name: js.String, valueFunction: (js.Any, js.Number)=> js.Any): Selection = ???
 
   def style(styleValueMap: Object): Selection = ???
 
@@ -302,7 +304,7 @@ trait Selection extends Selectors {
 
   def text(value: js.Number): Selection = ???
 
-  def text(valueFunction: js.Function2[_<:js.Any, js.Number, _<:Any]): Selection = ???
+  def text(valueFunction: js.Function2[_ <: js.Any, js.Number, _ <: Any]): Selection = ???
 
   def html(): js.String = ???
 
@@ -311,14 +313,19 @@ trait Selection extends Selectors {
   def html(valueFunction: js.Function2[js.Any, js.Number, Any]): Selection = ???
 
   def append(name: js.String): Selection = ???
+
   def insert(name: js.String, before: js.String): Selection = ???
+
   def remove: Selection = ???
+
   def empty: js.Boolean = ???
+
   def enter(): UpdateSelection = ???
 
- // def data(values: js.Function2[js.Any, js.Number, js.Array[js.Number]]): UpdateSelection = ???
-  def data(values: js.Function2[_<:js.Any, js.Number, js.Array[_<:js.Any]]): UpdateSelection = ???
-  def data(values: js.Function2[_<:js.Any, js.Number, js.Array[js.Number]], key: js.Function2[js.Any, js.Number, js.String]): UpdateSelection = ???
+  // def data(values: js.Function2[js.Any, js.Number, js.Array[js.Number]]): UpdateSelection = ???
+  def data(values: js.Function2[_ <: js.Any, js.Number, js.Array[_ <: js.Any]]): UpdateSelection = ???
+
+  def data(values: js.Function2[_ <: js.Any, js.Number, js.Array[js.Number]], key: js.Function2[js.Any, js.Number, js.String]): UpdateSelection = ???
 
   def data(): js.Array[js.Any] = ???
 
@@ -328,11 +335,11 @@ trait Selection extends Selectors {
 
   def filter(filter: js.Function2[js.Any, js.Number, js.Boolean], thisArg: js.Any = ???): UpdateSelection = ???
 
-  def call(callback: js.Function1[Selection, _<:Any]): Selection = ???
+  def call(callback: js.Function1[Selection, _ <: Any]): Selection = ???
 
-  def each(eachFunction: js.Function2[_<:js.Any, js.Number, _<:Any]): Selection = ???
+  def each(eachFunction: js.Function2[_ <: js.Any, js.Number, _ <: Any]): Selection = ???
 
-  def on(`type`: js.String): js.Function2[_<:js.Any, js.Number, Any] = ???
+  def on(`type`: js.String): js.Function2[_ <: js.Any, js.Number, Any] = ???
 
   def on(`type`: js.String, listener: js.Function2[js.Any, js.Number, Any], capture: js.Boolean = ???): Selection = ???
 
@@ -348,17 +355,23 @@ trait Selection extends Selectors {
 
 trait EnterSelection extends js.Object {
   def append: js.Function1[js.String, Selection] = ???
+
   def insert: js.Function2[js.String, js.String, Selection] = ???
+
   def select: js.Function1[js.String, Selection] = ???
+
   def empty: js.Function0[js.Boolean] = ???
+
   def node: js.Function0[Element] = ???
+
   def call: js.Function1[js.Function1[EnterSelection, Unit], EnterSelection] = ???
+
   def size: js.Function0[js.Number] = ???
 }
 
 trait UpdateSelection extends Selection {
- // override def enter(): UpdateSelection = ???
-  var   update: js.Function0[Selection] = ???
+  // override def enter(): UpdateSelection = ???
+  var update: js.Function0[Selection] = ???
   var exit: js.Function0[Selection] = ???
 }
 
@@ -440,7 +453,7 @@ trait Transition extends js.Object {
 
   def style(name: js.String, valueFunction: js.Function2[js.Any, js.Number, Any], priority: js.String): Transition = ???
 
-  def call(callback: js.Function1[_<:js.Any, Unit]): Transition = ???
+  def call(callback: js.Function1[_ <: js.Any, Unit]): Transition = ???
 
   def select(selector: js.String): Transition = ???
 
@@ -646,6 +659,7 @@ trait GraphNode extends js.Object with Geom.Point {
   var _children: js.Array[GraphNode] = ???
   var parent: GraphNode = ???
   var depth: js.Number = ???
+
   //def width: js.Number = ???
   //def height: js.Number = ???
   def group: js.Number = ???
@@ -1404,7 +1418,7 @@ trait LogScale extends QuantitiveScale {
 trait OrdinalScale extends Scale {
   override def apply(value: js.Any): js.Dynamic = ???
 
-  def domain(values: js.Array[_<:js.Any]): OrdinalScale = ???
+  def domain(values: js.Array[_ <: js.Any]): OrdinalScale = ???
 
   override def domain(): js.Array[js.Any] = ???
 
@@ -1787,7 +1801,7 @@ trait Geom extends js.Object {
 
   def quadtree(): QuadtreeFactory = ???
 
-  def quadtree(points: js.Array[_<:Point]): Quadtree = ???
+  def quadtree(points: js.Array[_ <: Point]): Quadtree = ???
 
   def quadtree(points: js.Array[Point], x1: js.Number, y1: js.Number, x2: js.Number, y2: js.Number): Quadtree = ???
 
