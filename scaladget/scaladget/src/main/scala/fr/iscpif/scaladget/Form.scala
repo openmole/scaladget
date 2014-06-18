@@ -21,10 +21,6 @@ import d3mapping.Selection
 import scala.Enumeration
 import DomUtil._
 
-/**
- * Created by mathieu on 06/06/14.
- */
-
 object Form {
 
   def form(parent: Selection) = {
