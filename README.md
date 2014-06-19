@@ -113,6 +113,8 @@ object Form {
 generates:  
 ![form Example](https://cloud.githubusercontent.com/assets/800035/3328068/f3a366b8-f7b7-11e3-9c7d-be8b3b8c5a91.png)
 
+2) Coming soon ...  
+
 Run the examples
 -------
 
@@ -124,6 +126,5 @@ toHtml
 
 Your *css*, *js* folders and the *html* file are generated in the example target.
 
-2) Coming soon ...  
 
 [1]: http://www.scala-js.org/
