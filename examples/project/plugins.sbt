@@ -1,5 +1,4 @@
-resolvers ++= Seq("Openmole Nexus" at "http://maven.openmole.org/snapshots",
-  "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/")
+resolvers += Resolver.sonatypeRepo("snapshots")
 
 addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.6.0")
 
