@@ -10,7 +10,7 @@ object ExampleBuild extends Build {
       resolvers += Resolver.sonatypeRepo("snapshots"),
       libraryDependencies += "fr.iscpif" %% "scaladget" % "0.1.0-SNAPSHOT",
       jsCall := "Form().run();",
-      outputPath := "/tmp"
+      //outputPath := "/tmp"
       )
   )
 }

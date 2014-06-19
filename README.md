@@ -111,5 +111,13 @@ object Form {
 generates:
 [[https://cloud.githubusercontent.com/assets/800035/3328068/f3a366b8-f7b7-11e3-9c7d-be8b3b8c5a91.png]]
 
+Run the examples
+-------
+
+Go to the examples folder and run:
+ ```scala
+sbt
+toHtml
+```
 
 [1]: http://www.scala-js.org/
