@@ -25,8 +25,6 @@ object DomUtil {
   def body: Selection = select("body")
 
   def title(t: String): Selection = select("head").append("title").html(t)
-
-  //  implicit def domUtilToSelection(d: DomUtil): Selection = d.selection
 }
 
 class DomUtil(val selection: Selection) {
@@ -78,4 +76,6 @@ class DomUtil(val selection: Selection) {
   def color(value: String) = style("color", value)
 
   def backgroundColor(value: String) = style("background-color", value)
+
+  def center: Selection = attr("align","center")
 }

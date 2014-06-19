@@ -32,7 +32,7 @@ object Form {
     body
       .backgroundColor("#d4d4d4")
       .color("#000")
-      .h1.html("A Scaladget form example")
+      .h1.html("A Scaladget form example").center
 
     form(body)
       .line.input("name", "Name", "", 6).input("email", "Email", "", 6)
