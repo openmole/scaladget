@@ -122,7 +122,8 @@ sbt
 toHtml
 ```
 
+Your *css*, *js* folders and the *html* file are generated in the example target.
+
 2) Coming soon ...  
->>>>>>> 76427ac89e958866291db5c731560dcea5649df1
 
 [1]: http://www.scala-js.org/
