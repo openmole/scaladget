@@ -21,8 +21,7 @@ object ScaladgetBuild extends Build {
         if (snapshot) Some("snapshots" at nexus + "content/repositories/snapshots")
         else Some("releases" at nexus + "service/local/staging/deploy/maven2")
       },
-      libraryDependencies ++= Seq("com.github.scala-incubator.io" %% "scala-io-file" % "0.4.2",
-        "org.scala-lang.modules.scalajs" %% "scalajs-jquery" % "0.4"),
+      libraryDependencies ++= Seq("com.github.scala-incubator.io" %% "scala-io-file" % "0.4.2"),
       addSbtPlugin("org.scala-lang.modules.scalajs" % "scalajs-sbt-plugin" % "0.4.0")
     )
   )
