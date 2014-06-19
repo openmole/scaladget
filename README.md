@@ -37,12 +37,26 @@ import fr.iscpif.jsmanager.JSManagerPlugin._
 ```
 
 Several additonal settings can be added:  
- **outputPath**: to specify a particular output path (instead of the default target one). *Ex: "/tmp/*
+ **outputPath**: to specify a particular output path (instead of the default target one). *Ex: "/tmp/*  
  **jsCall**: the string calling your javascript function: *Ex: "Form().run();"*
 
 
 
+The Library
+------
 
+The functions you want to exhibit in the generated javascript have to be preceeded by the scala-js annotation
+ ```scala
+@JSExport
+```
+
+The following imports are then required:
+```scala
+import scala.scalajs.js._
+import annotation.JSExport
+ ```
+ 
+ 
 
 
 [1]: http://www.scala-js.org/
