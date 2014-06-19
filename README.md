@@ -76,6 +76,8 @@ import scala.scalajs.js._
 import annotation.JSExport
  ```
 
+We plan to implemt libraries for forms, graphs, plots or any other usefull graphical representations in the web. Please post new issues or better: pull requests !
+
 Examples
 ------
 
@@ -83,8 +85,9 @@ Examples can be run in the examples directory by running on of the two tasks:
 * toJS: generates the *js* and *css* files only
 * toHtml: generates *js*, *css* and a ready to use *html* file
 
-To switch from one example to another, just change the invoked script function in the html directly or throuh the *jsCall* settings in the Build. 
-For instance, the content of the Form.scala example:
+To switch from one example to another, just change the invoked script function in the html directly or throuh the *jsCall* settings in the Build.
+
+1. A Bootstrap style form:
 
  ```scala
  @JSExport
@@ -110,5 +113,6 @@ object Form {
 generates:  
 ![form Example](https://cloud.githubusercontent.com/assets/800035/3328068/f3a366b8-f7b7-11e3-9c7d-be8b3b8c5a91.png)
 
+2. Coming soon ...  
 
 [1]: http://www.scala-js.org/
