@@ -108,7 +108,7 @@ object Form {
 }
 ```
 
-generates:
+generates:  
 ![form Example](https://cloud.githubusercontent.com/assets/800035/3328068/f3a366b8-f7b7-11e3-9c7d-be8b3b8c5a91.png)
 
 
