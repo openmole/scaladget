@@ -87,7 +87,7 @@ Examples can be run in the examples directory by running on of the two tasks:
 
 To switch from one example to another, just change the invoked script function in the html directly or throuh the *jsCall* settings in the Build.
 
-1. A Bootstrap style form:
+1) A Bootstrap style form:
 
  ```scala
  @JSExport
@@ -113,6 +113,6 @@ object Form {
 generates:  
 ![form Example](https://cloud.githubusercontent.com/assets/800035/3328068/f3a366b8-f7b7-11e3-9c7d-be8b3b8c5a91.png)
 
-2. Coming soon ...  
+2) Coming soon ...  
 
 [1]: http://www.scala-js.org/
