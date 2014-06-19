@@ -7,7 +7,7 @@ Scaladget is a library for generating html pages based on famous js libraries su
 * jQuery
 
 Scaladget provides high level functions to generates easily ready to use html pages. 
-It takes advantages of the [(scala-js library)][1] and transform all the scala code into javascript.
+It takes advantages of the [scala-js library][1] and transform all the scala code into javascript.
 The output is store into 2 directories *css* and *js* and optionaly a html page running your script.
 
 Scaladget is composed of:
@@ -36,7 +36,7 @@ Add the *jsManagerSettings* to your project settings contained in the JSManagerP
 import fr.iscpif.jsmanager.JSManagerPlugin._
 ```
 
-Several additonal settings can be added:
+Several additonal settings can be added:  
  **outputPath**: to specify a particular output path (instead of the default target one). *Ex: "/tmp/*
  **jsCall**: the string calling your javascript function: *Ex: "Form().run();"*
 
