@@ -51,10 +51,9 @@ Several additonal settings can be added:
  Here is a typical Build project:
  
  ```scala
- import sbt._
+import sbt._
 import Keys._
 import fr.iscpif.jsmanager.JSManagerPlugin._
-
 import scala.scalajs.sbtplugin.ScalaJSPlugin._
 
 object ExampleBuild extends Build {
