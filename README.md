@@ -28,13 +28,20 @@ Adds the jsManager plugin (in plugins.sbt)
 ```scala
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-addSbtPlugin("fr.iscpif" %% "jsmanager" % "0.1.0-SNAPSHOT")
+addSbtPlugin("fr.iscpif" %%% "jsmanager" % "0.1.0-SNAPSHOT")
 ```
 
-Add the *jsManagerSettings* to your project settings contained in the JSManagerPlugin
+Add the *jsManagerSettings* to your project settings contained in the JSManagerPlugin and *JSManagerPlugin* to be abble to run the *%%%* operator  
 ```scala
+import scala.scalajs.sbtplugin.ScalaJSPlugin._
 import fr.iscpif.jsmanager.JSManagerPlugin._
+```  
+
+Finally, you have to depend on scalajs (on which scaladget relies) in you *project/project/plugins.sbt*  
+```scala
+addSbtPlugin("org.scala-lang.modules.scalajs" % "scalajs-sbt-plugin" % "0.5.0")
 ```
+
 
 Several additonal settings can be added:  
  **outputPath**: to specify a particular output path (instead of the default target one). *Ex: "/tmp/*  
