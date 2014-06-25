@@ -71,10 +71,9 @@ object JSManagerPlugin extends Plugin {
     cssDir.mkdirs
 
     //Copy the scala-js generated files
-    Seq(jsFile1,jsFile2).foreach{f =>
-
-    println("COPY FROM " + f.getAbsolutePath + " TO " + new java.io.File(jsDir, f.getName))
-      IO.copyFile(f, new java.io.File(jsDir, f.getName))}
+    Seq(jsFile1, jsFile2).foreach { f =>
+      IO.copyFile(f, new java.io.File(jsDir, f.getName))
+    }
 
     //Copy the resources js libraries
     jsFiles.foreach { name => Resource.fromInputStream(this.getClass.getClassLoader.getResourceAsStream(name)).copyDataTo(fromFile(new java.io.File(jsDir, name)))}
@@ -109,7 +108,7 @@ object JSManagerPlugin extends Plugin {
         out write "  </body>\n"
         out write "</html>\n"
 
-        jsManagerCommand(target, resources, outputPath,p1,p2)
+        jsManagerCommand(target, resources, outputPath, p1, p2)
       case Failure(t: Throwable) => println(t + "\n" + t.getStackTraceString)
     }
   }
