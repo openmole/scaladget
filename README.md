@@ -20,7 +20,7 @@ Usage
 Depends on the scaladget library
 ```scala
 resolvers += Resolver.sonatypeRepo("snapshots")
-libraryDependencies += "fr.iscpif" %% "scaladget" % "0.1.0-SNAPSHOT"
+libraryDependencies += "fr.iscpif" %%% "scaladget" % "0.1.0-SNAPSHOT"
 ```
 
 Adds the jsManager plugin (in plugins.sbt)
