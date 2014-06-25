@@ -21,8 +21,10 @@ import java.io.{FileWriter, File}
 import sbt._
 import sbt.Keys._
 import scala.scalajs.sbtplugin.ScalaJSPlugin._
+import scala.scalajs.tools.classpath.CompleteNCClasspath
 import ScalaJSKeys._
 import collection.JavaConversions._
+import scala.util.{Failure, Success}
 import scalax.io._
 import Resource._
 
@@ -46,12 +48,22 @@ object JSManagerPlugin extends Plugin {
     jsCall := ""
   )
 
-
-  def jsManagerCommand(optFile: File,
+  def jsManagerCommand(optFile: CompleteNCClasspath,
                        target: File,
                        resources: File,
-                       outputPath: String) = {
+                       outputPath: String): Unit = scalaJSFiles(optFile) match {
+    case Success((p1: File, p2: File)) => jsManagerCommand(target, resources, outputPath, p1, p2)
+    case Failure(t: Throwable) => println(t + "\n" + t.getCause.toString)
+  }
+
+
+  def jsManagerCommand(target: File,
+                       resources: File,
+                       outputPath: String,
+                       jsFile1: File,
+                       jsFile2: File): Unit = {
     val targetFile = if (outputPath.isEmpty) target else new File(outputPath)
+    targetFile.mkdirs
 
     val jsDir = new java.io.File(targetFile, "js")
     jsDir.mkdirs
@@ -59,10 +71,10 @@ object JSManagerPlugin extends Plugin {
     cssDir.mkdirs
 
     //Copy the scala-js generated files
-    val optFilename = optFile.getName
-    val preoptFileName = optFilename.replace("opt", "preopt")
-    IO.copyFile(optFile, new java.io.File(jsDir, optFilename))
-    IO.copyFile(new java.io.File(optFile.getParentFile, preoptFileName), new java.io.File(jsDir, preoptFileName))
+    Seq(jsFile1,jsFile2).foreach{f =>
+
+    println("COPY FROM " + f.getAbsolutePath + " TO " + new java.io.File(jsDir, f.getName))
+      IO.copyFile(f, new java.io.File(jsDir, f.getName))}
 
     //Copy the resources js libraries
     jsFiles.foreach { name => Resource.fromInputStream(this.getClass.getClassLoader.getResourceAsStream(name)).copyDataTo(fromFile(new java.io.File(jsDir, name)))}
@@ -70,7 +82,7 @@ object JSManagerPlugin extends Plugin {
 
   }
 
-  def htmlManagerCommand(optFile: File,
+  def htmlManagerCommand(optFile: CompleteNCClasspath,
                          target: File,
                          resources: File,
                          outputPath: String,
@@ -80,28 +92,43 @@ object JSManagerPlugin extends Plugin {
     htmlFile.createNewFile
 
     val out = Resource.fromFile(htmlFile)
-    val optFilename = optFile.getName
-    val preoptFileName = optFilename.replace("opt", "preopt")
 
-    out write "<html>\n"
-    out write "  <head>\n"
-    out write "    <meta charset=\"utf-8\">\n"
-    cssFiles.foreach { name => out write "      <link rel=\"stylesheet\" href=\"css/" + name +"\"/>\n"}
-    jsFiles.foreach { name => out write "      <script type=\"text/javascript\" src=\"js/" + name +"\"></script>\n"}
-    out write "      <script type=\"text/javascript\" src=\"js/" + optFilename +"\"></script>\n"
-    out write "      <script type=\"text/javascript\" src=\"js/" + preoptFileName +"\"></script>\n"
-    out write "  </head>\n"
-    out write "  <body>\n"
-    out write "    <script>" + jsCall + "</script>\n"
-    out write "  </body>\n"
-    out write "</html>\n"
+    scalaJSFiles(optFile) match {
+      case Success((p1: File, p2: File)) =>
 
-    jsManagerCommand(optFile, target, resources, outputPath)
+        out write "<html>\n"
+        out write "  <head>\n"
+        out write "    <meta charset=\"utf-8\">\n"
+        cssFiles.foreach { name => out write "      <link rel=\"stylesheet\" href=\"css/" + name + "\"/>\n"}
+        jsFiles.foreach { name => out write "      <script type=\"text/javascript\" src=\"js/" + name + "\"></script>\n"}
+        out write "      <script type=\"text/javascript\" src=\"js/" + p1.getName + "\"></script>\n"
+        out write "      <script type=\"text/javascript\" src=\"js/" + p2.getName + "\"></script>\n"
+        out write "  </head>\n"
+        out write "  <body>\n"
+        out write "    <script>" + jsCall + "</script>\n"
+        out write "  </body>\n"
+        out write "</html>\n"
+
+        jsManagerCommand(target, resources, outputPath,p1,p2)
+      case Failure(t: Throwable) => println(t + "\n" + t.getStackTraceString)
+    }
+  }
+
+
+  private def scalaJSFiles(optFile: CompleteNCClasspath) = optFile.ncjsCode.map {
+    _.path
+  }.headOption match {
+    case Some(path: String) =>
+      val file = new File(path)
+      val name = file.getName
+      val dir = file.getParent
+      Success((file, new File(dir, name.replace("opt", "fastopt"))))
+    case _ => Failure(new Throwable("No js file has been generated"))
   }
 
   def jsManagerSettings = {
     super.settings ++
-      (toJs <<= (optimizeJS in Compile, target, resourceManaged, outputPath) map jsManagerCommand) ++
-      (toHtml <<= (optimizeJS in Compile, target, resourceManaged, outputPath, jsCall) map htmlManagerCommand)
+      (toJs <<= (fullOptJS in Compile, target, resourceManaged, outputPath) map jsManagerCommand) ++
+      (toHtml <<= (fullOptJS in Compile, target, resourceManaged, outputPath, jsCall) map htmlManagerCommand)
   } ++ scalaJSSettings
 }

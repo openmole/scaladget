@@ -17,6 +17,7 @@
 
 package fr.iscpif.scaladget.examples
 
+import scala.scalajs.js.JSApp
 import fr.iscpif.scaladget.d3mapping.Selection
 
 import scala.scalajs.js._
@@ -37,7 +38,7 @@ object Accordion {
       .color("#000")
       .h1.html("A Scaladget accordion example")
 
-    accordion(body, 6,
+    accordion(body, 12,
       ("first", "First", (s: Selection) => {
       form(s).line.input("firstName", "First name", "", 6).input("name", "Name", "", 6)
     }.selection),
