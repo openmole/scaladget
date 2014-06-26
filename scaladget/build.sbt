@@ -1,11 +1,11 @@
-//import com.typesafe.sbt.pgp.PgpKeys._
+import com.typesafe.sbt.pgp.PgpKeys._
 
-//organization := "fr.iscpif"
+organization := "fr.iscpif"
 
-//name := "scaladget"
+name := "scaladget"
 
-//packagedArtifacts in file(".") := Map.empty
+packagedArtifacts in file(".") := Map.empty
 
-//publish in file(".") := {}
+publish in file(".") := {}
 
-//publishSigned := {}
+publishSigned := {}
