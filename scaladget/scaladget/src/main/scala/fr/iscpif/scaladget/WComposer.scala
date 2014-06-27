@@ -19,6 +19,7 @@ package fr.iscpif.scaladget
 import fr.iscpif.scaladget.d3mapping.Selection
 
 trait WComposer {
+  def id: String
   def root: Selection
   def selection: Selection
 }

@@ -25,18 +25,18 @@ package object d3 extends js.GlobalScope {
 }
 
 package object widget {
-  def form(parent: Selection) = {
-    val root = parent.div.clazz("container")
+  def form(parent: Selection, id: String) = {
+    val root = parent.div.clazz("container").id(id)
       .div.clazz("row")
       .div.clazz("col-xs-12 col-md-8 col-md-6")
       .form.role("form")
       .style("font-size", "13")
       .div.clazz("well")
-    new Form(root, root)
+    new Form(root, root, id)
   }
 
-  def accordion(parent: Selection) = {
+  def accordion(parent: Selection, id: String) = {
     val root = parent.div.clazz("container").div.clazz("row").div.clazz("panel-group").id("accordion")
-    new Accordion(root,root)
+    new Accordion(root,root, id)
   }
 }

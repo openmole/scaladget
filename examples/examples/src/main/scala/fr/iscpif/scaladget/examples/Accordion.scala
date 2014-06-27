@@ -39,15 +39,15 @@ object Accordion {
       .color("#000")
       .h1.html("A Scaladget accordion example")
 
-    accordion(body)
+    accordion(body, "accor")
       .tab("first", "First", (s: Selection) => {
-      form(s)
+      form(s,"fform")
         .line
         .input("firstName", "First name", "", 6)
         .input("name", "Name", "", 6)
     }.selection)
       .tab("second", "Second", (s: Selection) => {
-      form(s)
+      form(s,"sform")
         .line
         .input("email", "Email", "", 12).selection
     })

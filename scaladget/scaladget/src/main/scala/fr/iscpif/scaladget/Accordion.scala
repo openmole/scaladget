@@ -19,13 +19,13 @@ package fr.iscpif.scaladget
 import fr.iscpif.scaladget.d3mapping.Selection
 import DomUtil._
 
-class Accordion(val root: Selection, val selection: Selection) extends WComposer {
+protected case class Accordion(root: Selection, selection: Selection, id: String) extends WComposer {
   implicit def selectionToForm(s: Selection): Accordion = this
 
   def tab(id: String, name: String, f: Selection=> Selection): Accordion = {
       val paneldefault = root.div.clazz("panel panel-default")
       paneldefault.div.clazz("panel-heading").h4.clazz("panel-title").a.datatoggle("collapse").dataparent("#accordion").href("#" + id).html(name)
       val bodypanel = paneldefault.div.id(id).clazz("panel-collapse collapse in")
-      new Accordion(root,f(bodypanel))
+      copy(selection = f(bodypanel))
   }
 }

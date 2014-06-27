@@ -16,9 +16,12 @@
  */
 package fr.iscpif.scaladget.examples
 
+import org.scalajs.jquery
+
 import scala.scalajs.js._
 import annotation.JSExport
-import fr.iscpif.scaladget.d3._
+import jquery._
+
 import fr.iscpif.scaladget.Form._
 import fr.iscpif.scaladget.DomUtil._
 import fr.iscpif.scaladget.widget._
@@ -35,10 +38,25 @@ object Form {
       .color("#000")
       .h1.html("A Scaladget form example").center
 
-    form(body)
+    form(body,"form")
       .line.input("name", "Name", "", 6).input("email", "Email", "", 6)
       .line.input("firstname", "First Name", "")
       .group.button("save", "Save", State.PRIMARY).button("cancel", "Cancel")
+
+
+    jQuery("#save").click((j: JQueryEventObject) => testForm)
+    jQuery("#cancel").click((j: JQueryEventObject) => jQuery("#form").hide())
+
+    def testForm = {
+      val name = jQuery("#name")
+      if (name.`val`().equals(""))
+        name.css("background-color","#ffd5d5")
+      else {
+        name.css("background-color","#fff")
+        body.h3.html(name.`val`())
+      }
+    }
+
   }
 }
 

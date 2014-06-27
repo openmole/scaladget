@@ -50,7 +50,7 @@ import Form.State._
  The sum is 12. Ex: line(8,4): the first element is 2/3 of the line space.
  0 for no indication at all
  */
-protected class Form(val root: Selection, val selection: Selection) {
+protected case class Form(root: Selection, selection: Selection, id: String) extends WComposer {
   implicit def selectionToForm(s: Any): Form = this
 
   private def column(colIndice: Int): Selection = {
@@ -58,13 +58,13 @@ protected class Form(val root: Selection, val selection: Selection) {
     else selection
   }
 
-  def line: Form = new Form(root, root.div.clazz("row"))
+  def line: Form = copy(selection = root.div.clazz("row"))
 
-  def group: Form = new Form(root, root.div.clazz("btn-group"))
+  def group: Form = copy(selection = root.div.clazz("btn-group"))
 
   def well: Form = {
     val w = root.div.clazz("well")
-    new Form(w, w)
+    copy(root = w, selection = w)
   }
 
   def input(id: String, default: String, init: String, nbCol: Int = 12): Form = column(nbCol)
