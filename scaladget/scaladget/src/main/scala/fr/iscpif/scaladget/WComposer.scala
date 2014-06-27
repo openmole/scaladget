@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 12/06/14 Mathieu Leclaire
+ * Copyright (C) 27/06/14 mathieu
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,27 +16,9 @@
  */
 package fr.iscpif.scaladget
 
-import fr.iscpif.scaladget.d3mapping.{Selection, Base}
-import scala.scalajs.js
-import DomUtil._
+import fr.iscpif.scaladget.d3mapping.Selection
 
-package object d3 extends js.GlobalScope {
-  val d3: Base = ???
-}
-
-package object widget {
-  def form(parent: Selection) = {
-    val root = parent.div.clazz("container")
-      .div.clazz("row")
-      .div.clazz("col-xs-12 col-md-8 col-md-6")
-      .form.role("form")
-      .style("font-size", "13")
-      .div.clazz("well")
-    new Form(root, root)
-  }
-
-  def accordion(parent: Selection) = {
-    val root = parent.div.clazz("container").div.clazz("row").div.clazz("panel-group").id("accordion")
-    new Accordion(root,root)
-  }
+trait WComposer {
+  def root: Selection
+  def selection: Selection
 }

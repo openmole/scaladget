@@ -9,7 +9,7 @@ object ExampleBuild extends Build {
     settings = Defaults.defaultSettings ++ jsManagerSettings ++ Seq(
       resolvers += Resolver.sonatypeRepo("snapshots"),
       libraryDependencies += "fr.iscpif" %%% "scaladget" % "0.1.0-SNAPSHOT",
-      jsCall := "Form().run();"
+      jsCall := "Accordion().run();"
       //outputPath := "/tmp"
     )
   )

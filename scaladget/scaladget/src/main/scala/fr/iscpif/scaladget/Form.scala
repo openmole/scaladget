@@ -84,9 +84,5 @@ protected class Form(val root: Selection, val selection: Selection) {
     actions.foreach { case (id, name) => ul.insert("li", "ul").insert("a", "li").id("id").href("#").html(name)}
     selection
   }
-
-  def accordion(selection: Selection, width: Int, components: Tuple3[String, String, Selection => Selection]*): Selection =
-    Form.accordion(selection, width, components.toSeq: _*)
-
   //  def table(header: Seq[String], lines: Seq[String]*) = selection.
 }

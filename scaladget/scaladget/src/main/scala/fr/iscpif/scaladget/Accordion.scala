@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 12/06/14 Mathieu Leclaire
+ * Copyright (C) 27/06/14 mathieu
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,27 +16,16 @@
  */
 package fr.iscpif.scaladget
 
-import fr.iscpif.scaladget.d3mapping.{Selection, Base}
-import scala.scalajs.js
+import fr.iscpif.scaladget.d3mapping.Selection
 import DomUtil._
 
-package object d3 extends js.GlobalScope {
-  val d3: Base = ???
-}
+class Accordion(val root: Selection, val selection: Selection) extends WComposer {
+  implicit def selectionToForm(s: Selection): Accordion = this
 
-package object widget {
-  def form(parent: Selection) = {
-    val root = parent.div.clazz("container")
-      .div.clazz("row")
-      .div.clazz("col-xs-12 col-md-8 col-md-6")
-      .form.role("form")
-      .style("font-size", "13")
-      .div.clazz("well")
-    new Form(root, root)
-  }
-
-  def accordion(parent: Selection) = {
-    val root = parent.div.clazz("container").div.clazz("row").div.clazz("panel-group").id("accordion")
-    new Accordion(root,root)
+  def tab(id: String, name: String, f: Selection=> Selection): Accordion = {
+      val paneldefault = root.div.clazz("panel panel-default")
+      paneldefault.div.clazz("panel-heading").h4.clazz("panel-title").a.datatoggle("collapse").dataparent("#accordion").href("#" + id).html(name)
+      val bodypanel = paneldefault.div.id(id).clazz("panel-collapse collapse in")
+      new Accordion(root,f(bodypanel))
   }
 }

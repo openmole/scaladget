@@ -39,12 +39,17 @@ object Accordion {
       .color("#000")
       .h1.html("A Scaladget accordion example")
 
-    accordion(body, 12,
-      ("first", "First", (s: Selection) => {
-      form(s).line.input("firstName", "First name", "", 6).input("name", "Name", "", 6)
-    }.selection),
-    ("second", "Second", (s: Selection) => {
-      form(s).line.input("email", "Email", "", 6).selection
-    }))
+    accordion(body)
+      .tab("first", "First", (s: Selection) => {
+      form(s)
+        .line
+        .input("firstName", "First name", "", 6)
+        .input("name", "Name", "", 6)
+    }.selection)
+      .tab("second", "Second", (s: Selection) => {
+      form(s)
+        .line
+        .input("email", "Email", "", 6).selection
+    })
   }
 }
