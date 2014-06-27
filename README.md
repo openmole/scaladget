@@ -26,21 +26,15 @@ libraryDependencies += "fr.iscpif" %%% "scaladget" % "0.1.0-SNAPSHOT"
 Adds the jsManager plugin (in plugins.sbt)
 
 ```scala
-resolvers += Resolver.sonatypeRepo("snapshots")
-
-addSbtPlugin("fr.iscpif" %%% "jsmanager" % "0.1.0-SNAPSHOT")
+resolvers ++= Seq(Resolver.sonatypeRepo("snapshots"),
+          Resolver.url("scala-js-releases",
+            url("http://dl.bintray.com/content/scala-js/scala-js-releases"))(
+              Resolver.ivyStylePatterns))
+        
+addSbtPlugin("fr.iscpif" %% "jsmanager" % "0.1.0-SNAPSHOT")
 ```
 
-Add the *jsManagerSettings* to your project settings contained in the JSManagerPlugin and *JSManagerPlugin* to be abble to run the *%%%* operator  
-```scala
-import scala.scalajs.sbtplugin.ScalaJSPlugin._
-import fr.iscpif.jsmanager.JSManagerPlugin._
-```  
-
-Finally, you have to depend on scalajs (on which scaladget relies) in you *project/project/plugins.sbt*  
-```scala
-addSbtPlugin("org.scala-lang.modules.scalajs" % "scalajs-sbt-plugin" % "0.5.0")
-```
+Add the *jsManagerSettings* to your project settings contained in the JSManagerPlugin.
 
 
 Several additonal settings can be added:  
@@ -54,7 +48,6 @@ Several additonal settings can be added:
 import sbt._
 import Keys._
 import fr.iscpif.jsmanager.JSManagerPlugin._
-import scala.scalajs.sbtplugin.ScalaJSPlugin._
 
 object ExampleBuild extends Build {
 
