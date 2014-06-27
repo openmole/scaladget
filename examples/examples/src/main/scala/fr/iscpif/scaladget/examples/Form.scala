@@ -21,6 +21,7 @@ import annotation.JSExport
 import fr.iscpif.scaladget.d3._
 import fr.iscpif.scaladget.Form._
 import fr.iscpif.scaladget.DomUtil._
+import fr.iscpif.scaladget.widget._
 
 @JSExport
 object Form {
@@ -38,7 +39,7 @@ object Form {
       .line.input("name", "Name", "", 6).input("email", "Email", "", 6)
       .line.input("firstname", "First Name", "")
       .group.button("save", "Save", State.PRIMARY).button("cancel", "Cancel")
-
   }
 }
+
 

@@ -22,28 +22,6 @@ import scala.Enumeration
 import DomUtil._
 
 object Form {
-
-  def form(parent: Selection) = {
-    val root = parent.div.clazz("container")
-      .div.clazz("row")
-      .div.clazz("col-xs-12 col-md-8 col-md-6")
-      .form.role("form")
-      .style("font-size", "13")
-      .div.clazz("well")
-    new Form(root, root)
-  }
-
-  def accordion(selection: Selection, width: Int, components: Tuple3[String, String, Selection => Selection]*): Selection = {
-    val root = selection.div.clazz("container").div.clazz("row")./*div.clazz("col-md-1"+ {if(width<=12) width else 12}).*/div.clazz("panel-group").id("accordion")
-    components.foreach { case (id, name, f) =>
-      val paneldefault = root.div.clazz("panel panel-default")
-      paneldefault.div.clazz("panel-heading").h4.clazz("panel-title").a.datatoggle("collapse").dataparent("#accordion").href("#" + id).html(name)
-      val bodypanel = paneldefault.div.id(id).clazz("panel-collapse collapse in")
-      f(bodypanel)
-    }
-    root
-  }
-
   private def button(selection: Selection, id: String, label: String, clazz: String, extraAttr: Tuple2[String, String]*) = {
     val button = selection.button.id(id).tyype("button").clazz("btn " + clazz)
     extraAttr.foreach { case (att, value) => button.attr(att, value)}
@@ -108,7 +86,7 @@ protected class Form(val root: Selection, val selection: Selection) {
   }
 
   def accordion(selection: Selection, width: Int, components: Tuple3[String, String, Selection => Selection]*): Selection =
-    Form.accordion(selection, width, components.toSeq:_*)
+    Form.accordion(selection, width, components.toSeq: _*)
 
   //  def table(header: Seq[String], lines: Seq[String]*) = selection.
 }

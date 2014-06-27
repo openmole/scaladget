@@ -25,6 +25,7 @@ import annotation.JSExport
 import fr.iscpif.scaladget.d3._
 import fr.iscpif.scaladget.Form._
 import fr.iscpif.scaladget.DomUtil._
+import fr.iscpif.scaladget.widget._
 
 @JSExport
 object Accordion {

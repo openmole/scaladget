@@ -16,9 +16,38 @@
  */
 package fr.iscpif.scaladget
 
-import d3mapping.Base
+import fr.iscpif.scaladget.d3mapping.{Selection, Base}
 import scala.scalajs.js
+import DomUtil._
 
 package object d3 extends js.GlobalScope {
   val d3: Base = ???
+}
+
+package object widget {
+  def form(parent: Selection) = {
+    val root = parent.div.clazz("container")
+      .div.clazz("row")
+      .div.clazz("col-xs-12 col-md-8 col-md-6")
+      .form.role("form")
+      .style("font-size", "13")
+      .div.clazz("well")
+    new Form(root, root)
+  }
+
+  def accordion(selection: Selection, width: Int, components: Tuple3[String, String, Selection => Selection]*): Selection = {
+    val root = selection.div.clazz("container").div.clazz("row"). /*div.clazz("col-md-1"+ {if(width<=12) width else 12}).*/ div.clazz("panel-group").id("accordion")
+    components.foreach { case (id, name, f) =>
+      val paneldefault = root.div.clazz("panel panel-default")
+      paneldefault.div.clazz("panel-heading").h4.clazz("panel-title").a.datatoggle("collapse").dataparent("#accordion").href("#" + id).html(name)
+      val bodypanel = paneldefault.div.id(id).clazz("panel-collapse collapse in")
+      f(bodypanel)
+    }
+    root
+  }
+
+  def accordion(selection: Selection) = {
+    val root = selection.div.clazz("container").div.clazz("row").div.clazz("panel-group").id("accordion")
+
+  }
 }
