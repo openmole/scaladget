@@ -1,13 +1,13 @@
 import sbt._
 import Keys._
 import scala.scalajs.sbtplugin.ScalaJSPlugin._
-import ScalaJSKeys._
 
 object ScaladgetBuild extends Build {
   val Organization = "fr.iscpif"
   val Name = "Scaladget"
   val Version = "0.1.0-SNAPSHOT"
-  val ScalaVersion = "2.10.4"
+  val ScalaVersion = "2.10.3"
+
 
   lazy val jsManager = Project(
     "jsManager",
@@ -21,7 +21,8 @@ object ScaladgetBuild extends Build {
         if (snapshot) Some("snapshots" at nexus + "content/repositories/snapshots")
         else Some("releases" at nexus + "service/local/staging/deploy/maven2")
       },
-      libraryDependencies ++= Seq("com.github.scala-incubator.io" %% "scala-io-file" % "0.4.2"),
+      libraryDependencies ++= Seq("com.github.scala-incubator.io" %% "scala-io-file" % "0.4.2"
+      ) ,
       addSbtPlugin("org.scala-lang.modules.scalajs" % "scalajs-sbt-plugin" % "0.5.0")
     )
   )
@@ -48,13 +49,13 @@ object ScaladgetBuild extends Build {
       homepage := Some(url("https://github.com/mathieuleclaire/scaladget")),
       scmInfo := Some(ScmInfo(url("https://github.com/mathieuleclaire/scaladget.git"), "scm:git:git@github.com:mathieuleclaire/scaladget.git")),
       pomExtra := {
-          <developers>
-            <developer>
-              <id>mathieuleclaire</id>
-              <name>Mathieu Leclaire</name>
-              <url>https://github.com/mathieuleclaire/</url>
-            </developer>
-          </developers>
+        <developers>
+          <developer>
+            <id>mathieuleclaire</id>
+            <name>Mathieu Leclaire</name>
+            <url>https://github.com/mathieuleclaire/</url>
+          </developer>
+        </developers>
       }
     )
   )

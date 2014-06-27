@@ -27,7 +27,7 @@ object Form {
 
   @JSExport
   def run() {
-    title("My first html page with Scala !")
+    title("My first html page aieth Scala !")
 
     body
       .backgroundColor("#d4d4d4")

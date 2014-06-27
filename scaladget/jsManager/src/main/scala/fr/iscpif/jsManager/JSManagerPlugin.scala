@@ -28,7 +28,7 @@ import scala.util.{Failure, Success}
 import scalax.io._
 import Resource._
 
-object JSManagerPlugin extends Plugin {
+object JSManagerPlugin extends Plugin with scala.scalajs.sbtplugin.impl.DependencyBuilders {
 
   implicit def pathToFile(s: String) = new java.io.File(s)
 
@@ -129,5 +129,9 @@ object JSManagerPlugin extends Plugin {
     super.settings ++
       (toJs <<= (fullOptJS in Compile, target, resourceManaged, outputPath) map jsManagerCommand) ++
       (toHtml <<= (fullOptJS in Compile, target, resourceManaged, outputPath, jsCall) map htmlManagerCommand)
-  } ++ scalaJSSettings
+  } ++ scalaJSSettings  ++ Seq(
+  resolvers += Resolver.url("scala-js-releases",
+    url("http://dl.bintray.com/content/scala-js/scala-js-releases"))(
+      Resolver.ivyStylePatterns)
+  )
 }
