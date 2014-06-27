@@ -2,8 +2,6 @@ import sbt._
 import Keys._
 import fr.iscpif.jsmanager.JSManagerPlugin._
 
-//import scala.scalajs.sbtplugin.ScalaJSPlugin._
-
 object ExampleBuild extends Build {
 
   lazy val scaladgetExample = Project("examples",

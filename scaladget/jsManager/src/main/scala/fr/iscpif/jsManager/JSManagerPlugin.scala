@@ -129,9 +129,5 @@ object JSManagerPlugin extends Plugin with scala.scalajs.sbtplugin.impl.Dependen
     super.settings ++
       (toJs <<= (fullOptJS in Compile, target, resourceManaged, outputPath) map jsManagerCommand) ++
       (toHtml <<= (fullOptJS in Compile, target, resourceManaged, outputPath, jsCall) map htmlManagerCommand)
-  } ++ scalaJSSettings  ++ Seq(
-  resolvers += Resolver.url("scala-js-releases",
-    url("http://dl.bintray.com/content/scala-js/scala-js-releases"))(
-      Resolver.ivyStylePatterns)
-  )
+  } ++ scalaJSSettings
 }
