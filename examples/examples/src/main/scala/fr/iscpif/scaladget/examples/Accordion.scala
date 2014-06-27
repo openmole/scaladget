@@ -49,7 +49,7 @@ object Accordion {
       .tab("second", "Second", (s: Selection) => {
       form(s)
         .line
-        .input("email", "Email", "", 6).selection
+        .input("email", "Email", "", 12).selection
     })
   }
 }
