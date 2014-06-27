@@ -18,8 +18,12 @@ package fr.iscpif.scaladget
 
 import d3._
 import d3mapping.Selection
+import org.scalajs.jquery
 import scala.Enumeration
 import DomUtil._
+import jquery._
+
+import scala.scalajs.js.JSON
 
 object Form {
   private def button(selection: Selection, id: String, label: String, clazz: String, extraAttr: Tuple2[String, String]*) = {
@@ -50,7 +54,8 @@ import Form.State._
  The sum is 12. Ex: line(8,4): the first element is 2/3 of the line space.
  0 for no indication at all
  */
-protected case class Form(root: Selection, selection: Selection, id: String) extends WComposer {
+protected case class Form(root: Selection, selection: Selection, id: String,componentIds: List[String] = List()) extends WComposer {
+
   implicit def selectionToForm(s: Any): Form = this
 
   private def column(colIndice: Int): Selection = {
@@ -67,9 +72,12 @@ protected case class Form(root: Selection, selection: Selection, id: String) ext
     copy(root = w, selection = w)
   }
 
-  def input(id: String, default: String, init: String, nbCol: Int = 12): Form = column(nbCol)
-    .input.clazz("form-control input-lg")
-    .tyype("text").placeholder(default).id(id).value(init)
+  def input(id: String, default: String, init: String, nbCol: Int = 12): Form = {
+    column(nbCol)
+      .input.clazz("form-control input-lg")
+      .tyype("text").placeholder(default).id(id).value(init)
+    copy(componentIds = componentIds :+ id)
+  }
 
   def button(id: String, label: String, state: State = DEFAULT, nbCol: Int = 0): Form = Form.button(column(nbCol), id, label, "btn-" + state.name + " btn-lg")
 
@@ -84,5 +92,11 @@ protected case class Form(root: Selection, selection: Selection, id: String) ext
     actions.foreach { case (id, name) => ul.insert("li", "ul").insert("a", "li").id("id").href("#").html(name)}
     selection
   }
+
+  def toJSON = "{\n" +
+    componentIds.map{ i=>
+    "\""+i+"\":\""+ jQuery("#"+i).`val`() + "\""
+  }.mkString("\n") + "\n}"
+  
   //  def table(header: Seq[String], lines: Seq[String]*) = selection.
 }

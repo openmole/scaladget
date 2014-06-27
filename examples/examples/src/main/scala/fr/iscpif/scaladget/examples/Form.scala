@@ -38,7 +38,7 @@ object Form {
       .color("#000")
       .h1.html("A Scaladget form example").center
 
-    form(body,"form")
+    val myForm = form(body, "form")
       .line.input("name", "Name", "", 6).input("email", "Email", "", 6)
       .line.input("firstname", "First Name", "")
       .group.button("save", "Save", State.PRIMARY).button("cancel", "Cancel")
@@ -50,10 +50,10 @@ object Form {
     def testForm = {
       val name = jQuery("#name")
       if (name.`val`().equals(""))
-        name.css("background-color","#ffd5d5")
+        name.css("background-color", "#ffd5d5")
       else {
-        name.css("background-color","#fff")
-        body.h3.html(name.`val`())
+        name.css("background-color", "#fff")
+        println(myForm.toJSON)
       }
     }
 
