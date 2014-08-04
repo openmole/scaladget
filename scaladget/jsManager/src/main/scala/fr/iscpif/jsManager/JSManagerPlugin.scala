@@ -37,11 +37,9 @@ object JSManagerPlugin extends Plugin with scala.scalajs.sbtplugin.impl.Dependen
   lazy val outputPath = SettingKey[String]("Output path")
   lazy val jsCall = SettingKey[String]("js Function to be called ")
 
-  val jsFiles = Seq("d3.v3.min.js",
-    "jquery-2.1.1.min.js",
-    "bootstrap.min.js")
+  val jsFiles = Seq()
 
-  val cssFiles = Seq("bootstrap.min.css")
+  val cssFiles = Seq()
 
   override def globalSettings = Seq(
     outputPath := "",
@@ -50,15 +48,13 @@ object JSManagerPlugin extends Plugin with scala.scalajs.sbtplugin.impl.Dependen
 
   def jsManagerCommand(optFile: CompleteNCClasspath,
                        target: File,
-                       resources: File,
                        outputPath: String): Unit = scalaJSFiles(optFile) match {
-    case Success((p1: File, p2: File)) => jsManagerCommand(target, resources, outputPath, p1, p2)
+    case Success((p1: File, p2: File)) => jsManagerCommand(target, outputPath, p1, p2)
     case Failure(t: Throwable) => println(t + "\n" + t.getCause.toString)
   }
 
 
   def jsManagerCommand(target: File,
-                       resources: File,
                        outputPath: String,
                        jsFile1: File,
                        jsFile2: File): Unit = {
@@ -83,7 +79,6 @@ object JSManagerPlugin extends Plugin with scala.scalajs.sbtplugin.impl.Dependen
 
   def htmlManagerCommand(optFile: CompleteNCClasspath,
                          target: File,
-                         resources: File,
                          outputPath: String,
                          jsCall: String) {
     val htmlFile = new java.io.File(if (outputPath.isEmpty) target else new File(outputPath), "scaladget-index.html")
@@ -108,11 +103,22 @@ object JSManagerPlugin extends Plugin with scala.scalajs.sbtplugin.impl.Dependen
         out write "  </body>\n"
         out write "</html>\n"
 
-        jsManagerCommand(target, resources, outputPath, p1, p2)
+        jsManagerCommand(target, outputPath, p1, p2)
       case Failure(t: Throwable) => println(t + "\n" + t.getStackTraceString)
     }
   }
 
+  private def all(resources: File, dir: String) = allFiles(new File(resources, dir)).map {
+    _.getAbsolutePath
+  }
+
+  private def allFiles(dir: File): Seq[File] = {
+    if (dir.isDirectory) {
+      val these = dir.listFiles.partition(_.isDirectory)
+      these._2 ++ these._1.flatMap(allFiles)
+    }
+    else Seq(dir)
+  }
 
   private def scalaJSFiles(optFile: CompleteNCClasspath) = optFile.ncjsCode.map {
     _.path
@@ -127,7 +133,7 @@ object JSManagerPlugin extends Plugin with scala.scalajs.sbtplugin.impl.Dependen
 
   def jsManagerSettings = {
     super.settings ++
-      (toJs <<= (fullOptJS in Compile, target, resourceManaged, outputPath) map jsManagerCommand) ++
-      (toHtml <<= (fullOptJS in Compile, target, resourceManaged, outputPath, jsCall) map htmlManagerCommand)
+      (toJs <<= (fullOptJS in Compile, target, outputPath) map jsManagerCommand) ++
+      (toHtml <<= (fullOptJS in Compile, target, outputPath, jsCall) map htmlManagerCommand)
   } ++ scalaJSSettings
 }
