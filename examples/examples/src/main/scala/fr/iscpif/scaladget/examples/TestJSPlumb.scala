@@ -121,9 +121,7 @@ object TestJSPlumb {
 
   @JSExport
   def run() = {
-
-   fr.iscpif.scaladget.jsplumb.FlowChart(new MyWorkflowSettings,Seq("Window2","Window3"))
-    //flow.connect("flowchartWindow1","flowchartWindow2",true)
-    // flow.addPoint("flowchartWindow1")
+   val flow = new FlowChart(new MyWorkflowSettings,Seq("Window2","Window3"))
+     flow.addPoint("Window1")
   }
 }

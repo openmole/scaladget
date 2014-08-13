@@ -20,32 +20,15 @@ package fr.iscpif.scaladget.jsplumb
 import scala.scalajs.js
 import js.Dynamic.{literal => lit}
 
-object FlowChart {
-
-  def apply(settings: WorkflowSettings, tasks: Seq[String]) {
+class FlowChart(settings: WorkflowSettings, tasks: Seq[String]) {
 
     val jsplumb = js.Dynamic.global.jsPlumb
 
+    val plumbInstance = jsplumb.getInstance(
+      settings.defaults
+    )
+
     jsplumb.ready { () =>
-
-      val plumbInstance = jsplumb.getInstance(
-        settings.defaults
-      )
-
-      def init(connection: js.Dynamic) = {
-        connection.getOverlay("label").setLabel(connection.sourceId.substring(15) + "-" + connection.targetId.substring(15))
-        connection.bind("editCompleted", (o: js.Dynamic) => {
-          println("connection edited. Path is now " + o.path)
-        })
-      }
-
-      def addPoint(toId: String) = {
-        val sourceUUID = toId + "RightMiddle"
-        plumbInstance.addEndpoint("flowchart" + toId, settings.sourcePoint, lit(anchor = "RightMiddle", uuid = sourceUUID))
-
-        val targetUUID = toId + "LeftMiddle"
-        plumbInstance.addEndpoint("flowchart" + toId, settings.targetPoint, lit(anchor = "LeftMiddle", uuid = targetUUID))
-      }
 
       plumbInstance.doWhileSuspended(() => {
         tasks.foreach {
@@ -55,35 +38,28 @@ object FlowChart {
           init(conInfo.connection)
         })
 
-      plumbInstance.draggable(jsplumb.getSelector(".flowchart-demo .window"), lit(
-        grid = js.Array(20, 20)
-      ))
+        plumbInstance.draggable(jsplumb.getSelector(".flowchart-demo .window"), lit(
+          grid = js.Array(20, 20)
+        ))
 
       })
 
-      def connect(from: String, to: String, _editable: Boolean) = {
-        plumbInstance.connect(lit(uuids = js.Array(from + "RightMiddle", to + "LeftMiddle"), lit(editable = _editable)))
+      def init(connection: js.Dynamic) = {
+        connection.getOverlay("label").setLabel(connection.sourceId.substring(15) + "-" + connection.targetId.substring(15))
+        connection.bind("editCompleted", (o: js.Dynamic) => {
+          println("connection edited. Path is now " + o.path)
+        })
       }
 
       jsplumb.fire("workfow loaded", plumbInstance)
     }
 
-  }
 
+  def addPoint(toId: String)= {
+        val sourceUUID = toId + "RightMiddle"
+        plumbInstance.addEndpoint("flowchart" + toId, settings.sourcePoint, lit(anchor = "RightMiddle", uuid = sourceUUID))
 
-  /*def connect (from: String, to: String, _editable: Boolean) = {
-  plumbInstance.connect (lit (uuids = js.Array (from + "RightMiddle", to + "LeftMiddle"), lit (editable = _editable) ) )
-  }*/
-
+        val targetUUID = toId + "LeftMiddle"
+        plumbInstance.addEndpoint("flowchart" + toId, settings.targetPoint, lit(anchor = "LeftMiddle", uuid = targetUUID))
+      }
 }
-
-
-/*connections.foreach { con =>
-  connect(con._1.id, con._2.id, true)
-}*/
-
-
-/*val instance = jsplumb.getInstance(
-  settings.defaults
-)*/
-
