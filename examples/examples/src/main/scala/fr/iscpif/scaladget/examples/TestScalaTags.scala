@@ -17,14 +17,12 @@
 package fr.iscpif.scaladget.examples
 
 import org.scalajs.dom
-import org.scalajs.dom.HTMLElement
 import scalatags.JsDom._
 import all._
-import tags2.section
 import rx._
+import fr.iscpif.scaladget.tools.JsRxTags._
 import scala.scalajs.js.annotation.JSExport
 import scala.Some
-import fr.iscpif.scaladget.tools.JsRxTags._
 
 case class Person(firstName: Var[String], name: Var[String])
 

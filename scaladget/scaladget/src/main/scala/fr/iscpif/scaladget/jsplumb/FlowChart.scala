@@ -17,49 +17,83 @@
 
 package fr.iscpif.scaladget.jsplumb
 
+import org.scalajs.dom
+import scalatags.JsDom.all._
+
 import scala.scalajs.js
 import js.Dynamic.{literal => lit}
 
 class FlowChart(settings: WorkflowSettings, tasks: Seq[String]) {
 
-    val jsplumb = js.Dynamic.global.jsPlumb
 
-    val plumbInstance = jsplumb.getInstance(
-      settings.defaults
-    )
+  val mainDiv = div(id := "main").render
 
-    jsplumb.ready { () =>
+  val flowChartDiv = div(
+    `class` := "demo flowchart-demo",
+    id := "flowchart-demo"
+  ).render
 
-      plumbInstance.doWhileSuspended(() => {
-        tasks.foreach {
-          addPoint
-        }
-        plumbInstance.bind("connection", (conInfo: js.Dynamic, _: js.Dynamic) => {
-          init(conInfo.connection)
-        })
+  val (firstWindow, firstWindowId) = {
+    val id = tasks.head
+    val fW = windowDiv(id, "flowchart" + id)
+    flowChartDiv.appendChild(fW)
+    (fW, id)
+  }
 
-        plumbInstance.draggable(jsplumb.getSelector(".flowchart-demo .window"), lit(
-          grid = js.Array(20, 20)
-        ))
+  def windowDiv(ID: String, chartId: String) = div(
+    id := chartId,
+    `class` := "window",
+    strong(ID)
+  ).render
 
+  val jsplumb = js.Dynamic.global.jsPlumb
+
+
+  mainDiv.appendChild(flowChartDiv)
+  dom.document.body.appendChild(mainDiv)
+
+  jsplumb.ready { () =>
+
+  val plumbInstance = jsplumb.getInstance(
+    settings.defaults
+  )
+
+    plumbInstance.doWhileSuspended(() => {
+      tasks.foreach {
+        addPoint
+      }
+      plumbInstance.bind("connection", (conInfo: js.Dynamic, _: js.Dynamic) => {
+        init(conInfo.connection)
       })
 
-      def init(connection: js.Dynamic) = {
-        connection.getOverlay("label").setLabel(connection.sourceId.substring(15) + "-" + connection.targetId.substring(15))
-        connection.bind("editCompleted", (o: js.Dynamic) => {
-          println("connection edited. Path is now " + o.path)
-        })
-      }
+      plumbInstance.draggable(jsplumb.getSelector(".flowchart-demo .window"), lit(
+        grid = js.Array(20, 20)
+      ))
 
-      jsplumb.fire("workfow loaded", plumbInstance)
+    })
+
+    def init(connection: js.Dynamic) = {
+      connection.getOverlay("label").setLabel(connection.sourceId.substring(15) + "-" + connection.targetId.substring(15))
+      connection.bind("editCompleted", (o: js.Dynamic) => {
+        println("connection edited. Path is now " + o.path)
+      })
     }
 
-
-  def addPoint(toId: String)= {
-        val sourceUUID = toId + "RightMiddle"
-        plumbInstance.addEndpoint("flowchart" + toId, settings.sourcePoint, lit(anchor = "RightMiddle", uuid = sourceUUID))
-
-        val targetUUID = toId + "LeftMiddle"
-        plumbInstance.addEndpoint("flowchart" + toId, settings.targetPoint, lit(anchor = "LeftMiddle", uuid = targetUUID))
+    def addPoint(toId: String) = {
+      val chartId = "flowchart" + toId
+      if (toId != firstWindowId) {
+        flowChartDiv.insertBefore(windowDiv(toId, chartId), firstWindow)
       }
+
+      val sourceUUID = toId + "RightMiddle"
+      plumbInstance.addEndpoint(chartId, settings.sourcePoint, lit(anchor = "RightMiddle", uuid = sourceUUID))
+
+      val targetUUID = toId + "LeftMiddle"
+      plumbInstance.addEndpoint(chartId, settings.targetPoint, lit(anchor = "LeftMiddle", uuid = targetUUID))
+    }
+
+    jsplumb.fire("workfow loaded", plumbInstance)
+  }
+
+
 }

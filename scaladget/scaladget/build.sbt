@@ -12,7 +12,6 @@ scalaVersion := "2.11.2"
 
 libraryDependencies ++= Seq("com.github.scala-incubator.io" %% "scala-io-core" % "0.4.3",
         "org.scala-lang.modules.scalajs" %%% "scalajs-dom" % "0.6",
-        "org.scala-lang.modules.scalajs" %%% "scalajs-jquery" % "0.6",
         "com.scalatags" %%% "scalatags" % "0.4.0",
         "com.scalarx" %%% "scalarx" % "0.2.6")
 

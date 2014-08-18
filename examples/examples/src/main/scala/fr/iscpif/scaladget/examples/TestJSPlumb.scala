@@ -22,6 +22,9 @@ import scala.scalajs.js.annotation.JSExport
 import js.Dynamic.{literal => lit}
 import rx._
 import fr.iscpif.scaladget.jsplumb._
+import org.scalajs.dom
+import scalatags.JsDom.all._
+
 
 
 @JSExport
@@ -121,7 +124,31 @@ object TestJSPlumb {
 
   @JSExport
   def run() = {
-   val flow = new FlowChart(new MyWorkflowSettings,Seq("Window2","Window3"))
-     flow.addPoint("Window1")
+    val flow = new FlowChart(new MyWorkflowSettings, Seq("Window2", "Window3"))
+    //flow.addWindow("window1")
+   // flow.addWindow("window4")
+    //flow.addWindow("window5")
   }
+
+/*
+  @JSExport
+  def addWindow(id: String, flow: FlowChart) = {
+    val chartId = "flowchart" + toId
+
+    dom.document.body.appendChild(
+      div(id := "main",
+        div(
+          `class` := "demo flowchart-demo",
+          id := "flowchart-demo",
+          div(
+            id := chartId,
+            `class` := "window",
+            strong("1")).render
+        ).render
+      ).render
+    )
+
+
+    flow.addPoint(id, flow)
+  }*/
 }
