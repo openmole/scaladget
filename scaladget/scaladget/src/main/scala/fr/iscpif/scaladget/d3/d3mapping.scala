@@ -44,12 +44,19 @@ trait Event extends js.Object {
   var y: js.Number = ???
   var keyCode: js.Number = ???
   var altKey: js.Any = ???
+  var ctrlKey: js.Boolean = ???
+  var shiftKey: js.Boolean = ???
   var `type`: js.String = ???
+
+  def stopPropagation: Unit = ???
+
+  def preventDefault: Unit = ???
 }
 
 trait Base extends Selectors {
   var behavior: Behavior.Behavior = ???
-  var event: Event = ???
+
+  def event: Event = ???
 
   def ascending[T](a: T, b: T): js.Number = ???
 
@@ -252,7 +259,7 @@ trait Xhr extends js.Object {
 
   def abort(): Xhr = ???
 
-  var on: js.Function2[js.String, js.Function2[js.Any, js.Number, Any], Xhr] = ???
+  def on: js.Function2[js.String, js.Function2[_ <: js.Any, js.Number, Any], Xhr] = ???
 }
 
 trait Dsv extends js.Object {
@@ -270,7 +277,7 @@ trait Selection extends Selectors {
 
   def attr(name: js.String, value: js.Any): Selection = ???
 
-  def attr(name: js.String, valueFunction: js.Function2[_ <: js.Any, js.Number, js.Any]): Selection = ???
+  def attr(name: js.String, valueFunction: js.Function2[_ <: js.Any, js.Number, _ <: js.Any]): Selection = ???
 
   def attr(attrValueMap: Object): Selection = ???
 
@@ -278,7 +285,7 @@ trait Selection extends Selectors {
 
   def classed(name: js.String, value: js.Any): Selection = ???
 
-  def classed(name: js.String, valueFunction: js.Function2[js.Any, js.Number, Any]): Selection = ???
+  def classed(name: js.String, valueFunction: js.Function2[_ <: js.Any, js.Number, Any]): Selection = ???
 
   def style(name: js.String): js.String = ???
 
@@ -310,38 +317,52 @@ trait Selection extends Selectors {
 
   def html(value: js.Any): Selection = ???
 
-  def html(valueFunction: js.Function2[js.Any, js.Number, Any]): Selection = ???
+  def html(valueFunction: js.Function2[_ <: js.Any, js.Number, Any]): Selection = ???
 
   def append(name: js.String): Selection = ???
 
   def insert(name: js.String, before: js.String): Selection = ???
 
-  def remove: Selection = ???
+  def remove(): Selection = ???
 
   def empty: js.Boolean = ???
 
   def enter(): UpdateSelection = ???
 
-  // def data(values: js.Function2[js.Any, js.Number, js.Array[js.Number]]): UpdateSelection = ???
   def data(values: js.Function2[_ <: js.Any, js.Number, js.Array[_ <: js.Any]]): UpdateSelection = ???
 
-  def data(values: js.Function2[_ <: js.Any, js.Number, js.Array[js.Number]], key: js.Function2[js.Any, js.Number, js.String]): UpdateSelection = ???
+  def data(values: js.Function2[_ <: js.Any, js.Number, js.Array[_ <: js.Any]], key: js.Function2[_ <: js.Any, js.Number, js.String]): UpdateSelection = ???
 
-  def data(): js.Array[js.Any] = ???
+  def data(): js.Array[_ <: js.Any] = ???
+
+  def data[A](values: js.Array[A]): UpdateSelection = ???
+
+  def data[A](values: js.Array[A], key: js.Function2[_ <: js.Any, js.Number, js.String]): UpdateSelection = ???
 
   def datum(values: js.Function2[js.Any, js.Number, Any]): UpdateSelection = ???
 
   def datum(): js.Dynamic = ???
 
-  def filter(filter: js.Function2[js.Any, js.Number, js.Boolean], thisArg: js.Any = ???): UpdateSelection = ???
+  def filter(filter: js.Function2[_ <: js.Any, js.Number, js.Boolean], thisArg: js.Any = ???): UpdateSelection = ???
 
-  def call(callback: js.Function1[Selection, _ <: Any]): Selection = ???
+  def call(callback: js.Function, args: js.Any*): Selection = ???
+
+  def call(f: Layout.Layout): Selection = ???
+
+  def call(f: Svg.Axis): Selection = ???
+
+  // def call(callback: js.Function1[Selection, _ <: Any]): Selection = ???
+  // def call(callback: js.Function0[_<:Any]): Selection = ???
 
   def each(eachFunction: js.Function2[_ <: js.Any, js.Number, _ <: Any]): Selection = ???
 
   def on(`type`: js.String): js.Function2[_ <: js.Any, js.Number, Any] = ???
 
-  def on(`type`: js.String, listener: js.Function2[js.Any, js.Number, Any], capture: js.Boolean = ???): Selection = ???
+  def on(`type`: js.String, listener: js.Function2[_ <: js.Any, js.Number, Any], capture: js.Boolean = ???): Selection = ???
+
+  def on(`type`: js.String, listener: js.Function1[_ <: js.Any, Unit]): Selection = ???
+
+  def on(`type`: js.String, listener: js.Function0[Unit]): Selection = ???
 
   def size(): js.Number = ???
 
@@ -349,8 +370,13 @@ trait Selection extends Selectors {
 
   def sort[T](comparator: js.Function2[T, T, js.Number] = ???): Selection = ???
 
-  var order: js.Function0[Selection] = ???
-  var node: js.Function0[Element] = ???
+  //  var order: js.Function0[Selection] = ???
+  def node: js.Function0[Element] = ???
+
+  //def exit: js.Function0[Selection] = ???
+
+  def exit(): Selection = ???
+
 }
 
 trait EnterSelection extends js.Object {
@@ -370,9 +396,8 @@ trait EnterSelection extends js.Object {
 }
 
 trait UpdateSelection extends Selection {
-  // override def enter(): UpdateSelection = ???
+  //override def enter(): UpdateSelection = ???
   var update: js.Function0[Selection] = ???
-  var exit: js.Function0[Selection] = ???
 }
 
 trait NestKeyValue extends js.Object {
@@ -381,7 +406,7 @@ trait NestKeyValue extends js.Object {
 }
 
 trait Nest extends js.Object {
-  def key(keyFunction: js.Function2[js.Any, js.Number, js.String]): Nest = ???
+  def key(keyFunction: js.Function2[_ <: js.Any, js.Number, js.String]): Nest = ???
 
   def sortKeys(comparator: js.Function2[js.Any, js.Any, js.Number]): Nest = ???
 
@@ -737,7 +762,7 @@ trait ForceLayout extends js.Object {
 
   def tick(): ForceLayout = ???
 
-  def on(`type`: js.String, listener: js.Function0[Any]): ForceLayout = ???
+  def on(`type`: js.String, listener: js.Function0[_ <: Any]): ForceLayout = ???
 
   def drag(): ForceLayout = ???
 }
@@ -1020,9 +1045,9 @@ trait Brush extends js.Object {
 
   def empty(): js.Boolean = ???
 
-  def on(`type`: js.String): js.Function2[js.Any, js.Number, Any] = ???
+  def on(`type`: js.String): js.Function2[_ <: js.Any, js.Number, Any] = ???
 
-  def on(`type`: js.String, listener: js.Function2[js.Any, js.Number, Any], capture: js.Boolean = ???): Brush = ???
+  def on(`type`: js.String, listener: js.Function2[_ <: js.Any, js.Number, Any], capture: js.Boolean = ???): Brush = ???
 }
 
 trait Axis extends js.Object {
@@ -1526,7 +1551,7 @@ trait Behavior extends js.Object {
 trait Zoom extends js.Object {
   def apply(selection: Selection): Unit = ???
 
-  var on: js.Function2[js.String, js.Function2[js.Any, js.Number, Any], Zoom] = ???
+  def on: js.Function2[js.String, js.Function2[_ <: js.Any, js.Number, Any], Zoom] = ???
 
   def scale(): js.Number = ???
 
@@ -1552,11 +1577,11 @@ trait Zoom extends js.Object {
 trait Drag extends js.Object {
   def apply(): js.Dynamic = ???
 
-  var on: js.Function2[js.String, js.Function2[js.Any, js.Number, Any], Drag] = ???
+  def on: js.Function2[js.String, js.Function2[_ <: js.Any, js.Number, Any], Drag] = ???
 
   def origin(): js.Dynamic = ???
 
-  def origin(origin: js.Any = ???): Drag = ???
+  def origin(origin: js.Any): Drag = ???
 }
 
 }

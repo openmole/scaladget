@@ -125,8 +125,8 @@ object TestJSPlumb {
   @JSExport
   def run() = {
     val flow = new FlowChart(new MyWorkflowSettings, Seq("Window2", "Window3"))
-    //flow.addWindow("window1")
-   // flow.addWindow("window4")
+    flow.addWindow("window1")
+    flow.addWindow("window4")
     //flow.addWindow("window5")
   }
 

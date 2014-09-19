@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 28/07/14 mathieu.leclaire@openmole.org
+ * Copyright (C) 12/06/14 Mathieu Leclaire
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,16 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.iscpif.scaladget.jsplumb
+package fr.iscpif.scaladget
 
+import fr.iscpif.scaladget.d3mapping.{Selection, Base}
 import scala.scalajs.js
-import js.Dynamic.{literal => lit}
 
-trait WorkflowSettings {
-  def defaults: js.Dynamic
-  val connectPaintStyle: js.Dynamic = lit()
-  val connectHoverStyle: js.Dynamic = lit()
-  val endPointHoverStyle: js.Dynamic = lit()
-  val sourcePoint: js.Dynamic = lit()
-  val targetPoint: js.Dynamic = lit()
+package object d3 extends js.GlobalScope {
+  val d3: Base = ???
 }
+
