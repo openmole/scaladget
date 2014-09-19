@@ -37,7 +37,7 @@ object JSManagerPlugin extends Plugin with scala.scalajs.sbtplugin.impl.Dependen
   lazy val outputPath = SettingKey[String]("Output path")
   lazy val jsCall = SettingKey[String]("js Function to be called ")
 
-  val jsFiles = Seq()
+  val jsFiles = Seq("d3.v3.min.js")
 
   val cssFiles = Seq()
 
@@ -49,15 +49,14 @@ object JSManagerPlugin extends Plugin with scala.scalajs.sbtplugin.impl.Dependen
   def jsManagerCommand(optFile: CompleteNCClasspath,
                        target: File,
                        outputPath: String): Unit = scalaJSFiles(optFile) match {
-    case Success((p1: File, p2: File)) => jsManagerCommand(target, outputPath, p1, p2)
+    case Success((p1: File)) => jsManagerCommand(target, outputPath, p1)
     case Failure(t: Throwable) => println(t + "\n" + t.getCause.toString)
   }
 
 
   def jsManagerCommand(target: File,
                        outputPath: String,
-                       jsFile1: File,
-                       jsFile2: File): Unit = {
+                       jsFile: File): Unit = {
     val targetFile = if (outputPath.isEmpty) target else new File(outputPath)
     targetFile.mkdirs
 
@@ -66,10 +65,8 @@ object JSManagerPlugin extends Plugin with scala.scalajs.sbtplugin.impl.Dependen
     val cssDir = new java.io.File(targetFile, "css")
     cssDir.mkdirs
 
-    //Copy the scala-js generated files
-    Seq(jsFile1, jsFile2).foreach { f =>
-      IO.copyFile(f, new java.io.File(jsDir, f.getName))
-    }
+    //Copy the scala-js generated file
+    IO.copyFile(jsFile, new java.io.File(jsDir, jsFile.getName))
 
     //Copy the resources js libraries
     jsFiles.foreach { name => Resource.fromInputStream(this.getClass.getClassLoader.getResourceAsStream(name)).copyDataTo(fromFile(new java.io.File(jsDir, name)))}
@@ -88,22 +85,21 @@ object JSManagerPlugin extends Plugin with scala.scalajs.sbtplugin.impl.Dependen
     val out = Resource.fromFile(htmlFile)
 
     scalaJSFiles(optFile) match {
-      case Success((p1: File, p2: File)) =>
+      case Success((p: File)) =>
 
         out write "<html>\n"
         out write "  <head>\n"
         out write "    <meta charset=\"utf-8\">\n"
         cssFiles.foreach { name => out write "      <link rel=\"stylesheet\" href=\"css/" + name + "\"/>\n"}
         jsFiles.foreach { name => out write "      <script type=\"text/javascript\" src=\"js/" + name + "\"></script>\n"}
-        out write "      <script type=\"text/javascript\" src=\"js/" + p1.getName + "\"></script>\n"
-        out write "      <script type=\"text/javascript\" src=\"js/" + p2.getName + "\"></script>\n"
+        out write "      <script type=\"text/javascript\" src=\"js/" + p.getName + "\"></script>\n"
         out write "  </head>\n"
         out write "  <body>\n"
         out write "    <script>" + jsCall + "</script>\n"
         out write "  </body>\n"
         out write "</html>\n"
 
-        jsManagerCommand(target, outputPath, p1, p2)
+        jsManagerCommand(target, outputPath, p)
       case Failure(t: Throwable) => println(t + "\n" + t.getStackTraceString)
     }
   }
@@ -127,7 +123,7 @@ object JSManagerPlugin extends Plugin with scala.scalajs.sbtplugin.impl.Dependen
       val file = new File(path)
       val name = file.getName
       val dir = file.getParent
-      Success((file, new File(dir, name.replace("opt", "fastopt"))))
+      Success(file)
     case _ => Failure(new Throwable("No js file has been generated"))
   }
 
