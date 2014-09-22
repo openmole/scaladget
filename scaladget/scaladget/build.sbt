@@ -1,4 +1,5 @@
 import scala.scalajs.sbtplugin.ScalaJSPlugin._
+import com.typesafe.sbt.pgp.PgpKeys._
 
 scalaJSSettings
 
@@ -6,7 +7,7 @@ organization := "fr.iscpif"
 
 name := "scaladget"
 
-version := "0.2.0-SNAPSHOT"
+version := "0.1.0"
 
 scalaVersion := "2.11.2"
 
@@ -21,4 +22,22 @@ publishTo := {
     Some("snapshots" at nexus + "content/repositories/snapshots")
   else
     Some("releases" at nexus + "service/local/staging/deploy/maven2")
+}
+
+pomIncludeRepository := { _ => false}
+
+licenses := Seq("Affero GPLv3" -> url("http://www.gnu.org/licenses/"))
+
+homepage := Some(url("https://github.com/mathieuleclaire/scaladget"))
+
+scmInfo := Some(ScmInfo(url("https://github.com/mathieuleclaire/scaladget.git"), "scm:git:git@github.com:mathieuleclaire/scaladget.git"))
+
+pomExtra := {
+  <developers>
+    <developer>
+      <id>mathieuleclaire</id>
+      <name>Mathieu Leclaire</name>
+      <url>https://github.com/mathieuleclaire/</url>
+    </developer>
+  </developers>
 }

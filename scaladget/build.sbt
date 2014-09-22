@@ -4,7 +4,7 @@ organization := "fr.iscpif"
 
 name := "scaladget"
 
-//scalaVersion := "2.11.1"
+scalaVersion := "2.11.2"
 
 packagedArtifacts in file(".") := Map.empty
 

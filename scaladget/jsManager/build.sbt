@@ -6,7 +6,7 @@ organization := "fr.iscpif"
 
 name := "jsManager"
 
-version := "0.5.0-SNAPSHOT"
+version := "0.6.0"
 
 scalaVersion := "2.10.4"
 
@@ -14,7 +14,7 @@ sbtPlugin := true
 
 libraryDependencies += "com.github.scala-incubator.io" %% "scala-io-core" % "0.4.3"
 
-addSbtPlugin("org.scala-lang.modules.scalajs" % "scalajs-sbt-plugin" % "0.5.4")
+addSbtPlugin("org.scala-lang.modules.scalajs" % "scalajs-sbt-plugin" % "0.5.5")
 
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
