@@ -1,3 +1,4 @@
+package fr.iscpif.scaladget.mapping
 /*
  * Copyright (C) 12/06/14 Mathieu Leclaire
  *
@@ -14,23 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.iscpif.scaladget
 
+import org.scalajs.jquery.JQuery
 
-
-import fr.iscpif.scaladget.mapping.{Base, Select2Static, Select2Options, BootstrapStatic}
-import scala.scalajs.js
-
-package object d3 extends js.GlobalScope {
-  val d3: Base = ???
+object Utils {
+  implicit def jq2Select2Static(jq:JQuery):Select2Static = jq.asInstanceOf[Select2Static]
+  implicit def jq2BoostrapStatic(jq:JQuery):BootstrapStatic = jq.asInstanceOf[BootstrapStatic]
 }
-
-package object select2 extends js.GlobalScope {
-  val select2: Select2Static = ???
-  val options: Select2Options = ???
-}
-
-package object boostrap extends js.GlobalScope {
-  val boostrap: BootstrapStatic = ???
-}
-
