@@ -12,7 +12,7 @@ scalaVersion := "2.10.4"
 
 sbtPlugin := true
 
-libraryDependencies += "com.github.scala-incubator.io" %% "scala-io-core" % "0.4.3"
+libraryDependencies ++= Seq("com.github.scala-incubator.io" %% "scala-io-core" % "0.4.3")
 
 addSbtPlugin("org.scala-lang.modules.scalajs" % "scalajs-sbt-plugin" % "0.5.5")
 

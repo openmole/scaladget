@@ -7,4 +7,4 @@ Resolver.sonatypeRepo("releases"),
 resolvers += "Typesafe repository" at
   "http://repo.typesafe.com/typesafe/releases/"
 
-addSbtPlugin("fr.iscpif" %% "jsmanager" % "0.3.0-SNAPSHOT")
+addSbtPlugin("fr.iscpif" %% "jsmanager" % "0.7.0-SNAPSHOT")

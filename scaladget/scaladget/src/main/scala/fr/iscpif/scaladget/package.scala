@@ -16,10 +16,17 @@
  */
 package fr.iscpif.scaladget
 
-import fr.iscpif.scaladget.d3mapping.{Selection, Base}
+
+
+import fr.iscpif.scaladget.mapping.{Base, Select2Static, Select2Options}
 import scala.scalajs.js
 
 package object d3 extends js.GlobalScope {
   val d3: Base = ???
+}
+
+package object select2 extends js.GlobalScope {
+  val select2: Select2Static = ???
+  val options: Select2Options = ???
 }
 

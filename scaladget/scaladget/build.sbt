@@ -9,12 +9,13 @@ name := "scaladget"
 
 version := "0.2.0-SNAPSHOT"
 
-scalaVersion := "2.11.2"
+scalaVersion := "2.11.4"
 
 libraryDependencies ++= Seq("com.github.scala-incubator.io" %% "scala-io-core" % "0.4.3",
-        "org.scala-lang.modules.scalajs" %%% "scalajs-dom" % "0.6",
-        "com.scalatags" %%% "scalatags" % "0.4.0",
-        "com.scalarx" %%% "scalarx" % "0.2.6")
+  "org.scala-lang.modules.scalajs" %%% "scalajs-dom" % "0.6",
+  "org.scala-lang.modules.scalajs" %%% "scalajs-jquery" % "0.6",
+  "com.scalatags" %%% "scalatags" % "0.4.2",
+  "com.scalarx" %%% "scalarx" % "0.2.6")
 
 publishTo := {
   val nexus = "https://oss.sonatype.org/"

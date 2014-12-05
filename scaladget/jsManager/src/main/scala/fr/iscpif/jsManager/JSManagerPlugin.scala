@@ -66,7 +66,7 @@ object JSManagerPlugin extends Plugin with scala.scalajs.sbtplugin.impl.Dependen
     cssDir.mkdirs
 
     //Copy the scala-js generated file
-    IO.copyFile(jsFile, new java.io.File(jsDir, jsFile.getName))
+    sbt.IO.copyFile(jsFile, new java.io.File(jsDir, jsFile.getName))
 
     //Copy the resources js libraries
     jsFiles.foreach { name => Resource.fromInputStream(this.getClass.getClassLoader.getResourceAsStream(name)).copyDataTo(fromFile(new java.io.File(jsDir, name)))}

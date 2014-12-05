@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.iscpif.scaladget.d3mapping
+package fr.iscpif.scaladget.mapping
 
 import scala.scalajs.js
 import js.annotation._
 
 import org.scalajs.dom._
 import scala.Range
+
 
 trait Selectors extends js.Object {
   def select(selector: js.String): Selection = ???
