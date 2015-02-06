@@ -24,7 +24,7 @@ import all._
 import rx._
 import rx.core.{Propagator, Obs}
 import org.scalajs.dom
-import org.scalajs.dom.{Element, DOMParser}
+import org.scalajs.dom.raw.{Element, DOMParser}
 import scala.scalajs.js
 
 
@@ -47,7 +47,7 @@ object JsRxTags {
    * the Obs onto the element itself so we have a reference to kill it when
    * the element leaves the DOM (e.g. it gets deleted).
    */
-  implicit def rxMod[T <: dom.HTMLElement](r: Rx[HtmlTag]): Modifier = {
+  implicit def rxMod[T <: dom.raw.HTMLElement](r: Rx[HtmlTag]): Modifier = {
     def rSafe = r.toTry match {
       case Success(v) => v.render
       case Failure(e) => span(e.toString, backgroundColor := "red").render

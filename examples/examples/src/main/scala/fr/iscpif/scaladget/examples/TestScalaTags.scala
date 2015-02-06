@@ -23,8 +23,6 @@ import rx._
 import fr.iscpif.scaladget.tools.JsRxTags._
 import scala.scalajs.js.annotation.JSExport
 import scala.Some
-import scala.scalajs.js.jquery._
-import fr.iscpif.scaladget.select2._
 
 case class Person(firstName: Var[String], name: Var[String])
 
@@ -61,9 +59,6 @@ object TestScalaTags {
     autofocus := true
   ).render
 
-  val autoInput = select2("tags")
-  autoInput.source = List("aa", "bbbb", "ccccc", "z")
-
   val submitButton = button("Save")(
     `class` := "btn btn-primary btn-lg",
     // `type` := "button",
@@ -83,7 +78,8 @@ object TestScalaTags {
 
   @JSExport
   def run() {
-    dom.document.body.appendChild(form(
+    dom.document.body.appendChild(
+      form(
       div(id := "green")(firstNameInput, nameInput),
       div(id := "green")(emailInput, label("une label")),
       div(`class` := "btn-group")(submitButton, simpleButton),
@@ -104,9 +100,9 @@ object TestScalaTags {
             )
           }
         )
-      },
-    autoInput
-    ).render)
+      }
+    ).render
+    )
 
     dom.document.body.appendChild(
       footer(id := "info")(
