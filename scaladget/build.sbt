@@ -8,7 +8,7 @@ organization := "fr.iscpif"
 
 name := "scaladget"
 
-version := "0.4.0"
+version := "0.5.0-SNAPSHOT"
 
 scalaVersion := "2.11.6"
 
