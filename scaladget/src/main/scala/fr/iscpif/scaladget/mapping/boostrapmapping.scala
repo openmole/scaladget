@@ -103,6 +103,7 @@ trait BootstrapStatic extends js.Object {
   def tooltip(command: String): BootstrapStatic = js.native
   def popover(options: PopoverOptions = js.native): BootstrapStatic = js.native
   def popover(command: String): BootstrapStatic = js.native
+  def popover(): BootstrapStatic = js.native
   def alert(): BootstrapStatic = js.native
   def alert(command: String): BootstrapStatic = js.native
   def button(): BootstrapStatic = js.native

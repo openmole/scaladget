@@ -34,16 +34,16 @@ trait Selectors extends js.Object {
 }
 
 trait Event extends js.Object {
-  var dx: Number = js.native
-  var dy: Number = js.native
-  var clientX: Number = js.native
-  var clientY: Number = js.native
-  var translate: js.Array[Number] = js.native
-  var scale: Number = js.native
+  var dx: Double = js.native
+  var dy: Double = js.native
+  var clientX: Double = js.native
+  var clientY: Double = js.native
+  var translate: js.Array[Double] = js.native
+  var scale: Double = js.native
   var sourceEvent: Event = js.native
-  var x: Number = js.native
-  var y: Number = js.native
-  var keyCode: Number = js.native
+  var x: Double = js.native
+  var y: Double = js.native
+  var keyCode: Double = js.native
   var altKey: js.Any = js.native
   var ctrlKey: Boolean = js.native
   var shiftKey: Boolean = js.native
@@ -59,9 +59,9 @@ trait Base extends Selectors {
 
   def event: Event = js.native
 
-  def ascending[T](a: T, b: T): Number = js.native
+  def ascending[T](a: T, b: T): Double = js.native
 
-  def descending[T](a: T, b: T): Number = js.native
+  def descending[T](a: T, b: T): Double = js.native
 
   def min[T, U](arr: js.Array[T], map: js.Function1[T, U]): U = js.native
 
@@ -75,27 +75,27 @@ trait Base extends Selectors {
 
   def extent[T](arr: js.Array[T]): js.Array[T] = js.native
 
-  def sum[T](arr: js.Array[T], map: js.Function1[T, Number]): Number = js.native
+  def sum[T](arr: js.Array[T], map: js.Function1[T, Double]): Double = js.native
 
-  def sum(arr: js.Array[Number]): Number = js.native
+  def sum(arr: js.Array[Double]): Double = js.native
 
-  def mean[T](arr: js.Array[T], map: js.Function1[T, Number]): Number = js.native
+  def mean[T](arr: js.Array[T], map: js.Function1[T, Double]): Double = js.native
 
-  def mean(arr: js.Array[Number]): Number = js.native
+  def mean(arr: js.Array[Double]): Double = js.native
 
-  def median[T](arr: js.Array[T], map: js.Function1[T, Number]): Number = js.native
+  def median[T](arr: js.Array[T], map: js.Function1[T, Double]): Double = js.native
 
-  def median(arr: js.Array[Number]): Number = js.native
+  def median(arr: js.Array[Double]): Double = js.native
 
-  var quantile: js.Function2[js.Array[Number], Number, Number] = js.native
+  var quantile: js.Function2[js.Array[Double], Double, Double] = js.native
 
-  def bisect[T](arr: js.Array[T], x: T, low: Number = js.native, high: Number = js.native): Number = js.native
+  def bisect[T](arr: js.Array[T], x: T, low: Double = js.native, high: Double = js.native): Double = js.native
 
-  def bisectLeft[T](arr: js.Array[T], x: T, low: Number = js.native, high: Number = js.native): Number = js.native
+  def bisectLeft[T](arr: js.Array[T], x: T, low: Double = js.native, high: Double = js.native): Double = js.native
 
-  def bisectRight[T](arr: js.Array[T], x: T, low: Number = js.native, high: Number = js.native): Number = js.native
+  def bisectRight[T](arr: js.Array[T], x: T, low: Double = js.native, high: Double = js.native): Double = js.native
 
-  def bisector(accessor: js.Function2[js.Any, Number, Any]): js.Dynamic = js.native
+  def bisector(accessor: js.Function2[js.Any, Double, Any]): js.Dynamic = js.native
 
   def shuffle[T](arr: js.Array[T]): js.Array[T] = js.native
 
@@ -115,9 +115,9 @@ trait Base extends Selectors {
 
   def merge(map: js.Any*): js.Array[js.Any] = js.native
 
-  def range(stop: Number, step: Number): js.Array[Number] = js.native
+  def range(stop: Double, step: Double): js.Array[Double] = js.native
 
-  def range(start: Number, stop: Number, step: Number): js.Array[Number] = js.native
+  def range(start: Double, stop: Double, step: Double): js.Array[Double] = js.native
 
   def nest(): Nest = js.native
 
@@ -148,7 +148,7 @@ trait Base extends Selectors {
   var time: Time.Time = js.native
   var scale: Scale.ScaleBase = js.native
   var interpolate: Transition.BaseInterpolate = js.native
-  var interpolateNumber: Transition.BaseInterpolate = js.native
+  var interpolateDouble: Transition.BaseInterpolate = js.native
   var interpolateRound: Transition.BaseInterpolate = js.native
   var interpolateString: Transition.BaseInterpolate = js.native
   var interpolateRgb: Transition.BaseInterpolate = js.native
@@ -163,9 +163,9 @@ trait Base extends Selectors {
   var svg: Svg.Svg = js.native
   var random: Random = js.native
 
-  def format(specifier: String): js.Function1[Number, String] = js.native
+  def format(specifier: String): js.Function1[Double, String] = js.native
 
-  def formatPrefix(value: Number, precision: Number = js.native): MetricPrefix = js.native
+  def formatPrefix(value: Double, precision: Double = js.native): MetricPrefix = js.native
 
   var version: String = js.native
 
@@ -174,28 +174,28 @@ trait Base extends Selectors {
   var ns: js.Any = js.native
   var ease: js.Function = js.native
 
-  def rgb(r: Number, g: Number, b: Number): Color.RGBColor = js.native
+  def rgb(r: Double, g: Double, b: Double): Color.RGBColor = js.native
 
   def rgb(color: String): Color.RGBColor = js.native
 
-  def hcl(h: Number, c: Number, l: Number): Color.HCLColor = js.native
+  def hcl(h: Double, c: Double, l: Double): Color.HCLColor = js.native
 
   def hcl(color: String): Color.HCLColor = js.native
 
-  def hsl(h: Number, s: Number, l: Number): Color.HSLColor = js.native
+  def hsl(h: Double, s: Double, l: Double): Color.HSLColor = js.native
 
   def hsl(color: String): Color.HSLColor = js.native
 
-  def lab(l: Number, a: Number, b: Number): Color.LABColor = js.native
+  def lab(l: Double, a: Double, b: Double): Color.LABColor = js.native
 
   def lab(color: String): Color.LABColor = js.native
 
   var geo: Geo.Geo = js.native
   var geom: Geom.Geom = js.native
 
-  def mouse(container: js.Any): js.Array[Number] = js.native
+  def mouse(container: js.Any): js.Array[Double] = js.native
 
-  def touches(container: js.Any): js.Array[js.Array[Number]] = js.native
+  def touches(container: js.Any): js.Array[js.Array[Double]] = js.native
 
   def functor[R, T](value: js.Function1[R, T]): js.Function1[R, T] = js.native
 
@@ -215,7 +215,7 @@ trait Base extends Selectors {
 
   def transition(): Transition.Transition = js.native
 
-  def round(x: Number, n: Number): Number = js.native
+  def round(x: Double, n: Double): Double = js.native
 }
 
 trait Dispatch extends js.Object {
@@ -231,7 +231,7 @@ trait Dispatch extends js.Object {
 }
 
 trait MetricPrefix extends js.Object {
-  var scale: js.Function1[Number, Number] = js.native
+  var scale: js.Function1[Double, Double] = js.native
   var symbol: String = js.native
 }
 
@@ -260,7 +260,7 @@ trait Xhr extends js.Object {
 
   def abort(): Xhr = js.native
 
-  def on: js.Function2[String, js.Function2[_ <: js.Any, Number, Any], Xhr] = js.native
+  def on: js.Function2[String, js.Function2[_ <: js.Any, Double, Any], Xhr] = js.native
 }
 
 trait Dsv extends js.Object {
@@ -268,7 +268,7 @@ trait Dsv extends js.Object {
 
   def parse(string: String): js.Array[js.Any] = js.native
 
-  def parseRows(string: String, accessor: js.Function2[js.Array[js.Any], Number, Any]): js.Dynamic = js.native
+  def parseRows(string: String, accessor: js.Function2[js.Array[js.Any], Double, Any]): js.Dynamic = js.native
 
   def format(rows: js.Array[js.Any]): String = js.native
 }
@@ -278,7 +278,7 @@ trait Selection extends Selectors {
 
   def attr(name: String, value: js.Any): Selection = js.native
 
-  def attr(name: String, valueFunction: js.Function2[_ <: js.Any, Number, _ <: js.Any]): Selection = js.native
+  def attr(name: String, valueFunction: js.Function2[_ <: js.Any, Double, _ <: js.Any]): Selection = js.native
 
   def attr(attrValueMap: Object): Selection = js.native
 
@@ -286,15 +286,15 @@ trait Selection extends Selectors {
 
   def classed(name: String, value: js.Any): Selection = js.native
 
-  def classed(name: String, valueFunction: js.Function2[_ <: js.Any, Number, Any]): Selection = js.native
+  def classed(name: String, valueFunction: js.Function2[_ <: js.Any, Double, Any]): Selection = js.native
 
   def style(name: String): String = js.native
 
   def style(name: String, value: String): Selection = js.native
 
-  def style(name: String, valueFunction: js.Function2[_ <: js.Any, Number, _ <: js.Any]): Selection = js.native
+  def style(name: String, valueFunction: js.Function2[_ <: js.Any, Double, _ <: js.Any]): Selection = js.native
 
-  //  def style(name: String, valueFunction: (js.Any, Number)=> js.Any): Selection = js.native
+  //  def style(name: String, valueFunction: (js.Any, Double)=> js.Any): Selection = js.native
 
   def style(styleValueMap: Object): Selection = js.native
 
@@ -302,7 +302,7 @@ trait Selection extends Selectors {
 
   def property(name: String, value: js.Any): Selection = js.native
 
-  def property(name: String, valueFunction: js.Function2[js.Any, Number, Any]): Selection = js.native
+  def property(name: String, valueFunction: js.Function2[js.Any, Double, Any]): Selection = js.native
 
   def property(propertyValueMap: Object): Selection = js.native
 
@@ -310,15 +310,15 @@ trait Selection extends Selectors {
 
   def text(value: js.Any): Selection = js.native
 
-  def text(value: Number): Selection = js.native
+  def text(value: Double): Selection = js.native
 
-  def text(valueFunction: js.Function2[_ <: js.Any, Number, _ <: Any]): Selection = js.native
+  def text(valueFunction: js.Function2[_ <: js.Any, Double, _ <: Any]): Selection = js.native
 
   def html(): String = js.native
 
   def html(value: js.Any): Selection = js.native
 
-  def html(valueFunction: js.Function2[_ <: js.Any, Number, Any]): Selection = js.native
+  def html(valueFunction: js.Function2[_ <: js.Any, Double, Any]): Selection = js.native
 
   def append(name: String): Selection = js.native
 
@@ -330,21 +330,21 @@ trait Selection extends Selectors {
 
   def enter(): UpdateSelection = js.native
 
-  def data(values: js.Function2[_ <: js.Any, Number, js.Array[_ <: js.Any]]): UpdateSelection = js.native
+  def data(values: js.Function2[_ <: Any, Double, js.Array[_ <: Any]]): UpdateSelection = js.native
 
-  def data(values: js.Function2[_ <: js.Any, Number, js.Array[_ <: js.Any]], key: js.Function2[_ <: js.Any, Number, String]): UpdateSelection = js.native
+  def data(values: js.Function2[_ <: Any, Double, js.Array[_ <: Any]], key: js.Function2[_ <: Any, Double, String]): UpdateSelection = js.native
 
-  def data(): js.Array[_ <: js.Any] = js.native
+  def data(): js.Array[_ <: Any] = js.native
 
   def data[A](values: js.Array[A]): UpdateSelection = js.native
 
-  def data[A](values: js.Array[A], key: js.Function2[_ <: js.Any, Number, String]): UpdateSelection = js.native
+  def data[A](values: js.Array[A], key: js.Function2[_ <: js.Any, Double, String]): UpdateSelection = js.native
 
-  def datum(values: js.Function2[js.Any, Number, Any]): UpdateSelection = js.native
+  def datum(values: js.Function2[js.Any, Double, Any]): UpdateSelection = js.native
 
   def datum(): js.Dynamic = js.native
 
-  def filter(filter: js.Function2[_ <: js.Any, Number, Boolean], thisArg: js.Any = js.native): UpdateSelection = js.native
+  def filter(filter: js.Function2[_ <: js.Any, Double, Boolean], thisArg: js.Any = js.native): UpdateSelection = js.native
 
   def call(callback: js.Function, args: js.Any*): Selection = js.native
 
@@ -355,21 +355,21 @@ trait Selection extends Selectors {
   // def call(callback: js.Function1[Selection, _ <: Any]): Selection = js.native
   // def call(callback: js.Function0[_<:Any]): Selection = js.native
 
-  def each(eachFunction: js.Function2[_ <: js.Any, Number, _ <: Any]): Selection = js.native
+  def each(eachFunction: js.Function2[_ <: js.Any, Double, _ <: Any]): Selection = js.native
 
-  def on(`type`: String): js.Function2[_ <: js.Any, Number, Any] = js.native
+  def on(`type`: String): js.Function2[_ <: js.Any, Double, Any] = js.native
 
-  def on(`type`: String, listener: js.Function2[_ <: js.Any, Number, Any], capture: Boolean = js.native): Selection = js.native
+  def on(`type`: String, listener: js.Function2[_ <: js.Any, Double, Any], capture: Boolean = js.native): Selection = js.native
 
   def on(`type`: String, listener: js.Function1[_ <: js.Any, Unit]): Selection = js.native
 
   def on(`type`: String, listener: js.Function0[Unit]): Selection = js.native
 
-  def size(): Number = js.native
+  def size(): Double = js.native
 
   def transition(): Transition.Transition = js.native
 
-  def sort[T](comparator: js.Function2[T, T, Number] = js.native): Selection = js.native
+  def sort[T](comparator: js.Function2[T, T, Double] = js.native): Selection = js.native
 
   //  var order: js.Function0[Selection] = js.native
   def node: js.Function0[Element] = js.native
@@ -393,7 +393,7 @@ trait EnterSelection extends js.Object {
 
   def call: js.Function1[js.Function1[EnterSelection, Unit], EnterSelection] = js.native
 
-  def size: js.Function0[Number] = js.native
+  def size: js.Function0[Double] = js.native
 }
 
 trait UpdateSelection extends Selection {
@@ -407,13 +407,13 @@ trait NestKeyValue extends js.Object {
 }
 
 trait Nest extends js.Object {
-  def key(keyFunction: js.Function2[_ <: js.Any, Number, String]): Nest = js.native
+  def key(keyFunction: js.Function2[_ <: js.Any, Double, String]): Nest = js.native
 
-  def sortKeys(comparator: js.Function2[js.Any, js.Any, Number]): Nest = js.native
+  def sortKeys(comparator: js.Function2[js.Any, js.Any, Double]): Nest = js.native
 
-  def sortValues(comparator: js.Function2[js.Any, js.Any, Number]): Nest = js.native
+  def sortValues(comparator: js.Function2[js.Any, js.Any, Double]): Nest = js.native
 
-  def rollup(rollupFunction: js.Function2[js.Any, Number, Any]): Nest = js.native
+  def rollup(rollupFunction: js.Function2[js.Any, Double, Any]): Nest = js.native
 
   def map(values: js.Array[js.Any]): js.Dynamic = js.native
 
@@ -451,25 +451,25 @@ trait Set extends js.Object {
 }
 
 trait Random extends js.Object {
-  def normal(mean: Number = js.native, deviation: Number = js.native): js.Function0[Number] = js.native
+  def normal(mean: Double = js.native, deviation: Double = js.native): js.Function0[Double] = js.native
 
-  def logNormal(mean: Number = js.native, deviation: Number = js.native): js.Function0[Number] = js.native
+  def logNormal(mean: Double = js.native, deviation: Double = js.native): js.Function0[Double] = js.native
 
-  def irwinHall(count: Number): js.Function0[Number] = js.native
+  def irwinHall(count: Double): js.Function0[Double] = js.native
 }
 
 package Transition {
 
 trait Transition extends js.Object {
-  def duration(duration: Number): Transition = js.native
+  def duration(duration: Double): Transition = js.native
 
-  def delay(delay: Number): Transition = js.native
+  def delay(delay: Double): Transition = js.native
 
   def attr(name: String): String = js.native
 
   def attr(name: String, value: js.Any): Transition = js.native
 
-  def attr(name: String, valueFunction: js.Function2[js.Any, Number, Any]): Transition = js.native
+  def attr(name: String, valueFunction: js.Function2[js.Any, Double, Any]): Transition = js.native
 
   def attr(attrValueMap: js.Any): Transition = js.native
 
@@ -477,7 +477,7 @@ trait Transition extends js.Object {
 
   def style(name: String, value: js.Any): Transition = js.native
 
-  def style(name: String, valueFunction: js.Function2[js.Any, Number, Any], priority: String): Transition = js.native
+  def style(name: String, valueFunction: js.Function2[js.Any, Double, Any], priority: String): Transition = js.native
 
   def call(callback: js.Function1[_ <: js.Any, Unit]): Transition = js.native
 
@@ -489,13 +489,13 @@ trait Transition extends js.Object {
 
   def selectAll(elements: js.Array[EventTarget]): Transition = js.native
 
-  var each: js.Function2[String, js.Function2[js.Any, Number, Any], Transition] = js.native
+  var each: js.Function2[String, js.Function2[js.Any, Double, Any], Transition] = js.native
   var transition: js.Function0[Transition] = js.native
   var ease: js.Function = js.native
 
-  def attrTween(name: String, tween: js.Function3[js.Any, Number, js.Any, BaseInterpolate]): Transition = js.native
+  def attrTween(name: String, tween: js.Function3[js.Any, Double, js.Any, BaseInterpolate]): Transition = js.native
 
-  def styleTween(name: String, tween: js.Function3[js.Any, Number, js.Any, BaseInterpolate], priority: String = js.native): Transition = js.native
+  def styleTween(name: String, tween: js.Function3[js.Any, Double, js.Any, BaseInterpolate], priority: String = js.native): Transition = js.native
 
   def text(text: String): Transition = js.native
 
@@ -558,7 +558,7 @@ trait Time extends js.Object {
 }
 
 trait Range extends js.Object {
-  def apply(start: Date, end: Date, step: Number = js.native): js.Array[Date] = js.native
+  def apply(start: Date, end: Date, step: Double = js.native): js.Array[Date] = js.native
 }
 
 trait Interval extends js.Object {
@@ -568,7 +568,7 @@ trait Interval extends js.Object {
   var round: js.Function1[Date, Date] = js.native
   var ceil: js.Function1[Date, Date] = js.native
   var range: Range = js.native
-  var offset: js.Function2[Date, Number, Date] = js.native
+  var offset: js.Function2[Date, Double, Date] = js.native
   var utc: Interval = js.native
 }
 
@@ -609,7 +609,7 @@ trait Layout extends js.Object {
 }
 
 trait StackLayout extends js.Object {
-  def apply[T](layers: js.Array[T], index: Number = js.native): js.Array[T] = js.native
+  def apply[T](layers: js.Array[T], index: Double = js.native): js.Array[T] = js.native
 
   def values(accessor: js.Function1[js.Any, Any] = js.native): StackLayout = js.native
 
@@ -617,9 +617,9 @@ trait StackLayout extends js.Object {
 }
 
 trait TreeLayout extends js.Object {
-  def sort(): js.Function2[js.Any, js.Any, Number] = js.native
+  def sort(): js.Function2[js.Any, js.Any, Double] = js.native
 
-  def sort(comparator: js.Function2[js.Any, js.Any, Number]): TreeLayout = js.native
+  def sort(comparator: js.Function2[js.Any, js.Any, Double]): TreeLayout = js.native
 
   def children(): js.Function1[js.Any, Any] = js.native
 
@@ -629,66 +629,66 @@ trait TreeLayout extends js.Object {
 
   def links(nodes: js.Array[GraphNode]): js.Array[GraphLink] = js.native
 
-  def seperation(): js.Function2[GraphNode, GraphNode, Number] = js.native
+  def seperation(): js.Function2[GraphNode, GraphNode, Double] = js.native
 
-  def seperation(seperation: js.Function2[GraphNode, GraphNode, Number]): TreeLayout = js.native
+  def seperation(seperation: js.Function2[GraphNode, GraphNode, Double]): TreeLayout = js.native
 
-  def size(): js.Array[Number] = js.native
+  def size(): js.Array[Double] = js.native
 
-  def size(size: js.Array[Number]): TreeLayout = js.native
+  def size(size: js.Array[Double]): TreeLayout = js.native
 }
 
 trait PieLayout extends js.Object {
-  def apply(values: js.Array[js.Any], index: Number = js.native): js.Array[ArcDescriptor] = js.native
+  def apply(values: js.Array[js.Any], index: Double = js.native): js.Array[ArcDescriptor] = js.native
 
-  def value(): js.Function2[js.Any, Number, Number] = js.native
+  def value(): js.Function2[js.Any, Double, Double] = js.native
 
-  def value(accessor: js.Function2[js.Any, Number, Number]): PieLayout = js.native
+  def value(accessor: js.Function2[js.Any, Double, Double]): PieLayout = js.native
 
-  def sort(): js.Function2[js.Any, js.Any, Number] = js.native
+  def sort(): js.Function2[js.Any, js.Any, Double] = js.native
 
-  def sort(comparator: js.Function2[js.Any, js.Any, Number]): PieLayout = js.native
+  def sort(comparator: js.Function2[js.Any, js.Any, Double]): PieLayout = js.native
 
-  def startAngle(): Number = js.native
+  def startAngle(): Double = js.native
 
-  def startAngle(angle: Number): PieLayout = js.native
+  def startAngle(angle: Double): PieLayout = js.native
 
-  def endAngle(): Number = js.native
+  def endAngle(): Double = js.native
 
-  def endAngle(angle: Number): PieLayout = js.native
+  def endAngle(angle: Double): PieLayout = js.native
 }
 
 trait ArcDescriptor extends js.Object {
   var value: js.Any = js.native
   var data: js.Any = js.native
-  var startAngle: Number = js.native
-  var endAngle: Number = js.native
-  var index: Number = js.native
+  var startAngle: Double = js.native
+  var endAngle: Double = js.native
+  var index: Double = js.native
 }
 
 trait GraphNode extends js.Object with Geom.Point {
-  var id: Number = js.native
-  var index: Number = js.native
+  var id: Double = js.native
+  var index: Double = js.native
   var name: String = js.native
-  var px: Number = js.native
-  var py: Number = js.native
-  var size: Number = js.native
-  var weight: Number = js.native
-  var cx: Number = js.native
-  var cy: Number = js.native
-  var subindex: Number = js.native
-  var startAngle: Number = js.native
-  var endAngle: Number = js.native
-  var value: Number = js.native
+  var px: Double = js.native
+  var py: Double = js.native
+  var size: Double = js.native
+  var weight: Double = js.native
+  var cx: Double = js.native
+  var cy: Double = js.native
+  var subindex: Double = js.native
+  var startAngle: Double = js.native
+  var endAngle: Double = js.native
+  var value: Double = js.native
   var fixed: Boolean = js.native
   var children: js.Array[GraphNode] = js.native
   var _children: js.Array[GraphNode] = js.native
   var parent: GraphNode = js.native
-  var depth: Number = js.native
+  var depth: Double = js.native
 
-  //def width: Number = js.native
-  //def height: Number = js.native
-  def group: Number = js.native
+  //def width: Double = js.native
+  //def height: Double = js.native
+  def group: Double = js.native
 }
 
 trait GraphLink extends js.Object {
@@ -699,53 +699,53 @@ trait GraphLink extends js.Object {
 trait ForceLayout extends js.Object {
   def apply(): ForceLayout = js.native
 
-  def size(): Number = js.native
+  def size(): Double = js.native
 
-  def size(mysize: js.Array[Number]): ForceLayout = js.native
+  def size(mysize: js.Array[Double]): ForceLayout = js.native
 
-  def size(accessor: js.Function2[js.Any, Number, js.Any]): ForceLayout = js.native
+  def size(accessor: js.Function2[js.Any, Double, js.Any]): ForceLayout = js.native
 
-  def linkDistance(): Number = js.native
+  def linkDistance(): Double = js.native
 
-  def linkDistance(number: Number): ForceLayout = js.native
+  def linkDistance(number: Double): ForceLayout = js.native
 
-  def linkDistance(accessor: js.Function2[js.Any, Number, Number]): ForceLayout = js.native
+  def linkDistance(accessor: js.Function2[js.Any, Double, Double]): ForceLayout = js.native
 
-  def linkStrength(): Number = js.native
+  def linkStrength(): Double = js.native
 
-  def linkStrength(number: Number): ForceLayout = js.native
+  def linkStrength(number: Double): ForceLayout = js.native
 
-  def linkStrength(accessor: js.Function2[js.Any, Number, Number]): ForceLayout = js.native
+  def linkStrength(accessor: js.Function2[js.Any, Double, Double]): ForceLayout = js.native
 
-  def friction(): Number = js.native
+  def friction(): Double = js.native
 
-  def friction(number: Number): ForceLayout = js.native
+  def friction(number: Double): ForceLayout = js.native
 
-  def friction(accessor: js.Function2[js.Any, Number, Number]): ForceLayout = js.native
+  def friction(accessor: js.Function2[js.Any, Double, Double]): ForceLayout = js.native
 
-  def alpha(): Number = js.native
+  def alpha(): Double = js.native
 
-  def alpha(number: Number): ForceLayout = js.native
+  def alpha(number: Double): ForceLayout = js.native
 
-  def alpha(accessor: js.Function2[js.Any, Number, Number]): ForceLayout = js.native
+  def alpha(accessor: js.Function2[js.Any, Double, Double]): ForceLayout = js.native
 
-  def charge(): Number = js.native
+  def charge(): Double = js.native
 
-  def charge(number: Number): ForceLayout = js.native
+  def charge(number: Double): ForceLayout = js.native
 
-  def charge(accessor: js.Function2[js.Any, Number, Number]): ForceLayout = js.native
+  def charge(accessor: js.Function2[js.Any, Double, Double]): ForceLayout = js.native
 
-  def theta(): Number = js.native
+  def theta(): Double = js.native
 
-  def theta(number: Number): ForceLayout = js.native
+  def theta(number: Double): ForceLayout = js.native
 
-  def theta(accessor: js.Function2[js.Any, Number, Number]): ForceLayout = js.native
+  def theta(accessor: js.Function2[js.Any, Double, Double]): ForceLayout = js.native
 
-  def gravity(): Number = js.native
+  def gravity(): Double = js.native
 
-  def gravity(number: Number): ForceLayout = js.native
+  def gravity(number: Double): ForceLayout = js.native
 
-  def gravity(accessor: js.Function2[js.Any, Number, Number]): ForceLayout = js.native
+  def gravity(accessor: js.Function2[js.Any, Double, Double]): ForceLayout = js.native
 
   def links(): js.Array[GraphLink] = js.native
 
@@ -773,25 +773,25 @@ trait BundleLayout extends js.Object {
 }
 
 trait ChordLayout extends js.Object {
-  def matrix(): js.Array[js.Array[Number]] = js.native
+  def matrix(): js.Array[js.Array[Double]] = js.native
 
-  def matrix(matrix: js.Array[js.Array[Number]]): ChordLayout = js.native
+  def matrix(matrix: js.Array[js.Array[Double]]): ChordLayout = js.native
 
-  def padding(): Number = js.native
+  def padding(): Double = js.native
 
-  def padding(padding: Number): ChordLayout = js.native
+  def padding(padding: Double): ChordLayout = js.native
 
-  def sortGroups(): js.Function2[Number, Number, Number] = js.native
+  def sortGroups(): js.Function2[Double, Double, Double] = js.native
 
-  def sortGroups(comparator: js.Function2[Number, Number, Number]): ChordLayout = js.native
+  def sortGroups(comparator: js.Function2[Double, Double, Double]): ChordLayout = js.native
 
-  def sortSubgroups(): js.Function2[Number, Number, Number] = js.native
+  def sortSubgroups(): js.Function2[Double, Double, Double] = js.native
 
-  def sortSubgroups(comparator: js.Function2[Number, Number, Number]): ChordLayout = js.native
+  def sortSubgroups(comparator: js.Function2[Double, Double, Double]): ChordLayout = js.native
 
-  def sortChords(): js.Function2[Number, Number, Number] = js.native
+  def sortChords(): js.Function2[Double, Double, Double] = js.native
 
-  def sortChords(comparator: js.Function2[Number, Number, Number]): ChordLayout = js.native
+  def sortChords(comparator: js.Function2[Double, Double, Double]): ChordLayout = js.native
 
   def chords(): js.Array[GraphLink] = js.native
 
@@ -799,71 +799,71 @@ trait ChordLayout extends js.Object {
 }
 
 trait ClusterLayout extends js.Object {
-  def sort(): js.Function2[GraphNode, GraphNode, Number] = js.native
+  def sort(): js.Function2[GraphNode, GraphNode, Double] = js.native
 
-  def sort(comparator: js.Function2[GraphNode, GraphNode, Number]): ClusterLayout = js.native
+  def sort(comparator: js.Function2[GraphNode, GraphNode, Double]): ClusterLayout = js.native
 
-  def children(): js.Function2[js.Any, Number, js.Array[GraphNode]] = js.native
+  def children(): js.Function2[js.Any, Double, js.Array[GraphNode]] = js.native
 
-  def children(children: js.Function2[js.Any, Number, js.Array[GraphNode]]): ClusterLayout = js.native
+  def children(children: js.Function2[js.Any, Double, js.Array[GraphNode]]): ClusterLayout = js.native
 
   def nodes(root: GraphNode): js.Array[GraphNode] = js.native
 
   def links(nodes: js.Array[GraphNode]): js.Array[GraphLink] = js.native
 
-  def seperation(): js.Function2[GraphNode, GraphNode, Number] = js.native
+  def seperation(): js.Function2[GraphNode, GraphNode, Double] = js.native
 
-  def seperation(seperation: js.Function2[GraphNode, GraphNode, Number]): ClusterLayout = js.native
+  def seperation(seperation: js.Function2[GraphNode, GraphNode, Double]): ClusterLayout = js.native
 
-  def size(): js.Array[Number] = js.native
+  def size(): js.Array[Double] = js.native
 
-  def size(size: js.Array[Number]): ClusterLayout = js.native
+  def size(size: js.Array[Double]): ClusterLayout = js.native
 
-  def value(): js.Function1[GraphNode, Number] = js.native
+  def value(): js.Function1[GraphNode, Double] = js.native
 
-  def value(value: js.Function1[GraphNode, Number]): ClusterLayout = js.native
+  def value(value: js.Function1[GraphNode, Double]): ClusterLayout = js.native
 }
 
 trait HierarchyLayout extends js.Object {
-  def sort(): js.Function2[GraphNode, GraphNode, Number] = js.native
+  def sort(): js.Function2[GraphNode, GraphNode, Double] = js.native
 
-  def sort(comparator: js.Function2[GraphNode, GraphNode, Number]): HierarchyLayout = js.native
+  def sort(comparator: js.Function2[GraphNode, GraphNode, Double]): HierarchyLayout = js.native
 
-  def children(): js.Function2[js.Any, Number, js.Array[GraphNode]] = js.native
+  def children(): js.Function2[js.Any, Double, js.Array[GraphNode]] = js.native
 
-  def children(children: js.Function2[js.Any, Number, js.Array[GraphNode]]): HierarchyLayout = js.native
+  def children(children: js.Function2[js.Any, Double, js.Array[GraphNode]]): HierarchyLayout = js.native
 
   def nodes(root: GraphNode): js.Array[GraphNode] = js.native
 
   def links(nodes: js.Array[GraphNode]): js.Array[GraphLink] = js.native
 
-  def value(): js.Function1[GraphNode, Number] = js.native
+  def value(): js.Function1[GraphNode, Double] = js.native
 
-  def value(value: js.Function1[GraphNode, Number]): HierarchyLayout = js.native
+  def value(value: js.Function1[GraphNode, Double]): HierarchyLayout = js.native
 
   def reValue(root: GraphNode): HierarchyLayout = js.native
 }
 
 trait Bin extends js.Array[js.Any] {
-  var x: Number = js.native
-  var dx: Number = js.native
-  var y: Number = js.native
+  var x: Double = js.native
+  var dx: Double = js.native
+  var y: Double = js.native
 }
 
 trait HistogramLayout extends js.Object {
-  def apply(values: js.Array[js.Any], index: Number = js.native): js.Array[Bin] = js.native
+  def apply(values: js.Array[js.Any], index: Double = js.native): js.Array[Bin] = js.native
 
   def value(): js.Function1[js.Any, Any] = js.native
 
   def value(accessor: js.Function1[js.Any, Any]): HistogramLayout = js.native
 
-  def range(): js.Function2[js.Any, Number, js.Array[Number]] = js.native
+  def range(): js.Function2[js.Any, Double, js.Array[Double]] = js.native
 
-  def range(range: js.Function2[js.Any, Number, js.Array[Number]]): HistogramLayout = js.native
+  def range(range: js.Function2[js.Any, Double, js.Array[Double]]): HistogramLayout = js.native
 
-  def bins(): js.Function2[js.Array[js.Any], Number, js.Array[Number]] = js.native
+  def bins(): js.Function2[js.Array[js.Any], Double, js.Array[Double]] = js.native
 
-  def bins(bins: js.Function2[js.Array[js.Any], Number, js.Array[Number]]): HistogramLayout = js.native
+  def bins(bins: js.Function2[js.Array[js.Any], Double, js.Array[Double]]): HistogramLayout = js.native
 
   def frequency(): Boolean = js.native
 
@@ -871,77 +871,77 @@ trait HistogramLayout extends js.Object {
 }
 
 trait PackLayout extends js.Object {
-  def sort(): js.Function2[GraphNode, GraphNode, Number] = js.native
+  def sort(): js.Function2[GraphNode, GraphNode, Double] = js.native
 
-  def sort(comparator: js.Function2[GraphNode, GraphNode, Number]): PackLayout = js.native
+  def sort(comparator: js.Function2[GraphNode, GraphNode, Double]): PackLayout = js.native
 
-  def children(): js.Function2[js.Any, Number, js.Array[GraphNode]] = js.native
+  def children(): js.Function2[js.Any, Double, js.Array[GraphNode]] = js.native
 
-  def children(children: js.Function2[js.Any, Number, js.Array[GraphNode]]): PackLayout = js.native
+  def children(children: js.Function2[js.Any, Double, js.Array[GraphNode]]): PackLayout = js.native
 
   def nodes(root: GraphNode): js.Array[GraphNode] = js.native
 
   def links(nodes: js.Array[GraphNode]): js.Array[GraphLink] = js.native
 
-  def value(): js.Function1[GraphNode, Number] = js.native
+  def value(): js.Function1[GraphNode, Double] = js.native
 
-  def value(value: js.Function1[GraphNode, Number]): PackLayout = js.native
+  def value(value: js.Function1[GraphNode, Double]): PackLayout = js.native
 
-  def size(): js.Array[Number] = js.native
+  def size(): js.Array[Double] = js.native
 
-  def size(size: js.Array[Number]): PackLayout = js.native
+  def size(size: js.Array[Double]): PackLayout = js.native
 
-  def padding(): Number = js.native
+  def padding(): Double = js.native
 
-  def padding(padding: Number): PackLayout = js.native
+  def padding(padding: Double): PackLayout = js.native
 }
 
 trait PartitionLayout extends js.Object {
-  def sort(): js.Function2[GraphNode, GraphNode, Number] = js.native
+  def sort(): js.Function2[GraphNode, GraphNode, Double] = js.native
 
-  def sort(comparator: js.Function2[GraphNode, GraphNode, Number]): PackLayout = js.native
+  def sort(comparator: js.Function2[GraphNode, GraphNode, Double]): PackLayout = js.native
 
-  def children(): js.Function2[js.Any, Number, js.Array[GraphNode]] = js.native
+  def children(): js.Function2[js.Any, Double, js.Array[GraphNode]] = js.native
 
-  def children(children: js.Function2[js.Any, Number, js.Array[GraphNode]]): PackLayout = js.native
+  def children(children: js.Function2[js.Any, Double, js.Array[GraphNode]]): PackLayout = js.native
 
   def nodes(root: GraphNode): js.Array[GraphNode] = js.native
 
   def links(nodes: js.Array[GraphNode]): js.Array[GraphLink] = js.native
 
-  def value(): js.Function1[GraphNode, Number] = js.native
+  def value(): js.Function1[GraphNode, Double] = js.native
 
-  def value(value: js.Function1[GraphNode, Number]): PackLayout = js.native
+  def value(value: js.Function1[GraphNode, Double]): PackLayout = js.native
 
-  def size(): js.Array[Number] = js.native
+  def size(): js.Array[Double] = js.native
 
-  def size(size: js.Array[Number]): PackLayout = js.native
+  def size(size: js.Array[Double]): PackLayout = js.native
 }
 
 trait TreeMapLayout extends js.Object {
-  def sort(): js.Function2[GraphNode, GraphNode, Number] = js.native
+  def sort(): js.Function2[GraphNode, GraphNode, Double] = js.native
 
-  def sort(comparator: js.Function2[GraphNode, GraphNode, Number]): TreeMapLayout = js.native
+  def sort(comparator: js.Function2[GraphNode, GraphNode, Double]): TreeMapLayout = js.native
 
-  def children(): js.Function2[js.Any, Number, js.Array[GraphNode]] = js.native
+  def children(): js.Function2[js.Any, Double, js.Array[GraphNode]] = js.native
 
-  def children(children: js.Function2[js.Any, Number, js.Array[GraphNode]]): TreeMapLayout = js.native
+  def children(children: js.Function2[js.Any, Double, js.Array[GraphNode]]): TreeMapLayout = js.native
 
   def nodes(root: GraphNode): js.Array[GraphNode] = js.native
 
   def links(nodes: js.Array[GraphNode]): js.Array[GraphLink] = js.native
 
-  def value(): js.Function1[GraphNode, Number] = js.native
+  def value(): js.Function1[GraphNode, Double] = js.native
 
-  def value(value: js.Function1[GraphNode, Number]): TreeMapLayout = js.native
+  def value(value: js.Function1[GraphNode, Double]): TreeMapLayout = js.native
 
-  def size(): js.Array[Number] = js.native
+  def size(): js.Array[Double] = js.native
 
-  def size(size: js.Array[Number]): TreeMapLayout = js.native
+  def size(size: js.Array[Double]): TreeMapLayout = js.native
 
-  def padding(): Number = js.native
+  def padding(): Double = js.native
 
-  def padding(padding: Number): TreeMapLayout = js.native
+  def padding(padding: Double): TreeMapLayout = js.native
 
   def round(): Boolean = js.native
 
@@ -961,41 +961,41 @@ trait TreeMapLayout extends js.Object {
 package Color {
 
 trait Color extends js.Object {
-  def brighter(k: Number): Color = js.native
+  def brighter(k: Double): Color = js.native
 
-  def darker(k: Number): Color = js.native
+  def darker(k: Double): Color = js.native
 
   override def toString(): String = js.native
 }
 
 trait RGBColor extends Color {
-  var r: Number = js.native
-  var g: Number = js.native
-  var b: Number = js.native
+  var r: Double = js.native
+  var g: Double = js.native
+  var b: Double = js.native
 
   def hsl(): HSLColor = js.native
 }
 
 trait HSLColor extends Color {
-  var h: Number = js.native
-  var s: Number = js.native
-  var l: Number = js.native
+  var h: Double = js.native
+  var s: Double = js.native
+  var l: Double = js.native
 
   def rgb(): RGBColor = js.native
 }
 
 trait LABColor extends Color {
-  var l: Number = js.native
-  var a: Number = js.native
-  var b: Number = js.native
+  var l: Double = js.native
+  var a: Double = js.native
+  var b: Double = js.native
 
   def rgb(): RGBColor = js.native
 }
 
 trait HCLColor extends Color {
-  var h: Number = js.native
-  var c: Number = js.native
-  var l: Number = js.native
+  var h: Double = js.native
+  var c: Double = js.native
+  var l: Double = js.native
 
   def rgb(): RGBColor = js.native
 }
@@ -1024,7 +1024,7 @@ trait Svg extends js.Object {
 
 trait Symbol extends js.Object {
   var `type`: js.Function1[String, Symbol] = js.native
-  var size: js.Function1[Number, Symbol] = js.native
+  var size: js.Function1[Double, Symbol] = js.native
 }
 
 trait Brush extends js.Object {
@@ -1046,9 +1046,9 @@ trait Brush extends js.Object {
 
   def empty(): Boolean = js.native
 
-  def on(`type`: String): js.Function2[_ <: js.Any, Number, Any] = js.native
+  def on(`type`: String): js.Function2[_ <: js.Any, Double, Any] = js.native
 
-  def on(`type`: String, listener: js.Function2[_ <: js.Any, Number, Any], capture: Boolean = js.native): Brush = js.native
+  def on(`type`: String, listener: js.Function2[_ <: js.Any, Double, Any], capture: Boolean = js.native): Brush = js.native
 }
 
 trait Axis extends js.Object {
@@ -1066,153 +1066,153 @@ trait Axis extends js.Object {
 
   def ticks(arguments: js.Any*): Axis = js.native
 
-  def tickPadding(): Number = js.native
+  def tickPadding(): Double = js.native
 
-  def tickPadding(padding: Number): Axis = js.native
+  def tickPadding(padding: Double): Axis = js.native
 
   def tickValues(): js.Array[js.Any] = js.native
 
   def tickValues(values: js.Array[js.Any]): Axis = js.native
 
-  def tickSubdivide(count: Number): Axis = js.native
+  def tickSubdivide(count: Double): Axis = js.native
 
-  def tickSize(major: Number = js.native, minor: Number = js.native, end: Number = js.native): Axis = js.native
+  def tickSize(major: Double = js.native, minor: Double = js.native, end: Double = js.native): Axis = js.native
 
   def tickFormat(formatter: js.Function1[js.Any, String]): Axis = js.native
 }
 
 trait Arc extends js.Object {
-  def apply(data: js.Any, index: Number = js.native): String = js.native
+  def apply(data: js.Any, index: Double = js.native): String = js.native
 
-  def innerRadius(): js.Function2[js.Any, Number, Number] = js.native
+  def innerRadius(): js.Function2[js.Any, Double, Double] = js.native
 
-  def innerRadius(radius: Number): Arc = js.native
+  def innerRadius(radius: Double): Arc = js.native
 
-  def outerRadius(): js.Function2[js.Any, Number, Number] = js.native
+  def outerRadius(): js.Function2[js.Any, Double, Double] = js.native
 
-  def outerRadius(radius: Number): Arc = js.native
+  def outerRadius(radius: Double): Arc = js.native
 
-  def startAngle(): js.Function2[js.Any, Number, Number] = js.native
+  def startAngle(): js.Function2[js.Any, Double, Double] = js.native
 
-  def startAngle(angle: Number): Arc = js.native
+  def startAngle(angle: Double): Arc = js.native
 
-  def endAngle(): js.Function2[js.Any, Number, Number] = js.native
+  def endAngle(): js.Function2[js.Any, Double, Double] = js.native
 
-  def endAngle(angle: Number): Arc = js.native
+  def endAngle(angle: Double): Arc = js.native
 
-  def centroid(data: js.Any, index: Number = js.native): js.Array[Number] = js.native
+  def centroid(data: js.Any, index: Double = js.native): js.Array[Double] = js.native
 }
 
 trait Line extends js.Object {
-  def apply(data: js.Array[js.Any], index: Number = js.native): String = js.native
+  def apply(data: js.Array[js.Any], index: Double = js.native): String = js.native
 
-  def x(): js.Function2[js.Any, Number, Number] = js.native
+  def x(): js.Function2[js.Any, Double, Double] = js.native
 
-  def x(accessor: js.Function1[js.Any, Number]): Line = js.native
+  def x(accessor: js.Function1[js.Any, Double]): Line = js.native
 
-  def x(cnst: Number): Line = js.native
+  def x(cnst: Double): Line = js.native
 
-  def y(): js.Function2[js.Any, Number, Number] = js.native
+  def y(): js.Function2[js.Any, Double, Double] = js.native
 
-  def y(accessor: js.Function1[js.Any, Number]): Line = js.native
+  def y(accessor: js.Function1[js.Any, Double]): Line = js.native
 
-  def y(cnst: Number): Line = js.native
+  def y(cnst: Double): Line = js.native
 
   def interpolate(): String = js.native
 
   def interpolate(interpolate: String): Line = js.native
 
-  def tension(): Number = js.native
+  def tension(): Double = js.native
 
-  def tension(tension: Number): Line = js.native
+  def tension(tension: Double): Line = js.native
 
-  def defined(): js.Function2[js.Any, Number, Boolean] = js.native
+  def defined(): js.Function2[js.Any, Double, Boolean] = js.native
 
   def defined(defined: js.Function1[js.Any, Boolean]): Line = js.native
 }
 
 trait LineRadial extends js.Object {
-  def apply(data: js.Array[js.Any], index: Number = js.native): String = js.native
+  def apply(data: js.Array[js.Any], index: Double = js.native): String = js.native
 
-  def x(): js.Function2[js.Any, Number, Number] = js.native
+  def x(): js.Function2[js.Any, Double, Double] = js.native
 
-  def x(accessor: js.Function1[js.Any, Number]): LineRadial = js.native
+  def x(accessor: js.Function1[js.Any, Double]): LineRadial = js.native
 
-  def x(cnst: Number): LineRadial = js.native
+  def x(cnst: Double): LineRadial = js.native
 
-  def y(): js.Function2[js.Any, Number, Number] = js.native
+  def y(): js.Function2[js.Any, Double, Double] = js.native
 
-  def y(accessor: js.Function1[js.Any, Number]): LineRadial = js.native
+  def y(accessor: js.Function1[js.Any, Double]): LineRadial = js.native
 
-  def y(cnst: Number): LineRadial = js.native
+  def y(cnst: Double): LineRadial = js.native
 
   def interpolate(): String = js.native
 
   def interpolate(interpolate: String): LineRadial = js.native
 
-  def tension(): Number = js.native
+  def tension(): Double = js.native
 
-  def tension(tension: Number): LineRadial = js.native
+  def tension(tension: Double): LineRadial = js.native
 
   def defined(): js.Function1[js.Any, Any] = js.native
 
   def defined(defined: js.Function1[js.Any, Any]): LineRadial = js.native
 
-  def radius(): js.Function2[js.Any, Number, Number] = js.native
+  def radius(): js.Function2[js.Any, Double, Double] = js.native
 
-  def radius(radius: Number): LineRadial = js.native
+  def radius(radius: Double): LineRadial = js.native
 
-  def angle(): js.Function2[js.Any, js.Any, Number] = js.native
+  def angle(): js.Function2[js.Any, js.Any, Double] = js.native
 
-  def angle(angle: Number): LineRadial = js.native
+  def angle(angle: Double): LineRadial = js.native
 }
 
 trait Area extends js.Object {
-  def apply(data: js.Array[js.Any], index: Number = js.native): String = js.native
+  def apply(data: js.Array[js.Any], index: Double = js.native): String = js.native
 
-  def x(): js.Function2[js.Any, Number, Number] = js.native
+  def x(): js.Function2[js.Any, Double, Double] = js.native
 
-  def x(accessor: js.Function1[js.Any, Number]): Area = js.native
+  def x(accessor: js.Function1[js.Any, Double]): Area = js.native
 
-  def x(cnst: Number): Area = js.native
+  def x(cnst: Double): Area = js.native
 
-  def x0(): js.Function2[js.Any, Number, Number] = js.native
+  def x0(): js.Function2[js.Any, Double, Double] = js.native
 
-  def x0(accessor: js.Function1[js.Any, Number]): Area = js.native
+  def x0(accessor: js.Function1[js.Any, Double]): Area = js.native
 
-  def x0(cnst: Number): Area = js.native
+  def x0(cnst: Double): Area = js.native
 
-  def x1(): js.Function2[js.Any, Number, Number] = js.native
+  def x1(): js.Function2[js.Any, Double, Double] = js.native
 
-  def x1(accessor: js.Function1[js.Any, Number]): Area = js.native
+  def x1(accessor: js.Function1[js.Any, Double]): Area = js.native
 
-  def x1(cnst: Number): Area = js.native
+  def x1(cnst: Double): Area = js.native
 
-  def y(): js.Function2[js.Any, Number, Number] = js.native
+  def y(): js.Function2[js.Any, Double, Double] = js.native
 
-  def y(accessor: js.Function1[js.Any, Number]): Area = js.native
+  def y(accessor: js.Function1[js.Any, Double]): Area = js.native
 
-  def y(cnst: Number): Area = js.native
+  def y(cnst: Double): Area = js.native
 
-  def y0(): js.Function2[js.Any, Number, Number] = js.native
+  def y0(): js.Function2[js.Any, Double, Double] = js.native
 
-  def y0(accessor: js.Function1[js.Any, Number]): Area = js.native
+  def y0(accessor: js.Function1[js.Any, Double]): Area = js.native
 
-  def y0(cnst: Number): Area = js.native
+  def y0(cnst: Double): Area = js.native
 
-  def y1(): js.Function2[js.Any, Number, Number] = js.native
+  def y1(): js.Function2[js.Any, Double, Double] = js.native
 
-  def y1(accessor: js.Function1[js.Any, Number]): Area = js.native
+  def y1(accessor: js.Function1[js.Any, Double]): Area = js.native
 
-  def y1(cnst: Number): Area = js.native
+  def y1(cnst: Double): Area = js.native
 
   def interpolate(): String = js.native
 
   def interpolate(interpolate: String): Area = js.native
 
-  def tension(): Number = js.native
+  def tension(): Double = js.native
 
-  def tension(tension: Number): Area = js.native
+  def tension(tension: Double): Area = js.native
 
   def defined(): js.Function1[js.Any, Any] = js.native
 
@@ -1220,95 +1220,95 @@ trait Area extends js.Object {
 }
 
 trait AreaRadial extends js.Object {
-  def apply(data: js.Array[js.Any], index: Number = js.native): String = js.native
+  def apply(data: js.Array[js.Any], index: Double = js.native): String = js.native
 
-  def x(): js.Function2[js.Any, Number, Number] = js.native
+  def x(): js.Function2[js.Any, Double, Double] = js.native
 
-  def x(accessor: js.Function1[js.Any, Number]): AreaRadial = js.native
+  def x(accessor: js.Function1[js.Any, Double]): AreaRadial = js.native
 
-  def x(cnst: Number): AreaRadial = js.native
+  def x(cnst: Double): AreaRadial = js.native
 
-  def x0(): js.Function2[js.Any, Number, Number] = js.native
+  def x0(): js.Function2[js.Any, Double, Double] = js.native
 
-  def x0(accessor: js.Function1[js.Any, Number]): AreaRadial = js.native
+  def x0(accessor: js.Function1[js.Any, Double]): AreaRadial = js.native
 
-  def x0(cnst: Number): AreaRadial = js.native
+  def x0(cnst: Double): AreaRadial = js.native
 
-  def x1(): js.Function2[js.Any, Number, Number] = js.native
+  def x1(): js.Function2[js.Any, Double, Double] = js.native
 
-  def x1(accessor: js.Function1[js.Any, Number]): AreaRadial = js.native
+  def x1(accessor: js.Function1[js.Any, Double]): AreaRadial = js.native
 
-  def x1(cnst: Number): AreaRadial = js.native
+  def x1(cnst: Double): AreaRadial = js.native
 
-  def y(): js.Function2[js.Any, Number, Number] = js.native
+  def y(): js.Function2[js.Any, Double, Double] = js.native
 
-  def y(accessor: js.Function1[js.Any, Number]): AreaRadial = js.native
+  def y(accessor: js.Function1[js.Any, Double]): AreaRadial = js.native
 
-  def y(cnst: Number): AreaRadial = js.native
+  def y(cnst: Double): AreaRadial = js.native
 
-  def y0(): js.Function2[js.Any, Number, Number] = js.native
+  def y0(): js.Function2[js.Any, Double, Double] = js.native
 
-  def y0(accessor: js.Function1[js.Any, Number]): AreaRadial = js.native
+  def y0(accessor: js.Function1[js.Any, Double]): AreaRadial = js.native
 
-  def y0(cnst: Number): AreaRadial = js.native
+  def y0(cnst: Double): AreaRadial = js.native
 
-  def y1(): js.Function2[js.Any, Number, Number] = js.native
+  def y1(): js.Function2[js.Any, Double, Double] = js.native
 
-  def y1(accessor: js.Function1[js.Any, Number]): AreaRadial = js.native
+  def y1(accessor: js.Function1[js.Any, Double]): AreaRadial = js.native
 
-  def y1(cnst: Number): AreaRadial = js.native
+  def y1(cnst: Double): AreaRadial = js.native
 
   def interpolate(): String = js.native
 
   def interpolate(interpolate: String): AreaRadial = js.native
 
-  def tension(): Number = js.native
+  def tension(): Double = js.native
 
-  def tension(tension: Number): AreaRadial = js.native
+  def tension(tension: Double): AreaRadial = js.native
 
   def defined(): js.Function1[js.Any, Any] = js.native
 
   def defined(defined: js.Function1[js.Any, Any]): AreaRadial = js.native
 
-  def radius(): Number = js.native
+  def radius(): Double = js.native
 
-  def radius(radius: Number): AreaRadial = js.native
+  def radius(radius: Double): AreaRadial = js.native
 
-  def innerRadius(): Number = js.native
+  def innerRadius(): Double = js.native
 
-  def innerRadius(radius: Number): AreaRadial = js.native
+  def innerRadius(radius: Double): AreaRadial = js.native
 
-  def outerRadius(): Number = js.native
+  def outerRadius(): Double = js.native
 
-  def outerRadius(radius: Number): AreaRadial = js.native
+  def outerRadius(radius: Double): AreaRadial = js.native
 
-  def angle(): Number = js.native
+  def angle(): Double = js.native
 
-  def angle(angle: Number): AreaRadial = js.native
+  def angle(angle: Double): AreaRadial = js.native
 
-  def startAngle(): Number = js.native
+  def startAngle(): Double = js.native
 
-  def startAngle(angle: Number): AreaRadial = js.native
+  def startAngle(angle: Double): AreaRadial = js.native
 
-  def endAngle(): Number = js.native
+  def endAngle(): Double = js.native
 
-  def endAngle(angle: Number): AreaRadial = js.native
+  def endAngle(angle: Double): AreaRadial = js.native
 }
 
 trait Chord extends js.Object {
-  def apply(datum: js.Any, index: Number = js.native): String = js.native
+  def apply(datum: js.Any, index: Double = js.native): String = js.native
 
-  def radius(): Number = js.native
+  def radius(): Double = js.native
 
-  def radius(radius: Number): Chord = js.native
+  def radius(radius: Double): Chord = js.native
 
-  def startAngle(): Number = js.native
+  def startAngle(): Double = js.native
 
-  def startAngle(angle: Number): Chord = js.native
+  def startAngle(angle: Double): Chord = js.native
 
-  def endAngle(): Number = js.native
+  def endAngle(): Double = js.native
 
-  def endAngle(angle: Number): Chord = js.native
+  def endAngle(angle: Double): Chord = js.native
 
   def source(): js.Dynamic = js.native
 
@@ -1320,17 +1320,17 @@ trait Chord extends js.Object {
 }
 
 trait Diagonal extends js.Object {
-  def apply(datum: js.Any, index: Number = js.native): String = js.native
+  def apply(datum: js.Any, index: Double = js.native): String = js.native
 
-  def projection(): js.Function2[js.Any, Number, js.Array[Number]] = js.native
+  def projection(): js.Function2[js.Any, Double, js.Array[Double]] = js.native
 
-  def projection(proj: js.Function1[js.Any, js.Array[Number]]): Diagonal = js.native
+  def projection(proj: js.Function1[js.Any, js.Array[Double]]): Diagonal = js.native
 
-  def source(): js.Function2[js.Any, Number, Any] = js.native
+  def source(): js.Function2[js.Any, Double, Any] = js.native
 
   def source(src: js.Function1[js.Any, Any]): Diagonal = js.native
 
-  def target(): js.Function2[js.Any, Number, Any] = js.native
+  def target(): js.Function2[js.Any, Double, Any] = js.native
 
   def target(target: js.Function1[js.Any, Any]): Diagonal = js.native
 }
@@ -1386,9 +1386,9 @@ trait Scale extends js.Object {
 }
 
 trait QuantitiveScale extends Scale {
-  def apply(value: Number): Number = js.native
+  def apply(value: Double): Double = js.native
 
-  def invert(value: Number): Number = js.native
+  def invert(value: Double): Double = js.native
 
   override def domain(values: js.Array[js.Any]): QuantitiveScale = js.native
 
@@ -1406,39 +1406,39 @@ trait QuantitiveScale extends Scale {
 
   def clamp(clamp: Boolean): QuantitiveScale = js.native
 
-  def nice(count: Number = js.native): QuantitiveScale = js.native
+  def nice(count: Double = js.native): QuantitiveScale = js.native
 
-  def ticks(count: Number): js.Array[js.Any] = js.native
+  def ticks(count: Double): js.Array[js.Any] = js.native
 
-  def tickFormat(count: Number): js.Function1[Number, String] = js.native
+  def tickFormat(count: Double): js.Function1[Double, String] = js.native
 
   override def copy(): QuantitiveScale = js.native
 }
 
 trait LinearScale extends QuantitiveScale {
-  override def apply(value: Number): Number = js.native
+  override def apply(value: Double): Double = js.native
 }
 
 trait IdentityScale extends Scale {
-  def apply(value: Number): Number = js.native
+  def apply(value: Double): Double = js.native
 
-  def invert(value: Number): Number = js.native
+  def invert(value: Double): Double = js.native
 
-  def ticks(count: Number): js.Array[js.Any] = js.native
+  def ticks(count: Double): js.Array[js.Any] = js.native
 
-  def tickFormat(count: Number): js.Function1[Number, String] = js.native
+  def tickFormat(count: Double): js.Function1[Double, String] = js.native
 }
 
 trait SqrtScale extends QuantitiveScale {
-  override def apply(value: Number): Number = js.native
+  override def apply(value: Double): Double = js.native
 }
 
 trait PowScale extends QuantitiveScale {
-  override def apply(value: Number): Number = js.native
+  override def apply(value: Double): Double = js.native
 }
 
 trait LogScale extends QuantitiveScale {
-  override def apply(value: Number): Number = js.native
+  override def apply(value: Double): Double = js.native
 }
 
 trait OrdinalScale extends Scale {
@@ -1452,13 +1452,13 @@ trait OrdinalScale extends Scale {
 
   override def range(): js.Array[js.Any] = js.native
 
-  def rangePoints(interval: js.Array[js.Any], padding: Number = js.native): OrdinalScale = js.native
+  def rangePoints(interval: js.Array[js.Any], padding: Double = js.native): OrdinalScale = js.native
 
-  def rangeBands(interval: js.Array[js.Any], padding: Number = js.native, outerPadding: Number = js.native): OrdinalScale = js.native
+  def rangeBands(interval: js.Array[js.Any], padding: Double = js.native, outerPadding: Double = js.native): OrdinalScale = js.native
 
-  def rangeRoundBands(interval: js.Array[js.Any], padding: Number = js.native, outerPadding: Number = js.native): OrdinalScale = js.native
+  def rangeRoundBands(interval: js.Array[js.Any], padding: Double = js.native, outerPadding: Double = js.native): OrdinalScale = js.native
 
-  def rangeBand(): Number = js.native
+  def rangeBand(): Double = js.native
 
   def rangeExtent(): js.Array[js.Any] = js.native
 
@@ -1468,7 +1468,7 @@ trait OrdinalScale extends Scale {
 trait QuantizeScale extends Scale {
   override def apply(value: js.Any): js.Dynamic = js.native
 
-  def domain(values: js.Array[Number]): QuantizeScale = js.native
+  def domain(values: js.Array[Double]): QuantizeScale = js.native
 
   override def domain(): js.Array[js.Any] = js.native
 
@@ -1482,7 +1482,7 @@ trait QuantizeScale extends Scale {
 trait ThresholdScale extends Scale {
   override def apply(value: js.Any): js.Dynamic = js.native
 
-  def domain(values: js.Array[Number]): ThresholdScale = js.native
+  def domain(values: js.Array[Double]): ThresholdScale = js.native
 
   override def domain(): js.Array[js.Any] = js.native
 
@@ -1496,7 +1496,7 @@ trait ThresholdScale extends Scale {
 trait QuantileScale extends Scale {
   override def apply(value: js.Any): js.Dynamic = js.native
 
-  def domain(values: js.Array[Number]): QuantileScale = js.native
+  def domain(values: js.Array[Double]): QuantileScale = js.native
 
   override def domain(): js.Array[js.Any] = js.native
 
@@ -1510,9 +1510,9 @@ trait QuantileScale extends Scale {
 }
 
 trait TimeScale extends Scale {
-  def apply(value: Date): Number = js.native
+  def apply(value: Date): Double = js.native
 
-  def invert(value: Number): Date = js.native
+  def invert(value: Double): Date = js.native
 
   override def domain(values: js.Array[js.Any]): TimeScale = js.native
 
@@ -1530,11 +1530,11 @@ trait TimeScale extends Scale {
 
   def clamp(clamp: Boolean): TimeScale = js.native
 
-  def ticks(count: Number): js.Array[js.Any] = js.native
+  def ticks(count: Double): js.Array[js.Any] = js.native
 
-  def ticks(range: Range, count: Number): js.Array[js.Any] = js.native
+  def ticks(range: Range, count: Double): js.Array[js.Any] = js.native
 
-  def tickFormat(count: Number): js.Function1[Number, String] = js.native
+  def tickFormat(count: Double): js.Function1[Double, String] = js.native
 
   override def copy(): TimeScale = js.native
 }
@@ -1552,19 +1552,19 @@ trait Behavior extends js.Object {
 trait Zoom extends js.Object {
   def apply(selection: Selection): Unit = js.native
 
-  def on: js.Function2[String, js.Function2[_ <: js.Any, Number, Any], Zoom] = js.native
+  def on: js.Function2[String, js.Function2[_ <: js.Any, Double, Any], Zoom] = js.native
 
-  def scale(): Number = js.native
+  def scale(): Double = js.native
 
-  def scale(scale: Number): Zoom = js.native
+  def scale(scale: Double): Zoom = js.native
 
-  def translate(): js.Array[Number] = js.native
+  def translate(): js.Array[Double] = js.native
 
-  def translate(translate: js.Array[Number]): Zoom = js.native
+  def translate(translate: js.Array[Double]): Zoom = js.native
 
-  def scaleExtent(): js.Array[Number] = js.native
+  def scaleExtent(): js.Array[Double] = js.native
 
-  def scaleExtent(extent: js.Array[Number]): Zoom = js.native
+  def scaleExtent(extent: js.Array[Double]): Zoom = js.native
 
   def x(): Scale.Scale = js.native
 
@@ -1578,7 +1578,7 @@ trait Zoom extends js.Object {
 trait Drag extends js.Object {
   def apply(): js.Dynamic = js.native
 
-  def on: js.Function2[String, js.Function2[_ <: js.Any, Number, Any], Drag] = js.native
+  def on: js.Function2[String, js.Function2[_ <: js.Any, Double, Any], Drag] = js.native
 
   def origin(): js.Dynamic = js.native
 
@@ -1594,17 +1594,17 @@ trait Geo extends js.Object {
 
   def circle(): Circle = js.native
 
-  def area(feature: js.Any): Number = js.native
+  def area(feature: js.Any): Double = js.native
 
-  def bounds(feature: js.Any): js.Array[js.Array[Number]] = js.native
+  def bounds(feature: js.Any): js.Array[js.Array[Double]] = js.native
 
-  def centroid(feature: js.Any): js.Array[Number] = js.native
+  def centroid(feature: js.Any): js.Array[Double] = js.native
 
-  def distance(a: js.Array[Number], b: js.Array[Number]): Number = js.native
+  def distance(a: js.Array[Double], b: js.Array[Double]): Double = js.native
 
-  def interpolate(a: js.Array[Number], b: js.Array[Number]): js.Function1[Number, js.Array[Number]] = js.native
+  def interpolate(a: js.Array[Double], b: js.Array[Double]): js.Function1[Double, js.Array[Double]] = js.native
 
-  def length(feature: js.Any): Number = js.native
+  def length(feature: js.Any): Double = js.native
 
   def projection(raw: RawProjection): Projection = js.native
 
@@ -1632,7 +1632,7 @@ trait Geo extends js.Object {
 
   def greatArc(): GreatArc = js.native
 
-  def rotation(rotation: js.Array[Number]): Rotation = js.native
+  def rotation(rotation: js.Array[Double]): Rotation = js.native
 }
 
 trait Path extends js.Object {
@@ -1652,19 +1652,19 @@ trait Path extends js.Object {
 
   def bounds(feature: js.Any): js.Dynamic = js.native
 
-  def pointRadius(): Number = js.native
+  def pointRadius(): Double = js.native
 
-  def pointRadius(radius: Number): Path = js.native
+  def pointRadius(radius: Double): Path = js.native
 }
 
 trait Context extends js.Object {
   def beginPath(): js.Dynamic = js.native
 
-  def moveTo(x: Number, y: Number): js.Dynamic = js.native
+  def moveTo(x: Double, y: Double): js.Dynamic = js.native
 
-  def lineTo(x: Number, y: Number): js.Dynamic = js.native
+  def lineTo(x: Double, y: Double): js.Dynamic = js.native
 
-  def arc(x: Number, y: Number, radius: Number, startAngle: Number, endAngle: Number): js.Dynamic = js.native
+  def arc(x: Double, y: Double, radius: Double, startAngle: Double, endAngle: Double): js.Dynamic = js.native
 
   def closePath(): js.Dynamic = js.native
 }
@@ -1672,17 +1672,17 @@ trait Context extends js.Object {
 trait Circle extends js.Object {
   def apply(args: js.Any*): GeoJSON = js.native
 
-  def origin(): js.Array[Number] = js.native
+  def origin(): js.Array[Double] = js.native
 
-  def origin(origin: js.Array[Number]): Circle = js.native
+  def origin(origin: js.Array[Double]): Circle = js.native
 
-  def angle(): Number = js.native
+  def angle(): Double = js.native
 
-  def angle(angle: Number): Circle = js.native
+  def angle(angle: Double): Circle = js.native
 
-  def precision(): Number = js.native
+  def precision(): Double = js.native
 
-  def precision(precision: Number): Circle = js.native
+  def precision(precision: Double): Circle = js.native
 }
 
 trait Graticule extends js.Object {
@@ -1692,39 +1692,39 @@ trait Graticule extends js.Object {
 
   def outline(): GeoJSON = js.native
 
-  def extent(): js.Array[js.Array[Number]] = js.native
+  def extent(): js.Array[js.Array[Double]] = js.native
 
-  def extent(extent: js.Array[js.Array[Number]]): Graticule = js.native
+  def extent(extent: js.Array[js.Array[Double]]): Graticule = js.native
 
-  def minorExtent(): js.Array[js.Array[Number]] = js.native
+  def minorExtent(): js.Array[js.Array[Double]] = js.native
 
-  def minorExtent(extent: js.Array[js.Array[Number]]): Graticule = js.native
+  def minorExtent(extent: js.Array[js.Array[Double]]): Graticule = js.native
 
-  def majorExtent(): js.Array[js.Array[Number]] = js.native
+  def majorExtent(): js.Array[js.Array[Double]] = js.native
 
-  def majorExtent(extent: js.Array[js.Array[Number]]): Graticule = js.native
+  def majorExtent(extent: js.Array[js.Array[Double]]): Graticule = js.native
 
-  def step(): js.Array[js.Array[Number]] = js.native
+  def step(): js.Array[js.Array[Double]] = js.native
 
-  def step(extent: js.Array[js.Array[Number]]): Graticule = js.native
+  def step(extent: js.Array[js.Array[Double]]): Graticule = js.native
 
-  def minorStep(): js.Array[js.Array[Number]] = js.native
+  def minorStep(): js.Array[js.Array[Double]] = js.native
 
-  def minorStep(extent: js.Array[js.Array[Number]]): Graticule = js.native
+  def minorStep(extent: js.Array[js.Array[Double]]): Graticule = js.native
 
-  def majorStep(): js.Array[js.Array[Number]] = js.native
+  def majorStep(): js.Array[js.Array[Double]] = js.native
 
-  def majorStep(extent: js.Array[js.Array[Number]]): Graticule = js.native
+  def majorStep(extent: js.Array[js.Array[Double]]): Graticule = js.native
 
-  def precision(): Number = js.native
+  def precision(): Double = js.native
 
-  def precision(precision: Number): Graticule = js.native
+  def precision(precision: Double): Graticule = js.native
 }
 
 trait GreatArc extends js.Object {
   def apply(): GeoJSON = js.native
 
-  def distance(): Number = js.native
+  def distance(): Double = js.native
 
   def source(): js.Dynamic = js.native
 
@@ -1734,64 +1734,64 @@ trait GreatArc extends js.Object {
 
   def target(target: js.Any): GreatArc = js.native
 
-  def precision(): Number = js.native
+  def precision(): Double = js.native
 
-  def precision(precision: Number): GreatArc = js.native
+  def precision(precision: Double): GreatArc = js.native
 }
 
 trait GeoJSON extends js.Object {
-  var coordinates: js.Array[js.Array[Number]] = js.native
+  var coordinates: js.Array[js.Array[Double]] = js.native
   var `type`: String = js.native
 }
 
 trait RawProjection extends js.Object {
-  def apply(lambda: Number, phi: Number): js.Array[Number] = js.native
+  def apply(lambda: Double, phi: Double): js.Array[Double] = js.native
 
-  def invert(x: Number, y: Number): js.Array[Number] = js.native
+  def invert(x: Double, y: Double): js.Array[Double] = js.native
 }
 
 trait Projection extends js.Object {
-  def apply(coordinates: js.Array[Number]): js.Array[Number] = js.native
+  def apply(coordinates: js.Array[Double]): js.Array[Double] = js.native
 
-  def invert(point: js.Array[Number]): js.Array[Number] = js.native
+  def invert(point: js.Array[Double]): js.Array[Double] = js.native
 
-  def rotate(): js.Array[Number] = js.native
+  def rotate(): js.Array[Double] = js.native
 
-  def rotate(rotation: js.Array[Number]): Projection = js.native
+  def rotate(rotation: js.Array[Double]): Projection = js.native
 
-  def center(): js.Array[Number] = js.native
+  def center(): js.Array[Double] = js.native
 
-  def center(location: js.Array[Number]): Projection = js.native
+  def center(location: js.Array[Double]): Projection = js.native
 
-  def parallels(): js.Array[Number] = js.native
+  def parallels(): js.Array[Double] = js.native
 
-  def parallels(location: js.Array[Number]): Projection = js.native
+  def parallels(location: js.Array[Double]): Projection = js.native
 
-  def translate(): js.Array[Number] = js.native
+  def translate(): js.Array[Double] = js.native
 
-  def translate(point: js.Array[Number]): Projection = js.native
+  def translate(point: js.Array[Double]): Projection = js.native
 
-  def scale(): Number = js.native
+  def scale(): Double = js.native
 
-  def scale(scale: Number): Projection = js.native
+  def scale(scale: Double): Projection = js.native
 
-  def clipAngle(): Number = js.native
+  def clipAngle(): Double = js.native
 
-  def clipAngle(angle: Number): Projection = js.native
+  def clipAngle(angle: Double): Projection = js.native
 
-  def clipExtent(): js.Array[js.Array[Number]] = js.native
+  def clipExtent(): js.Array[js.Array[Double]] = js.native
 
-  def clipExtent(extent: js.Array[js.Array[Number]]): Projection = js.native
+  def clipExtent(extent: js.Array[js.Array[Double]]): Projection = js.native
 
-  def precision(): Number = js.native
+  def precision(): Double = js.native
 
-  def precision(precision: Number): Projection = js.native
+  def precision(precision: Double): Projection = js.native
 
   def stream(listener: Stream = js.native): Stream = js.native
 }
 
 trait Stream extends js.Object {
-  def point(x: Number, y: Number, z: Number = js.native): Unit = js.native
+  def point(x: Double, y: Double, z: Double = js.native): Unit = js.native
 
   def lineStart(): Unit = js.native
 
@@ -1805,13 +1805,13 @@ trait Stream extends js.Object {
 }
 
 trait Rotation extends js.Array[js.Any] {
-  def apply(location: js.Array[Number]): Rotation = js.native
+  def apply(location: js.Array[Double]): Rotation = js.native
 
-  def invert(location: js.Array[Number]): Rotation = js.native
+  def invert(location: js.Array[Double]): Rotation = js.native
 }
 
 trait ProjectionMutator extends js.Object {
-  def apply(lambda: Number, phi: Number): Projection = js.native
+  def apply(lambda: Double, phi: Double): Projection = js.native
 }
 
 }
@@ -1829,9 +1829,9 @@ trait Geom extends js.Object {
 
   def quadtree(points: js.Array[_ <: Point]): Quadtree = js.native
 
-  def quadtree(points: js.Array[Point], x1: Number, y1: Number, x2: Number, y2: Number): Quadtree = js.native
+  def quadtree(points: js.Array[Point], x1: Double, y1: Double, x2: Double, y2: Double): Quadtree = js.native
 
-  def quadtree(points: js.Array[Point], width: Number, height: Number): Quadtree = js.native
+  def quadtree(points: js.Array[Point], width: Double, height: Double): Quadtree = js.native
 
   def polygon(vertices: js.Array[Vertice]): Polygon = js.native
 
@@ -1840,14 +1840,14 @@ trait Geom extends js.Object {
   def hull(vertices: js.Array[Vertice]): js.Array[Vertice] = js.native
 }
 
-trait Vertice extends js.Array[Number] {
-  var angle: Number = js.native
+trait Vertice extends js.Array[Double] {
+  var angle: Double = js.native
 }
 
 trait Polygon extends js.Array[Vertice] {
-  def area(): Number = js.native
+  def area(): Double = js.native
 
-  def centroid(): js.Array[Number] = js.native
+  def centroid(): js.Array[Double] = js.native
 
   def clip(subject: Polygon): Polygon = js.native
 }
@@ -1855,9 +1855,9 @@ trait Polygon extends js.Array[Vertice] {
 trait QuadtreeFactory extends js.Object {
   def apply(): Quadtree = js.native
 
-  def apply(points: js.Array[Point], x1: Number, y1: Number, x2: Number, y2: Number): Quadtree = js.native
+  def apply(points: js.Array[Point], x1: Double, y1: Double, x2: Double, y2: Double): Quadtree = js.native
 
-  def apply(points: js.Array[Point], width: Number, height: Number): Quadtree = js.native
+  def apply(points: js.Array[Point], width: Double, height: Double): Quadtree = js.native
 
   def x(): js.Function1[js.Any, Any] = js.native
 
@@ -1867,13 +1867,13 @@ trait QuadtreeFactory extends js.Object {
 
   def y(accesor: js.Function1[js.Any, Any]): QuadtreeFactory = js.native
 
-  def size(): js.Array[Number] = js.native
+  def size(): js.Array[Double] = js.native
 
-  def size(size: js.Array[Number]): QuadtreeFactory = js.native
+  def size(size: js.Array[Double]): QuadtreeFactory = js.native
 
-  def extent(): js.Array[js.Array[Number]] = js.native
+  def extent(): js.Array[js.Array[Double]] = js.native
 
-  def extent(points: js.Array[js.Array[Number]]): QuadtreeFactory = js.native
+  def extent(points: js.Array[js.Array[Double]]): QuadtreeFactory = js.native
 }
 
 trait Quadtree extends js.Object {
@@ -1885,8 +1885,8 @@ trait Quadtree extends js.Object {
 }
 
 trait Point extends js.Object {
-  var x: Number = js.native
-  var y: Number = js.native
+  var x: Double = js.native
+  var y: Double = js.native
 }
 
 trait Voronoi[T] extends js.Object {
@@ -1894,27 +1894,27 @@ trait Voronoi[T] extends js.Object {
 
   def links(data: js.Array[T]): js.Array[Layout.GraphLink] = js.native
 
-  def triangles(data: js.Array[T]): js.Array[js.Array[Number]] = js.native
+  def triangles(data: js.Array[T]): js.Array[js.Array[Double]] = js.native
 
-  def x(): js.Function2[T, Number, Number] = js.native
+  def x(): js.Function2[T, Double, Double] = js.native
 
-  def x(accessor: js.Function2[T, Number, Number]): Voronoi[T] = js.native
+  def x(accessor: js.Function2[T, Double, Double]): Voronoi[T] = js.native
 
-  def x(constant: Number): Voronoi[T] = js.native
+  def x(constant: Double): Voronoi[T] = js.native
 
-  def y(): js.Function2[T, Number, Number] = js.native
+  def y(): js.Function2[T, Double, Double] = js.native
 
-  def y(accessor: js.Function2[T, Number, Number]): Voronoi[T] = js.native
+  def y(accessor: js.Function2[T, Double, Double]): Voronoi[T] = js.native
 
-  def y(constant: Number): Voronoi[T] = js.native
+  def y(constant: Double): Voronoi[T] = js.native
 
-  def clipExtent(): js.Array[js.Array[Number]] = js.native
+  def clipExtent(): js.Array[js.Array[Double]] = js.native
 
-  def clipExtent(extent: js.Array[js.Array[Number]]): Voronoi[T] = js.native
+  def clipExtent(extent: js.Array[js.Array[Double]]): Voronoi[T] = js.native
 
-  def size(): js.Array[Number] = js.native
+  def size(): js.Array[Double] = js.native
 
-  def size(size: js.Array[Number]): Voronoi[T] = js.native
+  def size(size: js.Array[Double]): Voronoi[T] = js.native
 }
 
 trait Hull extends js.Object {

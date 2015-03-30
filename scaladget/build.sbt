@@ -8,9 +8,9 @@ organization := "fr.iscpif"
 
 name := "scaladget"
 
-version := "0.3.0-SNAPSHOT"
+version := "0.4.0"
 
-scalaVersion := "2.11.5"
+scalaVersion := "2.11.6"
 
 libraryDependencies ++= Seq("com.github.scala-incubator.io" %% "scala-io-core" % "0.4.3",
   "org.scala-js" %%% "scalajs-dom" % "0.8.0",
