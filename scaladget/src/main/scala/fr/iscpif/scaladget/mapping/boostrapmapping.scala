@@ -84,9 +84,9 @@ trait AffixOptions extends js.Object {
   var offset: js.Any = js.native
 }
 
-object BootstrapUtils {
-  implicit def jq2BootstrapStatic(jq:JQuery):BootstrapStatic = jq.asInstanceOf[BootstrapStatic]
-}
+//object BootstrapUtils extends js.Object {
+  //implicit def jq2BootstrapStatic(jq:JQuery):BootstrapStatic = jq.asInstanceOf[BootstrapStatic]
+//}
 
 trait BootstrapStatic extends js.Object {
   def modal(): BootstrapStatic = js.native
