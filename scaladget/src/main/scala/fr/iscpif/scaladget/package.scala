@@ -19,6 +19,7 @@ package fr.iscpif.scaladget
 
 
 import fr.iscpif.scaladget.mapping._
+import fr.iscpif.scaladget.mapping.ace._
 import scala.scalajs.js
 
 package object d3 extends js.GlobalScope {
@@ -28,5 +29,11 @@ package object d3 extends js.GlobalScope {
 package object bootstrap extends js.GlobalScope {
   val bootstrap: BootstrapStatic = js.native
   val modalOptions: ModalOptions = js.native
+}
+
+package object ace extends js.GlobalScope {
+  val ace: Ace = js.native
+  val autocomplete: AutoComplete = js.native
+  def editorCommand: EditorCommand = js.native
 }
 
