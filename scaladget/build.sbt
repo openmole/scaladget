@@ -12,10 +12,10 @@ version := "0.5.0-SNAPSHOT"
 
 scalaVersion := "2.11.6"
 
-libraryDependencies ++= Seq("com.github.scala-incubator.io" %% "scala-io-core" % "0.4.3",
+libraryDependencies ++= Seq(
   "org.scala-js" %%% "scalajs-dom" % "0.8.0",
-  "be.doeraene" % "scalajs-jquery_sjs0.6_2.11" % "0.8.0",
-  "com.lihaoyi" %%% "scalatags" % "0.5.1",
+  "be.doeraene" %%% "scalajs-jquery" % "0.8.0",
+  "com.lihaoyi" %%% "scalatags" % "0.5.2",
   "com.lihaoyi" %%% "scalarx" % "0.2.8")
 
 publishTo := {

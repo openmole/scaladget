@@ -3,6 +3,8 @@ package fr.iscpif.scaladget.mapping.ace
 
 import scala.scalajs.js
 import js.annotation._
+import org.scalajs.dom.raw.Element
+import org.scalajs.dom.raw.HTMLElement
 
 trait Delta extends js.Object {
   var action: String = js.native
@@ -11,18 +13,12 @@ trait Delta extends js.Object {
   var lines: js.Array[String] = js.native
 }
 
-trait EditorCommand extends js.Object {
-  var name: String = js.native
-  var bindKey: js.Any = js.native
-  var exec: js.Function = js.native
-}
-
 trait CommandManager extends js.Object {
   var byName: String = js.native
   var commands: String = js.native
   var platform: String = js.native
-  def addCommands(commands: js.Array[EditorCommand]): js.Dynamic = js.native
-  def addCommand(command: EditorCommand): js.Dynamic = js.native
+  def addCommands(commands: js.Array[js.Dynamic]): js.Dynamic = js.native
+  def addCommand(command: js.Dynamic): js.Dynamic = js.native
   def exec(name: String, editor: Editor, args: js.Any): js.Dynamic = js.native
 }
 
@@ -72,6 +68,7 @@ trait TextMode extends js.Object {
 trait Ace extends js.Object {
   def require(moduleName: String): js.Dynamic = js.native
   def edit(el: String): Editor = js.native
+  def edit(el: Element): Editor = js.native
   def createEditSession(text: Document, mode: TextMode): IEditSession = js.native
 }
 
@@ -268,7 +265,7 @@ class Editor protected () extends js.Object {
   var selection: AceSelection = js.native
   var renderer: VirtualRenderer = js.native
   var keyBinding: KeyBinding = js.native
-  //var container: HTMLElement = js.native
+  var container: HTMLElement = js.native
   def onSelectionChange(e: js.Any): js.Dynamic = js.native
   def onChangeMode(e: js.Any = ???): js.Dynamic = js.native
   def execCommand(command: String, args: js.Any = ???): js.Dynamic = js.native

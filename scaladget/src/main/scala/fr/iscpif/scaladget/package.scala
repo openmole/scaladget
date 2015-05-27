@@ -34,6 +34,5 @@ package object bootstrap extends js.GlobalScope {
 package object ace extends js.GlobalScope {
   val ace: Ace = js.native
   val autocomplete: AutoComplete = js.native
-  def editorCommand: EditorCommand = js.native
 }
 
