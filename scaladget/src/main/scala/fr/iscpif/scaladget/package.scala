@@ -16,10 +16,10 @@
  */
 package fr.iscpif.scaladget
 
-
-
 import fr.iscpif.scaladget.mapping._
 import fr.iscpif.scaladget.mapping.ace._
+import fr.iscpif.scaladget.mapping.tooltipster._
+import org.scalajs.jquery.JQuery
 import scala.scalajs.js
 
 package object d3 extends js.GlobalScope {
@@ -34,5 +34,9 @@ package object bootstrap extends js.GlobalScope {
 package object ace extends js.GlobalScope {
   val ace: Ace = js.native
   val autocomplete: AutoComplete = js.native
+  var range: Range = js.native
 }
 
+package object tooltipster {
+  implicit def jq2Datepicker(jq:JQuery):Tooltipster = jq.asInstanceOf[Tooltipster]
+}

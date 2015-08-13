@@ -8,15 +8,21 @@ organization := "fr.iscpif"
 
 name := "scaladget"
 
-version := "0.5.0"
+version := "0.6.0"
 
 scalaVersion := "2.11.6"
+
+resolvers ++= Seq(
+  DefaultMavenRepository
+)
 
 libraryDependencies ++= Seq(
   "org.scala-js" %%% "scalajs-dom" % "0.8.0",
   "be.doeraene" %%% "scalajs-jquery" % "0.8.0",
   "com.lihaoyi" %%% "scalatags" % "0.5.2",
-  "com.lihaoyi" %%% "scalarx" % "0.2.8")
+  "com.lihaoyi" %%% "scalarx" % "0.2.8",
+  "org.querki" %%% "querki-jsext" % "0.5"
+)
 
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
@@ -26,7 +32,7 @@ publishTo := {
     Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
 
-pomIncludeRepository := { _ => false}
+pomIncludeRepository := { _ => false }
 
 licenses := Seq("Affero GPLv3" -> url("http://www.gnu.org/licenses/"))
 

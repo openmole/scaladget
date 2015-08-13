@@ -17,7 +17,6 @@
 package fr.iscpif.scaladget.mapping
 
 import scala.scalajs.js
-import org.scalajs.jquery.JQuery
 
 trait ModalOptions extends js.Object {
   var backdrop: Boolean = js.native
@@ -83,10 +82,6 @@ trait TypeaheadOptions extends js.Object {
 trait AffixOptions extends js.Object {
   var offset: js.Any = js.native
 }
-
-//object BootstrapUtils extends js.Object {
-  //implicit def jq2BootstrapStatic(jq:JQuery):BootstrapStatic = jq.asInstanceOf[BootstrapStatic]
-//}
 
 trait BootstrapStatic extends js.Object {
   def modal(): BootstrapStatic = js.native
