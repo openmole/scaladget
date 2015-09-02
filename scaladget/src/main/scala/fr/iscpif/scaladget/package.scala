@@ -38,5 +38,5 @@ package object ace extends js.GlobalScope {
 }
 
 package object tooltipster {
-  implicit def jq2Datepicker(jq:JQuery):Tooltipster = jq.asInstanceOf[Tooltipster]
+    implicit def jq2Datepicker(jq:JQuery):Tooltipster = jq.asInstanceOf[Tooltipster]
 }

@@ -16,17 +16,20 @@ package fr.iscpif.scaladget.api
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import scalatags.JsDom.{ tags ⇒ tags }
-import scalatags.JsDom.all._
+import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw
 import org.scalajs.dom.raw._
+import scala.scalajs.js.annotation.JSExport
 import scalatags.JsDom.TypedTag
+
+import scalatags.JsDom.{tags ⇒ tags}
+import scalatags.JsDom.all._
+
+import fr.iscpif.scaladget.tools.JsRxTags._
 import org.scalajs.jquery.jQuery
 import org.scalajs.jquery.JQuery
-import scala.scalajs.js.annotation.JSExport
-import scala.scalajs.js
-import rx._
 import fr.iscpif.scaladget.mapping.BootstrapStatic
+import rx._
 
 @JSExport("BootstrapTags")
 object BootstrapTags {
@@ -41,6 +44,8 @@ object BootstrapTags {
     def +++(m: Seq[Modifier]) = t.copy(modifiers = t.modifiers :+ m.toSeq)
   }
 
+  def uuID: String = java.util.UUID.randomUUID.toString
+
   def emptyCK = ClassKeyAggregator.empty
 
   def key(s: String) = new ClassKeyAggregator(s)
@@ -52,28 +57,48 @@ object BootstrapTags {
   def span(keys: ClassKeyAggregator = emptyCK) = tags.span(`class` := keys.key)
 
   // Nav
-  class NavItem(val navid: String, content: String, val todo: () ⇒ Unit = () ⇒ {}, active: Boolean = false) {
+  class NavItem(val navid: String,
+                contentDiv: TypedTag[HTMLElement],
+                ontrigger: () ⇒ Unit,
+                val todo: () ⇒ Unit = () ⇒ {},
+                extraRenderPair: Seq[Modifier] = Seq(),
+                active: Boolean = false) {
     val activeString = {
       if (active) "active" else ""
     }
 
-    def render = li(role := "presentation", id := navid, `class` := activeString)(tags.a(href := "#")(content))
+    val render = li(role := "presentation", id := navid, `class` := activeString)(tags.a(href := "", onclick := { () ⇒
+      ontrigger()
+      false
+    }
+    )(contentDiv))(
+        extraRenderPair: _*)
+
   }
 
-  def navItem(id: String, content: String, todo: () ⇒ Unit = () ⇒ {}, active: Boolean = false) = new NavItem(id, content, todo, active)
+  def dialogNavItem(id: String, content: String, ontrigger: () ⇒ Unit = () ⇒ {}, todo: () ⇒ Unit = () ⇒ {}) =
+    navItem(id, content, ontrigger, todo, Seq(data("toggle") := "modal", data("target") := "#" + id + "PanelID"))
 
-  def nav(uuid: String, contents: Seq[(TypedTag[HTMLLIElement], String, () ⇒ Unit)], keys: ClassKeyAggregator): TypedTag[HTMLElement] =
-    ul(`class` := "nav " + keys.key, id := uuid, role := "tablist")(
-      contents.map { c ⇒
-        c._1(scalatags.JsDom.attrs.onclick := { () ⇒
-          jQuery("#" + uuid + " .active").removeClass("active")
-          jQuery("#" + c._2).addClass("active")
-          c._3()
-        })
-      }: _*)
+  def navItem(id: String, content: String, ontrigger: () ⇒ Unit = () ⇒ {}, todo: () ⇒ Unit = () ⇒ {}, extraRenderPair: Seq[Modifier] = Seq(), active: Boolean = false) =
+    new NavItem(id, tags.div(content), ontrigger, todo, extraRenderPair, active)
+
+  def dialogGlyphNavItem(id: String,
+                         glyphIcon: ClassKeyAggregator,
+                         ontrigger: () ⇒ Unit = () ⇒ {},
+                         todo: () ⇒ Unit = () ⇒ {},
+                         extraRenderPair: Seq[Modifier] = Seq(),
+                         active: Boolean = false) =
+    new NavItem(id, glyph(glyphIcon), ontrigger, todo, Seq(data("toggle") := "modal", data("target") := "#" + id + "PanelID"))
 
   def nav(uuid: String, keys: ClassKeyAggregator, contents: NavItem*): TypedTag[HTMLElement] =
-    nav(uuid, contents.map { c ⇒ (c.render, c.navid, c.todo) }, keys)
+    ul(`class` := "nav " + keys.key, id := uuid, role := "tablist")(
+      contents.map { c ⇒
+        c.render(scalatags.JsDom.attrs.onclick := { () ⇒
+          jQuery("#" + uuid + " .active").removeClass("active")
+          jQuery("#mainNavItemID").addClass("active")
+          c.todo()
+        })
+      }: _*)
 
   val nav_default = key("navbar-default")
   val nav_inverse = key("navbar-inverse")
@@ -87,7 +112,7 @@ object BootstrapTags {
   val dropdown = key("dropdown")
 
   //Inputs
-  def input(content: String = "") = tags.input(content, `class` := "form-control")
+  def input(content: String, key: ClassKeyAggregator = emptyCK) = tags.input(`class` := "form-control " + key.key, value := content)
 
   def checkbox(default: Boolean) = tags.input(`type` := "checkbox", checked := default)
 
@@ -116,8 +141,8 @@ object BootstrapTags {
     )
   )
 
-  def glyph(key: ClassKeyAggregator): TypedTag[HTMLSpanElement] =
-    span("glyphicon " + key.key)(aria.hidden := "true")
+  def glyph(key: ClassKeyAggregator, onclickAction: () ⇒ Unit = () ⇒ {}): TypedTag[HTMLSpanElement] =
+    span("glyphicon " + key.key)(aria.hidden := "true", onclick := { () ⇒ onclickAction() })
 
   val glyph_edit = "glyphicon-pencil"
   val glyph_trash = "glyphicon-trash"
@@ -131,12 +156,29 @@ object BootstrapTags {
   val glyph_folder_close = "glyphicon-folder-close"
   val glyph_home = "glyphicon-home"
   val glyph_upload = "glyphicon-cloud-upload"
-  val glyph_download = "glyphicon-download-alt"
+  val glyph_download = "glyphicon-cloud-download"
+  val glyph_download_alt = "glyphicon-download-alt"
   val glyph_settings = "glyphicon-cog"
+  val glyph_off = "glyphicon-off"
+  val glyph_flash = "glyphicon-flash"
+  val glyph_flag = "glyphicon-flag"
+  val glyph_remove = "glyphicon-remove-sign"
+  val glyph_road = "glyphicon-road"
+  val glyph_fire = "glyphicon-fire"
+  val glyph_list = "glyphicon-list"
+  val glyph_stats = "glyphicon-stats"
+  val glyph_refresh = "glyphicon-refresh"
+  val glyph_lock = "glyphicon-lock"
+  val glyph_archive = "glyphicon-compressed"
+  val glyph_market = "glyphicon-shopping-cart"
+  val glyph_info = "glyphicon-info-sign"
+  val glyph_plug = "icon-plug"
+  val glyph_exclamation = "glyphicon-exclamation-sign"
+  val glyph_comment = "glyphicon-comment"
 
   //Button
-  def button(content: String, keys: ClassKeyAggregator): TypedTag[HTMLButtonElement] =
-    tags.button(`class` := ("btn " + keys.key), `type` := "button")(content)
+  def button(content: String, keys: ClassKeyAggregator, todo: () ⇒ Unit = () ⇒ {}): TypedTag[HTMLButtonElement] =
+    tags.button(`class` := ("btn " + keys.key), `type` := "button", onclick := { () ⇒ todo() })(content)
 
   def button(content: TypedTag[HTMLElement], keys: ClassKeyAggregator): TypedTag[HTMLButtonElement] =
     tags.button(`class` := ("btn " + keys.key), `type` := "button")(content)
@@ -146,47 +188,47 @@ object BootstrapTags {
   def button(content: TypedTag[HTMLElement]): TypedTag[HTMLButtonElement] = button(content, btn_default)(span(" "))
 
   def glyphButton(text: String, buttonCB: ClassKeyAggregator, glyCA: ClassKeyAggregator, todo: () ⇒ Unit): TypedTag[HTMLSpanElement] =
-    tags.span(cursor := "pointer", `class` := "btn " + buttonCB.key, `type` := "button")(glyph(glyCA))(text)(onclick := {
+    span("btn " + buttonCB.key)(cursor := "pointer", `type` := "button")(glyph(glyCA))(text)(onclick := {
       () ⇒ todo()
     })
 
   def glyphButton(glyCA: ClassKeyAggregator, todo: () ⇒ Unit): TypedTag[HTMLSpanElement] = glyphButton("", emptyCK, glyCA, todo)
 
-  def glyphSpan(glyCA: ClassKeyAggregator, todo: () ⇒ Unit): TypedTag[HTMLSpanElement] =
-    tags.span(cursor := "pointer")(glyph(glyCA)(onclick := { () ⇒
+  def glyphSpan(glyCA: ClassKeyAggregator, todo: () ⇒ Unit, linkName: String = ""): TypedTag[HTMLSpanElement] =
+    tags.span(cursor := "pointer", glyph(glyCA)(linkName)(onclick := { () ⇒
       todo()
     }))
 
-  def fileInput(todo: HTMLInputElement ⇒ Unit): HTMLFormElement = {
-    lazy val form: HTMLFormElement = tags.form({
-      lazy val input: HTMLInputElement = tags.input(id := "fileinput", `type` := "file", multiple := "")(onchange := { () ⇒
-        todo(input)
-      }, onclick := { () ⇒
-        println("form submit")
-        form.submit
-      }).render
-      input
+  def fileInputMultiple(todo: HTMLInputElement ⇒ Unit) = {
+    lazy val input: HTMLInputElement = tags.input(id := "fileinput", `type` := "file", multiple := "")(onchange := { () ⇒
+      todo(input)
     }).render
+    input
+  }
 
-    form
+  def fileInput(todo: HTMLInputElement ⇒ Unit) = {
+    lazy val input: HTMLInputElement = tags.input(id := "fileinput", `type` := "file")(onchange := { () ⇒
+      todo(input)
+    }).render
+    input
   }
 
   def uploadButton(todo: HTMLInputElement ⇒ Unit): TypedTag[HTMLSpanElement] = {
-    tags.span(cursor := "pointer", `class` := " btn-file", id := "success-like")(
+    span(" btn-file")(cursor := "pointer", id := "success-like")(
       glyph(glyph_upload),
-      fileInput(todo)
+      fileInputMultiple(todo)
     )
   }
 
   def uploadGlyphSpan(todo: HTMLInputElement ⇒ Unit): TypedTag[HTMLSpanElement] =
-    tags.span(`class` := "btn-file")(
+    span("btn-file")(
       glyph(glyph_upload),
-      fileInput(todo)
+      fileInputMultiple(todo)
     )
 
   def progressBar(barMessage: String, ratio: Int): TypedTag[HTMLDivElement] =
-    tags.div(`class` := "progress")(
-      tags.div(`class` := "progress-bar", width := ratio.toString() + "%")(
+    div("progress")(
+      div("progress-bar")(width := ratio.toString() + "%")(
         barMessage
       )
     )
@@ -216,6 +258,24 @@ object BootstrapTags {
 
   def buttonToolBar = div("btn-toolbar")(role := "toolbar")
 
+  //Modalg Dialog
+  type Dialog = TypedTag[HTMLDivElement]
+  type ModalID = String
+
+  def modalDialog(ID: ModalID, typedTag: TypedTag[_]*): Dialog =
+    div("modal fade")(id := ID,
+      div("modal-dialog")(
+        div("modal-content")(
+          typedTag)
+      )
+    )
+
+  def headerDialog = div("modal-header modal-info")
+
+  def bodyDialog = div("modal-body")
+
+  def footerDialog = div("modal-footer")
+
   //Jumbotron
   def jumbotron(modifiers: scalatags.JsDom.Modifier*) =
     div("container theme-showcase")(role := "main")(
@@ -226,8 +286,72 @@ object BootstrapTags {
       )
     )
 
+  object ScrollableTextArea {
+
+    sealed trait AutoScroll
+
+    case class TopScroll() extends AutoScroll
+
+    case class BottomScroll() extends AutoScroll
+
+    case class NoScroll(scrollHeight: Int) extends AutoScroll
+
+  }
+
+  import ScrollableTextArea._
+
   //TextArea
-  def textArea(nbRows: Int) = tags.textarea(`class` := "form-control", rows := nbRows)
+  def textArea(nbRow: Int) = tags.textarea(`class` := "form-control", rows := nbRow)
+
+  def scrollableText(text: String = "", scrollMode: AutoScroll = TopScroll()): ScrollableText = ScrollableText(text, scrollMode)
+
+  def scrollableDiv(element: Div = tags.div.render, scrollMode: AutoScroll = BottomScroll()): ScrollableDiv = ScrollableDiv(element, scrollMode)
+
+  trait Scrollable {
+
+    def scrollMode: Var[AutoScroll]
+
+    def sRender: HTMLElement
+
+    def view: HTMLElement = tags.div(sRender).render
+
+    def setScrollMode = {
+      val scrollHeight = sRender.scrollHeight
+      val scrollTop = sRender.scrollTop.toInt
+      scrollMode() =
+        if ((scrollTop + sRender.offsetHeight.toInt) > scrollHeight) BottomScroll()
+        else NoScroll(scrollTop)
+    }
+
+    def doScroll = scrollMode() match {
+      case b: BottomScroll ⇒ sRender.scrollTop = sRender.scrollHeight
+      case n: NoScroll ⇒ sRender.scrollTop = n.scrollHeight
+      case _ ⇒
+    }
+  }
+
+  case class ScrollableText(initText: String, _scrollMode: AutoScroll) extends Scrollable {
+    val scrollMode: Var[AutoScroll] = Var(_scrollMode)
+    val tA = textArea(20)(initText, onscroll := { (e: Event) ⇒ setScrollMode })
+    val sRender = tA.render
+
+    def setContent(out: String) = {
+      sRender.value = out
+    }
+  }
+
+  case class ScrollableDiv(_element: Div, _scrollMode: AutoScroll) extends Scrollable {
+    val scrollMode: Var[AutoScroll] = Var(_scrollMode)
+    val child: Var[Node] = Var(tags.div)
+    val tA = div("scrollable")(Rx {
+      child()
+    }, onscroll := { (e: Event) ⇒ setScrollMode })
+
+    def setChild(d: Div) = child() = d
+
+    val sRender = tA.render
+
+  }
 
   //table
   def table(keys: ClassKeyAggregator) = tags.table(`class` := keys.key)
@@ -273,21 +397,48 @@ object BootstrapTags {
   val col_md_4 = key("col-md-4")
   val col_md_5 = key("col-md-5")
   val col_md_6 = key("col-md-6")
+  val col_md_7 = key("col-md-7")
   val col_md_8 = key("col-md-8")
   val col_md_12 = key("col-md-12")
 
   val col_md_offset_3 = key("col-md-offset-3")
   val col_md_offset_2 = key("col-md-offset-2")
 
+  def labeledField(labelString: String, element: HTMLElement) = {
+    val ID = uuID
+    form("form-horizontal")(
+      div("control-group")(
+        label(labelString, "control-label")(`for` := ID),
+        div("controls")(
+          tags.div(id := ID)(element)
+        )
+      )
+    )
+  }
+
   //Misc
   val center = key("text-center")
   val spacer20 = key("spacer20")
 
-  def panel(heading: String, bodyElement: TypedTag[HTMLElement]) = tags.div(
-    `class` := "panel panel-default")(
-      tags.div(`class` := "panel-heading")(heading),
-      tags.div(`class` := "panel-body")(bodyElement.render)
+  def panel(heading: String, bodyElement: TypedTag[HTMLElement]) =
+    div("panel panel-default")(
+      div("panel-heading")(heading),
+      div("panel-body")(bodyElement.render)
     )
+
+  val alert_warning = key("alert-warning")
+
+  def alert(alertType: ClassKeyAggregator, content: String, todook: () ⇒ Unit, todocancel: () ⇒ Unit) =
+    tags.div(role := "alert")(
+      content,
+      div("spacer20")(
+        buttonGroup("left")(
+          button("OK", btn_danger, todook),
+          button("Cancel", btn_default, todocancel)
+        )
+      )
+    )
+
 }
 
 object ClassKeyAggregator {

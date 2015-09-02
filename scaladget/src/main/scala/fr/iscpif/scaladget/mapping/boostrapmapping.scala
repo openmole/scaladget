@@ -18,6 +18,7 @@ package fr.iscpif.scaladget.mapping
 
 import scala.scalajs.js
 
+@js.native
 trait ModalOptions extends js.Object {
   var backdrop: Boolean = js.native
   var keyboard: Boolean = js.native
@@ -25,6 +26,7 @@ trait ModalOptions extends js.Object {
   var remote: String = js.native
 }
 
+@js.native
 trait ModalOptionsBackdropString extends js.Object {
   var backdrop: String = js.native
   var keyboard: Boolean = js.native
@@ -32,10 +34,12 @@ trait ModalOptionsBackdropString extends js.Object {
   var remote: String = js.native
 }
 
+@js.native
 trait ScrollSpyOptions extends js.Object {
   var offset: Double = js.native
 }
 
+@js.native
 trait TooltipOptions extends js.Object {
   var animation: Boolean = js.native
   var html: Boolean = js.native
@@ -47,6 +51,7 @@ trait TooltipOptions extends js.Object {
   var container: js.Any = js.native
 }
 
+@js.native
 trait PopoverOptions extends js.Object {
   var animation: Boolean = js.native
   var html: Boolean = js.native
@@ -59,16 +64,19 @@ trait PopoverOptions extends js.Object {
   var container: js.Any = js.native
 }
 
+@js.native
 trait CollapseOptions extends js.Object {
   var parent: js.Any = js.native
   var toggle: Boolean = js.native
 }
 
+@js.native
 trait CarouselOptions extends js.Object {
   var interval: Double = js.native
   var pause: String = js.native
 }
 
+@js.native
 trait TypeaheadOptions extends js.Object {
   var source: js.Any = js.native
   var items: Double = js.native
@@ -79,10 +87,12 @@ trait TypeaheadOptions extends js.Object {
   var highlighter: js.Function1[js.Any, String] = js.native
 }
 
+@js.native
 trait AffixOptions extends js.Object {
   var offset: js.Any = js.native
 }
 
+@js.native
 trait BootstrapStatic extends js.Object {
   def modal(): BootstrapStatic = js.native
   //def modal(options: ModalOptions = js.native): BootstrapStatic = js.native

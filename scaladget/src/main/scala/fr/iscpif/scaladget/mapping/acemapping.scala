@@ -6,6 +6,7 @@ import js.annotation._
 import org.scalajs.dom.raw.Element
 import org.scalajs.dom.raw.HTMLElement
 
+@js.native
 trait Delta extends js.Object {
   var action: String = js.native
   var range: Range = js.native
@@ -13,6 +14,7 @@ trait Delta extends js.Object {
   var lines: js.Array[String] = js.native
 }
 
+@js.native
 trait CommandManager extends js.Object {
   var byName: String = js.native
   var commands: String = js.native
@@ -22,6 +24,7 @@ trait CommandManager extends js.Object {
   def exec(name: String, editor: Editor, args: js.Any): js.Dynamic = js.native
 }
 
+@js.native
 trait Annotation extends js.Object {
   var row: Double = js.native
   var column: Double = js.native
@@ -29,16 +32,18 @@ trait Annotation extends js.Object {
   var `type`: String = js.native
 }
 
+@js.native
 trait TokenInfo extends js.Object {
   var value: String = js.native
 }
 
+@js.native
 trait Position extends js.Object {
   var row: Double = js.native
   var column: Double = js.native
 }
 
-@JSName("AceAjax.KeyBinding")
+@js.native
 class KeyBinding protected () extends js.Object {
     def this(editor: Editor) = this()
   def setDefaultHandler(kb: js.Any): js.Dynamic = js.native
@@ -50,10 +55,11 @@ class KeyBinding protected () extends js.Object {
   def onTextInput(text: js.Any): js.Dynamic = js.native
 }
 
-@JSName("AceAjax.KeyBinding")
+@js.native
 object KeyBinding extends js.Object {
 }
 
+@js.native
 trait TextMode extends js.Object {
   def getTokenizer(): js.Dynamic = js.native
   def toggleCommentLines(state: js.Any, doc: js.Any, startRow: js.Any, endRow: js.Any): js.Dynamic = js.native
@@ -65,6 +71,7 @@ trait TextMode extends js.Object {
   def transformAction(state: js.Any, action: js.Any, editor: js.Any, session: js.Any, param: js.Any): js.Dynamic = js.native
 }
 
+@js.native
 trait Ace extends js.Object {
   def require(moduleName: String): js.Dynamic = js.native
   def edit(el: String): Editor = js.native
@@ -72,7 +79,7 @@ trait Ace extends js.Object {
   def createEditSession(text: Document, mode: TextMode): IEditSession = js.native
 }
 
-@JSName("AceAjax.Anchor")
+@js.native
 class Anchor protected () extends js.Object {
   def this(doc: Document, row: Double, column: Double) = this()
   def on(event: String, fn: js.Function1[js.Any, Any]): js.Dynamic = js.native
@@ -83,11 +90,11 @@ class Anchor protected () extends js.Object {
   def detach(): js.Dynamic = js.native
 }
 
-@JSName("AceAjax.Anchor")
+@js.native
 object Anchor extends js.Object {
 }
 
-@JSName("AceAjax.BackgroundTokenizer")
+@js.native
 class BackgroundTokenizer protected () extends js.Object {
   def this(tokenizer: Tokenizer, editor: Editor) = this()
   var states: js.Array[js.Any] = js.native
@@ -100,11 +107,11 @@ class BackgroundTokenizer protected () extends js.Object {
   def getState(row: Double): String = js.native
 }
 
-@JSName("AceAjax.BackgroundTokenizer")
+@js.native
 object BackgroundTokenizer extends js.Object {
 }
 
-@JSName("AceAjax.Document")
+@js.native
 class Document protected () extends js.Object {
   def this(text: String = ???) = this()
   def on(event: String, fn: js.Function1[js.Any, Any]): js.Dynamic = js.native
@@ -135,10 +142,11 @@ class Document protected () extends js.Object {
   def positionToIndex(pos: Position, startRow: Double): Double = js.native
 }
 
-@JSName("AceAjax.Document")
+@js.native
 object Document extends js.Object {
 }
 
+@js.native
 trait IEditSession extends js.Object {
   var selection: AceSelection = js.native
   var bgTokenizer: BackgroundTokenizer = js.native
@@ -246,14 +254,14 @@ trait IEditSession extends js.Object {
   def getScreenLength(): Double = js.native
 }
 
-@JSName("AceAjax.EditSession")
+@js.native
 object EditSession extends js.Object {
 /* ??? ConstructorMember(FunSignature(List(),List(FunParam(Ident(text),false,Some(TypeRef(CoreType(string),List()))), FunParam(Ident(mode),true,Some(TypeRef(TypeName(TextMode),List())))),Some(TypeRef(TypeName(IEditSession),List())))) */
 /* ??? ConstructorMember(FunSignature(List(),List(FunParam(Ident(content),false,Some(TypeRef(CoreType(string),List()))), FunParam(Ident(mode),true,Some(TypeRef(CoreType(string),List())))),Some(TypeRef(TypeName(IEditSession),List())))) */
 /* ??? ConstructorMember(FunSignature(List(),List(FunParam(Ident(text),false,Some(TypeRef(TypeName(Array),List(TypeRef(CoreType(string),List()))))), FunParam(Ident(mode),true,Some(TypeRef(CoreType(string),List())))),Some(TypeRef(TypeName(IEditSession),List())))) */
 }
 
-@JSName("AceAjax.Editor")
+@js.native
 class Editor protected () extends js.Object {
   def this(renderer: VirtualRenderer, session: IEditSession = ???) = this()
   var inMultiSelectMode: Boolean = js.native
@@ -388,17 +396,17 @@ class Editor protected () extends js.Object {
   var completers: js.Array[js.Dynamic] = js.native
 }
 
-@JSName("AceAjax.Autocomplete")
+@js.native
 class AutoComplete extends js.Object {
   def showPopup(editor: Editor): js.Dynamic = js.native
   def cancelContextMenu(): js.Dynamic = js.native
 }
 
-@JSName("AceAjax.Editor")
+@js.native
 object Editor extends js.Object {
 }
 
-@JSName("AceAjax.PlaceHolder")
+@js.native
 class PlaceHolder protected () extends js.Object {
   def this(session: Document, length: Double, pos: Double, others: String, mainClass: String, othersClass: String) = this()
   def this(session: IEditSession, length: Double, pos: Position, positions: js.Array[Position]) = this()
@@ -412,10 +420,11 @@ class PlaceHolder protected () extends js.Object {
   def cancel(): js.Dynamic = js.native
 }
 
-@JSName("AceAjax.PlaceHolder")
+@js.native
 object PlaceHolder extends js.Object {
 }
 
+@js.native
 trait IRangeList extends js.Object {
   var ranges: js.Array[Range] = js.native
   def pointIndex(pos: Position, startIndex: Double = ???): js.Dynamic = js.native
@@ -425,12 +434,12 @@ trait IRangeList extends js.Object {
   def substractPoint(pos: Position): js.Dynamic = js.native
 }
 
-@JSName("AceAjax.RangeList")
+@js.native
 object RangeList extends js.Object {
 /* ??? ConstructorMember(FunSignature(List(),List(),Some(TypeRef(TypeName(IRangeList),List())))) */
 }
 
-@JSName("AceAjax.Range")
+@js.native
 class Range protected () extends js.Object {
   def this(startRow: Double, startColumn: Double, endRow: Double, endColumn: Double) = this()
   var startRow: Double = js.native
@@ -467,20 +476,21 @@ class Range protected () extends js.Object {
   def fromPoints(start: Range, end: Range): Range = js.native
 }
 
-@JSName("AceAjax.Range")
+@js.native
 object Range extends js.Object {
   def fromPoints(pos1: Position, pos2: Position): Range = js.native
 }
 
-@JSName("AceAjax.RenderLoop")
+@js.native
 class RenderLoop extends js.Object {
 }
 
-@JSName("AceAjax.RenderLoop")
+@js.native
 object RenderLoop extends js.Object {
 }
 
 @JSName("AceAjax.ScrollBar")
+@js.native
 class ScrollBar protected () extends js.Object {
  // def this(parent: HTMLElement) = this()
   def onScroll(e: js.Any): js.Dynamic = js.native
@@ -490,11 +500,11 @@ class ScrollBar protected () extends js.Object {
   def setScrollTop(scrollTop: Double): js.Dynamic = js.native
 }
 
-@JSName("AceAjax.ScrollBar")
+@js.native
 object ScrollBar extends js.Object {
 }
 
-@JSName("AceAjax.Search")
+@js.native
 class Search extends js.Object {
   def set(options: js.Any): Search = js.native
   def getOptions(): js.Dynamic = js.native
@@ -504,11 +514,11 @@ class Search extends js.Object {
   def replace(input: String, replacement: String): String = js.native
 }
 
-@JSName("AceAjax.Search")
+@js.native
 object Search extends js.Object {
 }
 
-@JSName("AceAjax.Selection")
+@js.native
 class AceSelection protected () extends js.Object {
   def this(session: IEditSession) = this()
   def addEventListener(ev: String, callback: js.Function): js.Dynamic = js.native
@@ -563,11 +573,11 @@ class AceSelection protected () extends js.Object {
   def moveCursorToScreen(row: Double, column: Double, keepDesiredColumn: Boolean): js.Dynamic = js.native
 }
 
-@JSName("AceAjax.Selection")
+@js.native
 object AceSelection extends js.Object {
 }
 
-@JSName("AceAjax.Split")
+@js.native
 class Split extends js.Object {
   def getSplits(): Double = js.native
   def getEditor(idx: Double): js.Dynamic = js.native
@@ -584,11 +594,11 @@ class Split extends js.Object {
   def resize(): js.Dynamic = js.native
 }
 
-@JSName("AceAjax.Split")
+@js.native
 object Split extends js.Object {
 }
 
-@JSName("AceAjax.TokenIterator")
+@js.native
 class TokenIterator protected () extends js.Object {
   def this(session: IEditSession, initialRow: Double, initialColumn: Double) = this()
   def stepBackward(): js.Array[String] = js.native
@@ -598,21 +608,21 @@ class TokenIterator protected () extends js.Object {
   def getCurrentTokenColumn(): Double = js.native
 }
 
-@JSName("AceAjax.TokenIterator")
+@js.native
 object TokenIterator extends js.Object {
 }
 
-@JSName("AceAjax.Tokenizer")
+@js.native
 class Tokenizer protected () extends js.Object {
   def this(rules: js.Any, flag: String) = this()
   def getLineTokens(): js.Dynamic = js.native
 }
 
-@JSName("AceAjax.Tokenizer")
+@js.native
 object Tokenizer extends js.Object {
 }
 
-@JSName("AceAjax.UndoManager")
+@js.native
 class UndoManager extends js.Object {
   def execute(options: js.Any): js.Dynamic = js.native
   def undo(dontSelect: Boolean = ???): Range = js.native
@@ -622,11 +632,11 @@ class UndoManager extends js.Object {
   def hasRedo(): Boolean = js.native
 }
 
-@JSName("AceAjax.UndoManager")
+@js.native
 object UndoManager extends js.Object {
 }
 
-@JSName("AceAjax.VirtualRenderer")
+@js.native
 class VirtualRenderer protected () extends js.Object {
  // def this(container: HTMLElement, theme: String = ???) = this()
   var scroller: js.Any = js.native
@@ -693,6 +703,6 @@ class VirtualRenderer protected () extends js.Object {
   def destroy(): js.Dynamic = js.native
 }
 
-@JSName("AceAjax.VirtualRenderer")
+@js.native
 object VirtualRenderer extends js.Object {
 }

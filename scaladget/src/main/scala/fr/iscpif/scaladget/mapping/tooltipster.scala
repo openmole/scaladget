@@ -5,10 +5,13 @@ import org.scalajs.jquery
 import org.querki.jsext._
 
 
+
+@js.native
 trait Tooltipster extends js.Object {
   def tooltipster(options: TooltipsterOptions): jquery.JQuery = js.native
 }
 
+@js.native
 trait TooltipsterOptions extends  js.Object
 object TooltipsterOptions extends TooltipsterOptionBuilder(noOpts)
 
@@ -50,15 +53,15 @@ JSOptionBuilder[TooltipsterOptions, TooltipsterOptionBuilder](new TooltipsterOpt
   /**
    * Delay how long it takes (in milliseconds) for the tooltip to start animating in. Default: 200
    */
-  def delay(v: Double) = jsOpt("delay", v)
+  def delay(v: Int) = jsOpt("delay", v)
   /**
-   * Set a fixed width for the tooltip. The tooltip will always be a consistent width - no matter your content size. Default: 0 (auto width)
+   * Set a minimum width for the tooltip. Default: 0 (auto width)
    */
-  def fixedWidth(v: Double) = jsOpt("fixedWidth", v)
+  def minWidth(v: Int) = jsOpt("minWidth", v)
   /**
    * Set a max width for the tooltip. If the tooltip ends up being smaller than the set max width, the tooltip's width will be set automatically. Default: 0 (no max width)
    */
-  def maxWidth(v: Double) = jsOpt("maxWidth", v)
+  def maxWidth(v: Int) = jsOpt("maxWidth", v)
   /**
    * If using the iconDesktop or iconTouch options, this sets the content for your icon. Default: '(?)'
    * type String, jQuery object
@@ -87,15 +90,15 @@ JSOptionBuilder[TooltipsterOptions, TooltipsterOptionBuilder](new TooltipsterOpt
   /**
    * If the tooltip is interactive and activated by a hover event, set the amount of time (milliseconds) allowed for a user to hover off of the tooltip activator (origin) on to the tooltip itself - keeping the tooltip from closing. Default: 350
    */
-  def interactiveTolerance(v: Double) = jsOpt("interactiveTolerance", v)
+  def interactiveTolerance(v: Int) = jsOpt("interactiveTolerance", v)
   /**
    * Offsets the tooltip (in pixels) farther left/right from the origin. Default: 0
    */
-  def offsetX(v: Double) = jsOpt("offsetX", v)
+  def offsetX(v: Int) = jsOpt("offsetX", v)
   /**
    * Offsets the tooltip (in pixels) farther up/down from the origin. Default: 0
    */
-  def offsetY(v: Double) = jsOpt("offsetY", v)
+  def offsetY(v: Int) = jsOpt("offsetY", v)
   /**
    * If true, only one tooltip will be allowed to be active at a time. Non-autoclosing tooltips will not be closed though. Default: false
    */
@@ -112,11 +115,11 @@ JSOptionBuilder[TooltipsterOptions, TooltipsterOptionBuilder](new TooltipsterOpt
   /**
    * Set the speed of the animation. Default: 350
    */
-  def speed(v: Double) = jsOpt("speed", v)
+  def speed(v: Int) = jsOpt("speed", v)
   /**
    * How long the tooltip should be allowed to live before closing. Default: 0 (disabled)
    */
-  def timer(v: Double) = jsOpt("timer", v)
+  def timer(v: Int) = jsOpt("timer", v)
   /**
    * Set the theme used for your tooltip. Default: 'tooltipster-default'
    */

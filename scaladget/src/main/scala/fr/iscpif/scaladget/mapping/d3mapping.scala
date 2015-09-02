@@ -23,6 +23,7 @@ import org.scalajs.dom._
 import scala.Range
 
 
+@js.native
 trait Selectors extends js.Object {
   def select(selector: String): Selection = js.native
 
@@ -33,6 +34,7 @@ trait Selectors extends js.Object {
   def selectAll(elements: js.Array[EventTarget]): Selection = js.native
 }
 
+@js.native
 trait Event extends js.Object {
   var dx: Double = js.native
   var dy: Double = js.native
@@ -54,6 +56,7 @@ trait Event extends js.Object {
   def preventDefault: Unit = js.native
 }
 
+@js.native
 trait Base extends Selectors {
   var behavior: Behavior.Behavior = js.native
 
@@ -218,6 +221,7 @@ trait Base extends Selectors {
   def round(x: Double, n: Double): Double = js.native
 }
 
+@js.native
 trait Dispatch extends js.Object {
   @JSBracketAccess
   def apply(event: String): js.Any = js.native
@@ -230,11 +234,13 @@ trait Dispatch extends js.Object {
   def on(`type`: String, listener: js.Any): js.Dynamic = js.native
 }
 
+@js.native
 trait MetricPrefix extends js.Object {
   var scale: js.Function1[Double, Double] = js.native
   var symbol: String = js.native
 }
 
+@js.native
 trait Xhr extends js.Object {
   def header(name: String): String = js.native
 
@@ -263,6 +269,7 @@ trait Xhr extends js.Object {
   def on: js.Function2[String, js.Function2[_ <: js.Any, Double, Any], Xhr] = js.native
 }
 
+@js.native
 trait Dsv extends js.Object {
   def apply(url: String, callback: js.Function2[js.Any, js.Array[js.Any], Unit] = js.native): Xhr = js.native
 
@@ -273,6 +280,7 @@ trait Dsv extends js.Object {
   def format(rows: js.Array[js.Any]): String = js.native
 }
 
+@js.native
 trait Selection extends Selectors {
   def attr(name: String): String = js.native
 
@@ -380,6 +388,7 @@ trait Selection extends Selectors {
 
 }
 
+@js.native
 trait EnterSelection extends js.Object {
   def append: js.Function1[String, Selection] = js.native
 
@@ -396,16 +405,19 @@ trait EnterSelection extends js.Object {
   def size: js.Function0[Double] = js.native
 }
 
+@js.native
 trait UpdateSelection extends Selection {
   //override def enter(): UpdateSelection = js.native
   var update: js.Function0[Selection] = js.native
 }
 
+@js.native
 trait NestKeyValue extends js.Object {
   var key: String = js.native
   var values: js.Any = js.native
 }
 
+@js.native
 trait Nest extends js.Object {
   def key(keyFunction: js.Function2[_ <: js.Any, Double, String]): Nest = js.native
 
@@ -420,6 +432,7 @@ trait Nest extends js.Object {
   def entries(values: js.Array[js.Any]): js.Array[NestKeyValue] = js.native
 }
 
+@js.native
 trait Map extends js.Object {
   def has(key: String): Boolean = js.native
 
@@ -438,6 +451,7 @@ trait Map extends js.Object {
   def forEach(func: js.Function2[String, js.Any, Unit]): Unit = js.native
 }
 
+@js.native
 trait Set extends js.Object {
   def has(value: js.Any): Boolean = js.native
 
@@ -450,6 +464,7 @@ trait Set extends js.Object {
   def forEach(func: js.Function1[js.Any, Unit]): Unit = js.native
 }
 
+@js.native
 trait Random extends js.Object {
   def normal(mean: Double = js.native, deviation: Double = js.native): js.Function0[Double] = js.native
 
@@ -460,6 +475,7 @@ trait Random extends js.Object {
 
 package Transition {
 
+@js.native
 trait Transition extends js.Object {
   def duration(duration: Double): Transition = js.native
 
@@ -506,14 +522,17 @@ trait Transition extends js.Object {
   def remove(): Transition = js.native
 }
 
+@js.native
 trait InterpolateFactory extends js.Object {
   def apply(a: js.Any = js.native, b: js.Any = js.native): BaseInterpolate = js.native
 }
 
+@js.native
 trait BaseInterpolate extends js.Object {
   def apply(a: js.Any, b: js.Any = js.native): js.Dynamic = js.native
 }
 
+@js.native
 trait Interpolate extends js.Object {
   def apply(t: js.Any): js.Dynamic = js.native
 }
@@ -524,6 +543,7 @@ package Time {
 
 import scala.scalajs.js.Date
 
+@js.native
 trait Time extends js.Object {
   var second: Interval = js.native
   var minute: Interval = js.native
@@ -557,10 +577,12 @@ trait Time extends js.Object {
   var scale: js.Any = js.native
 }
 
+@js.native
 trait Range extends js.Object {
   def apply(start: Date, end: Date, step: Double = js.native): js.Array[Date] = js.native
 }
 
+@js.native
 trait Interval extends js.Object {
   def apply(date: Date): Date = js.native
 
@@ -572,6 +594,7 @@ trait Interval extends js.Object {
   var utc: Interval = js.native
 }
 
+@js.native
 trait TimeFormat extends js.Object {
   def apply(date: Date): String = js.native
 
@@ -582,6 +605,7 @@ trait TimeFormat extends js.Object {
 
 package Layout {
 
+@js.native
 trait Layout extends js.Object {
   def stack(): StackLayout = js.native
 
@@ -608,6 +632,7 @@ trait Layout extends js.Object {
   def treemap(): TreeMapLayout = js.native
 }
 
+@js.native
 trait StackLayout extends js.Object {
   def apply[T](layers: js.Array[T], index: Double = js.native): js.Array[T] = js.native
 
@@ -616,6 +641,7 @@ trait StackLayout extends js.Object {
   def offset(offset: String): StackLayout = js.native
 }
 
+@js.native
 trait TreeLayout extends js.Object {
   def sort(): js.Function2[js.Any, js.Any, Double] = js.native
 
@@ -638,6 +664,7 @@ trait TreeLayout extends js.Object {
   def size(size: js.Array[Double]): TreeLayout = js.native
 }
 
+@js.native
 trait PieLayout extends js.Object {
   def apply(values: js.Array[js.Any], index: Double = js.native): js.Array[ArcDescriptor] = js.native
 
@@ -658,6 +685,7 @@ trait PieLayout extends js.Object {
   def endAngle(angle: Double): PieLayout = js.native
 }
 
+@js.native
 trait ArcDescriptor extends js.Object {
   var value: js.Any = js.native
   var data: js.Any = js.native
@@ -666,6 +694,7 @@ trait ArcDescriptor extends js.Object {
   var index: Double = js.native
 }
 
+@js.native
 trait GraphNode extends js.Object with Geom.Point {
   var id: Double = js.native
   var index: Double = js.native
@@ -691,11 +720,13 @@ trait GraphNode extends js.Object with Geom.Point {
   def group: Double = js.native
 }
 
+@js.native
 trait GraphLink extends js.Object {
   var source: GraphNode = js.native
   var target: GraphNode = js.native
 }
 
+@js.native
 trait ForceLayout extends js.Object {
   def apply(): ForceLayout = js.native
 
@@ -768,10 +799,12 @@ trait ForceLayout extends js.Object {
   def drag(): ForceLayout = js.native
 }
 
+@js.native
 trait BundleLayout extends js.Object {
   def apply(links: js.Array[GraphLink]): js.Array[js.Array[GraphNode]] = js.native
 }
 
+@js.native
 trait ChordLayout extends js.Object {
   def matrix(): js.Array[js.Array[Double]] = js.native
 
@@ -798,6 +831,7 @@ trait ChordLayout extends js.Object {
   def groups(): js.Array[ArcDescriptor] = js.native
 }
 
+@js.native
 trait ClusterLayout extends js.Object {
   def sort(): js.Function2[GraphNode, GraphNode, Double] = js.native
 
@@ -824,6 +858,7 @@ trait ClusterLayout extends js.Object {
   def value(value: js.Function1[GraphNode, Double]): ClusterLayout = js.native
 }
 
+@js.native
 trait HierarchyLayout extends js.Object {
   def sort(): js.Function2[GraphNode, GraphNode, Double] = js.native
 
@@ -844,12 +879,14 @@ trait HierarchyLayout extends js.Object {
   def reValue(root: GraphNode): HierarchyLayout = js.native
 }
 
+@js.native
 trait Bin extends js.Array[js.Any] {
   var x: Double = js.native
   var dx: Double = js.native
   var y: Double = js.native
 }
 
+@js.native
 trait HistogramLayout extends js.Object {
   def apply(values: js.Array[js.Any], index: Double = js.native): js.Array[Bin] = js.native
 
@@ -870,6 +907,7 @@ trait HistogramLayout extends js.Object {
   def frequency(frequency: Boolean): HistogramLayout = js.native
 }
 
+@js.native
 trait PackLayout extends js.Object {
   def sort(): js.Function2[GraphNode, GraphNode, Double] = js.native
 
@@ -896,6 +934,7 @@ trait PackLayout extends js.Object {
   def padding(padding: Double): PackLayout = js.native
 }
 
+@js.native
 trait PartitionLayout extends js.Object {
   def sort(): js.Function2[GraphNode, GraphNode, Double] = js.native
 
@@ -918,6 +957,7 @@ trait PartitionLayout extends js.Object {
   def size(size: js.Array[Double]): PackLayout = js.native
 }
 
+@js.native
 trait TreeMapLayout extends js.Object {
   def sort(): js.Function2[GraphNode, GraphNode, Double] = js.native
 
@@ -960,6 +1000,7 @@ trait TreeMapLayout extends js.Object {
 
 package Color {
 
+@js.native
 trait Color extends js.Object {
   def brighter(k: Double): Color = js.native
 
@@ -968,6 +1009,7 @@ trait Color extends js.Object {
   override def toString(): String = js.native
 }
 
+@js.native
 trait RGBColor extends Color {
   var r: Double = js.native
   var g: Double = js.native
@@ -976,6 +1018,7 @@ trait RGBColor extends Color {
   def hsl(): HSLColor = js.native
 }
 
+@js.native
 trait HSLColor extends Color {
   var h: Double = js.native
   var s: Double = js.native
@@ -984,6 +1027,7 @@ trait HSLColor extends Color {
   def rgb(): RGBColor = js.native
 }
 
+@js.native
 trait LABColor extends Color {
   var l: Double = js.native
   var a: Double = js.native
@@ -992,6 +1036,7 @@ trait LABColor extends Color {
   def rgb(): RGBColor = js.native
 }
 
+@js.native
 trait HCLColor extends Color {
   var h: Double = js.native
   var c: Double = js.native
@@ -1004,6 +1049,7 @@ trait HCLColor extends Color {
 
 package Svg {
 
+@js.native
 trait Svg extends js.Object {
   def symbol(): Symbol = js.native
 
@@ -1022,11 +1068,13 @@ trait Svg extends js.Object {
   var symbolTypes: js.Array[String] = js.native
 }
 
+@js.native
 trait Symbol extends js.Object {
   var `type`: js.Function1[String, Symbol] = js.native
   var size: js.Function1[Double, Symbol] = js.native
 }
 
+@js.native
 trait Brush extends js.Object {
   def apply(selection: Selection): Unit = js.native
 
@@ -1051,6 +1099,7 @@ trait Brush extends js.Object {
   def on(`type`: String, listener: js.Function2[_ <: js.Any, Double, Any], capture: Boolean = js.native): Brush = js.native
 }
 
+@js.native
 trait Axis extends js.Object {
   def apply(selection: Selection): Unit = js.native
 
@@ -1081,6 +1130,7 @@ trait Axis extends js.Object {
   def tickFormat(formatter: js.Function1[js.Any, String]): Axis = js.native
 }
 
+@js.native
 trait Arc extends js.Object {
   def apply(data: js.Any, index: Double = js.native): String = js.native
 
@@ -1103,6 +1153,7 @@ trait Arc extends js.Object {
   def centroid(data: js.Any, index: Double = js.native): js.Array[Double] = js.native
 }
 
+@js.native
 trait Line extends js.Object {
   def apply(data: js.Array[js.Any], index: Double = js.native): String = js.native
 
@@ -1131,6 +1182,7 @@ trait Line extends js.Object {
   def defined(defined: js.Function1[js.Any, Boolean]): Line = js.native
 }
 
+@js.native
 trait LineRadial extends js.Object {
   def apply(data: js.Array[js.Any], index: Double = js.native): String = js.native
 
@@ -1167,6 +1219,7 @@ trait LineRadial extends js.Object {
   def angle(angle: Double): LineRadial = js.native
 }
 
+@js.native
 trait Area extends js.Object {
   def apply(data: js.Array[js.Any], index: Double = js.native): String = js.native
 
@@ -1219,6 +1272,7 @@ trait Area extends js.Object {
   def defined(defined: js.Function1[js.Any, Any]): Area = js.native
 }
 
+@js.native
 trait AreaRadial extends js.Object {
   def apply(data: js.Array[js.Any], index: Double = js.native): String = js.native
 
@@ -1295,6 +1349,7 @@ trait AreaRadial extends js.Object {
   def endAngle(angle: Double): AreaRadial = js.native
 }
 
+@js.native
 trait Chord extends js.Object {
   def apply(datum: js.Any, index: Double = js.native): String = js.native
 
@@ -1319,6 +1374,7 @@ trait Chord extends js.Object {
   def target(angle: js.Any): Chord = js.native
 }
 
+@js.native
 trait Diagonal extends js.Object {
   def apply(datum: js.Any, index: Double = js.native): String = js.native
 
@@ -1341,6 +1397,7 @@ package Scale {
 
 import scala.scalajs.js.Date
 
+@js.native
 trait ScaleBase extends js.Object {
   def linear(): LinearScale = js.native
 
@@ -1369,6 +1426,7 @@ trait ScaleBase extends js.Object {
   def threshold(): ThresholdScale = js.native
 }
 
+@js.native
 trait Scale extends js.Object {
   def apply(value: js.Any): js.Dynamic = js.native
 
@@ -1385,6 +1443,7 @@ trait Scale extends js.Object {
   def copy(): Scale = js.native
 }
 
+@js.native
 trait QuantitiveScale extends Scale {
   def apply(value: Double): Double = js.native
 
@@ -1415,10 +1474,12 @@ trait QuantitiveScale extends Scale {
   override def copy(): QuantitiveScale = js.native
 }
 
+@js.native
 trait LinearScale extends QuantitiveScale {
   override def apply(value: Double): Double = js.native
 }
 
+@js.native
 trait IdentityScale extends Scale {
   def apply(value: Double): Double = js.native
 
@@ -1429,18 +1490,22 @@ trait IdentityScale extends Scale {
   def tickFormat(count: Double): js.Function1[Double, String] = js.native
 }
 
+@js.native
 trait SqrtScale extends QuantitiveScale {
   override def apply(value: Double): Double = js.native
 }
 
+@js.native
 trait PowScale extends QuantitiveScale {
   override def apply(value: Double): Double = js.native
 }
 
+@js.native
 trait LogScale extends QuantitiveScale {
   override def apply(value: Double): Double = js.native
 }
 
+@js.native
 trait OrdinalScale extends Scale {
   override def apply(value: js.Any): js.Dynamic = js.native
 
@@ -1465,6 +1530,7 @@ trait OrdinalScale extends Scale {
   override def copy(): OrdinalScale = js.native
 }
 
+@js.native
 trait QuantizeScale extends Scale {
   override def apply(value: js.Any): js.Dynamic = js.native
 
@@ -1479,6 +1545,7 @@ trait QuantizeScale extends Scale {
   override def copy(): QuantizeScale = js.native
 }
 
+@js.native
 trait ThresholdScale extends Scale {
   override def apply(value: js.Any): js.Dynamic = js.native
 
@@ -1493,6 +1560,7 @@ trait ThresholdScale extends Scale {
   override def copy(): ThresholdScale = js.native
 }
 
+@js.native
 trait QuantileScale extends Scale {
   override def apply(value: js.Any): js.Dynamic = js.native
 
@@ -1509,6 +1577,7 @@ trait QuantileScale extends Scale {
   override def copy(): QuantileScale = js.native
 }
 
+@js.native
 trait TimeScale extends Scale {
   def apply(value: Date): Double = js.native
 
@@ -1543,12 +1612,14 @@ trait TimeScale extends Scale {
 
 package Behavior {
 
+@js.native
 trait Behavior extends js.Object {
   def drag(): Drag = js.native
 
   def zoom(): Zoom = js.native
 }
 
+@js.native
 trait Zoom extends js.Object {
   def apply(selection: Selection): Unit = js.native
 
@@ -1575,6 +1646,7 @@ trait Zoom extends js.Object {
   def y(y: Scale.Scale): Zoom = js.native
 }
 
+@js.native
 trait Drag extends js.Object {
   def apply(): js.Dynamic = js.native
 
@@ -1589,6 +1661,7 @@ trait Drag extends js.Object {
 
 package Geo {
 
+@js.native
 trait Geo extends js.Object {
   def path(): Path = js.native
 
@@ -1635,6 +1708,7 @@ trait Geo extends js.Object {
   def rotation(rotation: js.Array[Double]): Rotation = js.native
 }
 
+@js.native
 trait Path extends js.Object {
   def apply(feature: js.Any, index: js.Any = js.native): String = js.native
 
@@ -1657,6 +1731,7 @@ trait Path extends js.Object {
   def pointRadius(radius: Double): Path = js.native
 }
 
+@js.native
 trait Context extends js.Object {
   def beginPath(): js.Dynamic = js.native
 
@@ -1669,6 +1744,7 @@ trait Context extends js.Object {
   def closePath(): js.Dynamic = js.native
 }
 
+@js.native
 trait Circle extends js.Object {
   def apply(args: js.Any*): GeoJSON = js.native
 
@@ -1685,6 +1761,7 @@ trait Circle extends js.Object {
   def precision(precision: Double): Circle = js.native
 }
 
+@js.native
 trait Graticule extends js.Object {
   def apply(): GeoJSON = js.native
 
@@ -1721,6 +1798,7 @@ trait Graticule extends js.Object {
   def precision(precision: Double): Graticule = js.native
 }
 
+@js.native
 trait GreatArc extends js.Object {
   def apply(): GeoJSON = js.native
 
@@ -1739,17 +1817,20 @@ trait GreatArc extends js.Object {
   def precision(precision: Double): GreatArc = js.native
 }
 
+@js.native
 trait GeoJSON extends js.Object {
   var coordinates: js.Array[js.Array[Double]] = js.native
   var `type`: String = js.native
 }
 
+@js.native
 trait RawProjection extends js.Object {
   def apply(lambda: Double, phi: Double): js.Array[Double] = js.native
 
   def invert(x: Double, y: Double): js.Array[Double] = js.native
 }
 
+@js.native
 trait Projection extends js.Object {
   def apply(coordinates: js.Array[Double]): js.Array[Double] = js.native
 
@@ -1790,6 +1871,7 @@ trait Projection extends js.Object {
   def stream(listener: Stream = js.native): Stream = js.native
 }
 
+@js.native
 trait Stream extends js.Object {
   def point(x: Double, y: Double, z: Double = js.native): Unit = js.native
 
@@ -1804,12 +1886,14 @@ trait Stream extends js.Object {
   def sphere(): Unit = js.native
 }
 
+@js.native
 trait Rotation extends js.Array[js.Any] {
   def apply(location: js.Array[Double]): Rotation = js.native
 
   def invert(location: js.Array[Double]): Rotation = js.native
 }
 
+@js.native
 trait ProjectionMutator extends js.Object {
   def apply(lambda: Double, phi: Double): Projection = js.native
 }
@@ -1818,6 +1902,7 @@ trait ProjectionMutator extends js.Object {
 
 package Geom {
 
+@js.native
 trait Geom extends js.Object {
   def voronoi[T](): Voronoi[T] = js.native
 
@@ -1840,10 +1925,12 @@ trait Geom extends js.Object {
   def hull(vertices: js.Array[Vertice]): js.Array[Vertice] = js.native
 }
 
+@js.native
 trait Vertice extends js.Array[Double] {
   var angle: Double = js.native
 }
 
+@js.native
 trait Polygon extends js.Array[Vertice] {
   def area(): Double = js.native
 
@@ -1852,6 +1939,7 @@ trait Polygon extends js.Array[Vertice] {
   def clip(subject: Polygon): Polygon = js.native
 }
 
+@js.native
 trait QuadtreeFactory extends js.Object {
   def apply(): Quadtree = js.native
 
@@ -1876,6 +1964,7 @@ trait QuadtreeFactory extends js.Object {
   def extent(points: js.Array[js.Array[Double]]): QuadtreeFactory = js.native
 }
 
+@js.native
 trait Quadtree extends js.Object {
   def add(point: Point): Unit = js.native
 
@@ -1884,11 +1973,13 @@ trait Quadtree extends js.Object {
   var point: Point = js.native
 }
 
+@js.native
 trait Point extends js.Object {
   var x: Double = js.native
   var y: Double = js.native
 }
 
+@js.native
 trait Voronoi[T] extends js.Object {
   def apply(data: js.Array[T]): js.Array[Polygon] = js.native
 
@@ -1917,6 +2008,7 @@ trait Voronoi[T] extends js.Object {
   def size(size: js.Array[Double]): Voronoi[T] = js.native
 }
 
+@js.native
 trait Hull extends js.Object {
   def apply(vertices: js.Array[Vertice]): js.Array[Vertice] = js.native
 
