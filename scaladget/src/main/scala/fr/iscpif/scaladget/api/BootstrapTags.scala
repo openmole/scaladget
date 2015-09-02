@@ -1,4 +1,5 @@
 package fr.iscpif.scaladget.api
+
 /*
  * Copyright (C) 27/05/15 // mathieu.leclaire@openmole.org
  *
@@ -57,12 +58,12 @@ object BootstrapTags {
   def span(keys: ClassKeyAggregator = emptyCK) = tags.span(`class` := keys.key)
 
   // Nav
-  class NavItem(val navid: String,
-                contentDiv: TypedTag[HTMLElement],
-                ontrigger: () ⇒ Unit,
-                val todo: () ⇒ Unit = () ⇒ {},
-                extraRenderPair: Seq[Modifier] = Seq(),
-                active: Boolean = false) {
+  class NavItem[T <: HTMLElement](val navid: String,
+                                  contentDiv: T,
+                                  ontrigger: () ⇒ Unit,
+                                  val todo: () ⇒ Unit = () ⇒ {},
+                                  extraRenderPair: Seq[Modifier] = Seq(),
+                                  active: Boolean = false) {
     val activeString = {
       if (active) "active" else ""
     }
@@ -76,21 +77,25 @@ object BootstrapTags {
 
   }
 
-  def dialogNavItem(id: String, content: String, ontrigger: () ⇒ Unit = () ⇒ {}, todo: () ⇒ Unit = () ⇒ {}) =
+  def dialogStringNavItem(id: String, content: String, ontrigger: () ⇒ Unit = () ⇒ {}, todo: () ⇒ Unit = () ⇒ {}): NavItem[HTMLDivElement] =
     navItem(id, content, ontrigger, todo, Seq(data("toggle") := "modal", data("target") := "#" + id + "PanelID"))
 
   def navItem(id: String, content: String, ontrigger: () ⇒ Unit = () ⇒ {}, todo: () ⇒ Unit = () ⇒ {}, extraRenderPair: Seq[Modifier] = Seq(), active: Boolean = false) =
-    new NavItem(id, tags.div(content), ontrigger, todo, extraRenderPair, active)
+    new NavItem(id, tags.div(content).render, ontrigger, todo, extraRenderPair, active)
 
   def dialogGlyphNavItem(id: String,
                          glyphIcon: ClassKeyAggregator,
                          ontrigger: () ⇒ Unit = () ⇒ {},
-                         todo: () ⇒ Unit = () ⇒ {},
-                         extraRenderPair: Seq[Modifier] = Seq(),
-                         active: Boolean = false) =
-    new NavItem(id, glyph(glyphIcon), ontrigger, todo, Seq(data("toggle") := "modal", data("target") := "#" + id + "PanelID"))
+                         todo: () ⇒ Unit = () ⇒ {}): NavItem[HTMLSpanElement] = dialogNavItem(id, glyph(glyphIcon).render, ontrigger, todo)
 
-  def nav(uuid: String, keys: ClassKeyAggregator, contents: NavItem*): TypedTag[HTMLElement] =
+  def dialogNavItem[T <: HTMLElement](id: String,
+                                      tTag: T,
+                                      ontrigger: () ⇒ Unit = () ⇒ {},
+                                      todo: () ⇒ Unit = () ⇒ {}): NavItem[T] =
+    new NavItem(id, tTag, ontrigger, todo, Seq(data("toggle") := "modal", data("target") := "#" + id + "PanelID"))
+
+
+  def nav(uuid: String, keys: ClassKeyAggregator, contents: NavItem[_ <: HTMLElement]*): TypedTag[HTMLElement] =
     ul(`class` := "nav " + keys.key, id := uuid, role := "tablist")(
       contents.map { c ⇒
         c.render(scalatags.JsDom.attrs.onclick := { () ⇒
