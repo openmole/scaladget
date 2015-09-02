@@ -21,7 +21,7 @@ The boostrap facade can be used directly or by means of a higher level library, 
 
 Here are 3 examples:
 ```scala
-import org.openmole.gui.misc.js.{ BootstrapTags ⇒ bs}
+import fr.iscpif.scaladget.api.{ BootstrapTags ⇒ bs}
 import bs._
 
 // Build a 12 columm a Boostrap div composed of 3 column divs
