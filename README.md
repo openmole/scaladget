@@ -7,6 +7,7 @@ Scaladget provides a scala facades of some famous javascript libraries. It relie
 * [Ace Editor](http://ace.c9.io)
 * [Tooltipster](http://iamceege.github.io/tooltipster/)
 
+
 ##Usage##
 Just add this to your dependencies:
 ```sh
@@ -14,6 +15,9 @@ Just add this to your dependencies:
 ```
 
 All the facades are intensively used in the [OpenMOLE project](https://github.com/openmole/openmole).
+
+##D3 wrapper##
+An example using the scaladget D3 wrapper can be found in the [ScalaWUI](https://github.com/mathieuleclaire/scalaWUI) project: [FlowChart](https://github.com/mathieuleclaire/scalaWUI/blob/master/client/src/main/scala/fr/iscpif/client/FlowChart.scala). It reproduces this [D3 flowchart](http://bl.ocks.org/cjrd/6863459).
 
 
 ##Bootstrap library##
