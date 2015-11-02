@@ -24,6 +24,10 @@ libraryDependencies ++= Seq(
   "org.querki" %%% "querki-jsext" % "0.5"
 )
 
+jsDependencies ++= Seq(
+  "org.webjars" % "d3js" % "3.5.6" / "d3.min.js"
+)
+
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
   if (version.value.trim.endsWith("SNAPSHOT"))
