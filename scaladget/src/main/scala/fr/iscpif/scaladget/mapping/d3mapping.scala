@@ -651,7 +651,7 @@ trait TreeLayout extends js.Object {
 
   def children(children: js.Function1[js.Any, Any]): TreeLayout = js.native
 
-  def nodes(root: GraphNode): TreeLayout = js.native
+  def nodes(root: GraphNode): js.Array[GraphNode] = js.native
 
   def links(nodes: js.Array[GraphNode]): js.Array[GraphLink] = js.native
 
