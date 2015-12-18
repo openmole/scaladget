@@ -180,6 +180,11 @@ object BootstrapTags {
   val glyph_plug = "icon-plug"
   val glyph_exclamation = "glyphicon-exclamation-sign"
   val glyph_comment = "glyphicon-comment"
+  val glyph_upload_alt = "glyphicon-upload"
+  val glyph_arrow_right = "glyphicon-arrow-right"
+  val glyph_arrow_left = "glyphicon-arrow-left"
+  val glyph_arrow_right_and_left = "glyphicon-resize-horizontal"
+
 
   //Button
   def button(content: String, keys: ClassKeyAggregator, todo: () ⇒ Unit = () ⇒ {}): TypedTag[HTMLButtonElement] =
@@ -255,7 +260,7 @@ object BootstrapTags {
     button(content + " ", keys)(span("badge")(badgeValue))
 
   //Button group
-  def buttonGroup(keys: ClassKeyAggregator = emptyCK) = div("btn-group")
+  def buttonGroup(keys: ClassKeyAggregator = emptyCK) = div(keys + "btn-group")
 
   val btn_group_large = key("btn-group-lg")
   val btn_group_medium = key("btn-group-sm")
