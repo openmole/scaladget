@@ -3,8 +3,14 @@ package fr.iscpif.scaladget.mapping.tooltipster
 import scala.scalajs.js
 import org.scalajs.jquery
 import org.querki.jsext._
+import org.scalajs.jquery.JQuery
+import js.annotation._
 
-
+@js.native
+@JSName("tooltipster")
+object tooltipster extends js.Object {
+    implicit def jq2Datepicker(jq:JQuery):Tooltipster = jq.asInstanceOf[Tooltipster]
+}
 
 @js.native
 trait Tooltipster extends js.Object {

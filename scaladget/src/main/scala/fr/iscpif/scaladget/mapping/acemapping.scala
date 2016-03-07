@@ -72,6 +72,10 @@ trait TextMode extends js.Object {
 }
 
 @js.native
+@JSName("ace")
+object ace extends Ace
+
+@js.native
 trait Ace extends js.Object {
   def require(moduleName: String): js.Dynamic = js.native
   def edit(el: String): Editor = js.native
@@ -397,6 +401,10 @@ class Editor protected () extends js.Object {
 }
 
 @js.native
+@JSName("autocomplete")
+object autocomplete extends AutoComplete
+
+@js.native
 class AutoComplete extends js.Object {
   def showPopup(editor: Editor): js.Dynamic = js.native
   def cancelContextMenu(): js.Dynamic = js.native
@@ -475,6 +483,10 @@ class Range protected () extends js.Object {
   def toScreenRange(session: IEditSession): Range = js.native
   def fromPoints(start: Range, end: Range): Range = js.native
 }
+
+@js.native
+@JSName("range")
+object range extends Range
 
 @js.native
 object Range extends js.Object {

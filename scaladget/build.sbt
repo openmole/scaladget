@@ -17,15 +17,15 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "org.scala-js" %%% "scalajs-dom" % "0.8.0",
-  "be.doeraene" %%% "scalajs-jquery" % "0.8.0",
-  "com.lihaoyi" %%% "scalatags" % "0.5.2",
+  "org.scala-js" %%% "scalajs-dom" % "0.9.0",
+  "be.doeraene" %%% "scalajs-jquery" % "0.9.0",
+  "com.lihaoyi" %%% "scalatags" % "0.5.4",
   "com.lihaoyi" %%% "scalarx" % "0.2.8",
-  "org.querki" %%% "querki-jsext" % "0.5"
+  "org.querki" %%% "querki-jsext" % "0.6"
 )
 
 jsDependencies ++= Seq(
-  "org.webjars" % "d3js" % "3.5.6" / "d3.min.js"
+  "org.webjars" % "d3js" % "3.5.12" / "d3.min.js"
 )
 
 publishTo := {

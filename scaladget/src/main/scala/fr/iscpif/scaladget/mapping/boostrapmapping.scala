@@ -17,6 +17,7 @@
 package fr.iscpif.scaladget.mapping
 
 import scala.scalajs.js
+import js.annotation._
 
 @js.native
 trait ModalOptions extends js.Object {
@@ -91,6 +92,10 @@ trait TypeaheadOptions extends js.Object {
 trait AffixOptions extends js.Object {
   var offset: js.Any = js.native
 }
+
+@js.native
+@JSName("bootstrap")
+object bootstrap extends BootstrapStatic
 
 @js.native
 trait BootstrapStatic extends js.Object {
