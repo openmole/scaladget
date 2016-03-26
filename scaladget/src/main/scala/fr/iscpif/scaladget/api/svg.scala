@@ -28,12 +28,10 @@ package object svg {
   object path {
     implicit def pathToTypedTagPath(p: Path): TypedTag[dom.svg.Path] = p.render
 
-    object Path {
       def start(x: Int, y: Int): Path = apply("").m(x, y)
 
       def apply(st: String) = new Path {
         val svgString = st
-      }
     }
 
 
@@ -42,7 +40,7 @@ package object svg {
 
       def render: TypedTag[dom.svg.Path] = svgTags.path(svgAttrs.d := svgString)
 
-      private def append(s: String): Path = Path(svgString + s" $s")
+      private def append(s: String): Path = path(svgString + s" $s")
 
       def m(x: Int, y: Int): Path = append(s"M $x $y")
 
