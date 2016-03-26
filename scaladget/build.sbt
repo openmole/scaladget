@@ -10,7 +10,7 @@ name := "scaladget"
 
 version := "0.8.0-SNAPSHOT"
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.11.8"
 
 resolvers ++= Seq(
   DefaultMavenRepository
@@ -18,7 +18,8 @@ resolvers ++= Seq(
 
 libraryDependencies ++= Seq(
   "org.scala-js" %%% "scalajs-dom" % "0.9.0",
-  "be.doeraene" %%% "scalajs-jquery" % "0.9.0",
+ // "be.doeraene" %%% "scalajs-jquery" % "0.9.0",
+  "org.querki" %%% "jquery-facade" % "1.0-RC1",
   "com.lihaoyi" %%% "scalatags" % "0.5.4",
   "com.lihaoyi" %%% "scalarx" % "0.2.8",
   "org.querki" %%% "querki-jsext" % "0.6"

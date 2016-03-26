@@ -27,15 +27,13 @@ import scalatags.JsDom.{tags ⇒ tags}
 import scalatags.JsDom.all._
 
 import fr.iscpif.scaladget.tools.JsRxTags._
-import org.scalajs.jquery.jQuery
-import org.scalajs.jquery.JQuery
-import fr.iscpif.scaladget.mapping.BootstrapStatic
+import org.querki.jquery._
+import fr.iscpif.scaladget.mapping.bootstrap._
+import fr.iscpif.scaladget.bootstrap._
 import rx._
 
 @JSExport("BootstrapTags")
 object BootstrapTags {
-
-  implicit def jq2BootstrapStatic(jq: JQuery): BootstrapStatic = jq.asInstanceOf[BootstrapStatic]
 
   implicit def stringToClassKeyAggregator(s: String): ClassKeyAggregator = key(s)
 
@@ -99,8 +97,8 @@ object BootstrapTags {
     ul(`class` := "nav " + keys.key, id := uuid, role := "tablist")(
       contents.map { c ⇒
         c.render(scalatags.JsDom.attrs.onclick := { () ⇒
-          jQuery("#" + uuid + " .active").removeClass("active")
-          jQuery("#mainNavItemID").addClass("active")
+          $("#" + uuid + " .active").removeClass("active")
+          $("#mainNavItemID").addClass("active")
           c.todo()
         })
       }: _*)
@@ -119,7 +117,7 @@ object BootstrapTags {
   //Inputs
   def input(content: String, key: ClassKeyAggregator = emptyCK) = tags.input(`class` := "form-control " + key.key, value := content)
 
-  def checkbox(default: Boolean) = tags.input(`type` := "checkbox", checked := default)
+  def checkbox(default: Boolean) = tags.input(`type` := "checkbox", if (default) checked)
 
   // Label
   def label(content: String, keys: ClassKeyAggregator = emptyCK): TypedTag[HTMLSpanElement] = span("label " + keys.key)(content)
@@ -210,7 +208,7 @@ object BootstrapTags {
     }))
 
   def fileInputMultiple(todo: HTMLInputElement ⇒ Unit) = {
-    lazy val input: HTMLInputElement = tags.input(id := "fileinput", `type` := "file", multiple := "")(onchange := { () ⇒
+    lazy val input: HTMLInputElement = tags.input(id := "fileinput", `type` := "file", multiple)(onchange := { () ⇒
       todo(input)
     }).render
     input
@@ -285,6 +283,14 @@ object BootstrapTags {
   def bodyDialog = div("modal-body")
 
   def footerDialog = div("modal-footer")
+
+  //modal events
+   private def modalQuery(id: ModalID, query: String) =  $("#" + id).modal(query)
+   private def hasClass(id: ModalID, clazz: String): Boolean = $("#"+id).hasClass(clazz)
+   def showModal(id: ModalID) = modalQuery(id, "show")
+   def hideModal(id: ModalID) = modalQuery(id, "hide")
+   def isModalVisible(id: ModalID): Boolean = hasClass(id,"in")
+
 
   //Jumbotron
   def jumbotron(modifiers: scalatags.JsDom.Modifier*) =

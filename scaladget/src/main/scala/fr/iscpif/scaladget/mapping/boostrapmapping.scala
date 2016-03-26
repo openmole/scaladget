@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.iscpif.scaladget.mapping
+package fr.iscpif.scaladget.mapping.bootstrap
 
 import scala.scalajs.js
+import org.querki.jquery._
 import js.annotation._
 
 @js.native
@@ -92,10 +93,6 @@ trait TypeaheadOptions extends js.Object {
 trait AffixOptions extends js.Object {
   var offset: js.Any = js.native
 }
-
-@js.native
-@JSName("bootstrap")
-object bootstrap extends BootstrapStatic
 
 @js.native
 trait BootstrapStatic extends js.Object {
