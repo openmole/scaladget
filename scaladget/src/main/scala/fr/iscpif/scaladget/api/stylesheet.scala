@@ -243,7 +243,7 @@ package stylesheet {
 
     //Exclusive Button Group
     def stringInGroup: ModifierSeq = Seq(
-      sty.height := "28px",
+      sty.height := "30px",
       sty.paddingTop := "3px",
       sty.paddingLeft := "6px",
       sty.paddingRight := "6px"
