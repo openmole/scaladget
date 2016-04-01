@@ -37,8 +37,6 @@ import rx._
 object BootstrapTags {
   bstags =>
 
-  // implicit def stringToClassKeyAggregator(s: String): ClassKeyAggregator = key(s)
-
   implicit def formTagToNode(tt: HtmlTag): org.scalajs.dom.Node = tt.render
 
   /*implicit class BootstrapTypedTag[+Output <: raw.Element](t: TypedTag[Output]) {
@@ -46,25 +44,6 @@ object BootstrapTags {
   }*/
 
   def uuID: String = java.util.UUID.randomUUID.toString
-
-
-  // GLYPHICONS
-
-  //def emptyCK = ClassKeyAggregator.empty
-
-  // def key(s: String) = new ClassKeyAggregator(s)
-
-  //Div
-  /* TO DEPRECATE
-  def div(style: Modifier*) = tags.div(`class` := keys.key)
-
-  def div(style: Modifier*) = tags.div(style)
-  */
-
-  //span
-  /* TO DEPRECATE
-  def span(keys: ClassKeyAggregator = emptyCK) = tags.span(`class` := keys.key)
-  */
 
   // INPUT
   def input(content: String) = tags.input(bs.formControl, value := content)
@@ -97,7 +76,7 @@ object BootstrapTags {
 
 
   // LABEL
-  def label(content: String, label: LabelStyle): TypedTag[HTMLSpanElement] = span(label)(content)
+  def label(content: String, label: ModifierSeq): TypedTag[HTMLSpanElement] = span(label)(content)
 
 
   // SELECT (to be used with button class aggregators )
@@ -480,13 +459,3 @@ object BootstrapTags {
   }
 
 }
-
-/*
-object ClassKeyAggregator {
-  def empty = new ClassKeyAggregator("")
-}
-
-class ClassKeyAggregator(val key: String = "") {
-  def +(otherKey: ClassKeyAggregator): ClassKeyAggregator = new ClassKeyAggregator(key + " " + otherKey.key)
-}
-*/
