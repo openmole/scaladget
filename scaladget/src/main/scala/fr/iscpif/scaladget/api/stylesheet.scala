@@ -33,7 +33,7 @@ package object stylesheet {
 
   def pairing(a: String, b: String): ClassAttrPair = `class` := (a.split(" ") ++ b.split(" ")).distinct.mkString(" ")
 
-  def ms(s: String): ModifierSeq = Seq(s)
+  def ms(s: String): ModifierSeq = Seq(`class` := s)
 
   implicit def modifierToModifierSeq(p: Modifier): ModifierSeq = Seq(p)
 
