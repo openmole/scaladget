@@ -17,6 +17,7 @@ package fr.iscpif.scaladget
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import scalatags.JsDom
 import scalatags.JsDom.{styles => sty}
 import org.scalajs.dom
 import scalatags.JsDom.all._
@@ -27,11 +28,16 @@ package object stylesheet {
 
   type ClassAttrPair = scalatags.generic.AttrPair[dom.Element, String]
   type ModifierSeq = Seq[Modifier]
+  val emptyMod: ModifierSeq = Seq()
 
 
   def pairing(a: String, b: String): ClassAttrPair = `class` := (a.split(" ") ++ b.split(" ")).distinct.mkString(" ")
 
+  def ms(s: String): ModifierSeq = Seq(s)
+
   implicit def modifierToModifierSeq(p: Modifier): ModifierSeq = Seq(p)
+
+  implicit def stringToModifierSeq(classString: String): ModifierSeq = toClass(classString)
 
   implicit class ComposableClassAttrPair[P <: ClassAttrPair](pair: P) {
     def +++(pair2: ClassAttrPair): ClassAttrPair = {
@@ -73,10 +79,29 @@ package object stylesheet {
 
     }
 
-    //def +++(modifier: Modifier): ModifierSeq = modifierSeq :+ modifier
+    def divCSS(cssClass: String) = div(`class` := cssClass)
   }
 
   def toClass(s: String): ClassAttrPair = `class` := s
+
+  // CONVINIENT GENERAL ALIASES
+
+  def paddingTop(t: Int): ModifierSeq = Seq(JsDom.styles.paddingTop := s"$t")
+
+  def paddingBottom(t: Int): ModifierSeq = Seq(JsDom.styles.paddingBottom := s"$t")
+
+  def paddingLeft(t: Int): ModifierSeq = Seq(JsDom.styles.paddingLeft := s"$t")
+
+  def paddingRight(t: Int): ModifierSeq = Seq(JsDom.styles.paddingRight := s"$t")
+
+  lazy val floatLeft: ModifierSeq = Seq(float := "left")
+
+  lazy val floatRight: ModifierSeq = Seq(float := "right")
+
+  lazy val transparent: ModifierSeq = Seq(opacity := 0)
+
+  lazy val opaque: ModifierSeq = Seq(opacity := 1)
+
 }
 
 package stylesheet {

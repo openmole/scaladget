@@ -25,7 +25,8 @@ import scalatags.JsDom.all._
 import scalatags.JsDom.{styles => sty}
 import fr.iscpif.scaladget.tools.JsRxTags._
 import org.querki.jquery._
-import fr.iscpif.scaladget.stylesheet._
+import fr.iscpif.scaladget.{stylesheet=> sheet}
+import sheet._
 import fr.iscpif.scaladget.stylesheet.{bootstrap => bs}
 import bs._
 import fr.iscpif.scaladget.bootstrap._
@@ -109,30 +110,9 @@ object BootstrapTags {
   def glyphButton(text: String, buttonStyle: ModifierSeq = Seq(), glyphicon: ModifierSeq = Seq(), todo: () ⇒ Unit = () => {}): TypedTag[HTMLButtonElement] =
     button(text, buttonStyle, todo)(cursor := "pointer", `type` := "button")(span(glyphicon))
 
-  // Clickable span containing a glyphicon
-  def glyphSpan(glyphicon: Glyphicon, onclickAction: () ⇒ Unit = () ⇒ {}): TypedTag[HTMLSpanElement] =
-    span(glyphicon, aria.hidden := "true", onclick := { () ⇒ onclickAction() })
-
-
-  /*def glyphSpan(glyCA: ClassKeyAggregator, todo: () ⇒ Unit, linkName: String = ""): TypedTag[HTMLSpanElement] =
-    tags.span(cursor := "pointer", glyphSpan(glyCA)(linkName)(onclick := { () ⇒
-      todo()
-    }))*/
-
-  /* Move to openmole because of cascading css needs
-    def uploadButton(todo: HTMLInputElement ⇒ Unit): TypedTag[HTMLSpanElement] = {
-      span(" btn-file")(cursor := "pointer", id := "success-like")(
-        glyphSpan(glyph_upload),
-        fileInputMultiple(todo)
-      )
-    }
-
-    def uploadGlyphSpan(todo: HTMLInputElement ⇒ Unit): TypedTag[HTMLSpanElement] =
-      span("btn-file")(
-        glyphSpan(glyph_upload),
-        fileInputMultiple(todo)
-      )
-  */
+  // Clickable span containing a glyphicon and a text
+  def glyphSpan(glyphicon: ModifierSeq, onclickAction: () ⇒ Unit = () ⇒ {}, text: String = ""): TypedTag[HTMLSpanElement] =
+    span(glyphicon, aria.hidden := "true", onclick := { () ⇒ onclickAction() })(text)
 
 
   // PROGRESS BAR
@@ -347,8 +327,8 @@ object BootstrapTags {
   def alert(content: String, todook: () ⇒ Unit, todocancel: () ⇒ Unit) = {
     tags.div(role := "alert")(
       content,
-      div(paddingTop := "20px")(
-        buttonGroup(sty.float := "left")(
+      div(sheet.paddingTop(20))(
+        buttonGroup(sheet.floatLeft)(
           button("OK", btn_danger, todook),
           button("Cancel", btn_default, todocancel)
         )
