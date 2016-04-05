@@ -1,4 +1,4 @@
-package fr.iscpif.scaladget
+package fr.iscpif.scaladget.stylesheet
 
 /*
  * Copyright (C) 30/03/16 // mathieu.leclaire@openmole.org
@@ -17,6 +17,7 @@ package fr.iscpif.scaladget
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 import scalatags.JsDom
 import scalatags.JsDom.{styles => sty}
 import org.scalajs.dom
@@ -24,89 +25,102 @@ import scalatags.JsDom.all._
 import scalatags.generic.StylePair
 
 
-package object stylesheet {
+package object all extends stylesheetbase.BasePackage with bootstrap.BootstrapPackage with bootstrap2.Bootstrap2Package
 
-  type ClassAttrPair = scalatags.generic.AttrPair[dom.Element, String]
-  type ModifierSeq = Seq[Modifier]
-  val emptyMod: ModifierSeq = Seq()
+package stylesheetbase {
+
+  package object stylesheetbase extends BasePackage
+
+  trait BasePackage {
 
 
-  def pairing(a: String, b: String): ClassAttrPair = `class` := (a.split(" ") ++ b.split(" ")).distinct.mkString(" ")
+    type ClassAttrPair = scalatags.generic.AttrPair[dom.Element, String]
+    type ModifierSeq = Seq[Modifier]
+    val emptyMod: ModifierSeq = Seq()
 
-  def ms(s: String): ModifierSeq = Seq(`class` := s)
 
-  implicit def modifierToModifierSeq(p: Modifier): ModifierSeq = Seq(p)
+    def pairing(a: String, b: String): ClassAttrPair = `class` := (a.split(" ") ++ b.split(" ")).distinct.mkString(" ")
 
-  implicit def stringToModifierSeq(classString: String): ModifierSeq = toClass(classString)
+    def ms(s: String): ModifierSeq = Seq(`class` := s)
 
-  implicit class ComposableClassAttrPair[P <: ClassAttrPair](pair: P) {
-    def +++(pair2: ClassAttrPair): ClassAttrPair = {
-      if (pair.a.name != "class" || pair2.a.name != "class") toClass("ClassError")
-      else pairing(pair.v, pair2.v)
-    }
+    implicit def modifierToModifierSeq(p: Modifier): ModifierSeq = Seq(p)
 
-    def +++(mod: ModifierSeq): ModifierSeq = pair +: mod
+    implicit def stringToModifierSeq(classString: String): ModifierSeq = toClass(classString)
 
-    def +++(sty: StylePair[dom.Element, _]): ModifierSeq = Seq(pair, sty)
-  }
-
-  implicit class ComposableModifierSeq(modifierSeq: ModifierSeq) {
-    private def findClassAttrPair(modifierSeq: ModifierSeq) =
-      modifierSeq.collect { case a: ClassAttrPair => a }.filter { x =>
-        x.a.name == "class"
+    implicit class ComposableClassAttrPair[P <: ClassAttrPair](pair: P) {
+      def +++(pair2: ClassAttrPair): ClassAttrPair = {
+        if (pair.a.name != "class" || pair2.a.name != "class") toClass("ClassError")
+        else pairing(pair.v, pair2.v)
       }
 
+      def +++(mod: ModifierSeq): ModifierSeq = pair +: mod
 
-    def +++(classPair: ClassAttrPair): ModifierSeq = {
-      val attrPair = findClassAttrPair(modifierSeq)
-
-      if (attrPair.isEmpty) modifierSeq :+ classPair
-      else modifierSeq.filterNot(_ == attrPair.head) :+ pairing(attrPair.head.v, classPair.v)
+      def +++(sty: StylePair[dom.Element, _]): ModifierSeq = Seq(pair, sty)
     }
 
-    def +++(modifierSeq2: ModifierSeq): ModifierSeq = {
-      val attrPair = findClassAttrPair(modifierSeq)
-      val attrPair2 = findClassAttrPair(modifierSeq2)
-      val classPairing =
-        if (attrPair.isEmpty && attrPair2.isEmpty) Seq()
-        else Seq((attrPair ++ attrPair2).reduce { (a, b) => pairing(a.v, b.v) })
+    implicit class ComposableModifierSeq(modifierSeq: ModifierSeq) {
+      private def findClassAttrPair(modifierSeq: ModifierSeq) =
+        modifierSeq.collect { case a: ClassAttrPair => a }.filter { x =>
+          x.a.name == "class"
+        }
 
-      modifierSeq.filterNot {
-        _ == attrPair
-      } ++ modifierSeq2.filterNot {
-        _ == attrPair2
-      } ++ classPairing
 
+      def +++(classPair: ClassAttrPair): ModifierSeq = {
+        val attrPair = findClassAttrPair(modifierSeq)
+
+        if (attrPair.isEmpty) modifierSeq :+ classPair
+        else modifierSeq.filterNot(_ == attrPair.head) :+ pairing(attrPair.head.v, classPair.v)
+      }
+
+      def +++(modifierSeq2: ModifierSeq): ModifierSeq = {
+        val attrPair = findClassAttrPair(modifierSeq)
+        val attrPair2 = findClassAttrPair(modifierSeq2)
+        val classPairing =
+          if (attrPair.isEmpty && attrPair2.isEmpty) Seq()
+          else Seq((attrPair ++ attrPair2).reduce { (a, b) => pairing(a.v, b.v) })
+
+        modifierSeq.filterNot {
+          _ == attrPair
+        } ++ modifierSeq2.filterNot {
+          _ == attrPair2
+        } ++ classPairing
+
+      }
+
+      def divCSS(cssClass: String) = div(`class` := cssClass)
     }
 
-    def divCSS(cssClass: String) = div(`class` := cssClass)
+    def toClass(s: String): ClassAttrPair = `class` := s
+
+    // CONVINIENT GENERAL ALIASES
+
+    def paddingTop(t: Int): ModifierSeq = Seq(JsDom.styles.paddingTop := s"$t")
+
+    def paddingBottom(t: Int): ModifierSeq = Seq(JsDom.styles.paddingBottom := s"$t")
+
+    def paddingLeft(t: Int): ModifierSeq = Seq(JsDom.styles.paddingLeft := s"$t")
+
+    def paddingRight(t: Int): ModifierSeq = Seq(JsDom.styles.paddingRight := s"$t")
+
+    lazy val floatLeft: ModifierSeq = Seq(float := "left")
+
+    lazy val floatRight: ModifierSeq = Seq(float := "right")
+
+    lazy val transparent: ModifierSeq = Seq(opacity := 0)
+
+    lazy val opaque: ModifierSeq = Seq(opacity := 1)
   }
-
-  def toClass(s: String): ClassAttrPair = `class` := s
-
-  // CONVINIENT GENERAL ALIASES
-
-  def paddingTop(t: Int): ModifierSeq = Seq(JsDom.styles.paddingTop := s"$t")
-
-  def paddingBottom(t: Int): ModifierSeq = Seq(JsDom.styles.paddingBottom := s"$t")
-
-  def paddingLeft(t: Int): ModifierSeq = Seq(JsDom.styles.paddingLeft := s"$t")
-
-  def paddingRight(t: Int): ModifierSeq = Seq(JsDom.styles.paddingRight := s"$t")
-
-  lazy val floatLeft: ModifierSeq = Seq(float := "left")
-
-  lazy val floatRight: ModifierSeq = Seq(float := "right")
-
-  lazy val transparent: ModifierSeq = Seq(opacity := 0)
-
-  lazy val opaque: ModifierSeq = Seq(opacity := 1)
 
 }
 
-package stylesheet {
+package bootstrap {
 
-  package object bootstrap {
+  import stylesheetbase.stylesheetbase._
+
+  package object bootstrap extends BootstrapPackage
+
+  trait BootstrapPackage {
+
     type Glyphicon = ClassAttrPair
     type Navbar = ClassAttrPair
     type LabelStyle = ClassAttrPair
@@ -262,9 +276,15 @@ package stylesheet {
     lazy val controls: ClassAttrPair = toClass("controls")
   }
 
+}
 
-  package object bootstrap2 {
+package bootstrap2 {
 
+  import stylesheetbase.stylesheetbase._
+
+  package object bootstrap2 extends Bootstrap2Package
+
+  trait Bootstrap2Package {
 
     //Exclusive Button Group
     def stringInGroup: ModifierSeq = Seq(
@@ -284,7 +304,7 @@ package stylesheet {
       sty.top := "1px",
       sty.height := "30px"
     )
-
   }
 
 }
+

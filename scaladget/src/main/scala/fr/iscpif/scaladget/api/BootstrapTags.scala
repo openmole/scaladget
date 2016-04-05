@@ -22,16 +22,11 @@ import org.scalajs.dom.raw._
 import scala.scalajs.js.annotation.JSExport
 import scalatags.JsDom.{TypedTag, tags ⇒ tags}
 import scalatags.JsDom.all._
-import scalatags.JsDom.{styles => sty}
 import fr.iscpif.scaladget.tools.JsRxTags._
 import org.querki.jquery._
-import fr.iscpif.scaladget.{stylesheet=> sheet}
-import sheet._
-import fr.iscpif.scaladget.stylesheet.{bootstrap => bs}
-import bs._
+import fr.iscpif.scaladget.stylesheet.{all=> sheet}
 import fr.iscpif.scaladget.bootstrap._
-import fr.iscpif.scaladget.stylesheet.{bootstrap2 => bs2}
-import bs2._
+import sheet._
 import rx._
 
 @JSExport("BootstrapTags")
@@ -47,9 +42,9 @@ object BootstrapTags {
   def uuID: String = java.util.UUID.randomUUID.toString
 
   // INPUT
-  def input(content: String) = tags.input(bs.formControl, value := content)
+  def input(content: String) = tags.input(formControl, value := content)
 
-  def inputGroup(modifierSeq: ModifierSeq) = div(modifierSeq +++ bs.inputGroup)
+  def inputGroup(modifierSeq: ModifierSeq) = div(modifierSeq +++ sheet.inputGroup)
 
   def inputGroupButton = span("input-group-btn")
 
@@ -117,8 +112,8 @@ object BootstrapTags {
 
   // PROGRESS BAR
   def progressBar(barMessage: String, ratio: Int): TypedTag[HTMLDivElement] =
-    div(bs.progress)(
-      div(bs.progressBar)(width := ratio.toString() + "%")(
+    div(progress)(
+      div(sheet.progressBar)(width := ratio.toString() + "%")(
         barMessage
       )
     )
@@ -130,9 +125,9 @@ object BootstrapTags {
 
 
   //BUTTON GROUP
-  def buttonGroup(mod: ModifierSeq = Seq()) = div(mod +++ bs.btnGroup)
+  def buttonGroup(mod: ModifierSeq = Seq()) = div(mod +++ btnGroup)
 
-  def buttonToolBar = div(bs.btnToolbar)(role := "toolbar")
+  def buttonToolBar = div(btnToolbar)(role := "toolbar")
 
 
   //MODAL
@@ -140,18 +135,18 @@ object BootstrapTags {
   type ModalID = String
 
   def modalDialog(ID: ModalID, typedTag: TypedTag[_]*): Dialog =
-    div(bs.modal +++ bs.fade)(id := ID,
-      div(bs.modalDialog)(
-        div(bs.modalContent)(
+    div(modal +++ fade)(id := ID,
+      div(sheet.modalDialog)(
+        div(modalContent)(
           typedTag)
       )
     )
 
-  def headerDialog = div(bs.modalHeader +++ bs.modalInfo)
+  def headerDialog = div(modalHeader +++ modalInfo)
 
-  def bodyDialog = div(bs.modalBody)
+  def bodyDialog = div(modalBody)
 
-  def footerDialog = div(bs.modalFooter)
+  def footerDialog = div(modalFooter)
 
   //modal jQuery events
   private def modalQuery(id: ModalID, query: String) = $("#" + id).modal(query)
@@ -216,8 +211,8 @@ object BootstrapTags {
 
   // JUMBOTRON
   def jumbotron(modifiers: ModifierSeq) =
-    div(bs.container +++ bs.themeShowcase)(role := "main")(
-      div(bs.jumbotron)(
+    div(container +++ themeShowcase)(role := "main")(
+      div(sheet.jumbotron)(
         p(modifiers)
       )
     )
@@ -244,7 +239,7 @@ object BootstrapTags {
   import ScrollableTextArea._
 
   // TEXT AREA
-  def textArea(nbRow: Int) = tags.textarea(bs.formControl, rows := nbRow)
+  def textArea(nbRow: Int) = tags.textarea(formControl, rows := nbRow)
 
   def scrollableText(text: String = "", scrollMode: AutoScroll = TopScroll): ScrollableText = ScrollableText(text, scrollMode)
 
@@ -319,9 +314,9 @@ object BootstrapTags {
 
   // PANELS
   def panel(heading: String) =
-    div(bs.panel +++ bs.panelDefault)(
-      div(bs.panelHeading)(heading),
-      div(bs.panelBody)
+    div(sheet.panel +++ panelDefault)(
+      div(panelHeading)(heading),
+      div(panelBody)
     )
 
   def alert(content: String, todook: () ⇒ Unit, todocancel: () ⇒ Unit) = {
@@ -413,7 +408,7 @@ object BootstrapTags {
 
     def buttonBackground(b: ExclusiveButton) = {
       val base: ModifierSeq = (if (b == selected()) selectionStyle else btn_default)
-      base +++ bs2.twoGlyphButton
+      base +++ twoGlyphButton
     }
 
 
