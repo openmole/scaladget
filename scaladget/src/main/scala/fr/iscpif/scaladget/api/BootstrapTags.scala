@@ -120,7 +120,7 @@ object BootstrapTags {
 
 
   // BADGE
-  def badge(content: String, badgeValue: String, buttonStyle: ButtonStyle, todo: () => Unit) =
+  def badge(content: String, badgeValue: String, buttonStyle: ModifierSeq, todo: () => Unit) =
     button(s"$content ", buttonStyle, todo)(span("badge")(badgeValue))
 
 
