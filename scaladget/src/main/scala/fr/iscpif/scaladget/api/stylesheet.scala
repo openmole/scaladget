@@ -102,6 +102,14 @@ package stylesheetbase {
 
     def paddingRight(t: Int): ModifierSeq = Seq(JsDom.styles.paddingRight := s"$t")
 
+    def marginTop(t: Int): ModifierSeq = Seq(JsDom.styles.marginTop := s"$t")
+
+    def marginBottom(t: Int): ModifierSeq = Seq(JsDom.styles.marginBottom := s"$t")
+
+    def marginLeft(t: Int): ModifierSeq = Seq(JsDom.styles.marginLeft := s"$t")
+
+    def marginRight(t: Int): ModifierSeq = Seq(JsDom.styles.marginRight := s"$t")
+
     lazy val floatLeft: ModifierSeq = Seq(float := "left")
 
     lazy val floatRight: ModifierSeq = Seq(float := "right")
