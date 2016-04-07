@@ -24,10 +24,10 @@ import org.scalajs.dom
 import scalatags.JsDom.all._
 import scalatags.generic.StylePair
 
-
 package object all extends stylesheetbase.BasePackage with bootstrap.BootstrapPackage with bootstrap2.Bootstrap2Package
 
 package stylesheetbase {
+
 
   package object stylesheetbase extends BasePackage
 
@@ -40,8 +40,6 @@ package stylesheetbase {
 
 
     def pairing(a: String, b: String): ClassAttrPair = `class` := (a.split(" ") ++ b.split(" ")).distinct.mkString(" ")
-
-    def ms(s: String): ModifierSeq = Seq(`class` := s)
 
     implicit def modifierToModifierSeq(p: Modifier): ModifierSeq = Seq(p)
 
@@ -90,7 +88,18 @@ package stylesheetbase {
       def divCSS(cssClass: String) = div(`class` := cssClass)
     }
 
+    // Convenient implicit conversions
+    implicit def condOnModifierSeq3(t: Tuple3[Boolean, ModifierSeq, ModifierSeq]): ModifierSeq = if (t._1) t._2 else t._3
+
+    implicit def condOnModifierSeq2(t: Tuple2[Boolean, ModifierSeq]): ModifierSeq = condOnModifierSeq3(t._1, t._2, emptyMod)
+
+
     def toClass(s: String): ClassAttrPair = `class` := s
+
+    // Explicit builders for ModifierSeq (from string or from condition and two ModifierSeq alternatives)
+    def ms(s: String): ModifierSeq = Seq(`class` := s)
+
+    def ms(cond: Boolean, ms1: ModifierSeq, ms2: ModifierSeq = emptyMod): ModifierSeq = condOnModifierSeq3(cond, ms1, ms2)
 
     // CONVINIENT GENERAL ALIASES
 
@@ -185,6 +194,8 @@ package bootstrap {
     lazy val glyph_triangle_top: Glyphicon = toGlyphicon("glyphicon-triangle-top")
 
     //NAVBARS
+    lazy val nav: Navbar = toClass("nav")
+    lazy val navTabs: Navbar = toClass("nav-tabs")
     lazy val nav_default: Navbar = toClass("navbar-default")
     lazy val nav_inverse: Navbar = toClass("navbar-inverse")
     lazy val nav_staticTop: Navbar = toClass("navbar-static-top")

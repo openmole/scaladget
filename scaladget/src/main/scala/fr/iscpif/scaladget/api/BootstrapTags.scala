@@ -42,7 +42,7 @@ object BootstrapTags {
   def uuID: String = java.util.UUID.randomUUID.toString
 
   // INPUT
-  def input(content: String) = tags.input(formControl, value := content)
+  def input(content: String = "") = tags.input(formControl, value := content)
 
   def inputGroup(modifierSeq: ModifierSeq) = div(modifierSeq +++ sheet.inputGroup)
 
@@ -69,10 +69,6 @@ object BootstrapTags {
 
   // CHECKBOX
   def checkbox(default: Boolean) = tags.input(`type` := "checkbox", if (default) checked)
-
-
-  // LABEL
-  def label(content: String, label: ModifierSeq): TypedTag[HTMLSpanElement] = span(label)(content)
 
 
   // SELECT (to be used with button class aggregators )
@@ -303,7 +299,7 @@ object BootstrapTags {
     val ID = uuID
     form(formHorizontal)(
       div(controlGroup)(
-        label(labelString, controlLabel)(`for` := ID),
+        label(labelString)(controlLabel, `for` := ID),
         div(controls)(
           tags.div(id := ID)(element)
         )
