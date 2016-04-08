@@ -51,7 +51,7 @@ package stylesheetbase {
         else pairing(pair.v, pair2.v)
       }
 
-      def +++(mod: ModifierSeq): ModifierSeq = pair +: mod
+      def +++(mod: ModifierSeq): ModifierSeq = mod +++ pair
 
       def +++(sty: StylePair[dom.Element, _]): ModifierSeq = Seq(pair, sty)
     }
@@ -126,6 +126,8 @@ package stylesheetbase {
     lazy val transparent: ModifierSeq = Seq(opacity := 0)
 
     lazy val opaque: ModifierSeq = Seq(opacity := 1)
+
+    lazy val pointer: ModifierSeq = cursor := "pointer"
   }
 
 }
