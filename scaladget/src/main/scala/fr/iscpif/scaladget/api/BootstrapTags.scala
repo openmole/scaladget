@@ -46,9 +46,9 @@ object BootstrapTags {
 
   def inputGroup(modifierSeq: ModifierSeq) = div(modifierSeq +++ sheet.inputGroup)
 
-  def inputGroupButton = span("input-group-btn")
+  def inputGroupButton = span(toClass("input-group-btn"))
 
-  def inputGroupAddon = span("input-group-addon")
+  def inputGroupAddon = span(toClass("input-group-addon"))
 
   val input_group_lg = "input-group-lg"
 
@@ -74,7 +74,7 @@ object BootstrapTags {
   // SELECT (to be used with button class aggregators )
   def select(id: String, contents: Seq[(String, String)], buttonStyle: ButtonStyle) = buttonGroup()(
     tags.a(buttonStyle +++ dropdownToggle, data("toggle") := "dropdown", href := "#")(
-      "Select", span("caret")),
+      "Select", span(toClass("caret"))),
     ul(dropdownMenu)(
       for (c ← contents) yield {
         tags.li(tags.a(
@@ -117,7 +117,7 @@ object BootstrapTags {
 
   // BADGE
   def badge(content: String, badgeValue: String, buttonStyle: ModifierSeq, todo: () => Unit) =
-    button(s"$content ", buttonStyle, todo)(span("badge")(badgeValue))
+    button(s"$content ", buttonStyle, todo)(span(toClass("badge"))(badgeValue))
 
 
   //BUTTON GROUP
@@ -180,7 +180,7 @@ object BootstrapTags {
     navItem(id, content, ontrigger, todo, Seq(data("toggle") := "modal", data("target") := "#" + id + "PanelID"))
 
   def navItem(id: String, content: String, ontrigger: () ⇒ Unit = () ⇒ {}, todo: () ⇒ Unit = () ⇒ {}, extraRenderPair: Seq[Modifier] = Seq(), active: Boolean = false) =
-    new NavItem(id, tags.div(content).render, ontrigger, todo, extraRenderPair, active)
+    new NavItem(id, div(content).render, ontrigger, todo, extraRenderPair, active)
 
   def dialogGlyphNavItem(id: String,
                          glyphIcon: Glyphicon,
@@ -239,7 +239,7 @@ object BootstrapTags {
 
   def scrollableText(text: String = "", scrollMode: AutoScroll = TopScroll): ScrollableText = ScrollableText(text, scrollMode)
 
-  def scrollableDiv(element: Div = tags.div.render, scrollMode: AutoScroll = BottomScroll): ScrollableDiv = ScrollableDiv(element, scrollMode)
+  def scrollableDiv(element: Div = div.render, scrollMode: AutoScroll = BottomScroll): ScrollableDiv = ScrollableDiv(element, scrollMode)
 
   trait Scrollable {
 
@@ -247,7 +247,7 @@ object BootstrapTags {
 
     def sRender: HTMLElement
 
-    def view: HTMLElement = tags.div(sRender).render
+    def view: HTMLElement = div(sRender).render
 
     def setScrollMode = {
       val scrollHeight = sRender.scrollHeight
@@ -276,7 +276,7 @@ object BootstrapTags {
 
   case class ScrollableDiv(_element: Div, _scrollMode: AutoScroll) extends Scrollable {
     val scrollMode: Var[AutoScroll] = Var(_scrollMode)
-    val child: Var[Node] = Var(tags.div)
+    val child: Var[Node] = Var(div)
     val tA = div(height := "100%")(Rx {
       child()
     }, onscroll := { (e: Event) ⇒ setScrollMode })
@@ -287,12 +287,6 @@ object BootstrapTags {
 
   }
 
-  //table
-  // !! add vert-align for td tags
-
-
-  //Input group
-
 
   // LABELED FIELD
   def labeledField(labelString: String, element: HTMLElement) = {
@@ -301,7 +295,7 @@ object BootstrapTags {
       div(controlGroup)(
         label(labelString)(controlLabel, `for` := ID),
         div(controls)(
-          tags.div(id := ID)(element)
+          div(id := ID)(element)
         )
       )
     )
@@ -409,7 +403,7 @@ object BootstrapTags {
 
 
     val div: Modifier = Rx {
-      tags.div(style, btnGroup)(
+      tags.div(style +++ btnGroup)(
         for (b ← buttons) yield {
           b match {
             case s: ExclusiveStringButton ⇒ button(s.title, buttonBackground(s) +++ stringInGroup, action(b, s.action))
