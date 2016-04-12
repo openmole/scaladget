@@ -45,6 +45,8 @@ package stylesheetbase {
 
     implicit def stringToModifierSeq(classString: String): ModifierSeq = toClass(classString)
 
+    implicit def classAttrPairToModifierSeq(classAttrPair: ClassAttrPair): ModifierSeq = Seq(classAttrPair)
+
     implicit class ComposableClassAttrPair[P <: ClassAttrPair](pair: P) {
       def +++(pair2: ClassAttrPair): ClassAttrPair = {
         if (pair.a.name != "class" || pair2.a.name != "class") toClass("ClassError")
@@ -99,7 +101,7 @@ package stylesheetbase {
     // Explicit builders for ModifierSeq (from string or from condition and two ModifierSeq alternatives)
     def ms(s: String): ModifierSeq = Seq(`class` := s)
 
-    def ms(cond: Boolean, ms1: ModifierSeq, ms2: ModifierSeq = emptyMod): ModifierSeq = condOnModifierSeq3(cond, ms1, ms2)
+    def ms(cond: Boolean, ms1: ModifierSeq, ms2: ModifierSeq = emptyMod): ModifierSeq = condOnModifierSeq3((cond, ms1, ms2))
 
     // CONVINIENT GENERAL ALIASES
 

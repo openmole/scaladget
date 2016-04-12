@@ -24,7 +24,7 @@ import scalatags.JsDom.{TypedTag, tags ⇒ tags}
 import scalatags.JsDom.all._
 import fr.iscpif.scaladget.tools.JsRxTags._
 import org.querki.jquery._
-import fr.iscpif.scaladget.stylesheet.{all=> sheet}
+import fr.iscpif.scaladget.stylesheet.{all => sheet}
 import fr.iscpif.scaladget.bootstrap._
 import sheet._
 import rx._
@@ -354,20 +354,22 @@ object BootstrapTags {
                                   preString: String,
                                   preGlyph: ModifierSeq
                                  ) extends ExclusiveButton {
-    val selected = Var(glyph)
+    val selected: Var[Option[ModifierSeq]] = Var(Some(glyph))
 
-    val div: Modifier = Rx {
-      glyphButton(preString, preGlyph, selected(), () ⇒ {
-        if (selected() == glyph) {
-          selected() = glyph2
-          action2()
-        }
-        else {
-          selected() = glyph
-          action()
-        }
-      })
+    lazy val div: Modifier = Rx {
+      val gly = selected().getOrElse(emptyMod)
+        glyphButton(preString, preGlyph, gly, () ⇒ {
+          if (selected() == Some(glyph)) {
+            selected() = Some(glyph2)
+            action2()
+          }
+          else {
+            selected() = Some(glyph)
+            action()
+          }
+        })
     }
+
   }
 
   object ExclusiveButton {
@@ -401,6 +403,7 @@ object BootstrapTags {
       base +++ twoGlyphButton
     }
 
+   def glyphForTwoStates(ts: TwoStatesGlyphButton) = (ts == selected(), ts.glyph, emptyMod)
 
     val div: Modifier = Rx {
       tags.div(style +++ btnGroup)(
@@ -408,7 +411,7 @@ object BootstrapTags {
           b match {
             case s: ExclusiveStringButton ⇒ button(s.title, buttonBackground(s) +++ stringInGroup, action(b, s.action))
             case g: ExclusiveGlyphButton ⇒ glyphButton("", buttonBackground(g), g.glyph, action(b, g.action))
-            case ts: TwoStatesGlyphButton ⇒ twoStatesGlyphButton(ts.glyph, ts.glyph2, action(ts, ts.action), action(ts, ts.action2), ts.preString, buttonBackground(ts) +++ ts.preGlyph).div
+            case ts: TwoStatesGlyphButton ⇒ twoStatesGlyphButton(glyphForTwoStates(ts), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), ts.preString, buttonBackground(ts) +++ ts.preGlyph).div
           }
         }
       )
