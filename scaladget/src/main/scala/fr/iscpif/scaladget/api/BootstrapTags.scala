@@ -323,7 +323,7 @@ object BootstrapTags {
 
 
   // EXCLUSIVE BUTTON GROUPS
-  def exclusiveButtonGroup(style: ModifierSeq, selectionStyle: ModifierSeq)(buttons: ExclusiveButton*) = new ExclusiveGroup(style, selectionStyle, buttons)
+  def exclusiveButtonGroup(style: ModifierSeq, defaultStyle: ModifierSeq = btn_default, selectionStyle: ModifierSeq = btn_default)(buttons: ExclusiveButton*) = new ExclusiveGroup(style, defaultStyle, selectionStyle, buttons)
 
   def twoStatesGlyphButton(
                             glyph1: ModifierSeq,
@@ -358,16 +358,16 @@ object BootstrapTags {
 
     lazy val div: Modifier = Rx {
       val gly = selected().getOrElse(emptyMod)
-        glyphButton(preString, preGlyph, gly, () ⇒ {
-          if (selected() == Some(glyph)) {
-            selected() = Some(glyph2)
-            action2()
-          }
-          else {
-            selected() = Some(glyph)
-            action()
-          }
-        })
+      glyphButton(preString, preGlyph, gly, () ⇒ {
+        if (selected() == Some(glyph)) {
+          selected() = Some(glyph2 +++ sheet.paddingLeft(3) )
+          action2()
+        }
+        else {
+          selected() = Some(glyph  +++ sheet.paddingLeft(3) )
+          action()
+        }
+      })
     }
 
   }
@@ -395,23 +395,24 @@ object BootstrapTags {
                       ) = twoStatesGlyphButton(glyph1, glyph2, todo1, todo2, preString, preGlyph)
   }
 
-  class ExclusiveGroup(style: ModifierSeq, selectionStyle: ModifierSeq, buttons: Seq[ExclusiveButton]) {
+  class ExclusiveGroup(style: ModifierSeq, defaultStyle: ModifierSeq, selectionStyle: ModifierSeq, buttons: Seq[ExclusiveButton]) {
     val selected = Var(buttons.head)
 
-    def buttonBackground(b: ExclusiveButton) = {
-      val base: ModifierSeq = (if (b == selected()) selectionStyle else btn_default)
-      base +++ twoGlyphButton
-    }
+    def buttonBackground(b: ExclusiveButton) = (if (b == selected()) btn +++ selectionStyle else btn +++ defaultStyle)
 
-   def glyphForTwoStates(ts: TwoStatesGlyphButton) = (ts == selected(), ts.glyph, emptyMod)
+    def glyphButtonBackground(b: ExclusiveButton) = buttonBackground(b) +++ twoGlyphButton
+
+    def stringButtonBackground(b: ExclusiveButton) = buttonBackground(b) +++ stringButton
+
+    def glyphForTwoStates(ts: TwoStatesGlyphButton) = (ts == selected(), ts.glyph, emptyMod)
 
     val div: Modifier = Rx {
       tags.div(style +++ btnGroup)(
         for (b ← buttons) yield {
           b match {
-            case s: ExclusiveStringButton ⇒ button(s.title, buttonBackground(s) +++ stringInGroup, action(b, s.action))
-            case g: ExclusiveGlyphButton ⇒ glyphButton("", buttonBackground(g), g.glyph, action(b, g.action))
-            case ts: TwoStatesGlyphButton ⇒ twoStatesGlyphButton(glyphForTwoStates(ts), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), ts.preString, buttonBackground(ts) +++ ts.preGlyph).div
+            case s: ExclusiveStringButton ⇒ button(s.title, stringButtonBackground(s) +++ stringInGroup, action(b, s.action))
+            case g: ExclusiveGlyphButton ⇒ glyphButton("", glyphButtonBackground(g), g.glyph, action(b, g.action))
+            case ts: TwoStatesGlyphButton ⇒ twoStatesGlyphButton(glyphForTwoStates(ts), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), ts.preString, glyphButtonBackground(ts) +++ ts.preGlyph).div
           }
         }
       )

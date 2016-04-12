@@ -327,6 +327,11 @@ package bootstrap2 {
       sty.top := "1px",
       sty.height := "30px"
     )
+
+    def stringButton: ModifierSeq = Seq(
+      sty.top := "4px",
+      sty.height := "30px"
+    )
   }
 
 }
