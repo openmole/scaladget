@@ -354,20 +354,10 @@ object BootstrapTags {
                                   preString: String,
                                   preGlyph: ModifierSeq
                                  ) extends ExclusiveButton {
-    val selected: Var[Option[ModifierSeq]] = Var(Some(glyph))
+    val cssglyph = glyph +++ sheet.paddingLeft(3)
 
-    lazy val div: Modifier = Rx {
-      val gly = selected().getOrElse(emptyMod)
-      glyphButton(preString, preGlyph, gly, () ⇒ {
-        if (selected() == Some(glyph)) {
-          selected() = Some(glyph2 +++ sheet.paddingLeft(3) )
-          action2()
-        }
-        else {
-          selected() = Some(glyph  +++ sheet.paddingLeft(3) )
-          action()
-        }
-      })
+    lazy val div: Modifier = {
+      glyphButton(preString, preGlyph, cssglyph, action)
     }
 
   }
@@ -397,6 +387,8 @@ object BootstrapTags {
 
   class ExclusiveGroup(style: ModifierSeq, defaultStyle: ModifierSeq, selectionStyle: ModifierSeq, buttons: Seq[ExclusiveButton]) {
     val selected = Var(buttons.head)
+    val selectedAgain = Var(false)
+
 
     def buttonBackground(b: ExclusiveButton) = (if (b == selected()) btn +++ selectionStyle else btn +++ defaultStyle)
 
@@ -404,22 +396,26 @@ object BootstrapTags {
 
     def stringButtonBackground(b: ExclusiveButton) = buttonBackground(b) +++ stringButton
 
-    def glyphForTwoStates(ts: TwoStatesGlyphButton) = (ts == selected(), ts.glyph, emptyMod)
+    def glyphForTwoStates(ts: TwoStatesGlyphButton, mod: ModifierSeq) = (ts == selected(), mod, emptyMod)
 
     val div: Modifier = Rx {
+      selected()
       tags.div(style +++ btnGroup)(
         for (b ← buttons) yield {
           b match {
             case s: ExclusiveStringButton ⇒ button(s.title, stringButtonBackground(s) +++ stringInGroup, action(b, s.action))
             case g: ExclusiveGlyphButton ⇒ glyphButton("", glyphButtonBackground(g), g.glyph, action(b, g.action))
-            case ts: TwoStatesGlyphButton ⇒ twoStatesGlyphButton(glyphForTwoStates(ts), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), ts.preString, glyphButtonBackground(ts) +++ ts.preGlyph).div
+            case ts: TwoStatesGlyphButton ⇒
+              if (selectedAgain()) twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph2), ts.glyph, action(ts, ts.action2), action(ts, ts.action), ts.preString, glyphButtonBackground(ts) +++ ts.preGlyph).div
+              else twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), ts.preString, glyphButtonBackground(ts) +++ ts.preGlyph).div
           }
         }
       )
     }
 
     private def action(b: ExclusiveButton, a: () ⇒ Unit) = () ⇒ {
-      if (selected() != b) selected() = b
+      selectedAgain() = if (b == selected()) !selectedAgain() else false
+      selected() = b
       a()
     }
 
