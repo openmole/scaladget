@@ -289,17 +289,23 @@ object BootstrapTags {
 
 
   // LABELED FIELD
-  def labeledField(labelString: String, element: HTMLElement) = {
+  case class ElementGroup(e1: TypedTag[HTMLElement], e2: TypedTag[HTMLElement])
+
+  def inLineForm(elements: ElementGroup*) = {
     val ID = uuID
-    form(formHorizontal)(
-      div(controlGroup)(
-        label(labelString)(controlLabel, `for` := ID),
-        div(controls)(
-          div(id := ID)(element)
+    form(formInline)(
+      for {
+        e <- elements
+      } yield {
+        div(formGroup)(
+          e.e1(`for` := ID, sheet.marginLeft(5)),
+          e.e2(formControl, sheet.marginLeft(5), id := ID)
         )
-      )
+      }
     )
   }
+
+  def group(e1: TypedTag[HTMLElement], e2: TypedTag[HTMLElement]) = ElementGroup(e1, e2)
 
 
   // PANELS

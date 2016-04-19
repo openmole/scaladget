@@ -283,6 +283,7 @@ package bootstrap {
     //FORMS
     lazy val formControl: ClassAttrPair = toClass("form-control")
     lazy val formGroup: ClassAttrPair = toClass("form-group")
+    lazy val formInline: ClassAttrPair = toClass("form-inline")
     lazy val formHorizontal: ClassAttrPair = toClass("form-horizontal")
 
 
