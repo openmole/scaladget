@@ -317,13 +317,7 @@ package bootstrap2 {
       sty.paddingLeft := "6px",
       sty.paddingRight := "6px"
     )
-
-    def sortingBar: ModifierSeq = Seq(
-      sty.width := "100%",
-      sty.right := "-149px",
-      sty.top := "15px"
-    )
-
+    
     def twoGlyphButton: ModifierSeq = Seq(
       sty.top := "1px",
       sty.height := "30px"
