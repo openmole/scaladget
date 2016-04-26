@@ -311,19 +311,19 @@ package bootstrap2 {
   trait Bootstrap2Package {
 
     //Exclusive Button Group
-    def stringInGroup: ModifierSeq = Seq(
+    lazy val stringInGroup: ModifierSeq = Seq(
       sty.height := "30px",
       sty.paddingTop := "3px",
       sty.paddingLeft := "6px",
       sty.paddingRight := "6px"
     )
-    
-    def twoGlyphButton: ModifierSeq = Seq(
+
+    lazy val twoGlyphButton: ModifierSeq = Seq(
       sty.top := "1px",
       sty.height := "30px"
     )
 
-    def stringButton: ModifierSeq = Seq(
+    lazy val stringButton: ModifierSeq = Seq(
       sty.top := "4px",
       sty.height := "30px"
     )

@@ -99,7 +99,7 @@ object BootstrapTags {
 
   // displaying a text with a button style and a glyphicon
   def glyphButton(text: String, buttonStyle: ModifierSeq = Seq(), glyphicon: ModifierSeq = Seq(), todo: () ⇒ Unit = () => {}): TypedTag[HTMLButtonElement] =
-    button(text, buttonStyle, todo)(cursor := "pointer", `type` := "button")(span(glyphicon))
+    button(text, buttonStyle, todo)(pointer, `type` := "button")(span(glyphicon))
 
   // Clickable span containing a glyphicon and a text
   def glyphSpan(glyphicon: ModifierSeq, onclickAction: () ⇒ Unit = () ⇒ {}, text: String = ""): TypedTag[HTMLSpanElement] =
@@ -331,15 +331,19 @@ object BootstrapTags {
   // EXCLUSIVE BUTTON GROUPS
   def exclusiveButtonGroup(style: ModifierSeq, defaultStyle: ModifierSeq = btn_default, selectionStyle: ModifierSeq = btn_default)(buttons: ExclusiveButton*) = new ExclusiveGroup(style, defaultStyle, selectionStyle, buttons)
 
-  def twoStatesGlyphButton(
-                            glyph1: ModifierSeq,
-                            glyph2: ModifierSeq,
-                            todo1: () ⇒ Unit,
-                            todo2: () ⇒ Unit,
-                            preString: String = "",
-                            preGlyph: ModifierSeq = Seq()
-                          ) = new TwoStatesGlyphButton(glyph1, glyph2, todo1, todo2, preString, preGlyph)
+  def twoStatesGlyphButton(glyph1: ModifierSeq,
+                           glyph2: ModifierSeq,
+                           todo1: () ⇒ Unit,
+                           todo2: () ⇒ Unit,
+                           preGlyph: ModifierSeq = Seq()
+                          ) = TwoStatesGlyphButton(glyph1, glyph2, todo1, todo2, preGlyph)
 
+  def twoStatesSpan(glyph1: ModifierSeq,
+                    glyph2: ModifierSeq,
+                    todo1: () ⇒ Unit,
+                    todo2: () ⇒ Unit,
+                    preString: String
+                   ) = TwoStatesSpan(glyph1, glyph2, todo1, todo2, preString)
 
   sealed trait ExclusiveButton {
     def action: () ⇒ Unit
@@ -353,17 +357,40 @@ object BootstrapTags {
     def title: String
   }
 
+  trait TwoStates extends ExclusiveButton
+
   case class TwoStatesGlyphButton(glyph: ModifierSeq,
                                   glyph2: ModifierSeq,
                                   action: () ⇒ Unit,
                                   action2: () ⇒ Unit,
-                                  preString: String,
                                   preGlyph: ModifierSeq
-                                 ) extends ExclusiveButton {
+                                 ) extends TwoStates {
     val cssglyph = glyph +++ sheet.paddingLeft(3)
 
     lazy val div: Modifier = {
-      glyphButton(preString, preGlyph, cssglyph, action)
+      glyphButton("", preGlyph, cssglyph, action)
+    }
+  }
+
+  case class TwoStatesSpan(glyph: ModifierSeq,
+                           glyph2: ModifierSeq,
+                           action: () ⇒ Unit,
+                           action2: () ⇒ Unit,
+                           preString: String
+                          ) extends TwoStates {
+    val cssglyph = glyph +++ sheet.paddingLeft(3)
+
+    lazy val cssbutton: ModifierSeq = Seq(
+      backgroundColor := "transparent",
+      sheet.paddingTop(8),
+      border := "none",
+      width := "auto"
+    )
+
+    lazy val div: Modifier = {
+      button(preString, cssbutton +++ pointer, action)(
+        span(cssglyph)
+      )
     }
 
   }
@@ -381,14 +408,21 @@ object BootstrapTags {
       def action = a
     }
 
-    def twoGlyphStates(
-                        glyph1: ModifierSeq,
-                        glyph2: ModifierSeq,
-                        todo1: () ⇒ Unit,
-                        todo2: () ⇒ Unit,
-                        preString: String = "",
-                        preGlyph: ModifierSeq = Seq()
-                      ) = twoStatesGlyphButton(glyph1, glyph2, todo1, todo2, preString, preGlyph)
+    def twoGlyphButtonStates(
+                              glyph1: ModifierSeq,
+                              glyph2: ModifierSeq,
+                              todo1: () ⇒ Unit,
+                              todo2: () ⇒ Unit,
+                              preGlyph: ModifierSeq
+                            ) = twoStatesGlyphButton(glyph1, glyph2, todo1, todo2, preGlyph)
+
+    def twoGlyphSpan(
+                      glyph1: ModifierSeq,
+                      glyph2: ModifierSeq,
+                      todo1: () ⇒ Unit,
+                      todo2: () ⇒ Unit,
+                      preString: String
+                    ) = twoStatesSpan(glyph1, glyph2, todo1, todo2, preString)
   }
 
   class ExclusiveGroup(style: ModifierSeq, defaultStyle: ModifierSeq, selectionStyle: ModifierSeq, buttons: Seq[ExclusiveButton]) {
@@ -402,7 +436,7 @@ object BootstrapTags {
 
     def stringButtonBackground(b: ExclusiveButton) = buttonBackground(b) +++ stringButton
 
-    def glyphForTwoStates(ts: TwoStatesGlyphButton, mod: ModifierSeq) = (ts == selected(), mod, emptyMod)
+    def glyphForTwoStates(ts: TwoStates, mod: ModifierSeq) = (ts == selected(), mod, emptyMod)
 
     val div: Modifier = Rx {
       selected()
@@ -412,8 +446,11 @@ object BootstrapTags {
             case s: ExclusiveStringButton ⇒ button(s.title, stringButtonBackground(s) +++ stringInGroup, action(b, s.action))
             case g: ExclusiveGlyphButton ⇒ glyphButton("", glyphButtonBackground(g), g.glyph, action(b, g.action))
             case ts: TwoStatesGlyphButton ⇒
-              if (selectedAgain()) twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph2), ts.glyph, action(ts, ts.action2), action(ts, ts.action), ts.preString, glyphButtonBackground(ts) +++ ts.preGlyph).div
-              else twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), ts.preString, glyphButtonBackground(ts) +++ ts.preGlyph).div
+              if (selectedAgain()) twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph2), ts.glyph, action(ts, ts.action2), action(ts, ts.action), glyphButtonBackground(ts) +++ ts.preGlyph).div
+              else twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), glyphButtonBackground(ts) +++ ts.preGlyph).div
+            case ts: TwoStatesSpan ⇒
+              if (selectedAgain()) twoStatesSpan(glyphForTwoStates(ts, ts.glyph2), ts.glyph, action(ts, ts.action2), action(ts, ts.action), ts.preString).div
+              else twoStatesSpan(glyphForTwoStates(ts, ts.glyph), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), ts.preString).div
           }
         }
       )
