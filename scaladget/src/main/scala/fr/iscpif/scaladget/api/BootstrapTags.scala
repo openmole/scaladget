@@ -342,8 +342,9 @@ object BootstrapTags {
                     glyph2: ModifierSeq,
                     todo1: () ⇒ Unit,
                     todo2: () ⇒ Unit,
-                    preString: String
-                   ) = TwoStatesSpan(glyph1, glyph2, todo1, todo2, preString)
+                    preString: String,
+                    buttonStyle: ModifierSeq = emptyMod
+                   ) = TwoStatesSpan(glyph1, glyph2, todo1, todo2, preString, buttonStyle)
 
   sealed trait ExclusiveButton {
     def action: () ⇒ Unit
@@ -376,7 +377,8 @@ object BootstrapTags {
                            glyph2: ModifierSeq,
                            action: () ⇒ Unit,
                            action2: () ⇒ Unit,
-                           preString: String
+                           preString: String,
+                           buttonStyle: ModifierSeq = emptyMod
                           ) extends TwoStates {
     val cssglyph = glyph +++ sheet.paddingLeft(3)
 
@@ -388,7 +390,7 @@ object BootstrapTags {
     )
 
     lazy val div: Modifier = {
-      button(preString, cssbutton +++ pointer, action)(
+      button(preString, buttonStyle +++ cssbutton +++ pointer, action)(
         span(cssglyph)
       )
     }
@@ -421,8 +423,9 @@ object BootstrapTags {
                       glyph2: ModifierSeq,
                       todo1: () ⇒ Unit,
                       todo2: () ⇒ Unit,
-                      preString: String
-                    ) = twoStatesSpan(glyph1, glyph2, todo1, todo2, preString)
+                      preString: String,
+                      buttonStyle: ModifierSeq = emptyMod
+                    ) = twoStatesSpan(glyph1, glyph2, todo1, todo2, preString, buttonStyle)
   }
 
   class ExclusiveGroup(style: ModifierSeq, defaultStyle: ModifierSeq, selectionStyle: ModifierSeq, buttons: Seq[ExclusiveButton]) {
@@ -449,8 +452,8 @@ object BootstrapTags {
               if (selectedAgain()) twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph2), ts.glyph, action(ts, ts.action2), action(ts, ts.action), glyphButtonBackground(ts) +++ ts.preGlyph).div
               else twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), glyphButtonBackground(ts) +++ ts.preGlyph).div
             case ts: TwoStatesSpan ⇒
-              if (selectedAgain()) twoStatesSpan(glyphForTwoStates(ts, ts.glyph2), ts.glyph, action(ts, ts.action2), action(ts, ts.action), ts.preString).div
-              else twoStatesSpan(glyphForTwoStates(ts, ts.glyph), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), ts.preString).div
+              if (selectedAgain()) twoStatesSpan(glyphForTwoStates(ts, ts.glyph2), ts.glyph, action(ts, ts.action2), action(ts, ts.action), ts.preString, glyphButtonBackground(ts)).div
+              else twoStatesSpan(glyphForTwoStates(ts, ts.glyph), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), ts.preString, glyphButtonBackground(ts)).div
           }
         }
       )
