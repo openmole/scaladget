@@ -130,6 +130,12 @@ package stylesheetbase {
     lazy val opaque: ModifierSeq = Seq(opacity := 1)
 
     lazy val pointer: ModifierSeq = cursor := "pointer"
+
+    lazy val relativePosition: ModifierSeq = position := "relative"
+
+    lazy val absolutePosition: ModifierSeq = position := "absolute"
+
+    lazy val fixedPosition: ModifierSeq = position := "fixed"
   }
 
 }
