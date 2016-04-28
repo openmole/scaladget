@@ -245,6 +245,12 @@ package bootstrap {
     lazy val btnToolbar: ClassAttrPair = toClass("btn-toolbar")
 
 
+    //ALERTS
+    lazy val alertSuccess: ClassAttrPair = toClass("alert alert-success")
+    lazy val alertInfo: ClassAttrPair = toClass("alert alert-info")
+    lazy val alertWarning: ClassAttrPair = toClass("alert alert-warning")
+    lazy val alertDanger: ClassAttrPair = toClass("alert alert-danger")
+
     //MODALS
     lazy val modal: ClassAttrPair = toClass("modal")
     lazy val fade: ClassAttrPair = toClass("fade")
