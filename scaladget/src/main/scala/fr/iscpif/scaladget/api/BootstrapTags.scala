@@ -23,9 +23,7 @@ import scala.scalajs.js.annotation.JSExport
 import scalatags.JsDom.{TypedTag, tags ⇒ tags}
 import scalatags.JsDom.all._
 import fr.iscpif.scaladget.tools.JsRxTags._
-import org.querki.jquery._
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
-import fr.iscpif.scaladget.bootstrap._
 import sheet._
 import rx._
 
@@ -127,7 +125,7 @@ object BootstrapTags {
 
 
   //MODAL
-  type Dialog = TypedTag[HTMLDivElement]
+ /* type Dialog = TypedTag[HTMLDivElement]
   type ModalID = String
 
   def modalDialog(ID: ModalID, typedTag: TypedTag[_]*): Dialog =
@@ -153,11 +151,11 @@ object BootstrapTags {
 
   def hideModal(id: ModalID) = modalQuery(id, "hide")
 
-  def isModalVisible(id: ModalID): Boolean = hasClass(id, "in")
+  def isModalVisible(id: ModalID): Boolean = hasClass(id, "in")*/
 
 
   // NAVS
-  class NavItem[T <: HTMLElement](val navid: String,
+ /* class NavItem[T <: HTMLElement](val navid: String,
                                   contentDiv: T,
                                   ontrigger: () ⇒ Unit,
                                   val todo: () ⇒ Unit = () ⇒ {},
@@ -202,7 +200,7 @@ object BootstrapTags {
           $("#mainNavItemID").addClass("active")
           c.todo()
         })
-      }: _*)
+      }: _*)*/
 
 
   // JUMBOTRON

@@ -17,7 +17,6 @@
 package fr.iscpif.scaladget.mapping.bootstrap
 
 import scala.scalajs.js
-import org.querki.jquery._
 import js.annotation._
 
 @js.native

@@ -1,15 +1,17 @@
-package test
+package demo
 
-import fr.iscpif.scaladget.api.BootstrapTags._
+import fr.iscpif.scaladget.api.Select.Displayable
 import fr.iscpif.scaladget.api.{BootstrapTags => bs}
-import fr.iscpif.scaladget.stylesheet.all._
+import fr.iscpif.scaladget.tools.JsRxTags._
+import fr.iscpif.scaladget.api.Popup._
+import fr.iscpif.scaladget.api._
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
+import scala.scalajs.js.JSApp
+import scala.scalajs.js.annotation.JSExport
+import org.scalajs.dom
 import scalatags.JsDom.tags
 import scalatags.JsDom.all._
-import fr.iscpif.client.stylesheet._
-import Popup._
 import scalatags.JsDom.{styles => sty}
-import client.JsRxTags._
 import sheet._
 import bs._
 import rx._
@@ -31,7 +33,9 @@ import rx._
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-object BootstrapDemo {
+
+@JSExport("Demo")
+object BootstrapDemo extends JSApp{
 
   val a: Var[Boolean] = Var(false)
 
@@ -48,6 +52,12 @@ object BootstrapDemo {
     bs.button("Run", btn_primary, ()=> println("button click")),
     label("Yop")(label_danger)
   )
+
+  @JSExport
+  def main(): Unit = {
+    dom.document.body.appendChild(build)
+  }
+
 
   def build = {
     val bottom = glyph_triangle_bottom +++ (fontSize := 10)
@@ -81,7 +91,7 @@ object BootstrapDemo {
        div("Haha")(btn_info +++ sheet.marginLeft(295)).tooltip(span("héhé"), position = Right, arrowStyle = whiteRightArrow),
       div("Settings")(btn_primary, sheet.marginLeft(145)).popup(inner, position = Right, popupStyle = whitePopupWithBorder, arrowStyle = whiteRightArrow),
       div("Dialog")(btn_primary, sheet.marginLeft(145)).dialog(inner),
-      tags.label("nrestiarn")(ms("oo") +++ toto),
+      tags.label("nrestiarn")(ms("oo")),
       span(glyph_trash),
       Rx {
         span(aria.hidden := "true", glyph_upload +++ ms("fileUpload glyphmenu"))
