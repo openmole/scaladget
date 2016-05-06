@@ -10,7 +10,6 @@ object ScaladgetBuild extends Build {
   val Name = "Scaladget"
   val Version = "0.8.0-SNAPSHOT"
   val ScalaVersion = "2.11.8"
-  val scalatagsVersion = "0.5.4"
   val Resolvers = Seq(Resolver.sonatypeRepo("snapshots"),
     DefaultMavenRepository
   )
@@ -25,7 +24,7 @@ object ScaladgetBuild extends Build {
       resolvers in ThisBuild ++= Resolvers,
       libraryDependencies ++= Seq(
         "org.scala-js" %%% "scalajs-dom" % "0.9.0",
-        "com.lihaoyi" %%% "scalatags" % "0.5.4",
+        "com.lihaoyi" %%% "scalatags" % "0.5.5",
         "com.lihaoyi" %%% "scalarx" % "0.2.8",
         "org.querki" %%% "querki-jsext" % "0.6"
       ),
