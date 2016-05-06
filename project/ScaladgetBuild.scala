@@ -58,13 +58,7 @@ object ScaladgetBuild extends Build {
     file("demo"),
     settings = Seq(
       version := Version,
-      scalaVersion := ScalaVersion,
-      resolvers in ThisBuild ++= Resolvers,
-      libraryDependencies ++= Seq(
-        "org.scala-js" %%% "scalajs-dom" % "0.9.0",
-        "com.lihaoyi" %%% "scalatags" % "0.5.4"
-      )
-
+      scalaVersion := ScalaVersion
     )
   ) dependsOn (scaladget) enablePlugins (ScalaJSPlugin)
 
