@@ -339,6 +339,16 @@ package bootstrap2 {
       sty.top := "4px",
       sty.height := "30px"
     )
+
+    lazy val selectFilter: ModifierSeq = Seq(
+      marginTop(6),
+      fontSize := 14,
+      paddingLeft(5),
+      borderBottomRightRadius := 0,
+      borderBottomLeftRadius := 0
+    )
+
+
   }
 
 }

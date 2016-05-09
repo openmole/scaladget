@@ -24,8 +24,12 @@ import scalatags.JsDom.{TypedTag, tags ⇒ tags}
 import scalatags.JsDom.all._
 import fr.iscpif.scaladget.tools.JsRxTags._
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
+import fr.iscpif.scaladget.bootstrap._
+import org.querki.jquery._
 import sheet._
 import rx._
+import Popup._
+import Select._
 
 @JSExport("BootstrapTags")
 object BootstrapTags {
@@ -68,20 +72,9 @@ object BootstrapTags {
   // CHECKBOX
   def checkbox(default: Boolean) = tags.input(`type` := "checkbox", if (default) checked)
 
-
-  // SELECT (to be used with button class aggregators )
-  def select(id: String, contents: Seq[(String, String)], buttonStyle: ButtonStyle) = buttonGroup()(
-    tags.a(buttonStyle +++ dropdownToggle, data("toggle") := "dropdown", href := "#")(
-      "Select", span(toClass("caret"))),
-    ul(dropdownMenu)(
-      for (c ← contents) yield {
-        tags.li(tags.a(
-          href := "#")(c._2)
-        )
-      }
-    )
-  )
-
+  trait Displayable {
+    def name: String
+  }
 
   // BUTTONS
   // default button with default button style and displaying a text
@@ -123,9 +116,12 @@ object BootstrapTags {
 
   def buttonToolBar = div(btnToolbar)(role := "toolbar")
 
+  def tototo = div
 
+
+  /////TO BE REMOVED  ----
   //MODAL
- /* type Dialog = TypedTag[HTMLDivElement]
+  type Dialog = TypedTag[HTMLDivElement]
   type ModalID = String
 
   def modalDialog(ID: ModalID, typedTag: TypedTag[_]*): Dialog =
@@ -151,11 +147,11 @@ object BootstrapTags {
 
   def hideModal(id: ModalID) = modalQuery(id, "hide")
 
-  def isModalVisible(id: ModalID): Boolean = hasClass(id, "in")*/
+  def isModalVisible(id: ModalID): Boolean = hasClass(id, "in")
 
 
   // NAVS
- /* class NavItem[T <: HTMLElement](val navid: String,
+  class NavItem[T <: HTMLElement](val navid: String,
                                   contentDiv: T,
                                   ontrigger: () ⇒ Unit,
                                   val todo: () ⇒ Unit = () ⇒ {},
@@ -200,7 +196,59 @@ object BootstrapTags {
           $("#mainNavItemID").addClass("active")
           c.todo()
         })
-      }: _*)*/
+      }: _*)
+
+
+  ///// -- TO BE REMOVED
+
+  // POUPUS, TOOLTIS, DIALOGS
+
+  implicit class PopableTypedTag(element: TypedTag[org.scalajs.dom.raw.HTMLElement]) {
+
+    def popup(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
+              position: PopupPosition = Bottom,
+              popupStyle: ModifierSeq = whitePopup,
+              arrowStyle: ModifierSeq = noArrow,
+              onclose: () => Unit = () => {},
+              condition: () => Boolean = ()=> true) =
+      new Popup(element.render, innerDiv, ClickPopup, position, popupStyle, arrowStyle, onclose, condition).popup
+
+
+    def tooltip(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
+                position: PopupPosition = Bottom,
+                popupStyle: ModifierSeq = whitePopup,
+                arrowStyle: ModifierSeq = whiteBottomArrow,
+                onclose: () => Unit = () => {},
+                condition: () => Boolean = ()=> true
+               ) = new Popup(element.render, innerDiv, HoverPopup, position, popupStyle, arrowStyle, onclose, condition).popup
+
+    def dialog(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
+               popupStyle: ModifierSeq = dialogStyle,
+               onclose: () => Unit = () => {},
+               condition: () => Boolean = ()=> true
+              ) = new Popup(element.render, innerDiv, DialogPopup, Bottom, popupStyle, noArrow, onclose, condition).popup
+
+  }
+
+
+  //SELECT
+  implicit class SelectableSeqWithStyle[T](s: Seq[(T, ModifierSeq)]) {
+    def select(default: Option[T],
+               naming: T => String,
+               key: ModifierSeq = emptyMod,
+               onclickExtra: () ⇒ Unit = () ⇒ {}) = Select(s, default, naming, key, onclickExtra)
+
+  }
+
+  implicit class SelectableSeq[T](s: Seq[T]) {
+    def select(default: Option[T],
+               naming: T => String,
+               key: ModifierSeq = emptyMod,
+               onclickExtra: () ⇒ Unit = () ⇒ {}) = SelectableSeqWithStyle(s.map {
+      (_, emptyMod)
+    }).select(default, naming, key, onclickExtra)
+
+  }
 
 
   // JUMBOTRON

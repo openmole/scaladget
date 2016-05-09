@@ -49,29 +49,6 @@ object Popup {
 
   private val popups: Var[Seq[Popup]] = Var(Seq())
 
-  implicit class PopableTypedTag(element: TypedTag[org.scalajs.dom.raw.HTMLElement]) {
-    def popup(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
-              position: PopupPosition = Bottom,
-              popupStyle: ModifierSeq = whitePopup,
-              arrowStyle: ModifierSeq = noArrow,
-              onclose: () => Unit = () => {}) =
-      new Popup(element.render, innerDiv, ClickPopup, position, popupStyle, arrowStyle, onclose).popup
-
-
-    def tooltip(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
-                position: PopupPosition = Bottom,
-                popupStyle: ModifierSeq = whitePopup,
-                arrowStyle: ModifierSeq = noArrow,
-                onclose: () => Unit = () => {}
-               ) = new Popup(element.render, innerDiv, HoverPopup, position, popupStyle, arrowStyle, onclose).popup
-
-    def dialog(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
-               popupStyle: ModifierSeq = dialogStyle,
-               onclose: () => Unit = () => {}
-              ) = new Popup(element.render, innerDiv, DialogPopup, Bottom, popupStyle, noArrow, onclose).popup
-
-  }
-
   def isEqual(e1: Node, to: Node): Boolean = {
     if (e1.isEqualNode(to)) true
     else if (e1.isEqualNode(org.scalajs.dom.document.body)) false
@@ -101,17 +78,18 @@ object Popup {
     whitePopup +++ (border := "0.1em solid #ccc")
 
 
-  lazy val dialogStyle: ModifierSeq = ms("ooo")/*Seq(
-    backgroundColor := "white",
-    absolutePosition,
-    top := -250,
-    left := 0,
-    width := "70%",
-    height := 250,
-    padding := 20,
-    transition := "top 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94)",
-    boxSizing := "border-box"
-  )*/
+  lazy val dialogStyle: ModifierSeq = ms("ooo")
+  /*Seq(
+      backgroundColor := "white",
+      absolutePosition,
+      top := -250,
+      left := 0,
+      width := "70%",
+      height := 250,
+      padding := 20,
+      transition := "top 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94)",
+      boxSizing := "border-box"
+    )*/
 
   def arrow(color: String, position: PopupPosition): ModifierSeq = {
     val transparent = "5px solid transparent"
@@ -135,13 +113,15 @@ object Popup {
 }
 
 import Popup._
+
 class Popup(val triggerElement: org.scalajs.dom.raw.HTMLElement,
             innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
             popupType: PopupType,
             direction: PopupPosition,
             popupStyle: ModifierSeq,
             arrowStyle: ModifierSeq,
-            onclose: () => Unit = () => {}) {
+            onclose: () => Unit = () => {},
+            condition: () => Boolean = ()=> true) {
 
   val popupVisible = Var(false)
   popups() = popups() :+ this
@@ -192,10 +172,10 @@ class Popup(val triggerElement: org.scalajs.dom.raw.HTMLElement,
   val popup = div(relativePosition)(
     triggerElement,
     Rx {
-      if (popupVisible()) div(
-    div(arrowStyle +++ arrowPosition),
-    innerDiv(popupStyle +++ popupPosition)
-  ).render
+      if (popupVisible() && condition()) div(
+        div(arrowStyle +++ arrowPosition),
+        innerDiv(popupStyle +++ popupPosition)
+      ).render
       else span(display := "none").render
     }).render
 

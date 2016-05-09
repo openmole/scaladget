@@ -35,7 +35,7 @@ package fr.iscpif.scaladget.api
  */
 
 import Popup._
-import fr.iscpif.scaladget.api.{BootstrapTags ⇒ bs}
+import fr.iscpif.scaladget.api.{BootstrapTags => bs}
 import fr.iscpif.scaladget.stylesheet.{all ⇒ sheet}
 import fr.iscpif.scaladget.tools.JsRxTags._
 import sheet._
@@ -46,50 +46,33 @@ import scalatags.JsDom.{tags ⇒ tags}
 
 object Select {
 
-  ///////////////
-
-  trait Displayable {
-    def name: String
-  }
-
-  lazy val selectFilter: ModifierSeq = Seq(
-    sheet.marginTop(6),
-    fontSize := 14,
-    sheet.paddingLeft(5),
-    borderBottomRightRadius := 0,
-    borderBottomLeftRadius := 0
-  )
-
-  ///
-
-
-  implicit def seqToSeqOfEmptyPairs[T <: Displayable](s: Seq[T]): Seq[(T, ModifierSeq)] = s.map {
+  implicit def seqToSeqOfEmptyPairs[T](s: Seq[T]): Seq[(T, ModifierSeq)] = s.map {
     (_, emptyMod)
   }
 
-  implicit def seqOfTupleToSeqOfT[T <: Displayable](s: Seq[(T, _)]): Seq[T] = s.map {
+  implicit def seqOfTupleToSeqOfT[T](s: Seq[(T, _)]): Seq[T] = s.map {
     _._1
   }
 
-  def apply[T <: Displayable](
-                               //  autoID:       String,
-                               contents: Seq[(T, ModifierSeq)],
-                               default: Option[T],
-                               key: ModifierSeq = emptyMod,
-                               onclickExtra: () ⇒ Unit = () ⇒ {}
-                             ) = new Select(Var(contents), default, key, onclickExtra)
-
+  def apply[T](
+                contents: Seq[(T, ModifierSeq)],
+                default: Option[T],
+                naming: T => String,
+                key: ModifierSeq = emptyMod,
+                onclickExtra: () ⇒ Unit = () ⇒ {}
+              ) = new Select(Var(contents), default, naming, key, onclickExtra)
 
 }
 
 import fr.iscpif.scaladget.api.Select._
 
-class Select[T <: Select.Displayable](
-                                private val contents: Var[Seq[(T, ModifierSeq)]],
-                                default: Option[T] = None,
-                                key: ModifierSeq = emptyMod,
-                                onclickExtra: () ⇒ Unit = () ⇒ {}
-                              ) {
+class Select[T](
+                 private val contents: Var[Seq[(T, ModifierSeq)]],
+                 default: Option[T] = None,
+                 naming: T => String,
+                 key: ModifierSeq = emptyMod,
+                 onclickExtra: () ⇒ Unit = () ⇒ {}
+               ) {
 
   val autoID = java.util.UUID.randomUUID.toString
 
@@ -109,11 +92,11 @@ class Select[T <: Select.Displayable](
   val filtered: Var[Seq[T]] = Var(contents())
   filtered() = contents().take(100)
 
-  lazy val inputFilter: HTMLInputElement = input(selectFilter, placeholder := "Filter", oninput := { () ⇒
-    filtered() = contents().filter {
-      _._1.name.toUpperCase.contains(inputFilter.value.toUpperCase)
+  lazy val inputFilter: HTMLInputElement = bs.input("")(selectFilter, placeholder := "Filter", oninput := { () ⇒
+    filtered() = contents().filter {f=>
+      naming(f._1).toUpperCase.contains(inputFilter.value.toUpperCase)
     }
-  })("").render
+  }).render
 
   val glyphMap = Var(contents().toMap)
 
@@ -148,9 +131,7 @@ class Select[T <: Select.Displayable](
           }
         },
         Rx {
-          content().map {
-            _.name
-          }.getOrElse(contents()(0)._1.name) + " "
+          content().map(naming).getOrElse(naming(contents()(0)._1)) + " "
         },
         span(ms("caret"))
       ).render,
@@ -164,7 +145,7 @@ class Select[T <: Select.Displayable](
           )
         else tags.div,
         Rx {
-          tags.div( sheet.marginLeft(0) +++ (listStyleType := "none"))(
+          tags.div(sheet.marginLeft(0) +++ (listStyleType := "none"))(
             if (filtered().size < 100) {
               for (c ← filtered()) yield {
                 tags.div(pointer, onclick := { () ⇒
@@ -175,7 +156,7 @@ class Select[T <: Select.Displayable](
                   }
                   onclickExtra()
                   popupButton.close
-                })(c.name)
+                })(naming(c))
               }
             }
             else tags.li("To many results, filter more !")

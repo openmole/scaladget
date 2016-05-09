@@ -1,10 +1,8 @@
 package demo
 
-import fr.iscpif.scaladget.api.Select.Displayable
-import fr.iscpif.scaladget.api.{BootstrapTags => bs}
+import fr.iscpif.scaladget.api.{BootstrapTags=> bs}
 import fr.iscpif.scaladget.tools.JsRxTags._
 import fr.iscpif.scaladget.api.Popup._
-import fr.iscpif.scaladget.api._
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
 import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
@@ -61,8 +59,10 @@ object BootstrapDemo extends JSApp{
 
   def build = {
     val bottom = glyph_triangle_bottom +++ (fontSize := 10)
-    val sel = Select(Seq(TT("aauieaa"), TT("bbeeaieai"), TT("uuuieuiecc")),
+    val oo = Seq[TT]().select(None, (t: TT)=> t.name, btn_default)
+    val sel = Seq(TT("aauieaa"), TT("bbeeaieai"), TT("uuuieuiecc")).select(
       Some(TT("bb")),
+      (t: TT)=> t.name,
       btn_primary
     )
     a() = true
@@ -88,7 +88,8 @@ object BootstrapDemo extends JSApp{
       div("Grow")(ms("ufo-big") +++ (color := "white")),
       sel.selector,
       div("You")(btn_danger +++ (height := 50) +++ sheet.marginLeft(295)).tooltip(span("héhé"), position = Bottom, arrowStyle = whiteBottomArrow),
-       div("Haha")(btn_info +++ sheet.marginLeft(295)).tooltip(span("héhé"), position = Right, arrowStyle = whiteRightArrow),
+       div("Haha")(btn_info +++ sheet.marginLeft(295)).tooltip(span("héhé"), position = Right, arrowStyle = whiteRightArrow, condition = ()=> {4 < 1}),
+      div("HIhi")(btn_info +++ sheet.marginLeft(395)).tooltip(span("Hello boy")),
       div("Settings")(btn_primary, sheet.marginLeft(145)).popup(inner, position = Right, popupStyle = whitePopupWithBorder, arrowStyle = whiteRightArrow),
       div("Dialog")(btn_primary, sheet.marginLeft(145)).dialog(inner),
       tags.label("nrestiarn")(ms("oo")),

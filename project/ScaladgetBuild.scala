@@ -20,13 +20,15 @@ object ScaladgetBuild extends Build {
     file("scaladget"),
     settings = Seq(
       version := Version,
+      organization := Organization,
       scalaVersion := ScalaVersion,
       resolvers in ThisBuild ++= Resolvers,
       libraryDependencies ++= Seq(
         "org.scala-js" %%% "scalajs-dom" % "0.9.0",
         "com.lihaoyi" %%% "scalatags" % "0.5.5",
         "com.lihaoyi" %%% "scalarx" % "0.2.8",
-        "org.querki" %%% "querki-jsext" % "0.6"
+        "org.querki" %%% "querki-jsext" % "0.6",
+        "org.querki" %%% "jquery-facade" % "1.0-RC3"
       ),
       publishTo := {
         val nexus = "https://oss.sonatype.org/"
