@@ -133,7 +133,7 @@ class Select[T](
         Rx {
           content().map(naming).getOrElse(naming(contents()(0)._1)) + " "
         },
-        span(ms("caret"))
+        span(caret)
       ).render,
       div(
         if (hasFilter())

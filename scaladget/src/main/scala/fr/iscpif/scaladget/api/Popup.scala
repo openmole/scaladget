@@ -47,15 +47,6 @@ object Popup {
 
   object DialogPopup extends PopupType
 
-  private val popups: Var[Seq[Popup]] = Var(Seq())
-
-  def isEqual(e1: Node, to: Node): Boolean = {
-    if (e1.isEqualNode(to)) true
-    else if (e1.isEqualNode(org.scalajs.dom.document.body)) false
-    else isEqual(e1.parentNode, to)
-  }
-
-
   lazy val noArrow: ModifierSeq = Seq()
   lazy val whiteBottomArrow = arrow("white", Bottom)
   lazy val whiteRightArrow = arrow("white", Right)
@@ -71,6 +62,7 @@ object Popup {
     padding := 8,
     borderRadius := "4px",
     backgroundColor := "white",
+    fontSize := 14,
     boxShadow := "0 8px 6px -6px black"
   )
 
@@ -121,10 +113,9 @@ class Popup(val triggerElement: org.scalajs.dom.raw.HTMLElement,
             popupStyle: ModifierSeq,
             arrowStyle: ModifierSeq,
             onclose: () => Unit = () => {},
-            condition: () => Boolean = ()=> true) {
+            condition: () => Boolean = () => true) {
 
   val popupVisible = Var(false)
-  popups() = popups() :+ this
 
   Obs(popupVisible) {
     if (!popupVisible()) onclose()
@@ -167,6 +158,7 @@ class Popup(val triggerElement: org.scalajs.dom.raw.HTMLElement,
       triggerElement.onmouseover = (m: MouseEvent) => popupVisible() = true
       triggerElement.onmouseleave = (m: MouseEvent) => popupVisible() = false
     case _ =>
+      triggerElement.onclick = (m: MouseEvent)=> popupVisible() = !popupVisible()
   }
 
   val popup = div(relativePosition)(
@@ -180,30 +172,5 @@ class Popup(val triggerElement: org.scalajs.dom.raw.HTMLElement,
     }).render
 
   def close = popupVisible() = false
-
-
-  // Manage the popups behavior when clicking in other popups or outside popups
-  org.scalajs.dom.window.onmouseup = (m: org.scalajs.dom.raw.MouseEvent) => {
-    popupType match {
-      case ClickPopup | DialogPopup =>
-        val triggers = popups().map {
-          _.triggerElement
-        }
-        val maindivs = popups().map {
-          _.popup
-        }
-        popups().foreach { p =>
-          if (!triggers.filterNot {
-            _ == p.triggerElement
-          }.exists { t => isEqual(m.srcElement, t) }) {
-            if (isEqual(m.srcElement, p.triggerElement)) p.popupVisible() = !p.popupVisible()
-            else if (!maindivs.exists { md => isEqual(m.srcElement, md) }) {
-              p.popupVisible() = false
-            }
-          }
-        }
-      case _ =>
-    }
-  }
 
 }

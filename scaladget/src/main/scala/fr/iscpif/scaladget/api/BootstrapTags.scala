@@ -46,7 +46,7 @@ object BootstrapTags {
   // INPUT
   def input(content: String = "") = tags.input(formControl, value := content)
 
-  def inputGroup(modifierSeq: ModifierSeq) = div(modifierSeq +++ sheet.inputGroup)
+  def inputGroup(modifierSeq: ModifierSeq  = emptyMod) = div(modifierSeq +++ sheet.inputGroup)
 
   def inputGroupButton = span(toClass("input-group-btn"))
 

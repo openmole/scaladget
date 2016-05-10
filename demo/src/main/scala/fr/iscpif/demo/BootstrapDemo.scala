@@ -60,6 +60,7 @@ object BootstrapDemo extends JSApp{
   def build = {
     val bottom = glyph_triangle_bottom +++ (fontSize := 10)
     val oo = Seq[TT]().select(None, (t: TT)=> t.name, btn_default)
+    val sel0 = Seq((TT("ff"), glyph_file +++ sheet.paddingLeft(3)), (TT("dd"), glyph_folder_close +++ sheet.paddingLeft(3))).select(Some(TT("ff")), (t: TT)=> t.name, btn_info)
     val sel = Seq(TT("aauieaa"), TT("bbeeaieai"), TT("uuuieuiecc")).select(
       Some(TT("bb")),
       (t: TT)=> t.name,
@@ -86,6 +87,7 @@ object BootstrapDemo extends JSApp{
         )
       ),
       div("Grow")(ms("ufo-big") +++ (color := "white")),
+      sel0.selector,
       sel.selector,
       div("You")(btn_danger +++ (height := 50) +++ sheet.marginLeft(295)).tooltip(span("héhé"), position = Bottom, arrowStyle = whiteBottomArrow),
        div("Haha")(btn_info +++ sheet.marginLeft(295)).tooltip(span("héhé"), position = Right, arrowStyle = whiteRightArrow, condition = ()=> {4 < 1}),
