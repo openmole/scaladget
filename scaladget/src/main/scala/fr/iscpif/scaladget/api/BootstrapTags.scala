@@ -216,8 +216,8 @@ object BootstrapTags {
 
     def tooltip(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
                 position: PopupPosition = Bottom,
-                popupStyle: ModifierSeq = whitePopup,
-                arrowStyle: ModifierSeq = whiteBottomArrow,
+                popupStyle: ModifierSeq = blackPopup,
+                arrowStyle: ModifierSeq = blackBottomArrow,
                 onclose: () => Unit = () => {},
                 condition: () => Boolean = ()=> true
                ) = new Popup(element.render, innerDiv, HoverPopup, position, popupStyle, arrowStyle, onclose, condition).popup

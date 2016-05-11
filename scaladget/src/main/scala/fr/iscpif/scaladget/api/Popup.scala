@@ -50,25 +50,10 @@ object Popup {
   lazy val noArrow: ModifierSeq = Seq()
   lazy val whiteBottomArrow = arrow("white", Bottom)
   lazy val whiteRightArrow = arrow("white", Right)
+  lazy val blackBottomArrow = arrow("#000", Bottom)
+  lazy val blackRightArrow = arrow("#000", Right)
   lazy val greyBottomArrow = arrow("#333", Bottom)
   lazy val greyRightArrow = arrow("#333", Right)
-
-  lazy val whitePopup: ModifierSeq = Seq(
-    all.absolutePosition,
-    display := "inline-block",
-    width := "auto",
-    maxWidth := 200,
-    height := "auto",
-    padding := 8,
-    borderRadius := "4px",
-    backgroundColor := "white",
-    fontSize := 14,
-    boxShadow := "0 8px 6px -6px black"
-  )
-
-  lazy val whitePopupWithBorder: ModifierSeq =
-    whitePopup +++ (border := "0.1em solid #ccc")
-
 
   lazy val dialogStyle: ModifierSeq = ms("ooo")
   /*Seq(
@@ -88,6 +73,7 @@ object Popup {
     val solid = s"5px solid $color"
     Seq(
       width := 0,
+      zIndex := 1002,
       height := 0) ++ {
       position match {
         case Bottom => Seq(

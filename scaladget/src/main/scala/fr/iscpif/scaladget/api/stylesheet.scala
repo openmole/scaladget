@@ -349,6 +349,43 @@ package bootstrap2 {
       borderBottomLeftRadius := 0
     )
 
+    //POPUPS
+
+    lazy val basePopup: ModifierSeq = Seq(
+      all.absolutePosition,
+      display := "inline-block",
+      fontSize := 12,
+      fontStyle := "normal",
+      fontWeight := "normal",
+      fontFamily := "'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'",
+      textAlign := "center",
+      width := "auto",
+      height := "auto"
+    )
+
+    lazy val blackPopup: ModifierSeq = basePopup +++ Seq(
+      display := "block",
+      lineHeight := 1.42857143,
+      textAlign := "start",
+      maxWidth := 200,
+      padding := "5 8",
+      color := "#fff",
+      backgroundColor := "#000",
+      opacity := "0.95",
+      borderRadius := "3px"
+    )
+
+
+    lazy val whitePopup: ModifierSeq = basePopup +++ Seq(
+      maxWidth := 200,
+      padding := 8,
+      borderRadius := "4px",
+      backgroundColor := "white",
+      boxShadow := "0 8px 6px -6px black"
+    )
+
+    lazy val whitePopupWithBorder: ModifierSeq =
+      whitePopup +++ (border := "0.1em solid #ccc")
 
   }
 
