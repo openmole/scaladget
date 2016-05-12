@@ -414,7 +414,7 @@ object BootstrapTags {
                                  ) extends TwoStates {
     val cssglyph = glyph +++ sheet.paddingLeft(3)
 
-    lazy val div: Modifier = {
+    lazy val div = {
       glyphButton("", preGlyph, cssglyph, action)
     }
   }
@@ -435,11 +435,9 @@ object BootstrapTags {
       width := "auto"
     )
 
-    lazy val div: Modifier = {
-      button(preString, buttonStyle +++ cssbutton +++ pointer, action)(
+    lazy val div = button(preString, buttonStyle +++ cssbutton +++ pointer, action)(
         span(cssglyph)
       )
-    }
 
   }
 
