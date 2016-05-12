@@ -67,6 +67,8 @@ object BootstrapDemo extends JSApp{
       (t: TT)=> t.name,
       btn_primary
     )
+    val li1 = labeledInput("Heere", "445", "enter here", 230, color := "white")
+    val li2 = labeledInput("Hahaha", pHolder = "your value", labelStyle = color := "white")
     a() = true
     tags.div(
       tags.table(sheet.table)(
@@ -88,6 +90,8 @@ object BootstrapDemo extends JSApp{
         )
       ),
       div("Grow")(ms("ufo-big") +++ (color := "white")),
+      li1.render,
+      li2.render,
       sel0.selector,
       sel.selector,
       div("You")(btn_danger +++ (height := 50) +++ sheet.marginLeft(295)).tooltip(span("héhé"), position = Bottom),
@@ -95,7 +99,6 @@ object BootstrapDemo extends JSApp{
       div("HIhi")(btn_info +++ sheet.marginLeft(395)).tooltip(span("Hello boy")),
       div("Settings")(btn_primary, sheet.marginLeft(145)).popup(inner, position = Right, popupStyle = whitePopupWithBorder, arrowStyle = whiteRightArrow),
      // div("Dialog")(btn_primary, sheet.marginLeft(145)).dialog(inner),
-      myDialog,
       tags.label("nrestiarn")(ms("oo")),
       span(glyph_trash),
       Rx {

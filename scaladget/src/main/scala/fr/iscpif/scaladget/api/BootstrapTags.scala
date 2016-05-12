@@ -46,7 +46,7 @@ object BootstrapTags {
   // INPUT
   def input(content: String = "") = tags.input(formControl, value := content)
 
-  def inputGroup(modifierSeq: ModifierSeq  = emptyMod) = div(modifierSeq +++ sheet.inputGroup)
+  def inputGroup(modifierSeq: ModifierSeq = emptyMod) = div(modifierSeq +++ sheet.inputGroup)
 
   def inputGroupButton = span(toClass("input-group-btn"))
 
@@ -210,7 +210,7 @@ object BootstrapTags {
               popupStyle: ModifierSeq = whitePopup,
               arrowStyle: ModifierSeq = noArrow,
               onclose: () => Unit = () => {},
-              condition: () => Boolean = ()=> true) =
+              condition: () => Boolean = () => true) =
       new Popup(element.render, innerDiv, ClickPopup, position, popupStyle, arrowStyle, onclose, condition).popup
 
 
@@ -219,13 +219,13 @@ object BootstrapTags {
                 popupStyle: ModifierSeq = blackPopup,
                 arrowStyle: ModifierSeq = blackBottomArrow,
                 onclose: () => Unit = () => {},
-                condition: () => Boolean = ()=> true
+                condition: () => Boolean = () => true
                ) = new Popup(element.render, innerDiv, HoverPopup, position, popupStyle, arrowStyle, onclose, condition).popup
 
     def dialog(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
                popupStyle: ModifierSeq = dialogStyle,
                onclose: () => Unit = () => {},
-               condition: () => Boolean = ()=> true
+               condition: () => Boolean = () => true
               ) = new Popup(element.render, innerDiv, DialogPopup, Bottom, popupStyle, noArrow, onclose, condition).popup
 
   }
@@ -514,5 +514,10 @@ object BootstrapTags {
 
     def reset = selected() = buttons.head
   }
+
+
+  // FORMS
+  def labeledInput(title: String, default: String = "", pHolder: String = "", inputWidth: Int = 130, labelStyle: ModifierSeq = emptyMod) =
+    new LabeledInput(title, default, pHolder, inputWidth, labelStyle)
 
 }
