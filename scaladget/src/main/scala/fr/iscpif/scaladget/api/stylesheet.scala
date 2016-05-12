@@ -317,77 +317,77 @@ package bootstrap {
 
 package bootstrap2 {
 
-  import stylesheetbase.stylesheetbase._
+import stylesheetbase.stylesheetbase._
 
-  package object bootstrap2 extends Bootstrap2Package
+package object bootstrap2 extends Bootstrap2Package
 
-  trait Bootstrap2Package {
+trait Bootstrap2Package {
 
-    //Exclusive Button Group
-    lazy val stringInGroup: ModifierSeq = Seq(
-      sty.height := "30px",
-      sty.paddingTop := "3px",
-      sty.paddingLeft := "6px",
-      sty.paddingRight := "6px"
-    )
+  //Exclusive Button Group
+  lazy val stringInGroup: ModifierSeq = Seq(
+    sty.height := "30px",
+    sty.paddingTop := "3px",
+    sty.paddingLeft := "6px",
+    sty.paddingRight := "6px"
+  )
 
-    lazy val twoGlyphButton: ModifierSeq = Seq(
-      sty.top := "1px",
-      sty.height := "30px"
-    )
+  lazy val twoGlyphButton: ModifierSeq = Seq(
+    sty.top := "1px",
+    sty.height := "30px"
+  )
 
-    lazy val stringButton: ModifierSeq = Seq(
-      sty.top := "4px",
-      sty.height := "30px"
-    )
+  lazy val stringButton: ModifierSeq = Seq(
+    sty.top := "4px",
+    sty.height := "30px"
+  )
 
-    lazy val selectFilter: ModifierSeq = Seq(
-      marginTop(6),
-      fontSize := 14,
-      paddingLeft(5),
-      borderBottomRightRadius := 0,
-      borderBottomLeftRadius := 0
-    )
+  lazy val selectFilter: ModifierSeq = Seq(
+    marginTop(6),
+    fontSize := 14,
+    paddingLeft(5),
+    borderBottomRightRadius := 0,
+    borderBottomLeftRadius := 0
+  )
 
-    //POPUPS
+  //POPUPS
 
-    lazy val basePopup: ModifierSeq = Seq(
-      all.absolutePosition,
-      display := "inline-block",
-      fontSize := 12,
-      fontStyle := "normal",
-      fontWeight := "normal",
-      fontFamily := "'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'",
-      textAlign := "center",
-      width := "auto",
-      height := "auto"
-    )
+  lazy val basePopup: ModifierSeq = Seq(
+    all.absolutePosition,
+    display := "inline-block",
+    fontSize := 12,
+    fontStyle := "normal",
+    fontWeight := "normal",
+    fontFamily := "'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'",
+    textAlign := "center",
+    width := "auto",
+    height := "auto"
+  )
 
-    lazy val blackPopup: ModifierSeq = basePopup +++ Seq(
-      display := "block",
-      lineHeight := 1.42857143,
-      textAlign := "start",
-      maxWidth := 200,
-      padding := "5 8",
-      color := "#fff",
-      backgroundColor := "#000",
-      opacity := "0.95",
-      borderRadius := "3px"
-    )
+  lazy val blackPopup: ModifierSeq = basePopup +++ Seq(
+    display := "block",
+    lineHeight := 1.42857143,
+    textAlign := "start",
+    maxWidth := 200,
+    padding := "5 8",
+    color := "#fff",
+    backgroundColor := "#000",
+    opacity := "0.95",
+    borderRadius := "3px"
+  )
 
 
-    lazy val whitePopup: ModifierSeq = basePopup +++ Seq(
-      maxWidth := 200,
-      padding := 8,
-      borderRadius := "4px",
-      backgroundColor := "white",
-      boxShadow := "0 8px 6px -6px black"
-    )
+  lazy val whitePopup: ModifierSeq = basePopup +++ Seq(
+    maxWidth := 200,
+    padding := 8,
+    borderRadius := "4px",
+    backgroundColor := "white",
+    boxShadow := "0 8px 6px -6px black"
+  )
 
-    lazy val whitePopupWithBorder: ModifierSeq =
-      whitePopup +++ (border := "0.1em solid #ccc")
+  lazy val whitePopupWithBorder: ModifierSeq =
+    whitePopup +++ (border := "0.1em solid #ccc")
 
-  }
+}
 
 }
 

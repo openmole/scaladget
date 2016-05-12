@@ -4,6 +4,7 @@ import fr.iscpif.scaladget.api.{BootstrapTags=> bs}
 import fr.iscpif.scaladget.tools.JsRxTags._
 import fr.iscpif.scaladget.api.Popup._
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
+import org.w3c.dom.css.CSSStyleSheet
 import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
 import org.scalajs.dom
@@ -93,7 +94,8 @@ object BootstrapDemo extends JSApp{
        div("Haha")(btn_info +++ sheet.marginLeft(295)).tooltip(span("héhé"), position = Right, condition = ()=> {4 < 1}),
       div("HIhi")(btn_info +++ sheet.marginLeft(395)).tooltip(span("Hello boy")),
       div("Settings")(btn_primary, sheet.marginLeft(145)).popup(inner, position = Right, popupStyle = whitePopupWithBorder, arrowStyle = whiteRightArrow),
-      div("Dialog")(btn_primary, sheet.marginLeft(145)).dialog(inner),
+     // div("Dialog")(btn_primary, sheet.marginLeft(145)).dialog(inner),
+      myDialog,
       tags.label("nrestiarn")(ms("oo")),
       span(glyph_trash),
       Rx {
