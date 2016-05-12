@@ -26,7 +26,7 @@ import all._
 class LabeledInput(title: String, default: String, pHolder: String, labelStyle: ModifierSeq, inputStyle: ModifierSeq) {
 
 
-  val lab = label(pHolder)(labelStyle, `for` := pHolder).render
+  val lab = label(title)(labelStyle, `for` := pHolder).render
 
   val inp = bs.input(default)(
     id := pHolder,
