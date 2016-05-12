@@ -517,7 +517,11 @@ object BootstrapTags {
 
 
   // FORMS
-  def labeledInput(title: String, default: String = "", pHolder: String = "", inputWidth: Int = 130, labelStyle: ModifierSeq = emptyMod) =
-    new LabeledInput(title, default, pHolder, inputWidth, labelStyle)
+  def labeledInput(title: String,
+                   default: String = "",
+                   pHolder: String = "",
+                   labelStyle: ModifierSeq = emptyMod,
+                   inputStyle: ModifierSeq = emptyMod) =
+    new LabeledInput(title, default, pHolder, labelStyle, inputStyle)
 
 }

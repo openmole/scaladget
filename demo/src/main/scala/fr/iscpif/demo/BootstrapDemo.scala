@@ -67,7 +67,7 @@ object BootstrapDemo extends JSApp{
       (t: TT)=> t.name,
       btn_primary
     )
-    val li1 = labeledInput("Heere", "445", "enter here", 230, color := "white")
+    val li1 = labeledInput("Heere", "445", "enter here", color := "white", passwordType)
     val li2 = labeledInput("Hahaha", pHolder = "your value", labelStyle = color := "white")
     a() = true
     tags.div(

@@ -23,7 +23,7 @@ import scalatags.JsDom.all._
 import all._
 
 
-class LabeledInput(title: String, default: String, pHolder: String, inputWidth: Int, labelStyle: ModifierSeq) {
+class LabeledInput(title: String, default: String, pHolder: String, labelStyle: ModifierSeq, inputStyle: ModifierSeq) {
 
 
   val lab = label(pHolder)(labelStyle, `for` := pHolder).render
@@ -32,7 +32,7 @@ class LabeledInput(title: String, default: String, pHolder: String, inputWidth: 
     id := pHolder,
     formControl,
     placeholder := pHolder,
-    width := inputWidth
+    inputStyle
   ).render
 
 

@@ -136,6 +136,8 @@ package stylesheetbase {
     lazy val absolutePosition: ModifierSeq = position := "absolute"
 
     lazy val fixedPosition: ModifierSeq = position := "fixed"
+
+    lazy val passwordType: ModifierSeq = `type` := "password"
   }
 
 }
