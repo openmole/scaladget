@@ -35,11 +35,12 @@ class LabeledInput(title: String, default: String, pHolder: String, labelStyle: 
     inputStyle
   ).render
 
+    def render = div(formGroup)(
+      lab,
+      inp)
 
-  def render = div(formGroup)(
-    lab,
-    inp)
+    def setDefault(v: String) = inp.value = v
 
-  def value = inp.value
+    def value = inp.value
 
-}
+  }
