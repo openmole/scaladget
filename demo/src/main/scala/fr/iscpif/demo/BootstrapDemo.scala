@@ -1,10 +1,10 @@
 package demo
 
+import fr.iscpif.scaladget.api.Select.SelectElement
 import fr.iscpif.scaladget.api.{BootstrapTags=> bs}
 import fr.iscpif.scaladget.tools.JsRxTags._
 import fr.iscpif.scaladget.api.Popup._
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
-import org.w3c.dom.css.CSSStyleSheet
 import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
 import org.scalajs.dom
@@ -54,17 +54,24 @@ object BootstrapDemo extends JSApp{
 
   @JSExport
   def main(): Unit = {
+    run
     dom.document.body.appendChild(build)
   }
 
 
-  def build = {
+  def run = {
+    Seq[TT]().select(None, (t: TT) => t.name, btn_default)
+  }
+
+  def build= {
     val bottom = glyph_triangle_bottom +++ (fontSize := 10)
-    val oo = Seq[TT]().select(None, (t: TT)=> t.name, btn_default)
-    val sel0 = Seq((TT("ff"), glyph_file +++ sheet.paddingLeft(3)), (TT("dd"), glyph_folder_close +++ sheet.paddingLeft(3))).select(Some(TT("ff")), (t: TT)=> t.name, btn_info)
+    val oo = Seq[TT]().select(None, (t: TT) => t.name, btn_default)
+    val sel0 = Seq(
+      SelectElement(TT("ff"), glyph_file +++ sheet.paddingLeft(3)),
+      SelectElement(TT("dd"), glyph_folder_close +++ sheet.paddingLeft(3))).select(Some(TT("ff")), (t: TT) => t.name, btn_info)
     val sel = Seq(TT("aauieaa"), TT("bbeeaieai"), TT("uuuieuiecc")).select(
       Some(TT("bb")),
-      (t: TT)=> t.name,
+      (t: TT) => t.name,
       btn_primary
     )
     val li1 = labeledInput("Heere", "445", "enter here", color := "white", passwordType)
@@ -95,10 +102,12 @@ object BootstrapDemo extends JSApp{
       sel0.selector,
       sel.selector,
       div("You")(btn_danger +++ (height := 50) +++ sheet.marginLeft(295)).tooltip(span("héhé"), position = Bottom),
-       div("Haha")(btn_info +++ sheet.marginLeft(295)).tooltip(span("héhé"), position = Right, condition = ()=> {4 < 1}),
+      div("Haha")(btn_info +++ sheet.marginLeft(295)).tooltip(span("héhé"), position = Right, condition = () => {
+        4 < 1
+      }),
       div("HIhi")(btn_info +++ sheet.marginLeft(395)).tooltip(span("Hello boy")),
       div("Settings")(btn_primary, sheet.marginLeft(145)).popup(inner, position = Right, popupStyle = whitePopupWithBorder, arrowStyle = whiteRightArrow),
-     // div("Dialog")(btn_primary, sheet.marginLeft(145)).dialog(inner),
+      // div("Dialog")(btn_primary, sheet.marginLeft(145)).dialog(inner),
       tags.label("nrestiarn")(ms("oo")),
       span(glyph_trash),
       Rx {
@@ -136,6 +145,5 @@ object BootstrapDemo extends JSApp{
       )
     )
   }
-
 
 }

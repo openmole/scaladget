@@ -205,13 +205,15 @@ object BootstrapTags {
 
   implicit class PopableTypedTag(element: TypedTag[org.scalajs.dom.raw.HTMLElement]) {
 
+    implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
+
     def popup(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
               position: PopupPosition = Bottom,
               popupStyle: ModifierSeq = whitePopup,
               arrowStyle: ModifierSeq = noArrow,
               onclose: () => Unit = () => {},
               condition: () => Boolean = () => true) =
-      new Popup(element.render, innerDiv, ClickPopup, position, popupStyle, arrowStyle, onclose, condition).popup
+      Popup(element.render, innerDiv, ClickPopup, position, popupStyle, arrowStyle, onclose, condition).popup
 
 
     def tooltip(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
@@ -220,19 +222,21 @@ object BootstrapTags {
                 arrowStyle: ModifierSeq = blackBottomArrow,
                 onclose: () => Unit = () => {},
                 condition: () => Boolean = () => true
-               ) = new Popup(element.render, innerDiv, HoverPopup, position, popupStyle, arrowStyle, onclose, condition).popup
+               ) =
+      Popup(element.render, innerDiv, HoverPopup, position, popupStyle, arrowStyle, onclose, condition).popup
 
     def dialog(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
                popupStyle: ModifierSeq = dialogStyle,
                onclose: () => Unit = () => {},
                condition: () => Boolean = () => true
-              ) = new Popup(element.render, innerDiv, DialogPopup, Bottom, popupStyle, noArrow, onclose, condition).popup
+              ) =
+      Popup(element.render, innerDiv, DialogPopup, Bottom, popupStyle, noArrow, onclose, condition).popup
 
   }
 
 
   //SELECT
-  implicit class SelectableSeqWithStyle[T](s: Seq[(T, ModifierSeq)]) {
+  implicit class SelectableSeqWithStyle[T](s: Seq[SelectElement[T]]) {
     def select(default: Option[T],
                naming: T => String,
                key: ModifierSeq = emptyMod,
@@ -244,8 +248,8 @@ object BootstrapTags {
     def select(default: Option[T],
                naming: T => String,
                key: ModifierSeq = emptyMod,
-               onclickExtra: () ⇒ Unit = () ⇒ {}) = SelectableSeqWithStyle(s.map {
-      (_, emptyMod)
+               onclickExtra: () ⇒ Unit = () ⇒ {}) = SelectableSeqWithStyle(s.map { el =>
+      SelectElement(el, emptyMod)
     }).select(default, naming, key, onclickExtra)
 
   }
@@ -263,6 +267,8 @@ object BootstrapTags {
   // SCROLL TEXT AREA
   // Define text area, which scrolling can be automated in function of content change:
   object ScrollableTextArea {
+
+    implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 
     sealed trait AutoScroll
 
@@ -303,7 +309,7 @@ object BootstrapTags {
         else NoScroll(scrollTop)
     }
 
-    def doScroll = scrollMode() match {
+    def doScroll = scrollMode.now match {
       case BottomScroll ⇒ sRender.scrollTop = sRender.scrollHeight
       case n: NoScroll ⇒ sRender.scrollTop = n.scrollHeight
       case _ ⇒
@@ -320,9 +326,10 @@ object BootstrapTags {
     }
   }
 
-  case class ScrollableDiv(_element: Div, _scrollMode: AutoScroll) extends Scrollable {
+  case class ScrollableDiv(_element: Div, _scrollMode: AutoScroll)(implicit ctx: Ctx.Owner) extends Scrollable {
     val scrollMode: Var[AutoScroll] = Var(_scrollMode)
     val child: Var[Node] = Var(div)
+
     val tA = div(height := "100%")(Rx {
       child()
     }, onscroll := { (e: Event) ⇒ setScrollMode })
@@ -330,7 +337,6 @@ object BootstrapTags {
     def setChild(d: Div) = child() = d
 
     val sRender = tA.render
-
   }
 
 
@@ -436,8 +442,8 @@ object BootstrapTags {
     )
 
     lazy val div = button(preString, buttonStyle +++ cssbutton +++ pointer, action)(
-        span(cssglyph)
-      )
+      span(cssglyph)
+    )
 
   }
 
@@ -472,18 +478,23 @@ object BootstrapTags {
                     ) = twoStatesSpan(glyph1, glyph2, todo1, todo2, preString, buttonStyle)
   }
 
-  class ExclusiveGroup(style: ModifierSeq, defaultStyle: ModifierSeq, selectionStyle: ModifierSeq, buttons: Seq[ExclusiveButton]) {
+  class ExclusiveGroup(style: ModifierSeq,
+                       defaultStyle: ModifierSeq,
+                       selectionStyle: ModifierSeq,
+                       buttons: Seq[ExclusiveButton]) {
+
+    implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
+
     val selected = Var(buttons.head)
     val selectedAgain = Var(false)
 
-
-    def buttonBackground(b: ExclusiveButton) = (if (b == selected()) btn +++ selectionStyle else btn +++ defaultStyle)
+    def buttonBackground(b: ExclusiveButton) = (if (b == selected.now) btn +++ selectionStyle else btn +++ defaultStyle)
 
     def glyphButtonBackground(b: ExclusiveButton) = buttonBackground(b) +++ twoGlyphButton
 
     def stringButtonBackground(b: ExclusiveButton) = buttonBackground(b) +++ stringButton
 
-    def glyphForTwoStates(ts: TwoStates, mod: ModifierSeq) = (ts == selected(), mod, emptyMod)
+    def glyphForTwoStates(ts: TwoStates, mod: ModifierSeq) = (ts == selected.now, mod, emptyMod)
 
     val div: Modifier = Rx {
       selected()
@@ -504,7 +515,7 @@ object BootstrapTags {
     }
 
     private def action(b: ExclusiveButton, a: () ⇒ Unit) = () ⇒ {
-      selectedAgain() = if (b == selected()) !selectedAgain() else false
+      selectedAgain() = if (b == selected.now) !selectedAgain.now else false
       selected() = b
       a()
     }

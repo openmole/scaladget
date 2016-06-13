@@ -68,6 +68,24 @@ object Popup {
       boxSizing := "border-box"
     )*/
 
+  def apply(triggerElement: org.scalajs.dom.raw.HTMLElement,
+            innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
+            popupType: PopupType,
+            direction: PopupPosition,
+            popupStyle: ModifierSeq,
+            arrowStyle: ModifierSeq,
+            onclose: () => Unit = () => {},
+            condition: () => Boolean = () => true) = {
+    new Popup(triggerElement,
+      innerDiv,
+      popupType,
+      direction,
+      popupStyle,
+      arrowStyle,
+      onclose,
+      condition)
+  }
+
   def arrow(color: String, position: PopupPosition): ModifierSeq = {
     val transparent = "5px solid transparent"
     val solid = s"5px solid $color"
@@ -101,11 +119,9 @@ class Popup(val triggerElement: org.scalajs.dom.raw.HTMLElement,
             onclose: () => Unit = () => {},
             condition: () => Boolean = () => true) {
 
-  val popupVisible = Var(false)
+  implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 
-  Obs(popupVisible) {
-    if (!popupVisible()) onclose()
-  }
+  val popupVisible = Var(false)
 
   val zPosition = zIndex := 1002
 
@@ -138,13 +154,20 @@ class Popup(val triggerElement: org.scalajs.dom.raw.HTMLElement,
   } +++ zPosition +++ absolutePosition
 
 
-  triggerElement.style.setProperty("cursor", "pointer")
-  popupType match {
-    case HoverPopup =>
-      triggerElement.onmouseover = (m: MouseEvent) => popupVisible() = true
-      triggerElement.onmouseleave = (m: MouseEvent) => popupVisible() = false
-    case _ =>
-      triggerElement.onclick = (m: MouseEvent)=> popupVisible() = !popupVisible()
+  Rx {
+    popupVisible.trigger {
+      if (!popupVisible()) onclose()
+    }
+
+    triggerElement.style.setProperty("cursor", "pointer")
+    popupType match {
+      case HoverPopup =>
+        triggerElement.onmouseover = (m: MouseEvent) => popupVisible() = true
+        triggerElement.onmouseleave = (m: MouseEvent) => popupVisible() = false
+      case _ =>
+        triggerElement.onclick = (m: MouseEvent) =>
+          popupVisible() = !popupVisible()
+    }
   }
 
   val popup = div(relativePosition)(

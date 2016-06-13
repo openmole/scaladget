@@ -46,70 +46,72 @@ import scalatags.JsDom.{tags ⇒ tags}
 
 object Select {
 
-  implicit def seqToSeqOfEmptyPairs[T](s: Seq[T]): Seq[(T, ModifierSeq)] = s.map {
-    (_, emptyMod)
-  }
+  implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 
-  implicit def seqOfTupleToSeqOfT[T](s: Seq[(T, _)]): Seq[T] = s.map {
-    _._1
-  }
+  case class SelectElement[T](value: T, mod: ModifierSeq = emptyMod)
+
+  implicit def seqOfTtoSeqOfSelectElement[T](s: Seq[T]): Seq[SelectElement[T]] = s.map { e => SelectElement(e) }
+
+  implicit def tToTElement[T](t: T): SelectElement[T] = SelectElement(t)
 
   def apply[T](
-                contents: Seq[(T, ModifierSeq)],
+                contents: Seq[SelectElement[T]],
                 default: Option[T],
                 naming: T => String,
                 key: ModifierSeq = emptyMod,
                 onclickExtra: () ⇒ Unit = () ⇒ {}
-              ) = new Select(Var(contents), default, naming, key, onclickExtra)
+              ) = new Select(contents, default, naming, key, onclickExtra)
 
 }
 
 import fr.iscpif.scaladget.api.Select._
 
 class Select[T](
-                 private val contents: Var[Seq[(T, ModifierSeq)]],
+                 private val _contents: Seq[SelectElement[T]],
                  default: Option[T] = None,
                  naming: T => String,
                  key: ModifierSeq = emptyMod,
                  onclickExtra: () ⇒ Unit = () ⇒ {}
                ) {
 
+  implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
+
+  val contents = Var(_contents)
   val autoID = java.util.UUID.randomUUID.toString
 
-  val content: Var[Option[T]] = Var(contents().size match {
+  val content: Var[Option[SelectElement[T]]] = Var(_contents.size match {
     case 0 ⇒ None
     case _ ⇒ default match {
-      case None ⇒ Some(contents()(0)._1)
+      case None ⇒ _contents.headOption
       case _ ⇒
-        val ind = contents().map {
-          _._1
-        }.indexOf(default.get)
-        if (ind != -1) Some(contents()(ind)._1) else Some(contents()(0)._1)
+        val defaultSelectElement: SelectElement[T] = default match {
+          case Some(t) => t
+          case _ => _contents.head
+        }
+        if (_contents.exists(_ == defaultSelectElement)) Some(defaultSelectElement)
+        else _contents.headOption
     }
   })
 
   val hasFilter = Var(false)
-  val filtered: Var[Seq[T]] = Var(contents())
-  filtered() = contents().take(100)
+  val filtered: Var[Seq[SelectElement[T]]] = Var(_contents)
+  filtered() = _contents.take(100)
 
   lazy val inputFilter: HTMLInputElement = bs.input("")(selectFilter, placeholder := "Filter", oninput := { () ⇒
-    filtered() = contents().filter {f=>
-      naming(f._1).toUpperCase.contains(inputFilter.value.toUpperCase)
+    filtered() = _contents.filter { f =>
+      naming(f.value).toUpperCase.contains(inputFilter.value.toUpperCase)
     }
   }).render
 
-  val glyphMap = Var(contents().toMap)
-
   def resetFilter = {
-    filtered() = contents().take(100)
+    filtered() = contents.now.take(100)
     content() = None
   }
 
-  def setContents(cts: Seq[T], onset: () ⇒ Unit = () ⇒ {}) = {
+  def setContents(cts: Seq[SelectElement[T]], onset: () ⇒ Unit = () ⇒ {}) = {
     contents() = cts
     content() = cts.headOption
-    filtered() = contents().take(100)
-    glyphMap() = contents().toMap
+    filtered() = cts.take(100)
     inputFilter.value = ""
     onset()
   }
@@ -119,7 +121,7 @@ class Select[T](
     content() = None
   }
 
-  def isContentsEmpty = contents().isEmpty
+  def isContentsEmpty = contents.now.isEmpty
 
   lazy val selector = {
 
@@ -127,36 +129,38 @@ class Select[T](
       span(key +++ pointer, `type` := "button")(
         Rx {
           content().map { c ⇒
-            bs.glyphSpan(glyphMap()(c))
+            bs.glyphSpan(c.mod)
           }
         },
         Rx {
-          content().map(naming).getOrElse(naming(contents()(0)._1)) + " "
+          content().map { c => naming(c.value) }.getOrElse("") + " "
         },
         span(caret)
       ).render,
       div(
-        if (hasFilter())
-          div(
-            tags.form(inputFilter)(`type` := "submit", onsubmit := { () ⇒
-              content() = filtered().headOption
-              false
-            })
-          )
-        else tags.div,
+        Rx {
+          if (hasFilter())
+            div(
+              tags.form(inputFilter)(`type` := "submit", onsubmit := { () ⇒
+                content() = filtered().headOption
+                false
+              })
+            )
+          else tags.div
+        },
         Rx {
           tags.div(sheet.marginLeft(0) +++ (listStyleType := "none"))(
             if (filtered().size < 100) {
               for (c ← filtered()) yield {
                 tags.div(pointer, onclick := { () ⇒
                   content() = contents().filter {
-                    _._1 == c
+                    _.value == c.value
                   }.headOption.map {
-                    _._1
+                    _.value
                   }
                   onclickExtra()
                   popupButton.close
-                })(naming(c))
+                })(naming(c.value))
               }
             }
             else tags.li("To many results, filter more !")

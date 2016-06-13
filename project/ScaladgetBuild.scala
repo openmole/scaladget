@@ -26,7 +26,7 @@ object ScaladgetBuild extends Build {
       libraryDependencies ++= Seq(
         "org.scala-js" %%% "scalajs-dom" % "0.9.0",
         "com.lihaoyi" %%% "scalatags" % "0.5.5",
-        "com.lihaoyi" %%% "scalarx" % "0.2.8",
+        "com.lihaoyi" %%% "scalarx" % "0.3.1",
         "org.querki" %%% "querki-jsext" % "0.6",
         "org.querki" %%% "jquery-facade" % "1.0-RC3"
       ),
