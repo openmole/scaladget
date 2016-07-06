@@ -54,6 +54,8 @@ object Select {
 
   implicit def tToTElement[T](t: T): SelectElement[T] = SelectElement(t)
 
+  implicit def optionSelectElementTToOptionT[T](opt: Option[SelectElement[T]]): Option[T] = opt.map{_.value}
+
   def apply[T](
                 contents: Seq[SelectElement[T]],
                 default: Option[T],
