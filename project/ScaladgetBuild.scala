@@ -59,7 +59,10 @@ object ScaladgetBuild extends Build {
     file("demo"),
     settings = Seq(
       version := Version,
-      scalaVersion := ScalaVersion
+      scalaVersion := ScalaVersion,
+      libraryDependencies ++= Seq(
+        "com.lihaoyi" %%% "scalarx" % "0.3.1"
+      )
     )
   ) dependsOn (scaladget) enablePlugins (ScalaJSPlugin)
 
