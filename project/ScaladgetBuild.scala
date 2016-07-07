@@ -77,6 +77,7 @@ object ScaladgetBuild extends Build {
       (runDemo <<= (fullOptJS in demo in Compile, resourceDirectory in demo in Compile, target in demo) map { (ct, r, t) =>
         ct.map { f => IO.copyFile(f, new File(t, s"js/${f.getName}"), preserveLastModified = true) }
         IO.copyFile(new File(r, "index.html"), new File(t, "index.html"))
+        recursiveCopy(new File(r, "js"), new File(t, "js"))
         recursiveCopy(new File(r, "css"), new File(t, "css"))
         recursiveCopy(new File(r, "fonts"), new File(t, "fonts"))
       }
