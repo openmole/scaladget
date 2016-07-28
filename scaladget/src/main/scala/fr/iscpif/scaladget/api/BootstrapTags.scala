@@ -188,7 +188,7 @@ object BootstrapTags {
     new NavItem(id, tTag, ontrigger, todo, Seq(data("toggle") := "modal", data("target") := "#" + id + "PanelID"))
 
 
-  def nav(uuid: String, classPair: ClassAttrPair, contents: NavItem[_ <: HTMLElement]*): TypedTag[HTMLElement] =
+  def nav(uuid: String, classPair: ModifierSeq, contents: NavItem[_ <: HTMLElement]*): TypedTag[HTMLElement] =
     ul(toClass("nav "), classPair, id := uuid, role := "tablist")(
       contents.map { c ⇒
         c.render(scalatags.JsDom.attrs.onclick := { () ⇒
