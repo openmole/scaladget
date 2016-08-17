@@ -29,59 +29,6 @@ import scalatags.JsDom.all._
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*@JSExport("LunrDemo")
-object LunrDemo extends JSApp {
-
-  @JSExport
-  def main(): Unit = {
-
-    val results: Var[Seq[IIndexSearchResult]] = Var(Seq())
-
-    val index = Importedjs.lunr((i: Index) => {
-      i.field("title", lit("boost" → 10).value)
-      i.field("body", lit("boost" → 1).value)
-      i.ref("id")
-      i.add(lit(
-        "title" -> "Scala-js",
-        "body" -> "Arguably the most efficient way to learn new technology is to try it out yourself. Here we have collected a set of tutorials from simple to complete web app, to get you started right away!",
-        "id" -> "www.google.com"
-      ))
-      i.add(lit(
-        "title" -> "New York",
-        "body" -> "New York set a major league record by winning five consecutive championships from 1949 to 1953, and appeared in the World Series nine times during the next 11 years. Despite management disputes, the team reached the World Series four times between 1976 and 1981, claiming the championship in 1977 and 1978.",
-        "id" -> "openmole.org"
-      ))
-    })
-
-    val result = index.search("new")
-
-    results() = result.toSeq
-
-    index.documentStore.get("openmole.org").toArray().foreach {
-      println
-    }
-
-    org.scalajs.dom.document.body.appendChild(tags.div(
-      color := "white",
-      Rx {
-        for {r <- results()} yield {
-          tags.div(
-            tags.span(
-              tags.a(r.ref, cursor := "pointer", href := r.ref),
-              r.score
-            )
-          )
-        }
-      }
-
-    ).render)
-  }
-
-  case class Page(url: String, title: String, body: String)
-
-}*/
-
-
 @JSExport
 object LunrDemo {
   val searchInput = input(placeholder:="Search").render
@@ -121,7 +68,6 @@ object LunrDemo {
 
   @JSExport
   def search(): Unit = {
-    println("search")
     results() = lunrIndex.now.map { i =>
       i.search(searchInput.value).toSeq
     }.getOrElse(Seq())
