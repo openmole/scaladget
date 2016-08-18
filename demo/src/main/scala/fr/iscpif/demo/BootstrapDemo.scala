@@ -1,18 +1,21 @@
 package demo
 
 import fr.iscpif.scaladget.api.Select.SelectElement
-import fr.iscpif.scaladget.api.{BootstrapTags=> bs}
+import fr.iscpif.scaladget.api.{BootstrapTags => bs}
 import fr.iscpif.scaladget.tools.JsRxTags._
 import fr.iscpif.scaladget.api.Popup._
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
+
 import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
 import org.scalajs.dom
+
 import scalatags.JsDom.tags
 import scalatags.JsDom.all._
 import scalatags.JsDom.{styles => sty}
 import sheet._
 import bs._
+import org.scalajs.dom.raw.Event
 import rx._
 
 /*
@@ -34,116 +37,33 @@ import rx._
 
 
 @JSExport("Demo")
-object BootstrapDemo extends JSApp{
+object BootstrapDemo extends JSApp {
 
-  val a: Var[Boolean] = Var(false)
 
-  case class TT(name: String) extends Displayable
+  lazy val modalDialog: ModalDialog = bs.ModalDialog()
 
-  val sortingBar: ModifierSeq = Seq(
-    color := "white",
-    backgroundColor := "#333",
-    opacity := "0.5",
-    width := 35
+  modalDialog header bs.ModalDialog.headerDialogShell(div("Header"))
+  modalDialog body bs.ModalDialog.bodyDialogShell(div("My body !"))
+  modalDialog footer bs.ModalDialog.footerDialogShell(
+    bs.buttonGroup()(
+      bs.ModalDialog.actAndCloseButton(modalDialog, btn_primary, "OK"),
+      tags.button(btn_info, "Cancel")
+    )
   )
 
-  val inner = div(
-    bs.button("Run", btn_primary, ()=> println("button click")),
-    label("Yop")(label_danger)
-  )
+  val modal = modalDialog.dialog
 
-  @JSExport
+  val trigger = modalDialog.buttonTrigger("Modal !", btn_primary).render
+
+  @JSExport()
   def main(): Unit = {
-    run
-    dom.document.body.appendChild(build)
+    dom.document.body.appendChild(modal)
+    dom.document.body.appendChild(trigger)
   }
 
-
-  def run = {
-    Seq[TT]().select(None, (t: TT) => t.name, btn_default)
-  }
-
-  def build= {
-    val bottom = glyph_triangle_bottom +++ (fontSize := 10)
-    val oo = Seq[TT]().select(None, (t: TT) => t.name, btn_default)
-    val sel0 = Seq(
-      SelectElement(TT("ff"), glyph_file +++ sheet.paddingLeft(3)),
-      SelectElement(TT("dd"), glyph_folder_close +++ sheet.paddingLeft(3))).select(Some(TT("ff")), (t: TT) => t.name, btn_info)
-    val sel = Seq(TT("aauieaa"), TT("bbeeaieai"), TT("uuuieuiecc")).select(
-      Some(TT("bb")),
-      (t: TT) => t.name,
-      btn_primary
-    )
-    val li1 = labeledInput("Heere", "445", "enter here", color := "white", passwordType)
-    val li2 = labeledInput("Hahaha", pHolder = "your value", labelStyle = color := "white")
-    a() = true
-    tags.div(
-      tags.table(sheet.table)(
-        thead(
-          tr(
-            th("col1"),
-            th("col2")
-          )
-        ),
-        tbody(
-          tr(
-            td("Yo"),
-            td("men")
-          ),
-          tr(
-            td("mathieu"),
-            td("leclaire")
-          )
-        )
-      ),
-      div("Grow")(ms("ufo-big") +++ (color := "white")),
-      li1.render,
-      li2.render,
-      sel0.selector,
-      sel.selector,
-      div("You")(btn_danger +++ (height := 50) +++ sheet.marginLeft(295)).tooltip(span("héhé"), position = Bottom),
-      div("Haha")(btn_info +++ sheet.marginLeft(295)).tooltip(span("héhé"), position = Right, condition = () => {
-        4 < 1
-      }),
-      div("HIhi")(btn_info +++ sheet.marginLeft(395)).tooltip(span("Hello boy")),
-      div("Settings")(btn_primary, sheet.marginLeft(145)).popup(inner, position = Right, popupStyle = whitePopupWithBorder, arrowStyle = whiteRightArrow),
-      // div("Dialog")(btn_primary, sheet.marginLeft(145)).dialog(inner),
-      tags.label("nrestiarn")(ms("oo")),
-      span(glyph_trash),
-      Rx {
-        span(aria.hidden := "true", glyph_upload +++ ms("fileUpload glyphmenu"))
-      },
-      tags.div(
-        sty.left := "40px",
-        sty.width := "100%",
-        exclusiveButtonGroup(sortingBar, ms("iii"), ms("yyy"))(
-          ExclusiveButton.twoGlyphSpan(
-            bottom,
-            glyph_triangle_top,
-            () ⇒ println("state 1"),
-            () ⇒ println("state 2"),
-            preString = "Aa"
-          ),
-          ExclusiveButton.twoGlyphButtonStates(
-            bottom,
-            glyph_triangle_top,
-            () ⇒ println("state 1"),
-            () ⇒ println("state 2"),
-            preGlyph = glyph_time
-          ),
-          ExclusiveButton.twoGlyphSpan(
-            bottom,
-            glyph_triangle_top,
-            () ⇒ println("state 1"),
-            () ⇒ println("state 2"),
-            preString = "Ko"
-          ),
-          ExclusiveButton.string("#", () => println("Yo #")),
-          ExclusiveButton.string("Name", () => println("Yo name")
-          )
-        ).div
-      )
-    )
+  @JSExport()
+  def loadBootstrap(): Unit = {
+    dom.document.body.appendChild(tags.script(`type` := "text/javascript", src := "js/bootstrap-native.min.js"))
   }
 
 }

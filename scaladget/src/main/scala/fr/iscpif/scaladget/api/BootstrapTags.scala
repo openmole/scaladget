@@ -82,33 +82,33 @@ object BootstrapTags {
 
   // displaying a text, with a button style and an action
   def button(content: String, buttonStyle: ModifierSeq, todo: () ⇒ Unit): TypedTag[HTMLButtonElement] =
-    tags.button(buttonStyle, `type` := "button", onclick := { () ⇒ todo() })(content)
+  tags.button(buttonStyle, `type` := "button", onclick := { () ⇒ todo() })(content)
 
   // displaying an HTHMElement, with a a button style and an action
   def button(content: TypedTag[HTMLElement], buttonStyle: ModifierSeq, todo: () ⇒ Unit): TypedTag[HTMLButtonElement] =
-    button("", buttonStyle, todo)(content)
+  button("", buttonStyle, todo)(content)
 
   // displaying a text with a button style and a glyphicon
   def glyphButton(text: String, buttonStyle: ModifierSeq = Seq(), glyphicon: ModifierSeq = Seq(), todo: () ⇒ Unit = () => {}): TypedTag[HTMLButtonElement] =
-    button(text, buttonStyle, todo)(pointer, `type` := "button")(span(glyphicon))
+  button(text, buttonStyle, todo)(pointer, `type` := "button")(span(glyphicon))
 
   // Clickable span containing a glyphicon and a text
   def glyphSpan(glyphicon: ModifierSeq, onclickAction: () ⇒ Unit = () ⇒ {}, text: String = ""): TypedTag[HTMLSpanElement] =
-    span(glyphicon, aria.hidden := "true", onclick := { () ⇒ onclickAction() })(text)
+  span(glyphicon, aria.hidden := "true", onclick := { () ⇒ onclickAction() })(text)
 
 
   // PROGRESS BAR
   def progressBar(barMessage: String, ratio: Int): TypedTag[HTMLDivElement] =
-    div(progress)(
-      div(sheet.progressBar)(width := ratio.toString() + "%")(
-        barMessage
-      )
+  div(progress)(
+    div(sheet.progressBar)(width := ratio.toString() + "%")(
+      barMessage
     )
+  )
 
 
   // BADGE
   def badge(content: String, badgeValue: String, buttonStyle: ModifierSeq, todo: () => Unit) =
-    button(s"$content ", buttonStyle, todo)(span(toClass("badge"))(badgeValue))
+  button(s"$content ", buttonStyle, todo)(span(toClass("badge"))(badgeValue))
 
 
   //BUTTON GROUP
@@ -121,33 +121,74 @@ object BootstrapTags {
 
   /////TO BE REMOVED  ----
   //MODAL
-  type Dialog = TypedTag[HTMLDivElement]
   type ModalID = String
 
-  def modalDialog(ID: ModalID, typedTag: TypedTag[_]*): Dialog =
-    div(modal +++ fade)(id := ID,
-      div(sheet.modalDialog)(
-        div(modalContent)(
-          typedTag)
+
+  object ModalDialog {
+    def apply() = new ModalDialog
+
+    type HeaderDialog = TypedTag[_]
+    type BodyDialog = TypedTag[_]
+    type FooterDialog = TypedTag[_]
+
+    val headerDialogShell = div(modalHeader +++ modalInfo)
+
+    val bodyDialogShell = div(modalBody)
+
+    val footerDialogShell = div(modalFooter)
+
+    def actAndCloseButton(modalDialog: ModalDialog, modifierSeq: ModifierSeq, content: String, action: () => Unit = () => {}) = {
+      println("build act an")
+      tags.button(modifierSeq, content, onclick := { () =>
+        println("hide modal")
+        action()
+        modalDialog.hideModal
+      }
       )
-    )
+    }
+  }
 
-  def headerDialog = div(modalHeader +++ modalInfo)
+  class ModalDialog {
 
-  def bodyDialog = div(modalBody)
+    val headerDialog: Var[ModalDialog.HeaderDialog] = Var(tags.div)
+    val bodyDialog: Var[ModalDialog.BodyDialog] = Var(tags.div)
+    val footerDialog: Var[ModalDialog.FooterDialog] = Var(tags.div)
 
-  def footerDialog = div(modalFooter)
+    val ID = uuID
+
+    def dialog =
+      div(modal +++ fade)(id := ID, `class` := "modal fade",
+        tabindex := "-1", role := "dialog", aria.labelledby := "myModalLabel", aria.hidden := "true")(
+        div(sheet.modalDialog)(
+          div(modalContent)(
+            headerDialog.now,
+            bodyDialog.now,
+            footerDialog.now
+          )
+        )
+      ).render
+
+    def header(hDialog: ModalDialog.HeaderDialog): Unit = headerDialog() = hDialog
+    def body(bDialog: ModalDialog.BodyDialog): Unit = bodyDialog() = bDialog
+    def footer(fDialog: ModalDialog.FooterDialog): Unit = footerDialog() = fDialog
+
+    def buttonTrigger(content: String, modifierSeq: ModifierSeq) =
+      tags.button(modifierSeq, id := "custom-modal-template", `type` := "button", data("toggle") := "modal", data("target") := s"#$ID")(content)
+
+    def hideModal = dialog.setAttribute("aria-hidden", "false")
+  }
+
 
   //modal jQuery events
-  private def modalQuery(id: ModalID, query: String) = $("#" + id).modal(query)
+  /* private def modalQuery(id: ModalID, query: String) = $("#" + id).modal(query)
 
-  private def hasClass(id: ModalID, clazz: String): Boolean = $("#" + id).hasClass(clazz)
+   private def hasClass(id: ModalID, clazz: String): Boolean = $("#" + id).hasClass(clazz)
 
-  def showModal(id: ModalID) = modalQuery(id, "show")
+   def showModal(id: ModalID) = modalQuery(id, "show")
 
-  def hideModal(id: ModalID) = modalQuery(id, "hide")
+   def hideModal(id: ModalID) = modalQuery(id, "hide")
 
-  def isModalVisible(id: ModalID): Boolean = hasClass(id, "in")
+   def isModalVisible(id: ModalID): Boolean = hasClass(id, "in")*/
 
 
   // NAVS
@@ -257,11 +298,11 @@ object BootstrapTags {
 
   // JUMBOTRON
   def jumbotron(modifiers: ModifierSeq) =
-    div(container +++ themeShowcase)(role := "main")(
-      div(sheet.jumbotron)(
-        p(modifiers)
-      )
+  div(container +++ themeShowcase)(role := "main")(
+    div(sheet.jumbotron)(
+      p(modifiers)
     )
+  )
 
 
   // SCROLL TEXT AREA
@@ -362,10 +403,10 @@ object BootstrapTags {
 
   // PANELS
   def panel(heading: String) =
-    div(sheet.panel +++ panelDefault)(
-      div(panelHeading)(heading),
-      div(panelBody)
-    )
+  div(sheet.panel +++ panelDefault)(
+    div(panelHeading)(heading),
+    div(panelBody)
+  )
 
   def alert(content: String, todook: () ⇒ Unit, todocancel: () ⇒ Unit) = {
     tags.div(role := "alert")(
@@ -531,6 +572,6 @@ object BootstrapTags {
                    pHolder: String = "",
                    labelStyle: ModifierSeq = emptyMod,
                    inputStyle: ModifierSeq = emptyMod) =
-    new LabeledInput(title, default, pHolder, labelStyle, inputStyle)
+  new LabeledInput(title, default, pHolder, labelStyle, inputStyle)
 
 }
