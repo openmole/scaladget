@@ -8,7 +8,7 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 object ScaladgetBuild extends Build {
   val Organization = "fr.iscpif"
   val Name = "Scaladget"
-  val Version = "0.8.0"
+  val Version = "0.8.1"
   val ScalaVersion = "2.11.8"
   val Resolvers = Seq(Resolver.sonatypeRepo("snapshots"),
     DefaultMavenRepository
@@ -24,7 +24,7 @@ object ScaladgetBuild extends Build {
       scalaVersion := ScalaVersion,
       resolvers in ThisBuild ++= Resolvers,
       libraryDependencies ++= Seq(
-        "org.scala-js" %%% "scalajs-dom" % "0.9.0",
+        "org.scala-js" %%% "scalajs-dom" % "0.9.1",
         "com.lihaoyi" %%% "scalatags" % "0.6.0",
         "com.lihaoyi" %%% "scalarx" % "0.3.1",
         "org.querki" %%% "querki-jsext" % "0.6",
