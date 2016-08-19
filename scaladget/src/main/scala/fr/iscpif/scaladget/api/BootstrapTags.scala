@@ -19,17 +19,18 @@ package fr.iscpif.scaladget.api
 
 import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw._
+
 import scala.scalajs.js.annotation.JSExport
-import scalatags.JsDom.{TypedTag, tags ⇒ tags}
+import scalatags.JsDom.{TypedTag, tags}
 import scalatags.JsDom.all._
 import fr.iscpif.scaladget.tools.JsRxTags._
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
-import fr.iscpif.scaladget.bootstrap._
 import org.querki.jquery._
 import sheet._
 import rx._
 import Popup._
 import Select._
+import fr.iscpif.scaladget.mapping.{Modal}
 
 @JSExport("BootstrapTags")
 object BootstrapTags {
@@ -175,7 +176,7 @@ object BootstrapTags {
     def buttonTrigger(content: String, modifierSeq: ModifierSeq) =
       tags.button(modifierSeq, id := "custom-modal-template", `type` := "button", data("toggle") := "modal", data("target") := s"#$ID")(content)
 
-    def hideModal = dialog.setAttribute("aria-hidden", "false")
+    def hideModal = new Modal(dialog).close
   }
 
 

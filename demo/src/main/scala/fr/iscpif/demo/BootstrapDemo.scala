@@ -15,6 +15,7 @@ import scalatags.JsDom.all._
 import scalatags.JsDom.{styles => sty}
 import sheet._
 import bs._
+import fr.iscpif.demo.ModalDialogDemo
 import org.scalajs.dom.raw.Event
 import rx._
 
@@ -39,26 +40,15 @@ import rx._
 @JSExport("Demo")
 object BootstrapDemo extends JSApp {
 
-
-  lazy val modalDialog: ModalDialog = bs.ModalDialog()
-
-  modalDialog header bs.ModalDialog.headerDialogShell(div("Header"))
-  modalDialog body bs.ModalDialog.bodyDialogShell(div("My body !"))
-  modalDialog footer bs.ModalDialog.footerDialogShell(
-    bs.buttonGroup()(
-      bs.ModalDialog.actAndCloseButton(modalDialog, btn_primary, "OK"),
-      tags.button(btn_info, "Cancel")
-    )
-  )
-
-  val modal = modalDialog.dialog
-
-  val trigger = modalDialog.buttonTrigger("Modal !", btn_primary).render
-
   @JSExport()
   def main(): Unit = {
-    dom.document.body.appendChild(modal)
-    dom.document.body.appendChild(trigger)
+    Seq(ModalDialogDemo.elementDemo).foreach { demo =>
+      dom.document.body.appendChild(
+        div(relativePosition)(
+          div(colMD(8))(pre(code(toClass("scala"))(demo.code))),
+          div(colMD(4))(demo.element)
+        ))
+    }
   }
 
   @JSExport()
@@ -66,4 +56,9 @@ object BootstrapDemo extends JSApp {
     dom.document.body.appendChild(tags.script(`type` := "text/javascript", src := "js/bootstrap-native.min.js"))
   }
 
+
+  @JSExport()
+  def highlight(): Unit = {
+    dom.document.body.appendChild(tags.script("hljs.initHighlighting();"))
+  }
 }

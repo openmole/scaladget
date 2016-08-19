@@ -3,8 +3,8 @@
     src:url(../fonts/glyphicons-halflings-regular.eot);
 }
 
-.uu{
-background-color: #333;
+code.scala.hljs{
+    background-color: #f5f5f5;
 }
 
 /* enables CSS3 transition for simple collapses, accordion and also navbar in responsive view */

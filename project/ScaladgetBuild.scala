@@ -24,7 +24,7 @@ object ScaladgetBuild extends Build {
       scalaVersion := ScalaVersion,
       resolvers in ThisBuild ++= Resolvers,
       libraryDependencies ++= Seq(
-        "org.scala-js" %%% "scalajs-dom" % "0.9.0",
+        "org.scala-js" %%% "scalajs-dom" % "0.9.1",
         "com.lihaoyi" %%% "scalatags" % "0.6.0",
         "com.lihaoyi" %%% "scalarx" % "0.3.1",
         "org.querki" %%% "querki-jsext" % "0.6",
