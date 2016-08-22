@@ -43,6 +43,8 @@ object SelectDemo {
 
 
   val elementDemo = new ElementDemo {
+    def title: String = "Dropdown"
+
     def code: String = sc.source
 
     def element: Element = sc.value

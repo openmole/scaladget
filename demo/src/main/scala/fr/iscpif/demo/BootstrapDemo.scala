@@ -42,12 +42,18 @@ object BootstrapDemo extends JSApp {
 
   @JSExport()
   def main(): Unit = {
-    Seq(ModalDialogDemo.elementDemo, SelectDemo.elementDemo).foreach { demo =>
+    for {
+      demo <- Seq(ModalDialogDemo.elementDemo, SelectDemo.elementDemo)
+    } yield {
       dom.document.body.appendChild(
-        div(relativePosition)(
-          div(colMD(8))(pre(code(toClass("scala"))(demo.cleanCode))),
-          div(colMD(4))(demo.element)
-        ))
+        div(
+          h3(demo.title),
+          div(row)(
+            div(colMD(8))(pre(code(toClass("scala"))(demo.cleanCode))),
+            div(colMD(4))(demo.element)
+          )
+        )
+      )
     }
   }
 

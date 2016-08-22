@@ -53,6 +53,8 @@ object ModalDialogDemo extends Demo {
 
 
   val elementDemo = new ElementDemo {
+    def title: String = "Modal"
+
     def code: String = sc.source
 
     def element: Element = sc.value
