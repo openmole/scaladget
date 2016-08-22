@@ -35,7 +35,8 @@ object SelectDemo {
     // Define the option sequence
     val elements = Seq(MyElement("First element"), MyElement("Second Element"), MyElement("Third Element"))
 
-    // Map them to Select Elements, select as default the second element and set the Dropdown with the Bootstrap success style
+    // Map them to Select Elements, select as default the second element and set the Dropdown
+    // with the Bootstrap success style (The selector has to be added also to the DOM)
     elements.map { e =>
       SelectElement(e)
     }.select(Some(elements(1)), _.name, btn_success).selector
