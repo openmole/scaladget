@@ -1,9 +1,6 @@
 package demo
 
-import fr.iscpif.scaladget.api.Select.SelectElement
 import fr.iscpif.scaladget.api.{BootstrapTags => bs}
-import fr.iscpif.scaladget.tools.JsRxTags._
-import fr.iscpif.scaladget.api.Popup._
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
 
 import scala.scalajs.js.JSApp
@@ -12,12 +9,9 @@ import org.scalajs.dom
 
 import scalatags.JsDom.tags
 import scalatags.JsDom.all._
-import scalatags.JsDom.{styles => sty}
 import sheet._
 import bs._
 import fr.iscpif.demo.{ModalDialogDemo, SelectDemo}
-import org.scalajs.dom.raw.Event
-import rx._
 
 /*
  * Copyright (C) 24/03/16 // mathieu.leclaire@openmole.org
@@ -46,7 +40,7 @@ object BootstrapDemo extends JSApp {
       demo <- Seq(ModalDialogDemo.elementDemo, SelectDemo.elementDemo)
     } yield {
       dom.document.body.appendChild(
-        div(
+        div( sheet.marginLeft(15), sheet.marginTop(25))(
           h3(demo.title),
           div(row)(
             div(colMD(8))(pre(code(toClass("scala"))(demo.cleanCode))),

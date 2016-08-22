@@ -12,3 +12,10 @@ code.scala.hljs{
 
 /* styles the close button for the dismissible popovers */
 .popover .close { position: absolute; top: 7px; right: 10px; }
+
+h3 {
+    color: inherit;
+    font-family: inherit;
+    font-weight: 700;
+    line-height: 1.9;
+}
