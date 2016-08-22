@@ -154,11 +154,11 @@ class Popup(val triggerElement: org.scalajs.dom.raw.HTMLElement,
   } +++ zPosition +++ absolutePosition
 
 
-  Rx {
-    popupVisible.trigger {
-      if (!popupVisible()) onclose()
-    }
+  popupVisible.triggerLater {
+    if (!popupVisible.now) onclose()
+  }
 
+  Rx {
     triggerElement.style.setProperty("cursor", "pointer")
     popupType match {
       case HoverPopup =>
