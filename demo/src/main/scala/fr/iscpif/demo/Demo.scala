@@ -26,5 +26,6 @@ trait Demo{
 
 trait ElementDemo{
   def code: String
+  def cleanCode = code.tail.dropRight(1)
   def element: Element
 }

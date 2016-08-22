@@ -1,13 +1,6 @@
 package fr.iscpif.demo
 
-import fr.iscpif.scaladget.api.BootstrapTags.ModalDialog
-import fr.iscpif.scaladget.stylesheet.all._
-import fr.iscpif.scaladget.api.{BootstrapTags => bs}
-
 import org.scalajs.dom.Element
-import org.scalajs.dom
-import scalatags.JsDom.all._
-import scalatags.JsDom.tags
 
 /*
  * Copyright (C) 19/08/16 // mathieu.leclaire@openmole.org
@@ -28,43 +21,41 @@ import scalatags.JsDom.tags
 
 object ModalDialogDemo extends Demo {
 
-  val modalCode =
-    """
-  lazy val modalDialog: ModalDialog = bs.ModalDialog()
+  val sc = sourcecode.Text {
+    import fr.iscpif.scaladget.api.BootstrapTags.ModalDialog
+    import fr.iscpif.scaladget.stylesheet.all._
+    import fr.iscpif.scaladget.api.{BootstrapTags => bs}
+    import org.scalajs.dom
+    import scalatags.JsDom.all._
+    import scalatags.JsDom.tags
 
-  modalDialog header bs.ModalDialog.headerDialogShell(div("Header"))
-  modalDialog body bs.ModalDialog.bodyDialogShell(div("My body !"))
-  modalDialog footer bs.ModalDialog.footerDialogShell(
-    bs.buttonGroup()(
-      tags.button(btn_info, "OK"),
-      tags.button(btn_info, "Cancel")
+
+    // Create the Modal dialog
+    lazy val modalDialog: ModalDialog = bs.ModalDialog()
+
+    // Append header, body, footer elements
+    modalDialog header bs.ModalDialog.headerDialogShell(div("Header"))
+    modalDialog body bs.ModalDialog.bodyDialogShell(div("My body !"))
+    modalDialog footer bs.ModalDialog.footerDialogShell(
+      bs.buttonGroup()(
+        tags.button(btn_info, "OK"),
+        tags.button(btn_info, "Cancel")
+      )
     )
-  )
 
-  val modal = modalDialog.dialog
-  val trigger = modalDialog.buttonTrigger("Modal !", btn_primary).render
-    """
+    // Append the modal dialog to the DOM
+    val modal = modalDialog.dialog
+    dom.document.body.appendChild(modal)
 
-  lazy val modalDialog: ModalDialog = bs.ModalDialog()
-
-  modalDialog header bs.ModalDialog.headerDialogShell(div("Header"))
-  modalDialog body bs.ModalDialog.bodyDialogShell(div("My body !"))
-  modalDialog footer bs.ModalDialog.footerDialogShell(
-    bs.buttonGroup()(
-      tags.button(btn_info, "OK"),
-      tags.button(btn_info, "Cancel")
-    )
-  )
-
-  val modal = modalDialog.dialog
-  val modalElement = modalDialog.buttonTrigger("Modal !", btn_primary).render
-  dom.document.body.appendChild(modal)
+    // Build the button trigger (to be also appended to the DOM)
+    modalDialog.buttonTrigger("Modal !", btn_primary).render
+  }
 
 
   val elementDemo = new ElementDemo {
-    def code: String = modalCode
+    def code: String = sc.source
 
-    def element: Element = modalElement
+    def element: Element = sc.value
   }
 
 }

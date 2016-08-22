@@ -15,7 +15,7 @@ import scalatags.JsDom.all._
 import scalatags.JsDom.{styles => sty}
 import sheet._
 import bs._
-import fr.iscpif.demo.ModalDialogDemo
+import fr.iscpif.demo.{ModalDialogDemo, SelectDemo}
 import org.scalajs.dom.raw.Event
 import rx._
 
@@ -42,10 +42,10 @@ object BootstrapDemo extends JSApp {
 
   @JSExport()
   def main(): Unit = {
-    Seq(ModalDialogDemo.elementDemo).foreach { demo =>
+    Seq(ModalDialogDemo.elementDemo, SelectDemo.elementDemo).foreach { demo =>
       dom.document.body.appendChild(
         div(relativePosition)(
-          div(colMD(8))(pre(code(toClass("scala"))(demo.code))),
+          div(colMD(8))(pre(code(toClass("scala"))(demo.cleanCode))),
           div(colMD(4))(demo.element)
         ))
     }
