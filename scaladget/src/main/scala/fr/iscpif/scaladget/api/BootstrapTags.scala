@@ -226,7 +226,7 @@ object BootstrapTags {
   }
 
   def navItem[T <: Modifier](content: T,
-                             todo: () => Unit = ()=> {},
+                             todo: () => Unit = () => {},
                              extraRenderPair: Seq[Modifier] = Seq(),
                              activeDefault: Boolean = false) = {
     new NavItem(content, todo, extraRenderPair, activeDefault)
@@ -278,21 +278,32 @@ object BootstrapTags {
       Popup(element.render, innerDiv, ClickPopup, position, popupStyle, arrowStyle, onclose, condition).popup
 
 
-    def tooltip(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
+    /*def tooltip(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
                 position: PopupPosition = Bottom,
                 popupStyle: ModifierSeq = blackPopup,
                 arrowStyle: ModifierSeq = blackBottomArrow,
                 onclose: () => Unit = () => {},
                 condition: () => Boolean = () => true
                ) =
-      Popup(element.render, innerDiv, HoverPopup, position, popupStyle, arrowStyle, onclose, condition).popup
+      Popup(element.render, innerDiv, HoverPopup, position, popupStyle, arrowStyle, onclose, condition).popup*/
 
-    def dialog(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
-               popupStyle: ModifierSeq = dialogStyle,
+
+    def tooltip(text: String,
+                position: PopupPosition = Bottom,
+                onclose: () => Unit = () => {}) = {
+      element(
+        data("placement") := position.value,
+        data("toggle") := "tooltip",
+        data("original-title") := text
+      )
+    }
+
+   /* def dialog(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
+               popup{Style: ModifierSeq = dialogStyle,
                onclose: () => Unit = () => {},
                condition: () => Boolean = () => true
               ) =
-      Popup(element.render, innerDiv, DialogPopup, Bottom, popupStyle, noArrow, onclose, condition).popup
+      Popup(element.render, innerDiv, DialogPopup, Bottom, popupStyle, noArrow, onclose, condition).popup*/
 
   }
 

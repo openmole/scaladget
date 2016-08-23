@@ -29,15 +29,25 @@ import rx._
 
 object Popup {
 
-  sealed trait PopupPosition
+  sealed trait PopupPosition {
+    def value: String
+  }
 
-  //object Left extends PopupPosition
+  object Left extends PopupPosition {
+    def value = "left"
+  }
 
-  object Right extends PopupPosition
+  object Right extends PopupPosition {
+    def value = "right"
+  }
 
-  //object Top extends PopupPosition
+  object Top extends PopupPosition {
+    def value = "top"
+  }
 
-  object Bottom extends PopupPosition
+  object Bottom extends PopupPosition {
+    def value = "bottom"
+  }
 
   sealed trait PopupType
 
