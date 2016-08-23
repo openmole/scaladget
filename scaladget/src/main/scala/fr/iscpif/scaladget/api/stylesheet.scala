@@ -208,15 +208,20 @@ package bootstrap {
 
     //NAVBARS
     lazy val nav: Navbar = toClass("nav")
+    lazy val navbar: Navbar = toClass("navbar")
+    lazy val navbar_nav: Navbar = toClass("navbar-nav")
     lazy val navTabs: Navbar = toClass("nav-tabs")
-    lazy val nav_default: Navbar = toClass("navbar-default")
-    lazy val nav_inverse: Navbar = toClass("navbar-inverse")
-    lazy val nav_staticTop: Navbar = toClass("navbar-static-top")
-    lazy val nav_pills: Navbar = toClass("nav-pills")
-    lazy val navbar: Navbar = toClass("navbar-nav")
+    lazy val navbar_default: Navbar = toClass("navbar-default")
+    lazy val navbar_inverse: Navbar = toClass("navbar-inverse")
+    lazy val navbar_staticTop: Navbar = toClass("navbar-static-top")
+    lazy val navbar_pills: Navbar = toClass("nav-pills")
     lazy val navbar_form: Navbar = toClass("navbar-form")
     lazy val navbar_right: Navbar = toClass("navbar-right")
     lazy val navbar_left: Navbar = toClass("navbar-left")
+    lazy val navbar_header: Navbar = toClass("navbar-header")
+    lazy val navbar_brand: Navbar = toClass("navbar-brand")
+    lazy val navbar_btn: Navbar = toClass("navbar-btn")
+    lazy val navbar_collapse: Navbar = toClass("navbar-collapse")
 
     //LABELS
     lazy val label_default: LabelStyle = toLabel("label-default")

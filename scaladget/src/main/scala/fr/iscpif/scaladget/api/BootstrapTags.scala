@@ -30,13 +30,16 @@ import sheet._
 import rx._
 import Popup._
 import Select._
-import fr.iscpif.scaladget.mapping.{Modal}
+import fr.iscpif.scaladget.mapping.Modal
+
+import scalatags.JsDom
 
 @JSExport("BootstrapTags")
 object BootstrapTags {
   bstags =>
 
   implicit def formTagToNode(tt: HtmlTag): org.scalajs.dom.Node = tt.render
+
 
   /*implicit class BootstrapTypedTag[+Output <: raw.Element](t: TypedTag[Output]) {
     def +++(m: Seq[Modifier]) = t.copy(modifiers = t.modifiers :+ m.toSeq)
@@ -170,7 +173,9 @@ object BootstrapTags {
       ).render
 
     def header(hDialog: ModalDialog.HeaderDialog): Unit = headerDialog() = hDialog
+
     def body(bDialog: ModalDialog.BodyDialog): Unit = bodyDialog() = bDialog
+
     def footer(fDialog: ModalDialog.FooterDialog): Unit = footerDialog() = fDialog
 
     def buttonTrigger(content: String, modifierSeq: ModifierSeq) =
@@ -193,52 +198,67 @@ object BootstrapTags {
 
 
   // NAVS
-  class NavItem[T <: HTMLElement](val navid: String,
-                                  contentDiv: T,
-                                  ontrigger: () ⇒ Unit,
-                                  val todo: () ⇒ Unit = () ⇒ {},
-                                  extraRenderPair: Seq[Modifier] = Seq(),
-                                  active: Boolean = false) {
-    val activeString = {
-      if (active) "active" else ""
-    }
+  class NavItem[T <: Modifier](contentDiv: T,
+                               val todo: () ⇒ Unit = () ⇒ {},
+                               extraRenderPair: Seq[Modifier] = Seq(),
+                               activeDefault: Boolean = false) {
 
-    val render = li(role := "presentation", id := navid, `class` := activeString)(tags.a(href := "", onclick := { () ⇒
-      ontrigger()
-      false
-    }
-    )(contentDiv))(
-      extraRenderPair: _*)
+    implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 
+    val active: Var[Boolean] = Var(activeDefault)
+
+    val render = li(
+      tags.a(href := "#",
+        lineHeight := "35px",
+        onclick := { () =>
+          todo()
+          false
+        })(
+        contentDiv,
+        Rx {
+          if (active()) span(toClass("sr-only"))("(current)")
+          else span()
+        }),
+      `class` := Rx {
+        if (active()) "active" else ""
+      }
+    )(extraRenderPair: _*)
   }
 
-  def dialogStringNavItem(id: String, content: String, ontrigger: () ⇒ Unit = () ⇒ {}, todo: () ⇒ Unit = () ⇒ {}): NavItem[HTMLDivElement] =
-    navItem(id, content, ontrigger, todo, Seq(data("toggle") := "modal", data("target") := "#" + id + "PanelID"))
+  def navItem[T <: Modifier](content: T,
+                             todo: () => Unit,
+                             extraRenderPair: Seq[Modifier] = Seq(),
+                             activeDefault: Boolean = false) = {
+    new NavItem(content, todo, extraRenderPair, activeDefault)
+  }
 
-  def navItem(id: String, content: String, ontrigger: () ⇒ Unit = () ⇒ {}, todo: () ⇒ Unit = () ⇒ {}, extraRenderPair: Seq[Modifier] = Seq(), active: Boolean = false) =
-    new NavItem(id, div(content).render, ontrigger, todo, extraRenderPair, active)
+  def stringNavItem(content: String, todo: () ⇒ Unit = () ⇒ {}, activeDefault: Boolean = false): NavItem[Modifier] =
+    navItem(content, todo, activeDefault = activeDefault)
 
-  def dialogGlyphNavItem(id: String,
-                         glyphIcon: Glyphicon,
-                         ontrigger: () ⇒ Unit = () ⇒ {},
-                         todo: () ⇒ Unit = () ⇒ {}): NavItem[HTMLSpanElement] = dialogNavItem(id, glyphSpan(glyphIcon).render, ontrigger, todo)
+  def navBar(classPair: ModifierSeq, contents: NavItem[_ <: Modifier]*): TypedTag[HTMLElement] =
 
-  def dialogNavItem[T <: HTMLElement](id: String,
-                                      tTag: T,
-                                      ontrigger: () ⇒ Unit = () ⇒ {},
-                                      todo: () ⇒ Unit = () ⇒ {}): NavItem[T] =
-    new NavItem(id, tTag, ontrigger, todo, Seq(data("toggle") := "modal", data("target") := "#" + id + "PanelID"))
+    JsDom.tags2.nav(navbar +++ navbar_default +++ (lineHeight := "20px"))(
+      div(toClass("container-fluid"))(
+        div(toClass("collapse") +++ navbar_collapse /*+++ classPair*/)(
+          ul(nav +++ navbar_nav)(
+            contents.map { c ⇒
+              c.render(scalatags.JsDom.attrs.onclick := { () ⇒
+                contents.foreach {
+                  _.active() = false
+                }
+                c.active() = true
+                c.todo()
+              })
+            }: _*)
+        )
+      )
+    )
 
 
-  def nav(uuid: String, classPair: ModifierSeq, contents: NavItem[_ <: HTMLElement]*): TypedTag[HTMLElement] =
-    ul(toClass("nav "), classPair, id := uuid, role := "tablist")(
-      contents.map { c ⇒
-        c.render(scalatags.JsDom.attrs.onclick := { () ⇒
-          $("#" + uuid + " .active").removeClass("active")
-          $("#mainNavItemID").addClass("active")
-          c.todo()
-        })
-      }: _*)
+  // Nav pills
+  case class NavPill(name: String, badge: Option[Int], todo: () => Unit)
+
+  // def navPills()
 
 
   ///// -- TO BE REMOVED
