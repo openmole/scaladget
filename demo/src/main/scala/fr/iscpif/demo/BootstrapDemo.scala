@@ -11,7 +11,7 @@ import scalatags.JsDom.tags
 import scalatags.JsDom.all._
 import sheet._
 import bs._
-import fr.iscpif.demo.{ModalDialogDemo, NavBarDemo, SelectDemo, TooltipDemo}
+import fr.iscpif.demo._
 
 /*
  * Copyright (C) 24/03/16 // mathieu.leclaire@openmole.org
@@ -38,6 +38,7 @@ object BootstrapDemo extends JSApp {
   def main(): Unit = {
     for {
       demo <- Seq(
+        ButtonDemo.elementDemo,
         ModalDialogDemo.elementDemo,
         SelectDemo.elementDemo,
         NavBarDemo.elementDemo,
@@ -47,8 +48,8 @@ object BootstrapDemo extends JSApp {
         div( sheet.marginLeft(15), sheet.marginTop(25))(
           h3(demo.title),
           div(row)(
-            div(colMD(6))(pre(code(toClass("scala"))(demo.cleanCode))),
-            div(colMD(6))(demo.element)
+            div(colMD(7))(pre(code(toClass("scala"))(demo.cleanCode))),
+            div(colMD(5))(demo.element)
           )
         )
       )
