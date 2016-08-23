@@ -43,8 +43,8 @@ object BootstrapDemo extends JSApp {
         div( sheet.marginLeft(15), sheet.marginTop(25))(
           h3(demo.title),
           div(row)(
-            div(colMD(8))(pre(code(toClass("scala"))(demo.cleanCode))),
-            div(colMD(4))(demo.element)
+            div(colMD(6))(pre(code(toClass("scala"))(demo.cleanCode))),
+            div(colMD(6))(demo.element)
           )
         )
       )

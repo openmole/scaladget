@@ -36,7 +36,7 @@ object NavBarDemo {
     )
 
     val twoItem = stringNavItem("Two", () ⇒
-      println("TwO open"), true
+      println("Two open"), true
     )
 
     val threeItem = navItem(
@@ -45,17 +45,25 @@ object NavBarDemo {
     )
 
     val fourItem = navItem(
-      div(glyph_fire, lineHeight := "35px"), () ⇒
-        println("four open")
+      div(glyph_fire +++ (color := "#337ab7"), lineHeight := "35px"), () ⇒
+        println("Four open")
+    )
+
+    val fiveItem = navItem(
+      buttonGroup()(
+      bs.button("OK", btn_primary, ()=> {println("Five open")}),
+      bs.button("Cancel", btn_default, ()=> {println("Five cancel")})
+      )
     )
 
     //Create the nav bar
     bs.navBar(
-      emptyMod,
+      navbar_staticTop,
       oneItem,
       twoItem,
       threeItem,
-      fourItem
+      fourItem,
+      fiveItem
     ).render
   }
 

@@ -226,7 +226,7 @@ object BootstrapTags {
   }
 
   def navItem[T <: Modifier](content: T,
-                             todo: () => Unit,
+                             todo: () => Unit = ()=> {},
                              extraRenderPair: Seq[Modifier] = Seq(),
                              activeDefault: Boolean = false) = {
     new NavItem(content, todo, extraRenderPair, activeDefault)
@@ -237,9 +237,9 @@ object BootstrapTags {
 
   def navBar(classPair: ModifierSeq, contents: NavItem[_ <: Modifier]*): TypedTag[HTMLElement] =
 
-    JsDom.tags2.nav(navbar +++ navbar_default +++ (lineHeight := "20px"))(
+    JsDom.tags2.nav(navbar +++ navbar_default +++ classPair)(
       div(toClass("container-fluid"))(
-        div(toClass("collapse") +++ navbar_collapse /*+++ classPair*/)(
+        div(toClass("collapse") +++ navbar_collapse)(
           ul(nav +++ navbar_nav)(
             contents.map { c ⇒
               c.render(scalatags.JsDom.attrs.onclick := { () ⇒
