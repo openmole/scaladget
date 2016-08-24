@@ -1,11 +1,7 @@
 package fr.iscpif.demo
 
-import org.scalajs.dom.Element
-
-import scalatags.JsDom
-
 /*
- * Copyright (C) 22/08/16 // mathieu.leclaire@openmole.org
+ * Copyright (C) 24/08/16 // mathieu.leclaire@openmole.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,54 +17,37 @@ import scalatags.JsDom
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
 import fr.iscpif.scaladget.api.{BootstrapTags => bs}
+
 import scalatags.JsDom.all._
 import sheet._
 import bs._
+import org.scalajs.dom._
 
-object NavBarDemo {
+object PopoverDemo extends Demo {
   val sc = sourcecode.Text {
 
-    // Create nav items
-    val oneItem = stringNavItem("One", () ⇒
-      println("One open")
+    import fr.iscpif.scaladget.api.Popup._
+
+    val buttonStyle: ModifierSeq = Seq(
+      btn_default,
+      sheet.marginRight(5)
     )
 
-    val twoItem = stringNavItem("Two", () ⇒
-      println("Two open"), true
-    )
 
-    val threeItem = navItem(
-      bs.input("")(placeholder := "Name", width := 100), () ⇒
-        println("Three open")
-    )
-
-    val fourItem = navItem(
-      div(glyph_fire +++ (color := "#337ab7"), lineHeight := "35px"), () ⇒
-        println("Four open")
-    )
-
-    val fiveItem = navItem(
-      buttonGroup()(
-      bs.button("OK", btn_primary, ()=> {println("Five open")}),
-      bs.button("Cancel", btn_default, ()=> {println("Five cancel")})
-      )
-    )
-
-    //Create the nav bar
-    bs.navBar(
-      navbar_staticTop,
-      oneItem,
-      twoItem,
-      threeItem,
-      fourItem,
-      fiveItem
+    div(
+      bs.button("Left", buttonStyle, () => {}).popover("Popover on hover on left", Left),
+      bs.button("Title", buttonStyle, () => {}).popover("Popover on hover with Title", Top, title = Some("Pop title")),
+      bs.button("Dismissable", buttonStyle, () => {}).popover("Dismissable Popover on hover with Title", Top, HoverPopup, Some("Pop title"), true),
+      bs.button("Right (click)", buttonStyle, () => {}).popover("Popover on click on right", Right, ClickPopup),
+      bs.input("")(width := 320, sheet.marginTop(10), placeholder := "Top (click)").popover("Tooltip on click on top", Bottom, ClickPopup)
     ).render
   }
 
   val elementDemo = new ElementDemo {
-    def title: String = "Nav bar"
+    def title: String = "Popover"
 
     def code: String = sc.source
 

@@ -50,8 +50,8 @@ object BootstrapDemo extends JSApp {
       div(sheet.marginLeft(15), sheet.marginTop(25))(
         h3("Imports"),
         div(row)(
-          div(colMD(7))(pre(code(toClass("scala"))(imports))),
-          div(colMD(5))("This imports have to be done before using the following examples. Specific imports will be also sometimes specified.")
+          div(colMD(8))(pre(code(toClass("scala"))(imports))),
+          div(colMD(4))("This imports have to be done before using the following examples. Specific imports will be also sometimes specified.")
         )
       )
     )
@@ -63,14 +63,15 @@ object BootstrapDemo extends JSApp {
         ModalDialogDemo.elementDemo,
         SelectDemo.elementDemo,
         NavBarDemo.elementDemo,
-        TooltipDemo.elementDemo)
+        TooltipDemo.elementDemo,
+        PopoverDemo.elementDemo)
     } yield {
       dom.document.body.appendChild(
         div(sheet.marginLeft(15), sheet.marginTop(25))(
           h3(demo.title),
           div(row)(
-            div(colMD(7))(pre(code(toClass("scala"))(demo.cleanCode))),
-            div(colMD(5))(demo.element)
+            div(colMD(8))(pre(code(toClass("scala"))(demo.cleanCode))),
+            div(colMD(4))(demo.element)
           )
         )
       )

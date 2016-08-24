@@ -111,7 +111,7 @@ object BootstrapTags {
 
 
   // BADGE
-  def badge(content: String, badgeValue: String, buttonStyle: ModifierSeq = emptyMod, todo: () => Unit = ()=> {}) =
+  def badge(content: String, badgeValue: String, buttonStyle: ModifierSeq = emptyMod, todo: () => Unit = () => {}) =
   button(s"$content ", buttonStyle, todo)(span(toClass("badge"))(badgeValue))
 
 
@@ -119,8 +119,6 @@ object BootstrapTags {
   def buttonGroup(mod: ModifierSeq = Seq()) = div(mod +++ btnGroup)
 
   def buttonToolBar = div(btnToolbar)(role := "toolbar")
-
-  def tototo = div
 
 
   /////TO BE REMOVED  ----
@@ -289,8 +287,7 @@ object BootstrapTags {
 
 
     def tooltip(text: String,
-                position: PopupPosition = Bottom,
-                onclose: () => Unit = () => {}) = {
+                position: PopupPosition = Bottom) = {
       element(
         data("placement") := position.value,
         data("toggle") := "tooltip",
@@ -298,12 +295,37 @@ object BootstrapTags {
       )
     }
 
-   /* def dialog(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
-               popup{Style: ModifierSeq = dialogStyle,
-               onclose: () => Unit = () => {},
-               condition: () => Boolean = () => true
-              ) =
-      Popup(element.render, innerDiv, DialogPopup, Bottom, popupStyle, noArrow, onclose, condition).popup*/
+    def popover(text: String,
+                position: PopupPosition = Bottom,
+                trigger: PopupType = HoverPopup,
+                title: Option[String] = None,
+                dismissable: Boolean = false
+               ) =
+      element(
+        data("placement") := position.value,
+        data("toggle") := "popover",
+        data("content") := text,
+        trigger match {
+          case ClickPopup => Seq(id := "popover-via-click", data("trigger") := "click")
+          case _ =>
+        },
+        title match {
+          case Some(t: String) => Seq(data("title") := t, data("dissmisibale") := "true")
+          case _ =>
+        },
+        dismissable match {
+          case true=> data("dismiss") := true
+          case _=>
+        }
+      )
+
+
+    /* def dialog(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
+                popup{Style: ModifierSeq = dialogStyle,
+                onclose: () => Unit = () => {},
+                condition: () => Boolean = () => true
+               ) =
+       Popup(element.render, innerDiv, DialogPopup, Bottom, popupStyle, noArrow, onclose, condition).popup*/
 
   }
 
