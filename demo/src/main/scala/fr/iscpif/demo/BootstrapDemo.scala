@@ -39,6 +39,7 @@ object BootstrapDemo extends JSApp {
     for {
       demo <- Seq(
         ButtonDemo.elementDemo,
+        LabelDemo.elementDemo,
         ModalDialogDemo.elementDemo,
         SelectDemo.elementDemo,
         NavBarDemo.elementDemo,
