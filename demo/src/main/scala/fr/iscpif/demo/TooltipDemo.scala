@@ -35,10 +35,15 @@ object TooltipDemo extends Demo {
       sheet.marginRight(5)
     )
 
+    val labelStyle: ModifierSeq = Seq(
+      label_danger,
+      sheet.marginRight(5)
+    )
+
     div(
       bs.button("Left", buttonStyle, () => {}).tooltip("Tooltip on left", Left),
-      bs.button("Right", buttonStyle, () => {}).tooltip("Tooltip on right", Right),
-      bs.button("Top", buttonStyle, () => {}).tooltip("Tooltip on top", Top),
+      label("Right", labelStyle).tooltip("Tooltip on right", Right),
+      label("Top", labelStyle).tooltip("Tooltip on top", Top),
       bs.button("Bottom", buttonStyle, () => {}).tooltip("Tooltip on bottom", Bottom)
     ).render
   }
