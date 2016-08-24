@@ -42,7 +42,7 @@ object PopoverDemo extends Demo {
       bs.button("Title", buttonStyle, () => {}).popover("Popover on hover with Title", Top, title = Some("Pop title")),
       bs.button("Dismissable", buttonStyle, () => {}).popover("Dismissable Popover on hover with Title", Top, HoverPopup, Some("Pop title"), true),
       bs.button("Right (click)", buttonStyle, () => {}).popover("Popover on click on right", Right, ClickPopup),
-      bs.input("")(width := 320, sheet.marginTop(10), placeholder := "Top (click)").popover("Tooltip on click on top", Bottom, ClickPopup)
+      bs.input("")(width := 320, sheet.marginTop(10), placeholder := "Bottom (click)").popover("Tooltip on click on bottom", Bottom, ClickPopup)
     ).render
   }
 
