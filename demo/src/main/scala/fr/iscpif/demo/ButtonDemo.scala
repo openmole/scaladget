@@ -39,6 +39,7 @@ object ButtonDemo {
     div(
       bs.button("Default", buttonStyle +++ btn_default, () => clickAction("default")),
       bs.button("Primary", buttonStyle +++ btn_primary, () => clickAction("primary")),
+      bs.badge("Badge", "7", buttonStyle +++ btn_primary, () => clickAction("badge")),
       bs.button("Info", buttonStyle +++ btn_info, () => clickAction("info")),
       bs.button("Success", buttonStyle +++ btn_success, () => clickAction("success")),
       bs.button("Warning", buttonStyle +++ btn_warning, () => clickAction("warning")),
