@@ -258,35 +258,10 @@ object BootstrapTags {
 
   // def navPills()
 
-
-  ///// -- TO BE REMOVED
-
-  // POUPUS, TOOLTIS, DIALOGS
-
+  // POUPUS, TOOLTIPS
   implicit class PopableTypedTag(element: TypedTag[org.scalajs.dom.raw.HTMLElement]) {
 
-    implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
-
-    def popup(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
-              position: PopupPosition = Bottom,
-              popupStyle: ModifierSeq = whitePopup,
-              arrowStyle: ModifierSeq = noArrow,
-              onclose: () => Unit = () => {},
-              condition: () => Boolean = () => true) =
-      Popup(element.render, innerDiv, ClickPopup, position, popupStyle, arrowStyle, onclose, condition).popup
-
-
-    /*def tooltip(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
-                position: PopupPosition = Bottom,
-                popupStyle: ModifierSeq = blackPopup,
-                arrowStyle: ModifierSeq = blackBottomArrow,
-                onclose: () => Unit = () => {},
-                condition: () => Boolean = () => true
-               ) =
-      Popup(element.render, innerDiv, HoverPopup, position, popupStyle, arrowStyle, onclose, condition).popup*/
-
-
-    def tooltip(text: String,
+      def tooltip(text: String,
                 position: PopupPosition = Bottom) = {
       element(
         data("placement") := position.value,
@@ -318,15 +293,6 @@ object BootstrapTags {
           case _=>
         }
       )
-
-
-    /* def dialog(innerDiv: TypedTag[org.scalajs.dom.raw.HTMLElement],
-                popup{Style: ModifierSeq = dialogStyle,
-                onclose: () => Unit = () => {},
-                condition: () => Boolean = () => true
-               ) =
-       Popup(element.render, innerDiv, DialogPopup, Bottom, popupStyle, noArrow, onclose, condition).popup*/
-
   }
 
 
