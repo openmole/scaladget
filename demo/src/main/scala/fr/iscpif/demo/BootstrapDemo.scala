@@ -63,6 +63,7 @@ object BootstrapDemo extends JSApp {
         ModalDialogDemo.elementDemo,
         SelectDemo.elementDemo,
         NavBarDemo.elementDemo,
+        FormDemo.elementDemo,
         TooltipDemo.elementDemo,
         PopoverDemo.elementDemo)
     } yield {

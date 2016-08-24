@@ -261,7 +261,7 @@ object BootstrapTags {
   // POUPUS, TOOLTIPS
   implicit class PopableTypedTag(element: TypedTag[org.scalajs.dom.raw.HTMLElement]) {
 
-      def tooltip(text: String,
+    def tooltip(text: String,
                 position: PopupPosition = Bottom) = {
       element(
         data("placement") := position.value,
@@ -289,8 +289,8 @@ object BootstrapTags {
           case _ =>
         },
         dismissable match {
-          case true=> data("dismiss") := true
-          case _=>
+          case true => data("dismiss") := true
+          case _ =>
         }
       )
   }
@@ -593,5 +593,22 @@ object BootstrapTags {
                    labelStyle: ModifierSeq = emptyMod,
                    inputStyle: ModifierSeq = emptyMod) =
   new LabeledInput(title, default, pHolder, labelStyle, inputStyle)
+
+  private def insideForm(labeledInputs: LabeledInput*) =
+    for {
+      li <- labeledInputs
+    } yield {
+      div(formGroup +++ sheet.paddingRight(5))(
+        li.lab,
+        li.inp)
+    }
+
+  def vForm(modifierSeq: ModifierSeq = emptyMod)(labeledInputs: LabeledInput*) =
+    div(modifierSeq)(insideForm(labeledInputs: _*))
+
+
+  def hForm(modifierSeq: ModifierSeq = emptyMod)(labeledInputs: LabeledInput*) = {
+    form(formInline +++ modifierSeq)(insideForm(labeledInputs: _*))
+  }
 
 }

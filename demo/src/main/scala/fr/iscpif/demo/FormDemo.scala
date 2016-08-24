@@ -1,7 +1,7 @@
-package fr.iscpif.scaladget.api
+package fr.iscpif.demo
 
 /*
- * Copyright (C) 12/05/16 // mathieu.leclaire@openmole.org
+ * Copyright (C) 24/08/16 // mathieu.leclaire@openmole.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,30 +17,35 @@ package fr.iscpif.scaladget.api
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.util.UUID
-
-import fr.iscpif.scaladget.stylesheet.{all => sheet}
 import fr.iscpif.scaladget.api.{BootstrapTags => bs}
+import fr.iscpif.scaladget.stylesheet.{all => sheet}
 import scalatags.JsDom.all._
+import org.scalajs.dom.raw.Element
 import sheet._
 
-class LabeledInput(title: String, default: String, pHolder: String, labelStyle: ModifierSeq, inputStyle: ModifierSeq) {
 
+object FormDemo extends Demo {
 
-  val uuid = UUID.randomUUID().toString
-  val lab = label(title)(labelStyle +++ (sheet.paddingRight(5)), `for` := uuid).render
+  val sc = sourcecode.Text {
 
-  val inp = bs.input(default)(
-    id := uuid,
-    `type` := "text",
-    formControl,
-    placeholder := pHolder,
-    inputStyle
-  ).render
+    // Vertical form
+    div(
+      bs.vForm(width := 200)(
+        bs.labeledInput("Login", "Login"),
+        bs.labeledInput("Password", "Pass")
+      ),
+      bs.hForm(sheet.paddingTop(20) +++ (width := 500))(
+        bs.labeledInput("Login", "Login", inputStyle = (width := 150)),
+        bs.labeledInput("Password", "Pass", inputStyle = (width := 150))
+      )
+    ).render
+  }
 
+  val elementDemo = new ElementDemo {
+    def title: String = "Form"
 
-  def setDefault(v: String) = inp.value = v
+    def code: String = sc.source
 
-  def value = inp.value
-
+    def element: Element = sc.value
+  }
 }
