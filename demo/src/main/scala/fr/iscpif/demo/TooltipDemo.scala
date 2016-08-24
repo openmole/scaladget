@@ -19,14 +19,16 @@ import org.scalajs.dom.Element
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import fr.iscpif.scaladget.stylesheet.{all => sheet}
+import fr.iscpif.scaladget.api.{BootstrapTags => bs}
+import scalatags.JsDom.all._
+import sheet._
+import bs._
+
 object TooltipDemo extends Demo {
   val sc = sourcecode.Text {
-    import fr.iscpif.scaladget.stylesheet.{all => sheet}
-    import fr.iscpif.scaladget.api.{BootstrapTags => bs}
+
     import fr.iscpif.scaladget.api.Popup._
-    import scalatags.JsDom.all._
-    import sheet._
-    import bs._
 
     val buttonStyle: ModifierSeq = Seq(
       btn_default,

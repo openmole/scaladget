@@ -36,6 +36,26 @@ object BootstrapDemo extends JSApp {
 
   @JSExport()
   def main(): Unit = {
+
+    def imports =
+      """
+      import fr.iscpif.scaladget.stylesheet.{all => sheet}
+      import fr.iscpif.scaladget.api.{BootstrapTags => bs}
+      import scalatags.JsDom.all._
+      import sheet._
+      import bs._
+      """.stripMargin
+    
+    dom.document.body.appendChild(
+      div(sheet.marginLeft(15), sheet.marginTop(25))(
+        h3("Imports"),
+        div(row)(
+          div(colMD(7))(pre(code(toClass("scala"))(imports))),
+          div(colMD(5))("This imports have to be done before using the following examples. Specific imports will be also sometimes specified.")
+        )
+      )
+    )
+
     for {
       demo <- Seq(
         ButtonDemo.elementDemo,
@@ -46,7 +66,7 @@ object BootstrapDemo extends JSApp {
         TooltipDemo.elementDemo)
     } yield {
       dom.document.body.appendChild(
-        div( sheet.marginLeft(15), sheet.marginTop(25))(
+        div(sheet.marginLeft(15), sheet.marginTop(25))(
           h3(demo.title),
           div(row)(
             div(colMD(7))(pre(code(toClass("scala"))(demo.cleanCode))),

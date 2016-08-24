@@ -20,14 +20,15 @@ import org.scalajs.dom.Element
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import fr.iscpif.scaladget.api.{BootstrapTags => bs}
+import fr.iscpif.scaladget.stylesheet.{all => sheet}
+import sheet._
+import bs._
+
 object SelectDemo {
 
   val sc = sourcecode.Text {
     import fr.iscpif.scaladget.api.Select.SelectElement
-    import fr.iscpif.scaladget.api.{BootstrapTags => bs}
-    import fr.iscpif.scaladget.stylesheet.{all => sheet}
-    import sheet._
-    import bs._
 
     // Define a toy case class containing at least a name attribute
     case class MyElement(name: String)

@@ -21,14 +21,14 @@ import scalatags.JsDom
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import fr.iscpif.scaladget.stylesheet.{all => sheet}
+import fr.iscpif.scaladget.api.{BootstrapTags => bs}
+import scalatags.JsDom.all._
+import sheet._
+import bs._
+
 object NavBarDemo {
   val sc = sourcecode.Text {
-    import fr.iscpif.scaladget.stylesheet.{all => sheet}
-    import fr.iscpif.scaladget.api.{BootstrapTags => bs}
-    import scalatags.JsDom.all._
-    import sheet._
-    import bs._
-
 
     // Create nav items
     val oneItem = stringNavItem("One", () ⇒

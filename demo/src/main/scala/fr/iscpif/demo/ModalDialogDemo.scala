@@ -19,16 +19,17 @@ import org.scalajs.dom.Element
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import fr.iscpif.scaladget.api.BootstrapTags.ModalDialog
+import fr.iscpif.scaladget.stylesheet.all._
+import fr.iscpif.scaladget.api.{BootstrapTags => bs}
+import scalatags.JsDom.all._
+
 object ModalDialogDemo extends Demo {
 
   val sc = sourcecode.Text {
-    import fr.iscpif.scaladget.api.BootstrapTags.ModalDialog
-    import fr.iscpif.scaladget.stylesheet.all._
-    import fr.iscpif.scaladget.api.{BootstrapTags => bs}
-    import org.scalajs.dom
-    import scalatags.JsDom.all._
-    import scalatags.JsDom.tags
 
+    import org.scalajs.dom
+    import scalatags.JsDom.tags
 
     // Create the Modal dialog
     lazy val modalDialog: ModalDialog = bs.ModalDialog()
