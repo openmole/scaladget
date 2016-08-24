@@ -33,13 +33,15 @@ object ButtonDemo {
       sheet.marginRight(5)
     )
 
+    def clickAction(tag: String) = clicked() = tag
+
     div(
-      bs.button("Default", buttonStyle +++ btn_default, () => { clicked() = "default" }),
-      bs.button("Primary", buttonStyle +++ btn_primary, () => { clicked() = "primary" }),
-      bs.button("Info", buttonStyle +++ btn_info, () => { clicked() = "info" }),
-      bs.button("Success", buttonStyle +++ btn_success, () => { clicked() = "success" }),
-      bs.button("Warning", buttonStyle +++ btn_warning, () => { clicked() = "warning" }),
-      bs.button("Danger", buttonStyle +++ btn_danger, () => { clicked() = "danger"}),
+      bs.button("Default", buttonStyle +++ btn_default, () => clickAction("default")),
+      bs.button("Primary", buttonStyle +++ btn_primary, () => clickAction("primary")),
+      bs.button("Info", buttonStyle +++ btn_info, () => clickAction("info")),
+      bs.button("Success", buttonStyle +++ btn_success, () => clickAction("success")),
+      bs.button("Warning", buttonStyle +++ btn_warning, () => clickAction("warning")),
+      bs.button("Danger", buttonStyle +++ btn_danger, () => clickAction("danger")),
       Rx{
         div(sheet.paddingTop(15), s"Clicked: ${clicked()}")
       }
