@@ -296,24 +296,30 @@ object BootstrapTags {
   }
 
 
-  //SELECT
+  //DROPDOWN
   implicit class SelectableSeqWithStyle[T](s: Seq[SelectElement[T]]) {
-    def select(default: Option[T],
-               naming: T => String,
-               key: ModifierSeq = emptyMod,
-               onclickExtra: () ⇒ Unit = () ⇒ {}) = Select(s, default, naming, key, onclickExtra)
+    def dropdown(default: Option[T],
+                 naming: T => String,
+                 key: ModifierSeq = emptyMod,
+                 onclickExtra: () ⇒ Unit = () ⇒ {}) = Select(s, default, naming, key, onclickExtra)
 
   }
 
   implicit class SelectableSeq[T](s: Seq[T]) {
-    def select(default: Option[T],
-               naming: T => String,
-               key: ModifierSeq = emptyMod,
-               onclickExtra: () ⇒ Unit = () ⇒ {}) = SelectableSeqWithStyle(s.map { el =>
+    def dropdown(default: Option[T],
+                 naming: T => String,
+                 key: ModifierSeq = emptyMod,
+                 onclickExtra: () ⇒ Unit = () ⇒ {}) = SelectableSeqWithStyle(s.map { el =>
       SelectElement(el, emptyMod)
-    }).select(default, naming, key, onclickExtra)
-
+    }).dropdown(default, naming, key, onclickExtra)
   }
+
+    implicit class SelectableTypedTag[T <: HTMLElement](tt: TypedTag[T]) {
+      def dropdown(triggerButtonText: String,
+                   buttonModifierSeq: ModifierSeq,
+                   onclose: () => {}) = Select(tt, triggerButtonText, buttonModifierSeq, onclose)
+    }
+
 
 
   // JUMBOTRON
@@ -604,7 +610,7 @@ object BootstrapTags {
     }
 
   def vForm(modifierSeq: ModifierSeq = emptyMod)(labeledInputs: LabeledInput*) =
-    div(modifierSeq)(insideForm(labeledInputs: _*))
+    div(modifierSeq +++ formVertical)(insideForm(labeledInputs: _*))
 
 
   def hForm(modifierSeq: ModifierSeq = emptyMod)(labeledInputs: LabeledInput*) = {

@@ -31,7 +31,7 @@ object ButtonDemo {
 
     val clicked = Var("None")
     val buttonStyle: ModifierSeq = Seq(
-      sheet.margin(right = 5, top = 5)
+      sheet.marginAll(right = 5, top = 5)
     )
 
     def clickAction(tag: String) = clicked() = tag
@@ -45,7 +45,7 @@ object ButtonDemo {
       bs.button("Warning", buttonStyle +++ btn_warning, () => clickAction("warning")),
       bs.button("Danger", buttonStyle +++ btn_danger, () => clickAction("danger")),
       Rx{
-        div(sheet.padding(top = 15), s"Clicked: ${clicked()}")
+        div(sheet.paddingAll(top = 15), s"Clicked: ${clicked()}")
       }
     ).render
   }

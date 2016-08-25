@@ -34,15 +34,15 @@ package fr.iscpif.scaladget.api
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Popup._
 import fr.iscpif.scaladget.api.{BootstrapTags => bs}
-import fr.iscpif.scaladget.stylesheet.{all ⇒ sheet}
-import fr.iscpif.scaladget.tools.JsRxTags._
+import fr.iscpif.scaladget.stylesheet.{all => sheet}
 import sheet._
 import rx._
+import bs._
 import org.scalajs.dom.raw._
+
 import scalatags.JsDom.all._
-import scalatags.JsDom.{tags ⇒ tags}
+import scalatags.JsDom.{TypedTag, tags}
 
 object Select {
 
@@ -54,7 +54,9 @@ object Select {
 
   implicit def tToTElement[T](t: T): SelectElement[T] = SelectElement(t)
 
-  implicit def optionSelectElementTToOptionT[T](opt: Option[SelectElement[T]]): Option[T] = opt.map{_.value}
+  implicit def optionSelectElementTToOptionT[T](opt: Option[SelectElement[T]]): Option[T] = opt.map {
+    _.value
+  }
 
   def apply[T](
                 contents: Seq[SelectElement[T]],
@@ -62,126 +64,19 @@ object Select {
                 naming: T => String,
                 key: ModifierSeq = emptyMod,
                 onclickExtra: () ⇒ Unit = () ⇒ {}
-              ) = new Select(contents, default, naming, key, onclickExtra)
+              ) = tags.div() //new Select(contents, default, naming, key, onclickExtra)
 
-}
-
-import fr.iscpif.scaladget.api.Select._
-
-class Select[T](
-                 private val _contents: Seq[SelectElement[T]],
-                 default: Option[T] = None,
-                 naming: T => String,
-                 key: ModifierSeq = emptyMod,
-                 onclickExtra: () ⇒ Unit = () ⇒ {}
-               ) {
-
-  implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
-
-  val contents = Var(_contents)
-  val autoID = java.util.UUID.randomUUID.toString
-
-  val content: Var[Option[SelectElement[T]]] = Var(_contents.size match {
-    case 0 ⇒ None
-    case _ ⇒ default match {
-      case None ⇒ _contents.headOption
-      case _ ⇒
-        val defaultSelectElement: SelectElement[T] = default match {
-          case Some(t) => t
-          case _ => _contents.head
-        }
-        if (_contents.exists(_ == defaultSelectElement)) Some(defaultSelectElement)
-        else _contents.headOption
-    }
-  })
-
-  val hasFilter = Var(false)
-  val filtered: Var[Seq[SelectElement[T]]] = Var(_contents)
-  filtered() = _contents.take(100)
-
-  lazy val inputFilter: HTMLInputElement = bs.input("")(selectFilter, placeholder := "Filter", oninput := { () ⇒
-    filtered() = _contents.filter { f =>
-      naming(f.value).toUpperCase.contains(inputFilter.value.toUpperCase)
-    }
-  }).render
-
-  def resetFilter = {
-    filtered() = contents.now.take(100)
-    content() = None
-  }
-
-  def setContents(cts: Seq[SelectElement[T]], onset: () ⇒ Unit = () ⇒ {}) = {
-    contents() = cts
-    content() = cts.headOption
-    filtered() = cts.take(100)
-    inputFilter.value = ""
-    onset()
-  }
-
-  def emptyContents = {
-    contents() = Seq()
-    content() = None
-  }
-
-  def isContentsEmpty = contents.now.isEmpty
-
-  lazy val selector = {
-
-    lazy val popupButton: Popup = new Popup(
-      span(key +++ pointer, `type` := "button")(
-        Rx {
-          content().map { c ⇒
-            bs.glyphSpan(c.mod)
-          }
-        },
-        Rx {
-          content().map { c => naming(c.value) }.getOrElse("") + " "
-        },
-        span(caret)
-      ).render,
-      div(
-        Rx {
-          if (hasFilter())
-            div(
-              tags.form(inputFilter)(`type` := "submit", onsubmit := { () ⇒
-                content() = filtered().headOption
-                false
-              })
-            )
-          else tags.div
-        },
-        Rx {
-          tags.div(sheet.marginLeft(0) +++ (listStyleType := "none"))(
-            if (filtered().size < 100) {
-              for (c ← filtered()) yield {
-                tags.div(pointer, onclick := { () ⇒
-                  content() = contents().filter {
-                    _.value == c.value
-                  }.headOption.map {
-                    _.value
-                  }
-                  onclickExtra()
-                  popupButton.close
-                })(naming(c.value))
-              }
-            }
-            else tags.li("To many results, filter more !")
-          )
-        }
+  def apply[T <: HTMLElement](content: TypedTag[T],
+                              buttonText: String,
+                              modifierSeq: ModifierSeq,
+                              onclose: () => {}) = {
+    bs.buttonGroup()(
+      bs.button(buttonText, modifierSeq +++ dropdownToggle, () => {})(
+        data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := false, tabindex := 0)(
+        span(caret, sheet.marginLeft(4))
       ),
-      ClickPopup,
-      Bottom,
-      whitePopupWithBorder,
-      noArrow
+      div(dropdownMenu +++ (padding := 10))(content)
     )
 
-    popupButton.popup
-
-  }
-
-  lazy val selectorWithFilter = {
-    // hasFilter() = if(contents().size > 9) true else false
-    hasFilter() = true
-    selector
   }
 }

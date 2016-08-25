@@ -22,6 +22,7 @@ import org.scalajs.dom.Element
 
 import fr.iscpif.scaladget.api.{BootstrapTags => bs}
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
+import scalatags.JsDom.all._
 import sheet._
 import bs._
 
@@ -40,10 +41,16 @@ object SelectDemo {
       MyElement("Third Element")
     )
 
-    // Map them to Select Elements, select as default the second element and set the Dropdown with the Bootstrap success style (The selector has to be added also to the DOM)
-    elements.map { e =>
-      SelectElement(e)
-    }.select(Some(elements(1)), _.name, btn_success).selector
+    div(
+      // Map them to Select Elements, select as default the second element and set the Dropdown with the Bootstrap success style (The selector has to be added also to the DOM)
+     /* elements.map { e =>
+        SelectElement(e)
+      }.dropdown(Some(elements(1)), _.name, btn_success),*/
+      bs.vForm(width := 200)(
+        bs.labeledInput("Login", "Login"),
+        bs.labeledInput("Password", "Pass")
+      ).dropdown("Form", btn_primary, () => "Dropdown closed")
+    ).render
   }
 
 

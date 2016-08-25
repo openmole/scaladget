@@ -113,7 +113,7 @@ package stylesheetbase {
 
     def paddingRight(t: Int): ModifierSeq = Seq(JsDom.styles.paddingRight := s"$t")
 
-    def padding(top: Int = 0, bottom: Int = 0, right: Int = 0, left: Int = 0): ModifierSeq = Seq(
+    def paddingAll(top: Int = 0, bottom: Int = 0, right: Int = 0, left: Int = 0): ModifierSeq = Seq(
       JsDom.styles.paddingTop := s"$top",
       JsDom.styles.paddingBottom := s"$bottom",
       JsDom.styles.paddingRight := s"$right",
@@ -128,7 +128,7 @@ package stylesheetbase {
 
     def marginRight(t: Int): ModifierSeq = Seq(JsDom.styles.marginRight := s"$t")
 
-    def margin(top: Int = 0, bottom: Int = 0, right: Int = 0, left: Int = 0): ModifierSeq = Seq(
+    def marginAll(top: Int = 0, bottom: Int = 0, right: Int = 0, left: Int = 0): ModifierSeq = Seq(
       JsDom.styles.marginTop := s"$top",
       JsDom.styles.marginBottom := s"$bottom",
       JsDom.styles.marginRight := s"$right",
@@ -320,7 +320,7 @@ package bootstrap {
     lazy val formGroup: ClassAttrPair = toClass("form-group")
     lazy val formInline: ClassAttrPair = toClass("form-inline")
     lazy val formHorizontal: ClassAttrPair = toClass("form-horizontal")
-    lazy val formVertical: ClassAttrPair = toClass("form-horizontal")
+    lazy val formVertical: ClassAttrPair = toClass("form-vertical")
 
 
     //OTHERS
@@ -385,31 +385,6 @@ package bootstrap2 {
       width := "auto",
       height := "auto"
     )
-
-    lazy val blackPopup: ModifierSeq = basePopup +++ Seq(
-      display := "block",
-      lineHeight := 1.42857143,
-      textAlign := "start",
-      maxWidth := 200,
-      padding := "5 8",
-      color := "#fff",
-      backgroundColor := "#000",
-      opacity := "0.95",
-      borderRadius := "3px"
-    )
-
-
-    lazy val whitePopup: ModifierSeq = basePopup +++ Seq(
-      maxWidth := 200,
-      padding := 8,
-      borderRadius := "4px",
-      backgroundColor := "white",
-      boxShadow := "0 8px 6px -6px black"
-    )
-
-    lazy val whitePopupWithBorder: ModifierSeq =
-      whitePopup +++ (border := "0.1em solid #ccc")
-
   }
 
 }
