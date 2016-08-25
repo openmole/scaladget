@@ -31,7 +31,7 @@ import bs._
 object SelectDemo {
 
   val sc = sourcecode.Text {
-    import fr.iscpif.scaladget.api.DropDown.OptionElement
+     import fr.iscpif.scaladget.api.DropDown._
 
     // Define a toy case class containing at least a name attribute
     case class MyElement(name: String)
@@ -45,7 +45,7 @@ object SelectDemo {
 
     div(
       elements.map { e =>
-        DropDown.option(e)
+        option(e)
       }.dropdown(_.name, 1, btn_success).selector,
       bs.vForm(width := 200)(
         bs.labeledInput("Login", "Login"),
