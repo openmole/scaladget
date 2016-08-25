@@ -11,7 +11,7 @@ Scaladget provides a scala facades of some famous javascript libraries. It relie
 ##Usage##
 Just add this to your dependencies:
 ```sh
-  libraryDependencies += "fr.iscpif" %%% "scaladget" % "0.7.0"
+  libraryDependencies += "fr.iscpif" %%% "scaladget" % "0.8.1"
 ```
 
 All the facades are intensively used in the [OpenMOLE project](https://github.com/openmole/openmole).
