@@ -25,11 +25,10 @@ import scalatags.JsDom.{TypedTag, tags}
 import scalatags.JsDom.all._
 import fr.iscpif.scaladget.tools.JsRxTags._
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
-import org.querki.jquery._
 import sheet._
 import rx._
 import Popup._
-import Select._
+import DropDown._
 import fr.iscpif.scaladget.mapping.Modal
 
 import scalatags.JsDom
@@ -116,7 +115,7 @@ object BootstrapTags {
 
 
   //BUTTON GROUP
-  def buttonGroup(mod: ModifierSeq = Seq()) = div(mod +++ btnGroup)
+  def buttonGroup(mod: ModifierSeq = emptyMod) = div(mod +++ btnGroup)
 
   def buttonToolBar = div(btnToolbar)(role := "toolbar")
 
@@ -297,29 +296,29 @@ object BootstrapTags {
 
 
   //DROPDOWN
-  implicit class SelectableSeqWithStyle[T](s: Seq[SelectElement[T]]) {
-    def dropdown(default: Option[T],
-                 naming: T => String,
+  implicit class SelectableSeqWithStyle[T](s: Seq[OptionElement[T]]) {
+    def dropdown(naming: T => String,
+                 defaultIndex: Int = 0,
                  key: ModifierSeq = emptyMod,
-                 onclickExtra: () ⇒ Unit = () ⇒ {}) = Select(s, default, naming, key, onclickExtra)
+                 onclickExtra: () ⇒ Unit = () ⇒ {}) = DropDown(s, naming, defaultIndex, key, onclickExtra)
 
   }
 
   implicit class SelectableSeq[T](s: Seq[T]) {
-    def dropdown(default: Option[T],
-                 naming: T => String,
+    def dropdown(naming: T => String,
+                 defaultIndex: Int = 0,
+                 buttonText: String,
                  key: ModifierSeq = emptyMod,
                  onclickExtra: () ⇒ Unit = () ⇒ {}) = SelectableSeqWithStyle(s.map { el =>
-      SelectElement(el, emptyMod)
-    }).dropdown(default, naming, key, onclickExtra)
+      OptionElement(el, emptyMod)
+    }).dropdown(naming, defaultIndex, key, onclickExtra)
   }
 
-    implicit class SelectableTypedTag[T <: HTMLElement](tt: TypedTag[T]) {
-      def dropdown(triggerButtonText: String,
-                   buttonModifierSeq: ModifierSeq,
-                   onclose: () => {}) = Select(tt, triggerButtonText, buttonModifierSeq, onclose)
-    }
-
+  implicit class SelectableTypedTag[T <: HTMLElement](tt: TypedTag[T]) {
+    def dropdown(triggerButtonText: String,
+                 buttonModifierSeq: ModifierSeq,
+                 onclose: () => Unit) = DropDown(tt, triggerButtonText, buttonModifierSeq, onclose)
+  }
 
 
   // JUMBOTRON

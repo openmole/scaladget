@@ -1,6 +1,8 @@
 package fr.iscpif.demo
 
 
+import fr.iscpif.scaladget.api.DropDown
+import fr.iscpif.scaladget.stylesheet.all
 import org.scalajs.dom.Element
 
 /*
@@ -29,7 +31,7 @@ import bs._
 object SelectDemo {
 
   val sc = sourcecode.Text {
-    import fr.iscpif.scaladget.api.Select.SelectElement
+    import fr.iscpif.scaladget.api.DropDown.OptionElement
 
     // Define a toy case class containing at least a name attribute
     case class MyElement(name: String)
@@ -42,15 +44,15 @@ object SelectDemo {
     )
 
     div(
-      // Map them to Select Elements, select as default the second element and set the Dropdown with the Bootstrap success style (The selector has to be added also to the DOM)
-     /* elements.map { e =>
-        SelectElement(e)
-      }.dropdown(Some(elements(1)), _.name, btn_success),*/
+      elements.map { e =>
+        DropDown.option(e)
+      }.dropdown(_.name, 1, btn_success).selector,
       bs.vForm(width := 200)(
         bs.labeledInput("Login", "Login"),
         bs.labeledInput("Password", "Pass")
-      ).dropdown("Form", btn_primary, () => "Dropdown closed")
+      ).dropdown("Form", btn_primary +++ sheet.marginLeft(10), () => println("Dropdown closed"))
     ).render
+
   }
 
 
