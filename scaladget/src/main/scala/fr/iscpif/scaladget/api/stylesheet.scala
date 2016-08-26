@@ -23,6 +23,7 @@ import scalatags.JsDom.{styles => sty}
 import org.scalajs.dom
 import scalatags.JsDom.all._
 import scalatags.generic.StylePair
+import rx._
 
 package object all extends stylesheetbase.BasePackage with bootstrap.BootstrapPackage with bootstrap2.Bootstrap2Package
 
@@ -33,6 +34,7 @@ package stylesheetbase {
 
   trait BasePackage {
 
+    implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 
     type ClassAttrPair = scalatags.generic.AttrPair[dom.Element, String]
     type ModifierSeq = Seq[Modifier]
@@ -48,7 +50,7 @@ package stylesheetbase {
     implicit def classAttrPairToModifierSeq(classAttrPair: ClassAttrPair): ModifierSeq = Seq(classAttrPair)
 
     implicit class ComposableClassAttrPair[P <: ClassAttrPair](pair: P) {
-      def +++(pair2: ClassAttrPair): ClassAttrPair = {
+      def +++(pair2: ClassAttrPair): ModifierSeq = {
         if (pair.a.name != "class" || pair2.a.name != "class") toClass("ClassError")
         else pairing(pair.v, pair2.v)
       }
@@ -91,12 +93,20 @@ package stylesheetbase {
     }
 
     // Convenient implicit conversions
+    def rxIf[T](dynamic: rx.Var[Boolean], yes: T, no: T) = {
+      rx.Rx {
+        if (dynamic()) yes
+        else no
+      }
+    }
+
+
     implicit def condOnModifierSeq3(t: Tuple3[Boolean, ModifierSeq, ModifierSeq]): ModifierSeq = if (t._1) t._2 else t._3
 
     implicit def condOnModifierSeq2(t: Tuple2[Boolean, ModifierSeq]): ModifierSeq = condOnModifierSeq3(t._1, t._2, emptyMod)
 
 
-    def toClass(s: String): ClassAttrPair = `class` := s
+    def toClass(s: String): ModifierSeq = `class` := s
 
     // Explicit builders for ModifierSeq (from string or from condition and two ModifierSeq alternatives)
     def ms(s: String): ModifierSeq = Seq(`class` := s)
@@ -165,10 +175,10 @@ package bootstrap {
 
   trait BootstrapPackage {
 
-    type Glyphicon = ClassAttrPair
-    type Navbar = ClassAttrPair
-    type LabelStyle = ClassAttrPair
-    type ButtonStyle = ClassAttrPair
+    type Glyphicon = ModifierSeq
+    type Navbar = ModifierSeq
+    type LabelStyle = ModifierSeq
+    type ButtonStyle = ModifierSeq
 
     private def toGlyphicon(s: String) = toClass(s"glyphicon $s")
 
@@ -219,7 +229,7 @@ package bootstrap {
     lazy val glyph_alph_sorting: Glyphicon = toGlyphicon("glyphicon-sort-by-alphabet")
     lazy val glyph_triangle_bottom: Glyphicon = toGlyphicon("glyphicon-triangle-bottom")
     lazy val glyph_triangle_top: Glyphicon = toGlyphicon("glyphicon-triangle-top")
-    lazy val caret: ClassAttrPair = toClass("caret")
+    lazy val caret: ModifierSeq = toClass("caret")
 
     //NAVBARS
     lazy val nav: Navbar = toClass("nav")
@@ -247,7 +257,7 @@ package bootstrap {
     lazy val label_danger: LabelStyle = toLabel("label-danger")
     lazy val black_label: LabelStyle = toLabel("black-label")
 
-    lazy val controlLabel: ClassAttrPair = toClass("control-label")
+    lazy val controlLabel: ModifierSeq = toClass("control-label")
 
 
     //BUTTONS
@@ -265,75 +275,75 @@ package bootstrap {
     lazy val btn_right: ButtonStyle = toButton("pull-right")
 
     lazy val btnGroup = toClass("btn-group")
-    lazy val btnToolbar: ClassAttrPair = toClass("btn-toolbar")
+    lazy val btnToolbar: ModifierSeq = toClass("btn-toolbar")
 
 
     //ALERTS
-    lazy val alertSuccess: ClassAttrPair = toClass("alert alert-success")
-    lazy val alertInfo: ClassAttrPair = toClass("alert alert-info")
-    lazy val alertWarning: ClassAttrPair = toClass("alert alert-warning")
-    lazy val alertDanger: ClassAttrPair = toClass("alert alert-danger")
+    lazy val alertSuccess: ModifierSeq = toClass("alert alert-success")
+    lazy val alertInfo: ModifierSeq = toClass("alert alert-info")
+    lazy val alertWarning: ModifierSeq = toClass("alert alert-warning")
+    lazy val alertDanger: ModifierSeq = toClass("alert alert-danger")
 
     //MODALS
-    lazy val modal: ClassAttrPair = toClass("modal")
-    lazy val fade: ClassAttrPair = toClass("fade")
-    lazy val modalDialog: ClassAttrPair = toClass("modal-dialog")
-    lazy val modalContent: ClassAttrPair = toClass("modal-content")
-    lazy val modalHeader: ClassAttrPair = toClass("modal-header")
-    lazy val modalInfo: ClassAttrPair = toClass("modal-info")
-    lazy val modalBody: ClassAttrPair = toClass("modal-body")
-    lazy val modalFooter: ClassAttrPair = toClass("modal-footer")
+    lazy val modal: ModifierSeq = toClass("modal")
+    lazy val fade: ModifierSeq = toClass("fade")
+    lazy val modalDialog: ModifierSeq = toClass("modal-dialog")
+    lazy val modalContent: ModifierSeq = toClass("modal-content")
+    lazy val modalHeader: ModifierSeq = toClass("modal-header")
+    lazy val modalInfo: ModifierSeq = toClass("modal-info")
+    lazy val modalBody: ModifierSeq = toClass("modal-body")
+    lazy val modalFooter: ModifierSeq = toClass("modal-footer")
 
     //GRIDS
-    def colMD(nbCol: Int): ClassAttrPair = toClass(s"col-md-$nbCol")
+    def colMD(nbCol: Int): ModifierSeq = toClass(s"col-md-$nbCol")
 
-    def colMDOffset(offsetSize: Int): ClassAttrPair = toClass(s"col-md-offset-$offsetSize")
+    def colMDOffset(offsetSize: Int): ModifierSeq = toClass(s"col-md-offset-$offsetSize")
 
-    lazy val row: ClassAttrPair = toClass("row")
+    lazy val row: ModifierSeq = toClass("row")
 
 
     //PANELS
-    lazy val panel: ClassAttrPair = toClass("panel")
-    lazy val panelDefault: ClassAttrPair = toClass("panel-default")
-    lazy val panelHeading: ClassAttrPair = toClass("panel-heading")
-    lazy val panelBody: ClassAttrPair = toClass("panel-body")
+    lazy val panel: ModifierSeq = toClass("panel")
+    lazy val panelDefault: ModifierSeq = toClass("panel-default")
+    lazy val panelHeading: ModifierSeq = toClass("panel-heading")
+    lazy val panelBody: ModifierSeq = toClass("panel-body")
 
 
     //TABLES
-    lazy val table: ClassAttrPair = toClass("table")
-    lazy val bordered: ClassAttrPair = toClass("table-bordered")
-    lazy val striped: ClassAttrPair = toClass("table-striped")
-    lazy val active: ClassAttrPair = toClass("active")
-    lazy val success: ClassAttrPair = toClass("success")
-    lazy val danger: ClassAttrPair = toClass("danger")
-    lazy val warning: ClassAttrPair = toClass("warning")
-    lazy val info: ClassAttrPair = toClass("info")
+    lazy val table: ModifierSeq = toClass("table")
+    lazy val bordered: ModifierSeq = toClass("table-bordered")
+    lazy val striped: ModifierSeq = toClass("table-striped")
+    lazy val active: ModifierSeq = toClass("active")
+    lazy val success: ModifierSeq = toClass("success")
+    lazy val danger: ModifierSeq = toClass("danger")
+    lazy val warning: ModifierSeq = toClass("warning")
+    lazy val info: ModifierSeq = toClass("info")
 
 
     //INPUTS
-    lazy val inputGroup: ClassAttrPair = toClass("input-group")
-    lazy val inputGroupButton: ClassAttrPair = toClass("input-group-btn")
-    lazy val inputGroupAddon: ClassAttrPair = toClass("input-group-addon")
+    lazy val inputGroup: ModifierSeq = toClass("input-group")
+    lazy val inputGroupButton: ModifierSeq = toClass("input-group-btn")
+    lazy val inputGroupAddon: ModifierSeq = toClass("input-group-addon")
 
     //FORMS
-    lazy val formControl: ClassAttrPair = toClass("form-control")
-    lazy val formGroup: ClassAttrPair = toClass("form-group")
-    lazy val formInline: ClassAttrPair = toClass("form-inline")
-    lazy val formHorizontal: ClassAttrPair = toClass("form-horizontal")
-    lazy val formVertical: ClassAttrPair = toClass("form-vertical")
+    lazy val formControl: ModifierSeq = toClass("form-control")
+    lazy val formGroup: ModifierSeq = toClass("form-group")
+    lazy val formInline: ModifierSeq = toClass("form-inline")
+    lazy val formHorizontal: ModifierSeq = toClass("form-horizontal")
+    lazy val formVertical: ModifierSeq = toClass("form-vertical")
 
 
     //OTHERS
-    lazy val dropdown: ClassAttrPair = toClass("dropdown")
-    lazy val dropdownMenu: ClassAttrPair = toClass("dropdown-menu")
-    lazy val dropdownToggle: ClassAttrPair = toClass("dropdown-toggle")
-    lazy val progress: ClassAttrPair = toClass("progress")
-    lazy val progressBar: ClassAttrPair = toClass("progress-bar")
-    lazy val container: ClassAttrPair = toClass("container")
-    lazy val jumbotron: ClassAttrPair = toClass("jumbotron")
-    lazy val themeShowcase: ClassAttrPair = toClass("theme-showcase")
-    lazy val controlGroup: ClassAttrPair = toClass("control-group")
-    lazy val controls: ClassAttrPair = toClass("controls")
+    lazy val dropdown: ModifierSeq = toClass("dropdown")
+    lazy val dropdownMenu: ModifierSeq = toClass("dropdown-menu")
+    lazy val dropdownToggle: ModifierSeq = toClass("dropdown-toggle")
+    lazy val progress: ModifierSeq = toClass("progress")
+    lazy val progressBar: ModifierSeq = toClass("progress-bar")
+    lazy val container: ModifierSeq = toClass("container")
+    lazy val jumbotron: ModifierSeq = toClass("jumbotron")
+    lazy val themeShowcase: ModifierSeq = toClass("theme-showcase")
+    lazy val controlGroup: ModifierSeq = toClass("control-group")
+    lazy val controls: ModifierSeq = toClass("controls")
   }
 
 }

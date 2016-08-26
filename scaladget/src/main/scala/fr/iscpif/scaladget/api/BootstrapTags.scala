@@ -75,6 +75,11 @@ object BootstrapTags {
   // CHECKBOX
   def checkbox(default: Boolean) = tags.input(`type` := "checkbox", if (default) checked)
 
+  def checkboxes(modifierSeq: ModifierSeq = emptyMod)(checkBoxes: ButtonCheckBox*): CheckBoxes = new CheckBoxes(modifierSeq)(checkBoxes)
+
+  def buttonCheckbox(text: String, defaultActive: Boolean = false, modifierSeq: ModifierSeq = btn_default, onclick: ()=> Unit = ()=> {}) =
+    ButtonCheckBox(text, defaultActive, modifierSeq, onclick)
+
   trait Displayable {
     def name: String
   }

@@ -1,5 +1,6 @@
 package fr.iscpif.demo
 
+import fr.iscpif.scaladget.api.{ButtonCheckBox, CheckBoxes}
 import org.scalajs.dom._
 
 /*
@@ -31,28 +32,47 @@ object ButtonDemo {
     import rx._
 
     val clicked = Var("None")
+    val active: Var[Seq[ButtonCheckBox]] = Var(Seq())
+
     val buttonStyle: ModifierSeq = Seq(
       sheet.marginAll(right = 5, top = 5)
     )
 
     def clickAction(tag: String) = clicked() = tag
 
+    lazy val checkBoxes: CheckBoxes = bs.checkboxes()(
+      bs.buttonCheckbox("Piano", true, btn_danger, checkAction),
+      bs.buttonCheckbox("Guitar", onclick = checkAction),
+      bs.buttonCheckbox("Bass", true, onclick = checkAction)
+    )
+
+    def checkAction = () => active() = checkBoxes.active
+
     div(
+      h4("Buttons"),
       bs.button("Default", buttonStyle +++ btn_default, () => clickAction("default")),
       bs.button("Primary", buttonStyle +++ btn_primary, () => clickAction("primary")),
-      bs.badge("Badge", "7", buttonStyle +++ btn_primary, () => clickAction("badge")),
       bs.button("Info", buttonStyle +++ btn_info, () => clickAction("info")),
       bs.button("Success", buttonStyle +++ btn_success, () => clickAction("success")),
       bs.button("Warning", buttonStyle +++ btn_warning, () => clickAction("warning")),
       bs.button("Danger", buttonStyle +++ btn_danger, () => clickAction("danger")),
       Rx {
         div(sheet.paddingAll(top = 15), s"Clicked: ${clicked()}")
-      }/*,
-      bs.buttonGroup(btn_warning)(
-        bs.checkbox("Piano", true),
-        bs.checkbox("Guitar", false),
-        bs.checkbox("Bass", true)
-      )*/
+      },
+      h4("Badges", sheet.paddingTop(30)),
+      bs.badge("Badge", "7", buttonStyle +++ btn_primary, () => clickAction("badge")),
+
+      h4("Check boxes", sheet.paddingTop(30)),
+      checkBoxes.render,
+      Rx {
+        div(sheet.paddingAll(top = 15), s"Active: ${
+          active().map {
+            _.text
+          }.toSeq
+        }")
+      }
+
+
     ).render
   }
 
