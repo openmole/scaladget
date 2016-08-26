@@ -89,6 +89,8 @@ package stylesheetbase {
 
       }
 
+      def +++(dyn: Rx.Dynamic[ModifierSeq]): ModifierSeq = modifierSeq +++ dyn.now
+
       def divCSS(cssClass: String) = div(`class` := cssClass)
     }
 

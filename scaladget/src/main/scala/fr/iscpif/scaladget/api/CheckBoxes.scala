@@ -27,7 +27,10 @@ import sheet._
 import bs._
 import rx._
 
+import scalatags.generic.Attr
+
 case class ButtonCheckBox(text: String, defaultActive: Boolean, modifierSeq: ModifierSeq, onclick: () => Unit) {
+  println("Init " + text + " " + defaultActive)
   val active = Var(defaultActive)
 }
 
@@ -35,25 +38,22 @@ class CheckBoxes(modifierSeq: ModifierSeq)(checkBoxes: Seq[ButtonCheckBox]) {
 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 
-  def render: Modifier = Rx {
-      buttonGroup(modifierSeq)(data("toggle") := "buttons")(
-        for {
-          cb <- checkBoxes
-        } yield {
-          tags.label(btn +++ cb.modifierSeq +++ {
-            if (cb.active()) toClass("active") else emptyMod
-          })(
-            tags.input(`type` := "checkbox", autocomplete := "off", checked := {
-              if (cb.active()) "checked" else ""
-            }, onclick := { () =>
+  def render: Modifier =
+    buttonGroup(modifierSeq)(data("toggle") := "buttons")(
+      for {
+        cb <- checkBoxes
+      } yield {
+        tags.label(btn +++ cb.modifierSeq +++ rxIf(cb.active, toClass("active"), emptyMod))(
+          tags.input(`type` := "checkbox", autocomplete := "off",
+            if(cb.active.now) checked := "checked" else emptyMod,
+            onclick := { () =>
               cb.active() = !cb.active.now
               cb.onclick()
             }),
-            cb.text
-          )
-        }
-      )
-    }
+          cb.text
+        )
+      }
+    )
 
   def active = checkBoxes.filter {
     _.active.now

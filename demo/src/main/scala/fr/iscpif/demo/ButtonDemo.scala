@@ -32,7 +32,6 @@ object ButtonDemo {
     import rx._
 
     val clicked = Var("None")
-    val active: Var[Seq[ButtonCheckBox]] = Var(Seq())
 
     val buttonStyle: ModifierSeq = Seq(
       sheet.marginAll(right = 5, top = 5)
@@ -41,11 +40,12 @@ object ButtonDemo {
     def clickAction(tag: String) = clicked() = tag
 
     lazy val checkBoxes: CheckBoxes = bs.checkboxes()(
-      bs.buttonCheckbox("Piano", true, btn_danger, checkAction),
+      bs.buttonCheckbox("Piano", onclick = checkAction),
       bs.buttonCheckbox("Guitar", onclick = checkAction),
       bs.buttonCheckbox("Bass", true, onclick = checkAction)
     )
 
+    lazy val active: Var[Seq[ButtonCheckBox]] = Var(checkBoxes.active)
     def checkAction = () => active() = checkBoxes.active
 
     div(
