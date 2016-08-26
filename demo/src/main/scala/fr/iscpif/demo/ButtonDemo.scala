@@ -1,6 +1,6 @@
 package fr.iscpif.demo
 
-import fr.iscpif.scaladget.api.{ButtonCheckBox, CheckBoxes}
+import fr.iscpif.scaladget.api.{SelectableButton, SelectableButtons}
 import org.scalajs.dom._
 
 /*
@@ -39,14 +39,20 @@ object ButtonDemo {
 
     def clickAction(tag: String) = clicked() = tag
 
-    lazy val checkBoxes: CheckBoxes = bs.checkboxes()(
-      bs.buttonCheckbox("Piano", onclick = checkAction),
-      bs.buttonCheckbox("Guitar", onclick = checkAction),
-      bs.buttonCheckbox("Bass", true, onclick = checkAction)
+    lazy val checkBoxes: SelectableButtons = bs.checkboxes()(
+      bs.selectableButton("Piano", onclick = checkAction),
+      bs.selectableButton("Guitar", onclick = checkAction),
+      bs.selectableButton("Bass", true, onclick = checkAction)
     )
 
-    lazy val active: Var[Seq[ButtonCheckBox]] = Var(checkBoxes.active)
+    lazy val radios: SelectableButtons = bs.radios()(
+      bs.selectableButton("Male", onclick = radioAction),
+      bs.selectableButton("Female", true, onclick = radioAction)
+    )
+
+    lazy val active: Var[Seq[SelectableButton]] = Var(checkBoxes.active)
     def checkAction = () => active() = checkBoxes.active
+    def radioAction = () => active() = radios.active
 
     div(
       h4("Buttons"),
@@ -61,9 +67,10 @@ object ButtonDemo {
       },
       h4("Badges", sheet.paddingTop(30)),
       bs.badge("Badge", "7", buttonStyle +++ btn_primary, () => clickAction("badge")),
-
       h4("Check boxes", sheet.paddingTop(30)),
       checkBoxes.render,
+      h4("Radio buttons", sheet.paddingTop(30)),
+      radios.render,
       Rx {
         div(sheet.paddingAll(top = 15), s"Active: ${
           active().map {
@@ -71,8 +78,6 @@ object ButtonDemo {
           }.toSeq
         }")
       }
-
-
     ).render
   }
 

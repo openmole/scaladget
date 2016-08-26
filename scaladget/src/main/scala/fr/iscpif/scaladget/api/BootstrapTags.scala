@@ -29,6 +29,7 @@ import sheet._
 import rx._
 import Popup._
 import DropDown._
+import fr.iscpif.scaladget.api.SelectableButtons.{CheckBoxSelection, RadioSelection}
 import fr.iscpif.scaladget.mapping.Modal
 
 import scalatags.JsDom
@@ -75,10 +76,27 @@ object BootstrapTags {
   // CHECKBOX
   def checkbox(default: Boolean) = tags.input(`type` := "checkbox", if (default) checked)
 
-  def checkboxes(modifierSeq: ModifierSeq = emptyMod)(checkBoxes: ButtonCheckBox*): CheckBoxes = new CheckBoxes(modifierSeq)(checkBoxes)
+  def checkboxes(modifierSeq: ModifierSeq = emptyMod)(checkBoxes: SelectableButton*): SelectableButtons =
+    new SelectableButtons(modifierSeq, CheckBoxSelection, checkBoxes)
 
-  def buttonCheckbox(text: String, defaultActive: Boolean = false, modifierSeq: ModifierSeq = btn_default, onclick: ()=> Unit = ()=> {}) =
-    ButtonCheckBox(text, defaultActive, modifierSeq, onclick)
+  def radios(modifierSeq: ModifierSeq = emptyMod)(radioButtons: SelectableButton*): SelectableButtons = {
+
+    val allActive = radioButtons.toSeq.filter {
+      _.active.now
+    }.size
+
+    val buttons = {
+      if (radioButtons.size > 0) {
+        if (allActive != 1) radioButtons.head.copy(defaultActive = true) +: radioButtons.tail.map{_.copy(defaultActive = false)}
+        else radioButtons
+      } else radioButtons
+    }
+
+    new SelectableButtons(modifierSeq, RadioSelection, buttons)
+  }
+
+  def selectableButton(text: String, defaultActive: Boolean = false, modifierSeq: ModifierSeq = btn_default, onclick: () => Unit = () => {}) =
+    SelectableButton(text, defaultActive, modifierSeq, onclick)
 
   trait Displayable {
     def name: String
