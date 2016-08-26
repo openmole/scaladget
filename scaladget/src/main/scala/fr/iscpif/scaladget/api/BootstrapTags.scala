@@ -592,28 +592,45 @@ object BootstrapTags {
 
 
   // FORMS
-  def labeledInput(title: String,
-                   default: String = "",
-                   pHolder: String = "",
-                   labelStyle: ModifierSeq = emptyMod,
-                   inputStyle: ModifierSeq = emptyMod) =
-  new LabeledInput(title, default, pHolder, labelStyle, inputStyle)
 
-  private def insideForm(labeledInputs: LabeledInput*) =
+  trait FormTag {
+    def tag: Modifier
+  }
+
+  trait LabeledFormTag extends FormTag {
+    def label: TypedTag[HTMLLabelElement]
+  }
+
+  implicit def modifierToFormTag(m: Modifier): FormTag = new FormTag {
+    val tag: Modifier = m
+  }
+
+  implicit class LabelForModifiers(m: Modifier) {
+    def withLabel(title: String, labelStyle: ModifierSeq = emptyMod): FormTag = new LabeledFormTag {
+      val label: TypedTag[HTMLLabelElement] = tags.label(title)(labelStyle +++ (sheet.paddingRight(5)))
+
+      val tag: Modifier = m
+    }
+  }
+
+  private def insideForm(formTags: FormTag*) =
     for {
-      li <- labeledInputs
+      ft <- formTags
     } yield {
       div(formGroup +++ sheet.paddingRight(5))(
-        li.lab,
-        li.inp)
+        ft match {
+          case lft: LabeledFormTag => lft.label
+          case _ =>
+        },
+        ft.tag)
     }
 
-  def vForm(modifierSeq: ModifierSeq = emptyMod)(labeledInputs: LabeledInput*) =
-    div(modifierSeq +++ formVertical)(insideForm(labeledInputs: _*))
+  def vForm(modifierSeq: ModifierSeq = emptyMod)(formTags: FormTag*) =
+    div(modifierSeq +++ formVertical)(insideForm(formTags: _*))
 
 
-  def hForm(modifierSeq: ModifierSeq = emptyMod)(labeledInputs: LabeledInput*) = {
-    form(formInline +++ modifierSeq)(insideForm(labeledInputs: _*))
+  def hForm(modifierSeq: ModifierSeq = emptyMod)(formTags: FormTag*) = {
+    form(formInline +++ modifierSeq)(insideForm(formTags: _*))
   }
 
 }

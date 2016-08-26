@@ -31,7 +31,7 @@ import bs._
 object SelectDemo {
 
   val sc = sourcecode.Text {
-     import fr.iscpif.scaladget.api.DropDown._
+    import fr.iscpif.scaladget.api.DropDown._
 
     // Define a toy case class containing at least a name attribute
     case class MyElement(name: String)
@@ -43,15 +43,23 @@ object SelectDemo {
       MyElement("Third Element")
     )
 
-    div(
+    val optionDropDown =
       elements.map { e =>
         option(e)
-      }.dropdown(_.name, 1, btn_success).selector,
+      }.dropdown(_.name, 1, btn_success).selector
+
+    val loginInput = bs.input("")(placeholder := "Login")
+    val passInput = bs.input("")(placeholder := "Login", `type` := "password")
+
+    val formDropDown =
       bs.vForm(width := 200)(
-        bs.labeledInput("Login", "Login"),
-        bs.labeledInput("Password", "Pass")
+        loginInput.withLabel("Login"),
+        passInput.withLabel("Pass"),
+        bs.button("OK", btn_primary, ()=> println("OK"))
       ).dropdown("Form", btn_primary +++ sheet.marginLeft(10), () => println("Dropdown closed"))
-    ).render
+
+
+    div(optionDropDown, formDropDown).render
 
   }
 

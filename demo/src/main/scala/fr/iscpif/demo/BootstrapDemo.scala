@@ -60,10 +60,10 @@ object BootstrapDemo extends JSApp {
       demo <- Seq(
         ButtonDemo.elementDemo,
         LabelDemo.elementDemo,
+        FormDemo.elementDemo,
         SelectDemo.elementDemo,
         ModalDialogDemo.elementDemo,
         NavBarDemo.elementDemo,
-        FormDemo.elementDemo,
         TooltipDemo.elementDemo,
         PopoverDemo.elementDemo)
     } yield {

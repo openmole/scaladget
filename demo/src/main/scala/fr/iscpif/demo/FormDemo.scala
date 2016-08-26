@@ -19,24 +19,41 @@ package fr.iscpif.demo
 
 import fr.iscpif.scaladget.api.{BootstrapTags => bs}
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
+
 import scalatags.JsDom.all._
 import org.scalajs.dom.raw.Element
 import sheet._
+import bs._
 
 
 object FormDemo extends Demo {
 
   val sc = sourcecode.Text {
 
-    // Vertical form
+    import fr.iscpif.scaladget.api.DropDown._
+
+    case class MyElement(name: String)
+
+    val inputStyle: ModifierSeq = Seq(width := 150)
+    val elements = Seq(
+      MyElement("Male"),
+      MyElement("Female")
+    )
+
+    val loginInput = bs.input("")(placeholder := "Login", inputStyle)
+    val passInput = bs.input("")(placeholder := "Login", `type` := "password", inputStyle)
+    val genderDD = elements.map { e =>
+      option(e)
+    }.dropdown(_.name, 1, btn_success).selector
+
     div(
       bs.vForm(width := 200)(
-        bs.labeledInput("Login", "Login"),
-        bs.labeledInput("Password", "Pass")
+        loginInput.withLabel("Login"),
+        passInput.withLabel("Password")
       ),
       bs.hForm(sheet.paddingTop(20) +++ (width := 500))(
-        bs.labeledInput("Login", "Login", inputStyle = (width := 150)),
-        bs.labeledInput("Password", "Pass", inputStyle = (width := 150))
+        loginInput.withLabel("Login"),
+        genderDD
       )
     ).render
   }
