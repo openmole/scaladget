@@ -43,8 +43,8 @@ object FormDemo extends Demo {
     val loginInput = bs.input("")(placeholder := "Login", inputStyle)
     val passInput = bs.input("")(placeholder := "Login", `type` := "password", inputStyle)
     val genderDD = elements.map { e =>
-      option(e)
-    }.dropdown(_.name, 1, btn_success).selector
+      option(e,e.name)
+    }.dropdown(1, btn_success).selector
 
     div(
       bs.vForm(width := 200)(

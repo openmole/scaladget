@@ -119,8 +119,6 @@ object BootstrapTags {
 
   def buttonToolBar = div(btnToolbar)(role := "toolbar")
 
-
-  /////TO BE REMOVED  ----
   //MODAL
   type ModalID = String
 
@@ -297,22 +295,20 @@ object BootstrapTags {
 
   //DROPDOWN
   implicit class SelectableSeqWithStyle[T](s: Seq[OptionElement[T]]) {
-    def dropdown(naming: T => String,
-                 defaultIndex: Int = 0,
+    def dropdown(defaultIndex: Int = 0,
                  key: ModifierSeq = emptyMod,
-                 onclickExtra: () ⇒ Unit = () ⇒ {}) = DropDown(s, naming, defaultIndex, key, onclickExtra)
+                 onclickExtra: () ⇒ Unit = () ⇒ {}) = DropDown(s, defaultIndex, key, onclickExtra)
 
   }
 
-  implicit class SelectableSeq[T](s: Seq[T]) {
-    def dropdown(naming: T => String,
-                 defaultIndex: Int = 0,
+  /*implicit class SelectableSeq[T](s: Seq[T]) {
+    def dropdown(defaultIndex: Int = 0,
                  buttonText: String,
                  key: ModifierSeq = emptyMod,
                  onclickExtra: () ⇒ Unit = () ⇒ {}) = SelectableSeqWithStyle(s.map { el =>
       OptionElement(el, emptyMod)
-    }).dropdown(naming, defaultIndex, key, onclickExtra)
-  }
+    }).dropdown(defaultIndex, key, onclickExtra)
+  }*/
 
   implicit class SelectableTypedTag[T <: HTMLElement](tt: TypedTag[T]) {
     def dropdown(triggerButtonText: String,

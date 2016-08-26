@@ -45,8 +45,8 @@ object SelectDemo {
 
     val optionDropDown =
       elements.map { e =>
-        option(e)
-      }.dropdown(_.name, 1, btn_success).selector
+        option(e, e.name)
+      }.dropdown(1, btn_success).selector
 
     val loginInput = bs.input("")(placeholder := "Login")
     val passInput = bs.input("")(placeholder := "Login", `type` := "password")

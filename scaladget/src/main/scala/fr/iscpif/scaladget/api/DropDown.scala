@@ -48,17 +48,13 @@ object DropDown {
 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 
-  case class OptionElement[T](value: T, mod: ModifierSeq = emptyMod)
-
-  implicit def seqOfTtoSeqOfSelectElement[T](s: Seq[T]): Seq[OptionElement[T]] = s.map { e => OptionElement(e) }
-
-  implicit def tToTElement[T](t: T): OptionElement[T] = OptionElement(t)
+  case class OptionElement[T](value: T, readableValue: String, mod: ModifierSeq = emptyMod)
 
   implicit def optionSelectElementTToOptionT[T](opt: Option[OptionElement[T]]): Option[T] = opt.map {
     _.value
   }
 
-  def option[T](value: T, mod: ModifierSeq = emptyMod) = OptionElement(value, mod)
+  def option[T](value: T, readableValue: String, mod: ModifierSeq = emptyMod) = OptionElement(value, readableValue, mod)
 
   private def button(buttonText: String,
                      modifierSeq: ModifierSeq,
@@ -68,11 +64,10 @@ object DropDown {
   )
 
   def apply[T](contents: Seq[OptionElement[T]],
-               naming: T => String,
                defaultIndex: Int = 0,
                key: ModifierSeq = emptyMod,
                onclickExtra: () ⇒ Unit = () ⇒ {}) =
-    new Options(contents, naming, defaultIndex, key, onclickExtra)
+    new Options(contents, defaultIndex, key, onclickExtra)
 
   def apply[T <: HTMLElement](content: TypedTag[T],
                               buttonText: String,
@@ -86,7 +81,6 @@ object DropDown {
   }
 
   class Options[T](private val _contents: Seq[OptionElement[T]],
-                   naming: T => String,
                    defaultIndex: Int = 0,
                    key: ModifierSeq = emptyMod,
                    onclose: () => Unit = () => {},
@@ -124,7 +118,7 @@ object DropDown {
           if (opened()) "open"
           else ""
         ))(
-        bs.button(content().map { c => naming(c.value) }.getOrElse("") + " ", key +++ dropdownToggle, () => {
+        bs.button(content().map { c => c.readableValue }.getOrElse("") + " ", key +++ dropdownToggle, () => {
           opened() = !opened.now
           onclickExtra()
         })(
@@ -136,8 +130,8 @@ object DropDown {
           for {
             c <- contents.now
           } yield {
-            li(a(href := "#")(naming(c.value)), onclick := { () =>
-              content() = Some(c.value)
+            li(a(href := "#")(c.readableValue), onclick := { () =>
+              content() = Some(c)
               opened() = !opened.now
               onclose()
               false
