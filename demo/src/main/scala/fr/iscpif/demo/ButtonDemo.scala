@@ -18,6 +18,7 @@ import org.scalajs.dom._
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
 import fr.iscpif.scaladget.api.{BootstrapTags => bs}
 import fr.iscpif.scaladget.tools.JsRxTags._
@@ -44,9 +45,14 @@ object ButtonDemo {
       bs.button("Success", buttonStyle +++ btn_success, () => clickAction("success")),
       bs.button("Warning", buttonStyle +++ btn_warning, () => clickAction("warning")),
       bs.button("Danger", buttonStyle +++ btn_danger, () => clickAction("danger")),
-      Rx{
+      Rx {
         div(sheet.paddingAll(top = 15), s"Clicked: ${clicked()}")
-      }
+      }/*,
+      bs.buttonGroup(btn_warning)(
+        bs.checkbox("Piano", true),
+        bs.checkbox("Guitar", false),
+        bs.checkbox("Bass", true)
+      )*/
     ).render
   }
 
