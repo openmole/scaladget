@@ -23,25 +23,26 @@ import fr.iscpif.scaladget.stylesheet.{all => sheet}
 import fr.iscpif.scaladget.tools.JsRxTags._
 import scalatags.JsDom.all._
 import sheet._
+import fr.iscpif.scaladget.api.BootstrapTags._
 
 object LabelDemo {
   val sc = sourcecode.Text {
     import rx._
 
     val hovered = Var("None")
-    val buttonStyle: ModifierSeq = Seq(
-      sheet.marginRight(5)
+    val labelStyle: ModifierSeq = Seq(
+      sheet.marginTop(20)
     )
 
     def overAction(tag: String) = onmouseover := { () =>  hovered() = tag }
 
-    div(
-      label("Default", buttonStyle +++ label_default, overAction("default")),
-      label("Primary", buttonStyle +++ label_primary, overAction("primary")),
-      label("Info", buttonStyle +++ label_info,  overAction("info")),
-      label("Success", buttonStyle +++ label_success, overAction("success")),
-      label("Warning", buttonStyle +++ label_warning, overAction("warning")),
-      label("Danger", buttonStyle +++ label_danger, overAction("danger")),
+    div(row)(
+      label("Default", label_default, overAction("default")).size4(labelStyle),
+      label("Primary", label_primary, overAction("primary")).size4(labelStyle),
+      label("Info", label_info,  overAction("info")).size4(labelStyle),
+      label("Success", label_success, overAction("success")).size4(labelStyle),
+      label("Warning", label_warning, overAction("warning")).size5(labelStyle),
+      label("Danger", label_danger, overAction("danger")).size6(labelStyle),
       Rx{
         div(sheet.paddingTop(15), s"Hovered: ${hovered()}")
       }

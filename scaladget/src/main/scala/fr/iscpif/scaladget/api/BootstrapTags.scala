@@ -124,6 +124,16 @@ object BootstrapTags {
   def glyphSpan(glyphicon: ModifierSeq, onclickAction: () ⇒ Unit = () ⇒ {}, text: String = ""): TypedTag[HTMLSpanElement] =
   span(glyphicon +++ pointer, aria.hidden := "true", onclick := { () ⇒ onclickAction() })(text)
 
+  //Label decorators to set the label size
+  implicit class TypedTagLabel(lab: TypedTag[HTMLLabelElement]){
+    def size1(modifierSeq: ModifierSeq = emptyMod) = h1(modifierSeq)(lab)
+    def size2(modifierSeq: ModifierSeq = emptyMod) = h2(modifierSeq)(lab)
+    def size3(modifierSeq: ModifierSeq = emptyMod) = h3(modifierSeq)(lab)
+    def size4(modifierSeq: ModifierSeq = emptyMod) = h4(modifierSeq)(lab)
+    def size5(modifierSeq: ModifierSeq = emptyMod) = h5(modifierSeq)(lab)
+    def size6(modifierSeq: ModifierSeq = emptyMod) = h6(modifierSeq)(lab)
+  }
+
 
   // PROGRESS BAR
   def progressBar(barMessage: String, ratio: Int): TypedTag[HTMLDivElement] =
