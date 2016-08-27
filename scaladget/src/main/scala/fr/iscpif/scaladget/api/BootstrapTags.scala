@@ -115,12 +115,14 @@ object BootstrapTags {
   button("", buttonStyle, todo)(content)
 
   // displaying a text with a button style and a glyphicon
-  def glyphButton(text: String, buttonStyle: ModifierSeq = Seq(), glyphicon: ModifierSeq = Seq(), todo: () ⇒ Unit = () => {}): TypedTag[HTMLButtonElement] =
-  button(text, buttonStyle, todo)(pointer, `type` := "button")(span(glyphicon))
+  def button(text: String = "", buttonStyle: ModifierSeq = btn_default, glyphicon: ModifierSeq = Seq(), todo: () ⇒ Unit = () => {}): TypedTag[HTMLButtonElement] = {
+    val iconStyle = if(text.isEmpty) paddingAll(top = 3, bottom = 3) else sheet.marginLeft(5)
+    tags.button(text, btn +++ buttonStyle, `type` := "button", onclick := { () ⇒ todo() })(span(glyphicon +++ iconStyle))
+  }
 
   // Clickable span containing a glyphicon and a text
   def glyphSpan(glyphicon: ModifierSeq, onclickAction: () ⇒ Unit = () ⇒ {}, text: String = ""): TypedTag[HTMLSpanElement] =
-  span(glyphicon, aria.hidden := "true", onclick := { () ⇒ onclickAction() })(text)
+  span(glyphicon +++ pointer, aria.hidden := "true", onclick := { () ⇒ onclickAction() })(text)
 
 
   // PROGRESS BAR
@@ -506,7 +508,7 @@ object BootstrapTags {
     val cssglyph = glyph +++ sheet.paddingLeft(3)
 
     lazy val div = {
-      glyphButton("", preGlyph, cssglyph, action)
+      button("", preGlyph, cssglyph, action)
     }
   }
 
@@ -587,7 +589,7 @@ object BootstrapTags {
         for (b ← buttons) yield {
           b match {
             case s: ExclusiveStringButton ⇒ button(s.title, stringButtonBackground(s) +++ stringInGroup, action(b, s.action))
-            case g: ExclusiveGlyphButton ⇒ glyphButton("", glyphButtonBackground(g), g.glyph, action(b, g.action))
+            case g: ExclusiveGlyphButton ⇒ button("", glyphButtonBackground(g), g.glyph, action(b, g.action))
             case ts: TwoStatesGlyphButton ⇒
               if (selectedAgain()) twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph2), ts.glyph, action(ts, ts.action2), action(ts, ts.action), glyphButtonBackground(ts) +++ ts.preGlyph).div
               else twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), glyphButtonBackground(ts) +++ ts.preGlyph).div

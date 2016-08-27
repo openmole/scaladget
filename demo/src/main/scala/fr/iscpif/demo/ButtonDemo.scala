@@ -62,11 +62,16 @@ object ButtonDemo {
       bs.button("Success", buttonStyle +++ btn_success, () => clickAction("success")),
       bs.button("Warning", buttonStyle +++ btn_warning, () => clickAction("warning")),
       bs.button("Danger", buttonStyle +++ btn_danger, () => clickAction("danger")),
+      bs.button("Default", buttonStyle +++ btn_default, glyph_fire, () => clickAction("fire")),
+      bs.button(buttonStyle = buttonStyle +++ btn_danger, glyphicon = glyph_download, todo = () => clickAction("download")),
       Rx {
         div(sheet.paddingAll(top = 15), s"Clicked: ${clicked()}")
       },
       h4("Badges", sheet.paddingTop(30)),
       bs.badge("Badge", "7", buttonStyle +++ btn_primary, () => clickAction("badge")),
+      h4("Icon buttons", sheet.paddingTop(30)),
+      bs.glyphSpan(glyph_refresh +++ buttonStyle, () => clickAction("refresh")),
+      bs.glyphSpan(glyph_flash +++ buttonStyle, () => clickAction("flash")),
       h4("Check boxes", sheet.paddingTop(30)),
       checkBoxes.render,
       h4("Radio buttons", sheet.paddingTop(30)),
