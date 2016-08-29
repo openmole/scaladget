@@ -17,6 +17,8 @@ package fr.iscpif.scaladget.api
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.util.UUID
+
 import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw._
 
@@ -29,6 +31,7 @@ import sheet._
 import rx._
 import Popup._
 import DropDown._
+import fr.iscpif.scaladget.api.Alert.ExtraButton
 import fr.iscpif.scaladget.api.SelectableButtons.{CheckBoxSelection, RadioSelection}
 import fr.iscpif.scaladget.mapping.Modal
 
@@ -87,7 +90,9 @@ object BootstrapTags {
 
     val buttons = {
       if (radioButtons.size > 0) {
-        if (allActive != 1) radioButtons.head.copy(defaultActive = true) +: radioButtons.tail.map{_.copy(defaultActive = false)}
+        if (allActive != 1) radioButtons.head.copy(defaultActive = true) +: radioButtons.tail.map {
+          _.copy(defaultActive = false)
+        }
         else radioButtons
       } else radioButtons
     }
@@ -116,7 +121,7 @@ object BootstrapTags {
 
   // displaying a text with a button style and a glyphicon
   def button(text: String = "", buttonStyle: ModifierSeq = btn_default, glyphicon: ModifierSeq = Seq(), todo: () ⇒ Unit = () => {}): TypedTag[HTMLButtonElement] = {
-    val iconStyle = if(text.isEmpty) paddingAll(top = 3, bottom = 3) else sheet.marginLeft(5)
+    val iconStyle = if (text.isEmpty) paddingAll(top = 3, bottom = 3) else sheet.marginLeft(5)
     tags.button(text, btn +++ buttonStyle, `type` := "button", onclick := { () ⇒ todo() })(span(glyphicon +++ iconStyle))
   }
 
@@ -124,13 +129,24 @@ object BootstrapTags {
   def glyphSpan(glyphicon: ModifierSeq, onclickAction: () ⇒ Unit = () ⇒ {}, text: String = ""): TypedTag[HTMLSpanElement] =
   span(glyphicon +++ pointer, aria.hidden := "true", onclick := { () ⇒ onclickAction() })(text)
 
+
+  // Close buttons
+  def closeButton(dataDismiss: String, todo: () => Unit = () => {}) = button("", todo)(toClass("close"), aria.label := "Close", data.dismiss := dataDismiss)(
+    span(aria.hidden := true)(raw("&#215"))
+  )
+
   //Label decorators to set the label size
-  implicit class TypedTagLabel(lab: TypedTag[HTMLLabelElement]){
+  implicit class TypedTagLabel(lab: TypedTag[HTMLLabelElement]) {
     def size1(modifierSeq: ModifierSeq = emptyMod) = h1(modifierSeq)(lab)
+
     def size2(modifierSeq: ModifierSeq = emptyMod) = h2(modifierSeq)(lab)
+
     def size3(modifierSeq: ModifierSeq = emptyMod) = h3(modifierSeq)(lab)
+
     def size4(modifierSeq: ModifierSeq = emptyMod) = h4(modifierSeq)(lab)
+
     def size5(modifierSeq: ModifierSeq = emptyMod) = h5(modifierSeq)(lab)
+
     def size6(modifierSeq: ModifierSeq = emptyMod) = h6(modifierSeq)(lab)
   }
 
@@ -464,17 +480,17 @@ object BootstrapTags {
     div(panelBody)
   )
 
-  def alert(content: String, todook: () ⇒ Unit, todocancel: () ⇒ Unit) = {
-    tags.div(role := "alert")(
-      content,
-      div(sheet.paddingTop(20))(
-        buttonGroup(sheet.floatLeft)(
-          button("OK", btn_danger, todook),
-          button("Cancel", btn_default, todocancel)
-        )
-      )
-    )
-  }
+  def successAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean], todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+    new Alert(alert_success, title, content, triggerCondition, todocancel)(otherButtons: _*).render
+
+  def infoAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean], todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+    new Alert(alert_info, title, content, triggerCondition, todocancel)(otherButtons: _*).render
+
+  def warningAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean], todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+    new Alert(alert_warning, title, content, triggerCondition, todocancel)(otherButtons: _*).render
+
+  def dangerAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean], todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+    new Alert(alert_danger, title, content, triggerCondition, todocancel)(otherButtons: _*).render
 
 
   // EXCLUSIVE BUTTON GROUPS

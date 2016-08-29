@@ -65,14 +65,15 @@ object BootstrapDemo extends JSApp {
         ModalDialogDemo.elementDemo,
         NavBarDemo.elementDemo,
         TooltipDemo.elementDemo,
-        PopoverDemo.elementDemo)
+        PopoverDemo.elementDemo,
+        AlertDemo.elementDemo)
     } yield {
       dom.document.body.appendChild(
         div(sheet.marginLeft(15), sheet.marginTop(25))(
           h3(demo.title),
           div(row)(
-            div(colMD(8))(pre(code(toClass("scala"))(demo.cleanCode))),
-            div(colMD(4))(demo.element)
+            div(colMD(demo.codeWidth))(pre(code(toClass("scala"))(demo.cleanCode))),
+            div(colMD(12 - demo.codeWidth))(demo.element)
           )
         )
       )

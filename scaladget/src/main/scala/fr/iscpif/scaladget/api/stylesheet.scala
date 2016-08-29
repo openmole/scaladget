@@ -49,6 +49,8 @@ package stylesheetbase {
 
     implicit def classAttrPairToModifierSeq(classAttrPair: ClassAttrPair): ModifierSeq = Seq(classAttrPair)
 
+    implicit def rxToModifierSeq(dyn: Rx.Dynamic[ModifierSeq]): ModifierSeq = dyn.now
+
     implicit class ComposableClassAttrPair[P <: ClassAttrPair](pair: P) {
       def +++(pair2: ClassAttrPair): ModifierSeq = {
         if (pair.a.name != "class" || pair2.a.name != "class") toClass("ClassError")
@@ -181,12 +183,15 @@ package bootstrap {
     type Navbar = ModifierSeq
     type LabelStyle = ModifierSeq
     type ButtonStyle = ModifierSeq
+    type AlertStyle = ModifierSeq
 
     private def toGlyphicon(s: String) = toClass(s"glyphicon $s")
 
     private def toLabel(s: String) = toClass(s"label $s")
 
     private def toButton(s: String) = toClass(s"btn $s")
+
+    private def toAlert(s: String) = toClass(s"alert $s")
 
     //GHYPHICONS
     lazy val glyph_edit: Glyphicon = toGlyphicon("glyphicon-pencil")
@@ -281,10 +286,10 @@ package bootstrap {
 
 
     //ALERTS
-    lazy val alertSuccess: ModifierSeq = toClass("alert alert-success")
-    lazy val alertInfo: ModifierSeq = toClass("alert alert-info")
-    lazy val alertWarning: ModifierSeq = toClass("alert alert-warning")
-    lazy val alertDanger: ModifierSeq = toClass("alert alert-danger")
+    lazy val alert_success: AlertStyle = toAlert("alert-success")
+    lazy val alert_info: AlertStyle = toAlert("alert-info")
+    lazy val alert_warning: AlertStyle = toAlert("alert-warning")
+    lazy val alert_danger: AlertStyle = toAlert("alert-danger")
 
     //MODALS
     lazy val modal: ModifierSeq = toClass("modal")
@@ -376,26 +381,12 @@ package bootstrap2 {
       sty.height := "30px"
     )
 
-    lazy val selectFilter: ModifierSeq = Seq(
-      marginTop(6),
-      fontSize := 14,
-      paddingLeft(5),
-      borderBottomRightRadius := 0,
-      borderBottomLeftRadius := 0
-    )
-
-    //POPUPS
-
-    lazy val basePopup: ModifierSeq = Seq(
-      all.absolutePosition,
-      display := "inline-block",
-      fontSize := 12,
-      fontStyle := "normal",
-      fontWeight := "normal",
-      fontFamily := "'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'",
-      textAlign := "center",
-      width := "auto",
-      height := "auto"
+    // ALERTS
+    lazy val closeButtonDissmiss: ModifierSeq = Seq(
+      padding := 0,
+      pointer,
+      backgroundColor := "0 0",
+      border := 0
     )
   }
 

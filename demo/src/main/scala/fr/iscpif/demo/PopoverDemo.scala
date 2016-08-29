@@ -52,5 +52,7 @@ object PopoverDemo extends Demo {
     def code: String = sc.source
 
     def element: Element = sc.value
+
+    override def codeWidth: Int = 9
   }
 }

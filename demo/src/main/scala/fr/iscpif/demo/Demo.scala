@@ -26,10 +26,14 @@ trait Demo{
 
 trait ElementDemo{
   def title: String
+
   def code: String
+
   def cleanCode = {
     if (code.startsWith("{")) code.tail.dropRight(1)
     else code
   }
   def element: Element
+
+  def codeWidth: Int = 8
 }
