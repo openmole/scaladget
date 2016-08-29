@@ -380,14 +380,6 @@ package bootstrap2 {
       sty.top := "4px",
       sty.height := "30px"
     )
-
-    // ALERTS
-    lazy val closeButtonDissmiss: ModifierSeq = Seq(
-      padding := 0,
-      pointer,
-      backgroundColor := "0 0",
-      border := 0
-    )
   }
 
 }
