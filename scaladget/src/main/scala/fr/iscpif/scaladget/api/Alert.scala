@@ -8,6 +8,7 @@ import scalatags.JsDom.tags
 import sheet._
 import rx._
 import fr.iscpif.scaladget.api.Alert.ExtraButton
+import fr.iscpif.scaladget.tools.JsRxTags._
 import rx.Rx
 
 /*
@@ -39,13 +40,22 @@ class Alert(alertStyle: AlertStyle,
             title: String,
             content: String,
             triggerCondition: Rx.Dynamic[() => Boolean],
-            cancelAction: ()=> Unit
+            cancelAction: () => Unit
            )(otherButtons: ExtraButton*) {
 
-  val render = Rx {
-      if (triggerCondition().apply) {
-        tags.div(alertStyle +++ {if(otherButtons.isEmpty) emptyMod else sheet.paddingBottom(50)})(
-          bs.closeButton("", cancelAction),
+  implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
+  val closed = Var(false)
+
+  val render = tags.div(
+    Rx {
+      if (triggerCondition().apply && !closed()) {
+        tags.div(alertStyle +++ {
+          if (otherButtons.isEmpty) emptyMod else sheet.paddingBottom(50)
+        })(
+          bs.closeButton("", ()=> {
+            cancelAction()
+            closed() = true
+          }),
           h4(title),
           p(content),
           p(
@@ -61,4 +71,6 @@ class Alert(alertStyle: AlertStyle,
       }
       else tags.div
     }
+  )
+
 }

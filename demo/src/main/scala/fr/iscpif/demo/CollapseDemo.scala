@@ -3,9 +3,9 @@ package fr.iscpif.demo
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
 import fr.iscpif.scaladget.api.{BootstrapTags => bs}
 import bs._
-import scalatags.JsDom.all._
-import org.scalajs.dom.raw.{Element, HTMLButtonElement}
+import org.scalajs.dom.raw.Element
 import sheet._
+import scalatags.JsDom.all._
 
 /*
  * Copyright (C) 30/08/16 // mathieu.leclaire@openmole.org
@@ -29,7 +29,7 @@ object CollapseDemo extends Demo {
 
   val sc = sourcecode.Text {
 
-    bs.button("Trigger !", btn_primary).expand(bs.panel("My panel"))
+    bs.button("Trigger !", btn_primary).expandOnclick(bs.panel("My panel")(width := 400))
   }
 
   val elementDemo = new ElementDemo {

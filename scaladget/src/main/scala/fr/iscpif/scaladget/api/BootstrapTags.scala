@@ -467,44 +467,63 @@ object BootstrapTags {
 
 
   // ALERTS
-  def successAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean], todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+  def successAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(()=> true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
   new Alert(alert_success, title, content, triggerCondition, todocancel)(otherButtons: _*).render
 
-  def infoAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean], todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+  def infoAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(()=> true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
     new Alert(alert_info, title, content, triggerCondition, todocancel)(otherButtons: _*).render
 
-  def warningAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean], todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+  def warningAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(()=> true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
     new Alert(alert_warning, title, content, triggerCondition, todocancel)(otherButtons: _*).render
 
-  def dangerAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean], todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+  def dangerAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(()=> true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
     new Alert(alert_danger, title, content, triggerCondition, todocancel)(otherButtons: _*).render
 
 
-  implicit class TagCollapser[S <: TypedTag[HTMLElement]](triggerTag: S) {
-    def expand[T <: TypedTag[HTMLElement]](inner: T) = new Collapser[T, S](inner, triggerTag).tagAndTrigger
+  implicit class TagCollapserOnClick[S <: TypedTag[HTMLElement]](triggerTag: S) {
+    def expandOnclick[T <: TypedTag[HTMLElement]](inner: T) = {
+      val collapser = new Collapser[T](inner)
+      val triggerTagRender = triggerTag.render
+
+      triggerTagRender.onclick = (e: MouseEvent) => {
+        collapser.switch
+      }
+
+      div(
+        triggerTagRender,
+        collapser.tag
+      )
+    }
+  }
+
+  implicit class TagCollapserOnCondition(triggerCondition: Rx.Dynamic[() => Boolean]) {
+    def expand[T <: TypedTag[HTMLElement]](inner: T) = {
+      val collapser = new Collapser[T](inner, triggerCondition.now())
+      Rx {
+        if (triggerCondition().apply) {
+          collapser.switch
+        }
+      }
+      collapser.tag
+    }
   }
 
   // COLLAPSERS
-  class Collapser[T  <: TypedTag[HTMLElement], S  <: TypedTag[HTMLElement]](innerTag: T, triggerTag: S) {
-    val expanded = Var(false)
+  class Collapser[T <: TypedTag[HTMLElement]](innerTag: T, initExpand: Boolean = false) {
+    val expanded = Var(initExpand)
 
     private val innerTagRender = innerTag.render
-    private val triggerTagRender = triggerTag.render
 
     val tag = div(collapseTransition +++ sheet.paddingTop(10))(innerTagRender).render
 
-    triggerTagRender.onclick = (e: MouseEvent)=> {
-        expanded() = !expanded.now
-        tag.style.height = {
-          if (expanded.now) (innerTagRender.clientHeight + 15).toString
-          else "0"
-        }
+    def switch = {
+      expanded() = !expanded.now
+      tag.style.height = {
+        if (expanded.now) (innerTagRender.clientHeight + 15).toString
+        else "0"
       }
+    }
 
-    val tagAndTrigger = div(
-      triggerTagRender,
-      tag
-    )
   }
 
 

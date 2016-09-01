@@ -25,6 +25,8 @@ import org.scalajs.dom.raw.Element
 import scalatags.JsDom.all._
 import sheet._
 import fr.iscpif.scaladget.api.Alert.ExtraButton
+import fr.iscpif.scaladget.api.{BootstrapTags => bs}
+import bs._
 
 object AlertDemo extends Demo {
 
@@ -52,18 +54,21 @@ object AlertDemo extends Demo {
     )
 
     div(
+      h4("No collapser"),
       bs.button("Info", buttonStyle +++ btn_info, add(Info)),
-      bs.button("Success", buttonStyle +++ btn_success, add(Success)),
       bs.button("Warning", buttonStyle +++ btn_warning, add(Warning)),
+      h4("With collapser", sheet.paddingTop(30)),
+      bs.button("Success", buttonStyle +++ btn_success, add(Success)),
       bs.button("Danger", buttonStyle +++ btn_danger, add(Danger)),
       div(padding := 10)(
-        bs.successAlert("Success !", "Operation completed !", contains(Success), todocancel = remove(Success))(),
         bs.infoAlert("Info !", "Operation completed !", contains(Info), todocancel = remove(Info))(
           ExtraButton("Build", btn_info, action = remove(Info)),
           ExtraButton("Abort", btn_default, action = remove(Info))),
         bs.warningAlert("Warning !", "Operation failed !", contains(Warning), todocancel = remove(Warning))(),
-        bs.dangerAlert("Danger !", "Operation failed !", contains(Danger), todocancel = remove(Danger))(
-          ExtraButton("Run",btn_danger, action = remove(Danger)))
+        contains(Success).expand(
+          bs.successAlert("Success !", "Operation completed !", todocancel = remove(Success))()),
+        contains(Danger).expand(bs.dangerAlert("Danger !", "Operation failed !", todocancel = remove(Danger))(
+          ExtraButton("Run", btn_danger, action = remove(Danger))))
       )
     ).render
   }
