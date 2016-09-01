@@ -66,6 +66,7 @@ object BootstrapDemo extends JSApp {
         NavBarDemo.elementDemo,
         TooltipDemo.elementDemo,
         PopoverDemo.elementDemo,
+        CollapseDemo.elementDemo,
         AlertDemo.elementDemo)
     } yield {
       dom.document.body.appendChild(

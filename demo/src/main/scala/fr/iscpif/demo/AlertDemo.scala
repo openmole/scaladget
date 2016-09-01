@@ -24,7 +24,6 @@ import org.scalajs.dom.raw.Element
 
 import scalatags.JsDom.all._
 import sheet._
-import bs._
 import fr.iscpif.scaladget.api.Alert.ExtraButton
 
 object AlertDemo extends Demo {

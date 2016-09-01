@@ -91,13 +91,24 @@ package stylesheetbase {
 
       }
 
+      //def +++(dyn: Rx.Dynamic[ModifierSeq]): ModifierSeq = dyn.flatMap { d =>
+      // modifierSeq +++ d
+      //  }
       def +++(dyn: Rx.Dynamic[ModifierSeq]): ModifierSeq = modifierSeq +++ dyn.now
 
       def divCSS(cssClass: String) = div(`class` := cssClass)
     }
 
     // Convenient implicit conversions
-    def rxIf[T](dynamic: rx.Var[Boolean], yes: T, no: T) = {
+    def rxIf[T](dynamic: Rx.Dynamic[Boolean], yes: T, no: T) = {
+      rx.Rx {
+        if (dynamic()) yes
+        else no
+      }
+    }
+
+
+    def rxIf[T](dynamic: Var[Boolean], yes: T, no: T) = {
       rx.Rx {
         if (dynamic()) yes
         else no
@@ -380,7 +391,13 @@ package bootstrap2 {
       sty.top := "4px",
       sty.height := "30px"
     )
+
+    lazy val collapseTransition: ModifierSeq = Seq(
+      transition := "height .3s",
+      height := 0,
+      overflow := "hidden"
+    )
+
   }
 
 }
-

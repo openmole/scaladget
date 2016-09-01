@@ -27,7 +27,7 @@ import scalatags.JsDom.{TypedTag, tags}
 import scalatags.JsDom.all._
 import fr.iscpif.scaladget.tools.JsRxTags._
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
-import sheet._
+import sheet.{ctx => _, _}
 import rx._
 import Popup._
 import DropDown._
@@ -43,10 +43,6 @@ object BootstrapTags {
 
   implicit def formTagToNode(tt: HtmlTag): org.scalajs.dom.Node = tt.render
 
-
-  /*implicit class BootstrapTypedTag[+Output <: raw.Element](t: TypedTag[Output]) {
-    def +++(m: Seq[Modifier]) = t.copy(modifiers = t.modifiers :+ m.toSeq)
-  }*/
 
   def uuID: String = java.util.UUID.randomUUID.toString
 
@@ -188,9 +184,7 @@ object BootstrapTags {
     val footerDialogShell = div(modalFooter)
 
     def actAndCloseButton(modalDialog: ModalDialog, modifierSeq: ModifierSeq, content: String, action: () => Unit = () => {}) = {
-      println("build act an")
       tags.button(modifierSeq, content, onclick := { () =>
-        println("hide modal")
         action()
         modalDialog.hideModal
       }
@@ -352,15 +346,6 @@ object BootstrapTags {
 
   }
 
-  /*implicit class SelectableSeq[T](s: Seq[T]) {
-    def dropdown(defaultIndex: Int = 0,
-                 buttonText: String,
-                 key: ModifierSeq = emptyMod,
-                 onclickExtra: () ⇒ Unit = () ⇒ {}) = SelectableSeqWithStyle(s.map { el =>
-      OptionElement(el, emptyMod)
-    }).dropdown(defaultIndex, key, onclickExtra)
-  }*/
-
   implicit class SelectableTypedTag[T <: HTMLElement](tt: TypedTag[T]) {
     def dropdown(triggerButtonText: String,
                  buttonModifierSeq: ModifierSeq,
@@ -480,8 +465,10 @@ object BootstrapTags {
     div(panelBody)
   )
 
+
+  // ALERTS
   def successAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean], todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
-    new Alert(alert_success, title, content, triggerCondition, todocancel)(otherButtons: _*).render
+  new Alert(alert_success, title, content, triggerCondition, todocancel)(otherButtons: _*).render
 
   def infoAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean], todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
     new Alert(alert_info, title, content, triggerCondition, todocancel)(otherButtons: _*).render
@@ -491,6 +478,34 @@ object BootstrapTags {
 
   def dangerAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean], todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
     new Alert(alert_danger, title, content, triggerCondition, todocancel)(otherButtons: _*).render
+
+
+  implicit class TagCollapser[S <: TypedTag[HTMLElement]](triggerTag: S) {
+    def expand[T <: TypedTag[HTMLElement]](inner: T) = new Collapser[T, S](inner, triggerTag).tagAndTrigger
+  }
+
+  // COLLAPSERS
+  class Collapser[T  <: TypedTag[HTMLElement], S  <: TypedTag[HTMLElement]](innerTag: T, triggerTag: S) {
+    val expanded = Var(false)
+
+    private val innerTagRender = innerTag.render
+    private val triggerTagRender = triggerTag.render
+
+    val tag = div(collapseTransition +++ sheet.paddingTop(10))(innerTagRender).render
+
+    triggerTagRender.onclick = (e: MouseEvent)=> {
+        expanded() = !expanded.now
+        tag.style.height = {
+          if (expanded.now) (innerTagRender.clientHeight + 15).toString
+          else "0"
+        }
+      }
+
+    val tagAndTrigger = div(
+      triggerTagRender,
+      tag
+    )
+  }
 
 
   // EXCLUSIVE BUTTON GROUPS
