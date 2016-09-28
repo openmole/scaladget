@@ -218,8 +218,12 @@ object BootstrapTags {
 
     def footer(fDialog: ModalDialog.FooterDialog): Unit = footerDialog() = fDialog
 
-    def buttonTrigger(content: String, modifierSeq: ModifierSeq) =
-      tags.button(modifierSeq, id := "custom-modal-template", `type` := "button", data("toggle") := "modal", data("target") := s"#$ID")(content)
+    def trigger[T <: HTMLElement](element: TypedTag[T]) =
+      element(id := "custom-modal-template", data("toggle") := "modal", data("target") := s"#$ID")
+
+    def triggerButton(content: String, modifierSeq: ModifierSeq) =
+      trigger(tags.button(modifierSeq)(content))
+
 
     def hideModal = new Modal(dialog).close
   }

@@ -20,9 +20,10 @@ import org.scalajs.dom.Element
  */
 
 import fr.iscpif.scaladget.api.BootstrapTags.ModalDialog
-import fr.iscpif.scaladget.stylesheet.all._
+import fr.iscpif.scaladget.stylesheet.{all => sheet}
 import fr.iscpif.scaladget.api.{BootstrapTags => bs}
 import scalatags.JsDom.all._
+import sheet._
 
 object ModalDialogDemo extends Demo {
 
@@ -49,7 +50,10 @@ object ModalDialogDemo extends Demo {
     dom.document.body.appendChild(modal)
 
     // Build the button trigger (to be also appended to the DOM)
-    modalDialog.buttonTrigger("Modal !", btn_primary).render
+    tags.span(
+      modalDialog.triggerButton("Modal !", btn_primary),
+      modalDialog.trigger(tags.span(glyph_settings +++ sheet.paddingLeft(5) +++ pointer))
+    ).render
   }
 
 
