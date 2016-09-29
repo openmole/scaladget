@@ -40,22 +40,25 @@ object FormDemo extends Demo {
       MyElement("Female")
     )
 
-    val loginInput = bs.input("")(placeholder := "Login", inputStyle)
-    val passInput = bs.input("")(placeholder := "Login", `type` := "password", inputStyle)
+    val loginInput = BS.input("Mathieu")
+    val passInput = BS.input("")
     val genderDD = elements.map { e =>
       option(e,e.name)
     }.dropdown(1, btn_success).selector
 
+    val loginTag = loginInput.tag(placeholder := "Login", inputStyle).withLabel("Login")
     div(
       bs.vForm(width := 200)(
-        loginInput.withLabel("Login"),
-        passInput.withLabel("Password")
+        loginTag,
+        passInput.tag(placeholder := "Login", `type` := "password", inputStyle).withLabel("Password")
       ),
       bs.hForm(sheet.paddingTop(20) +++ (width := 500))(
-        loginInput.withLabel("Login"),
+        loginTag,
         genderDD
-      )
+      ),
+      span(sheet.marginTop(20),s"Initial login input value: ${loginInput.value}")
     ).render
+
   }
 
   val elementDemo = new ElementDemo {

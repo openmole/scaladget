@@ -19,7 +19,7 @@ package fr.iscpif.scaladget.api
 
 import java.util.UUID
 
-import org.scalajs.dom.html.Div
+import org.scalajs.dom.html.{Div, Input}
 import org.scalajs.dom.raw._
 
 import scala.scalajs.js.annotation.JSExport
@@ -46,8 +46,20 @@ object BootstrapTags {
 
   def uuID: String = java.util.UUID.randomUUID.toString
 
+  type Input = ConcreteHtmlTag[org.scalajs.dom.raw.HTMLInputElement]
+
+  object BS {
+    def input(content: String) = new BSInput(content)
+  }
+
   // INPUT
-  def input(content: String = "") = tags.input(formControl, value := content)
+  class BSInput(val content: String) {
+    val tag = tags.input(formControl, scalatags.JsDom.all.value := content)
+    val render: HTMLInputElement = tag.render
+    def value = render.value
+  }
+
+  def input(content: String = "") = BS.input(content).tag
 
   def inputGroup(modifierSeq: ModifierSeq = emptyMod) = div(modifierSeq +++ sheet.inputGroup)
 
