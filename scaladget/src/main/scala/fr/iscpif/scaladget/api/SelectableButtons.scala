@@ -19,7 +19,7 @@ package fr.iscpif.scaladget.api
 
 import fr.iscpif.scaladget.api.{BootstrapTags => bs}
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
-
+import fr.iscpif.scaladget.tools.JsRxTags._
 import scalatags.JsDom.tags
 import scalatags.JsDom.all._
 import sheet._

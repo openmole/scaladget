@@ -95,4 +95,20 @@ object JsRxTags {
     }
   }
 
+  // Convenient implicit conversions
+  def rxIf[T](dynamic: Rx.Dynamic[Boolean], yes: T, no: T) = {
+    rx.Rx {
+      if (dynamic()) yes
+      else no
+    }
+  }
+
+
+  def rxIf[T](dynamic: Var[Boolean], yes: T, no: T) = {
+    rx.Rx {
+      if (dynamic()) yes
+      else no
+    }
+  }
+
 }
