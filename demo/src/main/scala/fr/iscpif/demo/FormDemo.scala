@@ -19,9 +19,10 @@ package fr.iscpif.demo
 
 import fr.iscpif.scaladget.api.{BootstrapTags => bs}
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
+import fr.iscpif.scaladget.tools.JsRxTags._
 
 import scalatags.JsDom.all._
-import org.scalajs.dom.raw.Element
+import org.scalajs.dom.raw.{Element, HTMLInputElement}
 import sheet._
 import bs._
 
@@ -31,32 +32,41 @@ object FormDemo extends Demo {
   val sc = sourcecode.Text {
 
     import fr.iscpif.scaladget.api.DropDown._
+    import rx._
 
     case class MyElement(name: String)
 
     val inputStyle: ModifierSeq = Seq(width := 150)
+    val loginValue = Var("Mathieu")
     val elements = Seq(
       MyElement("Male"),
       MyElement("Female")
     )
 
-    val loginInput = BS.input("Mathieu")
-    val passInput = BS.input("")
+    lazy val loginInput: HTMLInputElement =
+      bs.input(loginValue.now)(placeholder := "Login", inputStyle, oninput := { () =>
+        loginValue() = loginInput.value
+      }).render
+
+    val passInput = bs.input("")(placeholder := "Login", `type` := "password", inputStyle).render
+    val cityInput = bs.input("")(placeholder := "City", inputStyle).render
+
     val genderDD = elements.map { e =>
-      option(e,e.name)
+      option(e, e.name)
     }.dropdown(1, btn_success).selector
 
-    val loginTag = loginInput.tag(placeholder := "Login", inputStyle).withLabel("Login")
     div(
       bs.vForm(width := 200)(
-        loginTag,
-        passInput.tag(placeholder := "Login", `type` := "password", inputStyle).withLabel("Password")
+        loginInput.withLabel("Login"),
+        passInput.withLabel("Password")
       ),
       bs.hForm(sheet.paddingTop(20) +++ (width := 500))(
-        loginTag,
+        cityInput.withLabel("City"),
         genderDD
       ),
-      span(sheet.marginTop(20),s"Initial login input value: ${loginInput.value}")
+      Rx {
+        span(sheet.marginTop(20), s"Login : ${loginValue()}")
+      }
     ).render
 
   }

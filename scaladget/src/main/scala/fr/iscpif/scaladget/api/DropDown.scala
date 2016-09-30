@@ -112,34 +112,36 @@ object DropDown {
 
     def isContentsEmpty = contents.now.isEmpty
 
-    lazy val selector: Modifier = Rx {
-      buttonGroup(
-        toClass(
-          if (opened()) "open"
-          else ""
-        ))(
-        bs.button(content().map { c => c.readableValue }.getOrElse("") + " ", key +++ dropdownToggle, () => {
-          opened() = !opened.now
-          onclickExtra()
-        })(
-          data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := {
-            if (opened()) true else false
-          }, tabindex := 0)(
-          span(caret, sheet.marginLeft(4))),
-        ul(dropdownMenu, role := "menu")(
-          for {
-            c <- contents.now
-          } yield {
-            li(a(href := "#")(c.readableValue), onclick := { () =>
-              content() = Some(c)
-              opened() = !opened.now
-              onclose()
-              false
-            })
-          }
+    lazy val selector: HTMLElement = div(
+      Rx {
+        buttonGroup(
+          toClass(
+            if (opened()) "open"
+            else ""
+          ))(
+          bs.button(content().map { c => c.readableValue }.getOrElse("") + " ", key +++ dropdownToggle, () => {
+            opened() = !opened.now
+            onclickExtra()
+          })(
+            data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := {
+              if (opened()) true else false
+            }, tabindex := 0)(
+            span(caret, sheet.marginLeft(4))),
+          ul(dropdownMenu, role := "menu")(
+            for {
+              c <- contents.now
+            } yield {
+              li(a(href := "#")(c.readableValue), onclick := { () =>
+                content() = Some(c)
+                opened() = !opened.now
+                onclose()
+                false
+              })
+            }
+          )
         )
-      )
-    }
+      }
+    ).render
   }
 
 }

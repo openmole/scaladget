@@ -54,19 +54,7 @@ object BootstrapTags {
 
   type Input = ConcreteHtmlTag[org.scalajs.dom.raw.HTMLInputElement]
 
-  object BS {
-    def input(content: String) = new BSInput(content)
-  }
-
-  // INPUT
-  class BSInput(val content: String) {
-    val tag = tags.input(formControl, scalatags.JsDom.all.value := content)
-    val render: HTMLInputElement = tag.render
-
-    def value = render.value
-  }
-
-  def input(content: String = "") = BS.input(content).tag
+  def input(content: String = "") = tags.input(formControl, scalatags.JsDom.all.value := content)
 
   def inputGroup(modifierSeq: ModifierSeq = emptyMod) = div(modifierSeq +++ sheet.inputGroup)
 
@@ -697,43 +685,48 @@ object BootstrapTags {
 
   // FORMS
 
-  trait FormTag {
-    def tag: Modifier
+  trait FormTag[+T <: HTMLElement] {
+    def tag: T
   }
 
-  trait LabeledFormTag extends FormTag {
+  trait LabeledFormTag[T <: HTMLElement]  extends FormTag[T] {
     def label: TypedTag[HTMLLabelElement]
   }
 
+  /*
   implicit def modifierToFormTag(m: Modifier): FormTag = new FormTag {
-    val tag: Modifier = m
+    val tag: T = m
+  }*/
+  implicit def htmlElementToFormTag[T <: HTMLElement](t: T): FormTag[T] = new FormTag[T] {
+    val tag: T = t
   }
 
-  implicit class LabelForModifiers(m: Modifier) {
-    def withLabel(title: String, labelStyle: ModifierSeq = emptyMod): FormTag = new LabeledFormTag {
+
+  implicit class LabelForModifiers[T <: HTMLElement](m: T) {
+    def withLabel(title: String, labelStyle: ModifierSeq = emptyMod): LabeledFormTag[T] = new LabeledFormTag[T] {
       val label: TypedTag[HTMLLabelElement] = tags.label(title)(labelStyle +++ (sheet.paddingRight(5)))
 
-      val tag: Modifier = m
+      val tag: T = m
     }
   }
 
-  private def insideForm(formTags: FormTag*) =
+  private def insideForm[T <: HTMLElement](formTags: FormTag[T]*) =
     for {
       ft <- formTags
     } yield {
       div(formGroup +++ sheet.paddingRight(5))(
         ft match {
-          case lft: LabeledFormTag => lft.label
+          case lft: LabeledFormTag[T] => lft.label
           case _ =>
         },
         ft.tag)
     }
 
-  def vForm(modifierSeq: ModifierSeq = emptyMod)(formTags: FormTag*) =
+  def vForm[T <: HTMLElement](modifierSeq: ModifierSeq = emptyMod)(formTags: FormTag[T]*) =
     div(modifierSeq +++ formVertical)(insideForm(formTags: _*))
 
 
-  def hForm(modifierSeq: ModifierSeq = emptyMod)(formTags: FormTag*) = {
+  def hForm[T <: HTMLElement](modifierSeq: ModifierSeq = emptyMod)(formTags: FormTag[T]*) = {
     form(formInline +++ modifierSeq)(insideForm(formTags: _*))
   }
 

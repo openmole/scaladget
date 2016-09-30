@@ -57,9 +57,9 @@ object SelectDemo {
 
     val formDropDown =
       bs.vForm(width := 200)(
-        loginInput.withLabel("Login"),
-        passInput.withLabel("Pass"),
-        bs.button("OK", btn_primary, () => println("OK"))
+        loginInput.render.withLabel("Login"),
+        passInput.render.withLabel("Pass"),
+        bs.button("OK", btn_primary, () => println("OK")).render
       ).dropdown("Form", btn_primary +++ sheet.marginLeft(10), () => println("Dropdown closed"))
 
 
