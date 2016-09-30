@@ -45,47 +45,39 @@ object BootstrapDemo extends JSApp {
       import sheet._
       import bs._
       """.stripMargin
-    
-    dom.document.body.appendChild(
-      div(sheet.marginLeft(15), sheet.marginTop(25))(
+
+    bs.withBootstrapNative {
+      div(div(sheet.marginLeft(15), sheet.marginTop(25))(
         h3("Imports"),
         div(row)(
           div(colMD(8))(pre(code(toClass("scala"))(imports))),
           div(colMD(4))("This imports have to be done before using the following examples. Specific imports will be also sometimes specified.")
         )
-      )
-    )
-
-    for {
-      demo <- Seq(
-        ButtonDemo.elementDemo,
-        LabelDemo.elementDemo,
-        FormDemo.elementDemo,
-        SelectDemo.elementDemo,
-        ModalDialogDemo.elementDemo,
-        NavBarDemo.elementDemo,
-        TooltipDemo.elementDemo,
-        PopoverDemo.elementDemo,
-        CollapseDemo.elementDemo,
-        AlertDemo.elementDemo)
-    } yield {
-      dom.document.body.appendChild(
-        div(sheet.marginLeft(15), sheet.marginTop(25))(
-          h3(demo.title),
-          div(row)(
-            div(colMD(demo.codeWidth))(pre(code(toClass("scala"))(demo.cleanCode))),
-            div(colMD(12 - demo.codeWidth))(demo.element)
+      ),
+        for {
+          demo <- Seq(
+            ButtonDemo.elementDemo,
+            LabelDemo.elementDemo,
+            FormDemo.elementDemo,
+            SelectDemo.elementDemo,
+            ModalDialogDemo.elementDemo,
+            NavBarDemo.elementDemo,
+            TooltipDemo.elementDemo,
+            PopoverDemo.elementDemo,
+            CollapseDemo.elementDemo,
+            AlertDemo.elementDemo)
+        } yield {
+          div(sheet.marginLeft(15), sheet.marginTop(25))(
+            h3(demo.title),
+            div(row)(
+              div(colMD(demo.codeWidth))(pre(code(toClass("scala"))(demo.cleanCode))),
+              div(colMD(12 - demo.codeWidth))(demo.element)
+            )
           )
-        )
-      )
+        }
+      ).render
     }
   }
-
-  @JSExport()
-  def loadBootstrap(): Unit = {
-    dom.document.body.appendChild(tags.script(`type` := "text/javascript", src := "js/bootstrap-native.min.js"))
-  }
-
 
   @JSExport()
   def highlight(): Unit = {

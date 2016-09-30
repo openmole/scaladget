@@ -41,6 +41,12 @@ import scalatags.JsDom
 object BootstrapTags {
   bstags =>
 
+  def withBootstrapNative[T <: HTMLElement](f: => T) = {
+    org.scalajs.dom.document.body.appendChild(f)
+    org.scalajs.dom.document.body.appendChild(
+      tags.script(`type` := "text/javascript", src := "js/bootstrap-native.min.js"))
+  }
+
   implicit def formTagToNode(tt: HtmlTag): org.scalajs.dom.Node = tt.render
 
 
@@ -56,6 +62,7 @@ object BootstrapTags {
   class BSInput(val content: String) {
     val tag = tags.input(formControl, scalatags.JsDom.all.value := content)
     val render: HTMLInputElement = tag.render
+
     def value = render.value
   }
 
@@ -483,16 +490,16 @@ object BootstrapTags {
 
 
   // ALERTS
-  def successAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(()=> true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+  def successAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(() => true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
   new Alert(alert_success, title, content, triggerCondition, todocancel)(otherButtons: _*).render
 
-  def infoAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(()=> true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+  def infoAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(() => true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
     new Alert(alert_info, title, content, triggerCondition, todocancel)(otherButtons: _*).render
 
-  def warningAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(()=> true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+  def warningAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(() => true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
     new Alert(alert_warning, title, content, triggerCondition, todocancel)(otherButtons: _*).render
 
-  def dangerAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(()=> true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+  def dangerAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(() => true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
     new Alert(alert_danger, title, content, triggerCondition, todocancel)(otherButtons: _*).render
 
 
