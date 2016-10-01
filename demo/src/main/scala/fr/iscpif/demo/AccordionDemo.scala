@@ -33,7 +33,12 @@ object AccordionDemo extends Demo {
 
   val sc = sourcecode.Text {
 
-    bs.accordion(margin := 10)(
+    val titleStyle: ModifierSeq = Seq(
+      color := "#3086b5",
+      fontWeight := "bold"
+    )
+
+    bs.accordion(margin := 10)(titleStyle)(
       accordionItem("First Title", div("This is my life")),
       accordionItem("Second Title", div("This is my second life")),
       accordionItem("Third Title", div("This is my third life"))

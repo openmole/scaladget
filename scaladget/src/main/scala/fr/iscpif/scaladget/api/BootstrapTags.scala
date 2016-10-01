@@ -743,11 +743,12 @@ object BootstrapTags {
   def accordionItem[T <: HTMLElement](title: String, content: TypedTag[T]) = AccordionItem(title, content)
 
   def accordion[T <: HTMLElement](accordionItems: AccordionItem[T]*): TypedTag[HTMLDivElement] =
-    accordion(emptyMod)(accordionItems.toSeq: _*)
+    accordion(emptyMod)(emptyMod)(accordionItems.toSeq: _*)
 
-  def accordion[T <: HTMLElement](modifierSeq: ModifierSeq)(accordionItems: AccordionItem[T]*): TypedTag[HTMLDivElement]  = {
+  def accordion[T <: HTMLElement](modifierSeq: ModifierSeq)(titleModifierSeq: ModifierSeq)(accordionItems: AccordionItem[T]*): TypedTag[HTMLDivElement]  = {
     val accordionID = uuID
     div(
+      modifierSeq,
       id := accordionID,
       role := "tablist",
       aria.multiselectable := "true",
@@ -760,17 +761,18 @@ object BootstrapTags {
           div(
             panelHeading,
             role := "tab"
-          )(h4(
-            panelTitle
           )(a(
             data("toggle") := "collapse",
             data("parent") := s"#$accordionID",
             href := collapseID,
             aria.expanded := true,
             aria.controls := collapseID,
-            ms("collapsed")
-          )(item.title)
-          )),
+            ms("collapsed"),
+            display := "block",
+            width := "100%",
+            height := 25,
+            titleModifierSeq
+          )(item.title)),
           div(
             id := collapseID,
             ms("panel-collapse collapse"),
