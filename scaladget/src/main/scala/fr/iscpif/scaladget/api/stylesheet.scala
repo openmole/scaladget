@@ -308,6 +308,7 @@ package bootstrap {
     lazy val panel: ModifierSeq = toClass("panel")
     lazy val panelDefault: ModifierSeq = toClass("panel-default")
     lazy val panelHeading: ModifierSeq = toClass("panel-heading")
+    lazy val panelTitle: ModifierSeq = toClass("panel-title")
     lazy val panelBody: ModifierSeq = toClass("panel-body")
 
 

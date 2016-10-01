@@ -65,7 +65,8 @@ object BootstrapDemo extends JSApp {
             TooltipDemo.elementDemo,
             PopoverDemo.elementDemo,
             CollapseDemo.elementDemo,
-            AlertDemo.elementDemo)
+            AlertDemo.elementDemo,
+            AccordionDemo.elementDemo)
         } yield {
           div(sheet.marginLeft(15), sheet.marginTop(25))(
             h3(demo.title),

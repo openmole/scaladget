@@ -62,14 +62,15 @@ object SelectDemo {
         bs.button("OK", btn_primary, () => println("OK")).render
       ).dropdown("Form", btn_primary +++ sheet.marginLeft(10), () => println("Dropdown closed"))
 
-
-    div(optionDropDown.selector,
-      formDropDown,
+    div(
+      hForm(
+        optionDropDown.selector,
+        formDropDown.render
+      ),
       Rx {
-        div(
-          "Selected: " + selected().readableValue
-        )
-      }).render
+        div("Selected: " + selected().readableValue)
+      }
+    ).render
 
   }
 

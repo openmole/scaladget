@@ -689,7 +689,7 @@ object BootstrapTags {
     def tag: T
   }
 
-  trait LabeledFormTag[T <: HTMLElement]  extends FormTag[T] {
+  trait LabeledFormTag[T <: HTMLElement] extends FormTag[T] {
     def label: TypedTag[HTMLLabelElement]
   }
 
@@ -722,12 +722,66 @@ object BootstrapTags {
         ft.tag)
     }
 
-  def vForm[T <: HTMLElement](modifierSeq: ModifierSeq = emptyMod)(formTags: FormTag[T]*) =
+
+  def vForm[T <: HTMLElement](formTags: FormTag[T]*): TypedTag[HTMLDivElement] = vForm(emptyMod)(formTags.toSeq: _*)
+
+  def vForm[T <: HTMLElement](modifierSeq: ModifierSeq)(formTags: FormTag[T]*): TypedTag[HTMLDivElement] =
     div(modifierSeq +++ formVertical)(insideForm(formTags: _*))
 
 
-  def hForm[T <: HTMLElement](modifierSeq: ModifierSeq = emptyMod)(formTags: FormTag[T]*) = {
+
+  def hForm[T <: HTMLElement](formTags: FormTag[T]*): TypedTag[HTMLFormElement] = hForm(emptyMod)(formTags.toSeq: _*)
+
+  def hForm[T <: HTMLElement](modifierSeq: ModifierSeq)(formTags: FormTag[T]*): TypedTag[HTMLFormElement] = {
     form(formInline +++ modifierSeq)(insideForm(formTags: _*))
+  }
+
+  //ACCORDION
+
+  case class AccordionItem[T <: HTMLElement](title: String, content: TypedTag[T])
+
+  def accordionItem[T <: HTMLElement](title: String, content: TypedTag[T]) = AccordionItem(title, content)
+
+  def accordion[T <: HTMLElement](accordionItems: AccordionItem[T]*): TypedTag[HTMLDivElement] =
+    accordion(emptyMod)(accordionItems.toSeq: _*)
+
+  def accordion[T <: HTMLElement](modifierSeq: ModifierSeq)(accordionItems: AccordionItem[T]*): TypedTag[HTMLDivElement]  = {
+    val accordionID = uuID
+    div(
+      id := accordionID,
+      role := "tablist",
+      aria.multiselectable := "true",
+      ms("panel-group"))(
+      for {
+        item <- accordionItems.toSeq
+      } yield {
+        val collapseID = uuID
+        div(sheet.panel +++ sheet.panelDefault)(
+          div(
+            panelHeading,
+            role := "tab"
+          )(h4(
+            panelTitle
+          )(a(
+            data("toggle") := "collapse",
+            data("parent") := s"#$accordionID",
+            href := collapseID,
+            aria.expanded := true,
+            aria.controls := collapseID,
+            ms("collapsed")
+          )(item.title)
+          )),
+          div(
+            id := collapseID,
+            ms("panel-collapse collapse"),
+            role := "tabpanel",
+            aria.expanded := false
+          )(div(
+            panelBody,
+            item.content))
+        )
+      }
+    )
   }
 
 }
