@@ -1,4 +1,4 @@
-package fr.iscpif.scaladget.mapping
+package fr.iscpif.scaladget.mapping.bootstrap
 
 /*
  * Copyright (C) 18/08/16 // mathieu.leclaire@openmole.org
@@ -24,24 +24,10 @@ import scala.scalajs.js
 import js.annotation._
 
 
-//@js.native
-/*trait BootstrapNative extends js.Object{
-  def modal(element: Element): Modal = js.native
-}*/
-
-
-//@js.native
-//@JSName("bootstrapnative")
-//object bootstrapnative extends BootstrapNative
-
-
-/* @js.native
- trait ModalOptions extends js.Object {
-
- }*/
-
+@JSName("Modal")
 @js.native
 class Modal(element: Element) extends js.Object {
-  println("Modal constr")
-  def close: js.Dynamic = js.native
+
+  def open(): Unit = js.native
+  def close(): Unit = js.native
 }

@@ -33,7 +33,7 @@ import Popup._
 import DropDown._
 import fr.iscpif.scaladget.api.Alert.ExtraButton
 import fr.iscpif.scaladget.api.SelectableButtons.{CheckBoxSelection, RadioSelection}
-import fr.iscpif.scaladget.mapping.Modal
+import fr.iscpif.scaladget.mapping.bootstrap.Modal
 
 import scalatags.JsDom
 
@@ -193,10 +193,12 @@ object BootstrapTags {
     def actAndCloseButton(modalDialog: ModalDialog, modifierSeq: ModifierSeq, content: String, action: () => Unit = () => {}) = {
       tags.button(modifierSeq, content, onclick := { () =>
         action()
-        modalDialog.hideModal
-      }
-      )
+        modalDialog.close
+      })
     }
+
+    def closeButton(modalDialog: ModalDialog, modifierSeq: ModifierSeq, content: String) =
+      actAndCloseButton(modalDialog, modifierSeq, content)
   }
 
   class ModalDialog {
@@ -207,7 +209,7 @@ object BootstrapTags {
 
     val ID = uuID
 
-    def dialog =
+    lazy val dialog =
       div(modal +++ fade)(id := ID, `class` := "modal fade",
         tabindex := "-1", role := "dialog", aria.labelledby := "myModalLabel", aria.hidden := "true")(
         div(sheet.modalDialog)(
@@ -218,6 +220,8 @@ object BootstrapTags {
           )
         )
       ).render
+
+    lazy val modalMapping = new Modal(dialog)
 
     def header(hDialog: ModalDialog.HeaderDialog): Unit = headerDialog() = hDialog
 
@@ -232,7 +236,8 @@ object BootstrapTags {
       trigger(tags.button(modifierSeq)(content))
 
 
-    def hideModal = new Modal(dialog).close
+    def open = modalMapping.open
+    def close = modalMapping.close
   }
 
 
@@ -729,7 +734,6 @@ object BootstrapTags {
     div(modifierSeq +++ formVertical)(insideForm(formTags: _*))
 
 
-
   def hForm[T <: HTMLElement](formTags: FormTag[T]*): TypedTag[HTMLFormElement] = hForm(emptyMod)(formTags.toSeq: _*)
 
   def hForm[T <: HTMLElement](modifierSeq: ModifierSeq)(formTags: FormTag[T]*): TypedTag[HTMLFormElement] = {
@@ -745,7 +749,7 @@ object BootstrapTags {
   def accordion[T <: HTMLElement](accordionItems: AccordionItem[T]*): TypedTag[HTMLDivElement] =
     accordion(emptyMod)(emptyMod)(accordionItems.toSeq: _*)
 
-  def accordion[T <: HTMLElement](modifierSeq: ModifierSeq)(titleModifierSeq: ModifierSeq)(accordionItems: AccordionItem[T]*): TypedTag[HTMLDivElement]  = {
+  def accordion[T <: HTMLElement](modifierSeq: ModifierSeq)(titleModifierSeq: ModifierSeq)(accordionItems: AccordionItem[T]*): TypedTag[HTMLDivElement] = {
     val accordionID = uuID
     div(
       modifierSeq,
