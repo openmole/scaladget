@@ -47,11 +47,10 @@ object ModalDialogDemo extends Demo {
       )
     )
 
-    // Append the modal dialog to the DOM
-    val modal = modalDialog.dialog
 
-    // Build the button trigger (to be also appended to the DOM)
+    // Build the dialog and the modal dialog
     tags.span(
+      modalDialog.dialog,
       modalDialog.triggerButton("Modal !", btn_primary),
       modalDialog.trigger(tags.span(glyph_settings +++ sheet.paddingLeft(5) +++ pointer)),
       bs.button("External trigger", btn_default +++ sheet.marginLeft(5), () => modalDialog.open)
