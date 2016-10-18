@@ -40,20 +40,21 @@ object ModalDialogDemo extends Demo {
     modalDialog body bs.ModalDialog.bodyDialogShell(div("My body !"))
     modalDialog footer bs.ModalDialog.footerDialogShell(
       bs.buttonGroup()(
-        ModalDialog.actAndCloseButton(modalDialog, btn_info, "OK", ()=> println("OK")),
+        ModalDialog.actAndCloseButton(modalDialog, btn_info, "OK", () => {
+          println("OK")
+        }),
         ModalDialog.closeButton(modalDialog, btn_default, "Cancel")
       )
     )
 
     // Append the modal dialog to the DOM
     val modal = modalDialog.dialog
-    dom.document.body.appendChild(modal)
 
     // Build the button trigger (to be also appended to the DOM)
     tags.span(
       modalDialog.triggerButton("Modal !", btn_primary),
       modalDialog.trigger(tags.span(glyph_settings +++ sheet.paddingLeft(5) +++ pointer)),
-      bs.button("External trigger", btn_default +++ sheet.marginLeft(5), ()=> modalDialog.open)
+      bs.button("External trigger", btn_default +++ sheet.marginLeft(5), () => modalDialog.open)
     ).render
   }
 

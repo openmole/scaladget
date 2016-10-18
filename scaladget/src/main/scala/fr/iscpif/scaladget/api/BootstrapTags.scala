@@ -209,8 +209,8 @@ object BootstrapTags {
 
     val ID = uuID
 
-    lazy val dialog =
-      div(modal +++ fade)(id := ID, `class` := "modal fade",
+    lazy val dialog = {
+      val d = div(modal +++ fade)(id := ID, `class` := "modal fade",
         tabindex := "-1", role := "dialog", aria.labelledby := "myModalLabel", aria.hidden := "true")(
         div(sheet.modalDialog)(
           div(modalContent)(
@@ -220,6 +220,10 @@ object BootstrapTags {
           )
         )
       ).render
+
+      org.scalajs.dom.document.body.appendChild(d)
+      d
+    }
 
     lazy val modalMapping = new Modal(dialog)
 
@@ -237,7 +241,10 @@ object BootstrapTags {
 
 
     def open = modalMapping.open
+
     def close = modalMapping.close
+
+    def isVisible = dialog.className.contains(" in")
   }
 
 
