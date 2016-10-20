@@ -31,11 +31,3 @@ class Modal(element: Element) extends js.Object {
   def open(): Unit = js.native
   def close(): Unit = js.native
 }
-
-
-@JSName("Dropdown")
-@js.native
-class Dropdown(element: Element) extends js.Object {
-
-  def close(): Unit = js.native
-}
