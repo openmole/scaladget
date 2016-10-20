@@ -44,7 +44,7 @@ import org.scalajs.dom.raw._
 import scalatags.JsDom.all._
 import scalatags.JsDom.{TypedTag, tags}
 
-object DropDown {
+object Dropdown {
 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 
@@ -56,13 +56,6 @@ object DropDown {
 
   def option[T](value: T, readableValue: String, mod: ModifierSeq = emptyMod) = OptionElement(value, readableValue, mod)
 
-  private def button(buttonText: String,
-                     modifierSeq: ModifierSeq,
-                     onclose: () => Unit) = bs.button(buttonText, modifierSeq +++ dropdownToggle, () => {})(
-    data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := false, tabindex := 0)(
-    span(caret, sheet.marginLeft(4))
-  )
-
   def apply[T](contents: Seq[OptionElement[T]],
                defaultIndex: Int = 0,
                key: ModifierSeq = emptyMod,
@@ -71,13 +64,30 @@ object DropDown {
 
   def apply[T <: HTMLElement](content: TypedTag[T],
                               buttonText: String,
-                              modifierSeq: ModifierSeq,
-                              onclose: () => Unit) = {
-    bs.buttonGroup()(
-      button(buttonText, modifierSeq, onclose),
-      div(dropdownMenu +++ (padding := 10))(content)
-    )
+                              modifierSeq: ModifierSeq) = new Dropdown(content, buttonText, modifierSeq)
 
+
+  class Dropdown[T <: HTMLElement](content: TypedTag[T],
+                                   buttonText: String,
+                                   modifierSeq: ModifierSeq) {
+
+    val open = Var(false)
+
+    val render = div(
+      Rx {
+        bs.buttonGroup(ms(open(), "open", ""))(
+          bs.button(buttonText, modifierSeq +++ dropdownToggle, () => open() = true)(
+            data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := open(), tabindex := 0)(
+            span(caret, sheet.marginLeft(4))),
+          div(dropdownMenu +++ (padding := 10))(content)
+        )
+      }
+    ).render
+
+
+    def close[T <: HTMLElement]: Unit = {
+      open() = false
+    }
   }
 
   class Options[T](private val _contents: Seq[OptionElement[T]],

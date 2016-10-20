@@ -30,10 +30,9 @@ import fr.iscpif.scaladget.stylesheet.{all => sheet}
 import sheet.{ctx => _, _}
 import rx._
 import Popup._
-import DropDown._
+import Dropdown._
 import fr.iscpif.scaladget.api.Alert.ExtraButton
 import fr.iscpif.scaladget.api.SelectableButtons.{CheckBoxSelection, RadioSelection}
-import fr.iscpif.scaladget.mapping.bootstrap.Modal
 
 import scalatags.JsDom
 
@@ -44,7 +43,7 @@ object BootstrapTags {
   def withBootstrapNative[T <: HTMLElement](f: => T) = {
     org.scalajs.dom.document.body.appendChild(f)
     org.scalajs.dom.document.body.appendChild(
-      tags.script(`type` := "text/javascript", src := "js/bootstrap-native.min.js"))
+      tags.script(`type` := "text/javascript", src := "js/bootstrap-native1.0.5.min.js"))
   }
 
   implicit def formTagToNode(tt: HtmlTag): org.scalajs.dom.Node = tt.render
@@ -225,7 +224,7 @@ object BootstrapTags {
       d
     }
 
-    lazy val modalMapping = new Modal(dialog)
+    lazy val modalMapping = new fr.iscpif.scaladget.mapping.bootstrap.Modal(dialog)
 
     def header(hDialog: ModalDialog.HeaderDialog): Unit = headerDialog() = hDialog
 
@@ -246,18 +245,6 @@ object BootstrapTags {
 
     def isVisible = dialog.className.contains(" in")
   }
-
-
-  //modal jQuery events
-  /* private def modalQuery(id: ModalID, query: String) = $("#" + id).modal(query)
-
-   private def hasClass(id: ModalID, clazz: String): Boolean = $("#" + id).hasClass(clazz)
-
-   def showModal(id: ModalID) = modalQuery(id, "show")
-
-   def hideModal(id: ModalID) = modalQuery(id, "hide")
-
-   def isModalVisible(id: ModalID): Boolean = hasClass(id, "in")*/
 
 
   // NAVS
@@ -365,14 +352,13 @@ object BootstrapTags {
   implicit class SelectableSeqWithStyle[T](s: Seq[OptionElement[T]]) {
     def dropdown(defaultIndex: Int = 0,
                  key: ModifierSeq = emptyMod,
-                 onclickExtra: () ⇒ Unit = () ⇒ {}) = DropDown(s, defaultIndex, key, onclickExtra)
+                 onclickExtra: () ⇒ Unit = () ⇒ {}) = Dropdown(s, defaultIndex, key, onclickExtra)
 
   }
 
   implicit class SelectableTypedTag[T <: HTMLElement](tt: TypedTag[T]) {
     def dropdown(triggerButtonText: String,
-                 buttonModifierSeq: ModifierSeq,
-                 onclose: () => Unit) = DropDown(tt, triggerButtonText, buttonModifierSeq, onclose)
+                 buttonModifierSeq: ModifierSeq) = Dropdown(tt, triggerButtonText, buttonModifierSeq)
   }
 
 

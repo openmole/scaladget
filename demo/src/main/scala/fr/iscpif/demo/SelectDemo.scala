@@ -1,9 +1,10 @@
 package fr.iscpif.demo
 
 
-import fr.iscpif.scaladget.api.DropDown
+import fr.iscpif.scaladget.api.Dropdown
 import fr.iscpif.scaladget.stylesheet.all
 import org.scalajs.dom.Element
+import org.scalajs.dom.raw.HTMLDivElement
 
 /*
  * Copyright (C) 22/08/16 // mathieu.leclaire@openmole.org
@@ -31,7 +32,7 @@ import bs._
 object SelectDemo {
 
   val sc = sourcecode.Text {
-    import fr.iscpif.scaladget.api.DropDown._
+    import fr.iscpif.scaladget.api.Dropdown._
     import fr.iscpif.scaladget.tools.JsRxTags._
     import rx._
 
@@ -45,6 +46,7 @@ object SelectDemo {
       MyElement("Third Element")
     )
 
+
     val selected: Var[OptionElement[MyElement]] = Var(option(elements(1), elements(1).name))
 
     lazy val optionDropDown: Options[MyElement] =
@@ -55,12 +57,15 @@ object SelectDemo {
     val loginInput = bs.input("")(placeholder := "Login")
     val passInput = bs.input("")(placeholder := "Login", `type` := "password")
 
-    val formDropDown =
+    lazy val formDropDown: Dropdown[HTMLDivElement] =
       bs.vForm(width := 200)(
         loginInput.render.withLabel("Login"),
         passInput.render.withLabel("Pass"),
-        bs.button("OK", btn_primary, () => println("OK")).render
-      ).dropdown("Form", btn_primary +++ sheet.marginLeft(10), () => println("Dropdown closed"))
+        bs.button("OK", btn_primary, () => {
+          println("OK")
+          formDropDown.close
+        }).render
+      ).dropdown("Form", btn_primary +++ sheet.marginLeft(10))
 
     div(
       hForm(
