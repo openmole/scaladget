@@ -735,7 +735,7 @@ object BootstrapTags {
 
   //ACCORDION
 
-  case class AccordionItem[T <: HTMLElement](title: String, content: TypedTag[T])
+  case class AccordionItem[+T <: HTMLElement](title: String, content: TypedTag[T])
 
   def accordionItem[T <: HTMLElement](title: String, content: TypedTag[T]) = AccordionItem(title, content)
 
