@@ -43,7 +43,7 @@ object BootstrapTags {
   def withBootstrapNative[T <: HTMLElement](f: => T) = {
     org.scalajs.dom.document.body.appendChild(f)
     org.scalajs.dom.document.body.appendChild(
-      tags.script(`type` := "text/javascript", src := "js/bootstrap-native-1.0.5.min.js"))
+      tags.script(`type` := "text/javascript", src := "js/bootstrap-native-1.0.51.min.js"))
   }
 
   implicit def formTagToNode(tt: HtmlTag): org.scalajs.dom.Node = tt.render
@@ -210,7 +210,7 @@ object BootstrapTags {
 
     lazy val dialog = {
       val d = div(modal +++ fade)(id := ID, `class` := "modal fade",
-        tabindex := "-1", role := "dialog", aria.labelledby := "myModalLabel", aria.hidden := "true")(
+        tabindex := "-1", role := "dialog", aria.hidden := "true")(
         div(sheet.modalDialog)(
           div(modalContent)(
             headerDialog.now,
