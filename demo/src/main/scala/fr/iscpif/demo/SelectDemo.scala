@@ -1,7 +1,7 @@
 package fr.iscpif.demo
 
 
-import fr.iscpif.scaladget.api.Dropdown
+import fr.iscpif.scaladget.api.Selector
 import fr.iscpif.scaladget.stylesheet.all
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.HTMLDivElement
@@ -32,7 +32,7 @@ import bs._
 object SelectDemo {
 
   val sc = sourcecode.Text {
-    import fr.iscpif.scaladget.api.Dropdown._
+    import fr.iscpif.scaladget.api.Selector._
     import fr.iscpif.scaladget.tools.JsRxTags._
     import rx._
 
@@ -65,7 +65,7 @@ object SelectDemo {
           println("OK")
           formDropDown.close
         }).render
-      ).dropdown("Form", btn_primary +++ sheet.marginLeft(10))
+      ).dropdown("Form", btn_primary, sheet.marginLeft(10))
 
     div(
       hForm(

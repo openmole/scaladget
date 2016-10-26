@@ -31,7 +31,7 @@ object FormDemo extends Demo {
 
   val sc = sourcecode.Text {
 
-    import fr.iscpif.scaladget.api.Dropdown._
+    import fr.iscpif.scaladget.api.Selector._
     import rx._
 
     case class MyElement(name: String)

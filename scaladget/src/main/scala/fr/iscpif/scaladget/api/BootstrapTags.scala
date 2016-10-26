@@ -30,7 +30,7 @@ import fr.iscpif.scaladget.stylesheet.{all => sheet}
 import sheet.{ctx => _, _}
 import rx._
 import Popup._
-import Dropdown._
+import Selector._
 import fr.iscpif.scaladget.api.Alert.ExtraButton
 import fr.iscpif.scaladget.api.SelectableButtons.{CheckBoxSelection, RadioSelection}
 
@@ -352,13 +352,14 @@ object BootstrapTags {
   implicit class SelectableSeqWithStyle[T](s: Seq[OptionElement[T]]) {
     def dropdown(defaultIndex: Int = 0,
                  key: ModifierSeq = emptyMod,
-                 onclickExtra: () ⇒ Unit = () ⇒ {}) = Dropdown(s, defaultIndex, key, onclickExtra)
+                 onclickExtra: () ⇒ Unit = () ⇒ {}) = Selector.options(s, defaultIndex, key, onclickExtra)
 
   }
 
   implicit class SelectableTypedTag[T <: HTMLElement](tt: TypedTag[T]) {
     def dropdown(triggerButtonText: String,
-                 buttonModifierSeq: ModifierSeq) = Dropdown(tt, triggerButtonText, buttonModifierSeq)
+                 buttonModifierSeq: ModifierSeq,
+                 allModifierSeq: ModifierSeq) = Selector.dropdown(tt, triggerButtonText, buttonModifierSeq, allModifierSeq)
   }
 
 

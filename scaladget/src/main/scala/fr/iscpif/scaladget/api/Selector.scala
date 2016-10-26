@@ -44,7 +44,7 @@ import org.scalajs.dom.raw._
 import scalatags.JsDom.all._
 import scalatags.JsDom.{TypedTag, tags}
 
-object Dropdown {
+object Selector {
 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 
@@ -56,24 +56,25 @@ object Dropdown {
 
   def option[T](value: T, readableValue: String, mod: ModifierSeq = emptyMod) = OptionElement(value, readableValue, mod)
 
-  def apply[T](contents: Seq[OptionElement[T]],
+  def options[T](contents: Seq[OptionElement[T]],
                defaultIndex: Int = 0,
                key: ModifierSeq = emptyMod,
-               onclickExtra: () ⇒ Unit = () ⇒ {}) =
-    new Options(contents, defaultIndex, key, onclickExtra)
+               onclickExtra: () ⇒ Unit = () ⇒ {}) = new Options(contents, defaultIndex, key, onclickExtra)
 
-  def apply[T <: HTMLElement](content: TypedTag[T],
+  def dropdown[T <: HTMLElement](content: TypedTag[T],
                               buttonText: String,
-                              modifierSeq: ModifierSeq) = new Dropdown(content, buttonText, modifierSeq)
+                              buttonModifierSeq: ModifierSeq = emptyMod,
+                              allModifierSeq: ModifierSeq = emptyMod) = new Dropdown(content, buttonText, buttonModifierSeq, allModifierSeq)
 
 
   class Dropdown[T <: HTMLElement](content: TypedTag[T],
                                    buttonText: String,
-                                   modifierSeq: ModifierSeq) {
+                                   modifierSeq: ModifierSeq,
+                                   allModifierSeq: ModifierSeq) {
 
     val open = Var(false)
 
-    val render = div(
+    val render = div(allModifierSeq)(
       Rx {
         bs.buttonGroup(ms(open(), "open", ""))(
           bs.button(buttonText, modifierSeq +++ dropdownToggle, () => open() = true)(
