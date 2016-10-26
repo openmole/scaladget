@@ -59,7 +59,7 @@ class Alert(alertStyle: AlertStyle,
           h4(title),
           if( content.size == 1) content
           else {
-          ul(
+          ul(Seq(sheet.marginLeft(-25), sheet.marginTop(20)))(
             for{
               c<- content
             } yield {li(c)})},
