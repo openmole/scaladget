@@ -38,7 +38,7 @@ object Alert {
 
 class Alert(alertStyle: AlertStyle,
             title: String,
-            content: String,
+            content: Seq[String],
             triggerCondition: Rx.Dynamic[() => Boolean],
             cancelAction: () => Unit
            )(otherButtons: ExtraButton*) {
@@ -57,8 +57,13 @@ class Alert(alertStyle: AlertStyle,
             closed() = true
           }),
           h4(title),
-          p(content),
-          p(
+          if( content.size == 1) content
+          else {
+          ul(
+            for{
+              c<- content
+            } yield {li(c)})},
+          p(sheet.marginTop(25))(
             bs.buttonGroup(sheet.floatLeft)(
               for {
                 b <- otherButtons

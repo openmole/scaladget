@@ -477,17 +477,29 @@ object BootstrapTags {
 
 
   // ALERTS
-  def successAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(() => true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+  def successAlerts(title: String, content: Seq[String], triggerCondition: Rx.Dynamic[() => Boolean] = Rx(() => true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
   new Alert(alert_success, title, content, triggerCondition, todocancel)(otherButtons: _*).render
 
-  def infoAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(() => true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+  def infoAlerts(title: String, content: Seq[String], triggerCondition: Rx.Dynamic[() => Boolean] = Rx(() => true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
     new Alert(alert_info, title, content, triggerCondition, todocancel)(otherButtons: _*).render
 
-  def warningAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(() => true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+  def warningAlerts(title: String, content: Seq[String], triggerCondition: Rx.Dynamic[() => Boolean] = Rx(() => true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
     new Alert(alert_warning, title, content, triggerCondition, todocancel)(otherButtons: _*).render
 
-  def dangerAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(() => true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+  def dangerAlerts(title: String, content: Seq[String], triggerCondition: Rx.Dynamic[() => Boolean] = Rx(() => true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
     new Alert(alert_danger, title, content, triggerCondition, todocancel)(otherButtons: _*).render
+
+  def successAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(() => true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+    successAlerts(title, Seq(content), triggerCondition, todocancel)(otherButtons.toSeq: _*)
+
+  def infoAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(() => true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+    infoAlerts(title, Seq(content), triggerCondition, todocancel)(otherButtons.toSeq: _*)
+
+  def warningAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(() => true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
+    warningAlerts(title, Seq(content), triggerCondition, todocancel)(otherButtons.toSeq: _*)
+
+  def dangerAlert(title: String, content: String, triggerCondition: Rx.Dynamic[() => Boolean] = Rx(() => true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*)=
+    dangerAlerts(title, Seq(content), triggerCondition, todocancel)(otherButtons.toSeq: _*)
 
 
   implicit class TagCollapserOnClick[S <: TypedTag[HTMLElement]](triggerTag: S) {

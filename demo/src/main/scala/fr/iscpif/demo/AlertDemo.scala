@@ -67,7 +67,7 @@ object AlertDemo extends Demo {
         bs.warningAlert("Warning !", "Operation failed !", contains(Warning), todocancel = remove(Warning))(),
         contains(Success).expand(
           bs.successAlert("Success !", "Operation completed !", todocancel = remove(Success))()),
-        contains(Danger).expand(bs.dangerAlert("Danger !", "Operation failed !", todocancel = remove(Danger))(
+        contains(Danger).expand(bs.dangerAlerts("Danger !", Seq("Operation 1 failed ", "Operation 2 failed"), todocancel = remove(Danger))(
           ExtraButton("Run", btn_danger, action = remove(Danger))))
       )
     ).render
