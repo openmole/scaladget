@@ -39,7 +39,7 @@ object Alert {
 class Alert(alertStyle: AlertStyle,
             title: String,
             content: Seq[String],
-            triggerCondition: Rx.Dynamic[() => Boolean],
+            triggerCondition: Rx.Dynamic[Boolean],
             cancelAction: () => Unit
            )(otherButtons: ExtraButton*) {
 
@@ -48,7 +48,7 @@ class Alert(alertStyle: AlertStyle,
 
   val render = tags.div(
     Rx {
-      if (triggerCondition().apply && !closed()) {
+      if (triggerCondition() && !closed()) {
         tags.div(alertStyle +++ {
           if (otherButtons.isEmpty) emptyMod else sheet.paddingBottom(50)
         })(

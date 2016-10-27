@@ -47,7 +47,7 @@ object AlertDemo extends Demo {
 
     def add(alert: Alert) = () => triggers() = triggers.now :+ alert
     def remove(alert: Alert) = () => triggers() = triggers.now.filterNot(_ == alert)
-    def contains(alert: Alert) = triggers.map { t => () => t.contains(alert) }
+    def contains(alert: Alert) = triggers.map { t => t.contains(alert) }
 
     val buttonStyle: ModifierSeq = Seq(
       sheet.marginAll(right = 5, top = 5)
