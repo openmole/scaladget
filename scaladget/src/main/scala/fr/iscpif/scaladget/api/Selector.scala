@@ -48,23 +48,16 @@ object Selector {
 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 
-  case class OptionElement[T](value: T, readableValue: String, mod: ModifierSeq = emptyMod)
-
-  implicit def optionSelectElementTToOptionT[T](opt: Option[OptionElement[T]]): Option[T] = opt.map {
-    _.value
-  }
-
-  def option[T](value: T, readableValue: String, mod: ModifierSeq = emptyMod) = OptionElement(value, readableValue, mod)
-
-  def options[T](contents: Seq[OptionElement[T]],
-               defaultIndex: Int = 0,
-               key: ModifierSeq = emptyMod,
-               onclickExtra: () ⇒ Unit = () ⇒ {}) = new Options(contents, defaultIndex, key, onclickExtra)
+  def options[T](contents: Seq[T],
+                 defaultIndex: Int = 0,
+                 key: ModifierSeq = emptyMod,
+                 naming: T => String,
+                 onclickExtra: () ⇒ Unit = () ⇒ {}) = new Options(contents, defaultIndex, key, naming, onclickExtra)
 
   def dropdown[T <: HTMLElement](content: TypedTag[T],
-                              buttonText: String,
-                              buttonModifierSeq: ModifierSeq = emptyMod,
-                              allModifierSeq: ModifierSeq = emptyMod) = new Dropdown(content, buttonText, buttonModifierSeq, allModifierSeq)
+                                 buttonText: String,
+                                 buttonModifierSeq: ModifierSeq = emptyMod,
+                                 allModifierSeq: ModifierSeq = emptyMod) = new Dropdown(content, buttonText, buttonModifierSeq, allModifierSeq)
 
 
   class Dropdown[T <: HTMLElement](content: TypedTag[T],
@@ -91,26 +84,28 @@ object Selector {
     }
   }
 
-  class Options[T](private val _contents: Seq[OptionElement[T]],
+  class Options[T](private val _contents: Seq[T],
                    defaultIndex: Int = 0,
                    key: ModifierSeq = emptyMod,
+                   naming: T=> String,
                    onclose: () => Unit = () => {},
                    onclickExtra: () ⇒ Unit = () ⇒ {}) {
 
     implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
+    implicit def tToString(t: T): String = naming(t)
 
     val contents = Var(_contents)
     val opened = Var(false)
     val autoID = java.util.UUID.randomUUID.toString
 
-    val content: Var[Option[OptionElement[T]]] = Var(_contents.size match {
+    val content: Var[Option[T]] = Var(_contents.size match {
       case 0 ⇒ None
       case _ ⇒
         if (defaultIndex < _contents.size) Some(_contents(defaultIndex))
         else _contents.headOption
     })
 
-    def setContents(cts: Seq[OptionElement[T]], onset: () ⇒ Unit = () ⇒ {}) = {
+    def setContents(cts: Seq[T], onset: () ⇒ Unit = () ⇒ {}) = {
       contents() = cts
       content() = cts.headOption
       onset()
@@ -121,6 +116,10 @@ object Selector {
       content() = None
     }
 
+    def set(t: T) = content() = Some(t)
+
+    def get: Option[T] = content.now
+
     def isContentsEmpty = contents.now.isEmpty
 
     lazy val selector: HTMLElement = div(
@@ -130,7 +129,7 @@ object Selector {
             if (opened()) "open"
             else ""
           ))(
-          bs.button(content().map { c => c.readableValue }.getOrElse("") + " ", key +++ dropdownToggle, () => {
+          bs.button(content().map{naming}.getOrElse("") + " ", key +++ dropdownToggle, () => {
             opened() = !opened.now
             onclickExtra()
           })(
@@ -142,7 +141,7 @@ object Selector {
             for {
               c <- contents.now
             } yield {
-              li(a(href := "#")(c.readableValue), onclick := { () =>
+              li(a(href := "#")(naming(c)), onclick := { () =>
                 content() = Some(c)
                 opened() = !opened.now
                 onclose()

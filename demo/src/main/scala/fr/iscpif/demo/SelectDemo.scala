@@ -47,12 +47,15 @@ object SelectDemo {
     )
 
 
-    val selected: Var[OptionElement[MyElement]] = Var(option(elements(1), elements(1).name))
+    val selected: Var[MyElement] = Var(elements(1))
 
     lazy val optionDropDown: Options[MyElement] =
-      elements.map { e =>
-        option(e, e.name)
-      }.dropdown(1, btn_success, () => selected() = optionDropDown.content.now.get)
+      elements.options(
+        1,
+        btn_success,
+        (m: MyElement)=> m.name,
+        () => selected() = optionDropDown.content.now.get
+      )
 
     val loginInput = bs.input("")(placeholder := "Login")
     val passInput = bs.input("")(placeholder := "Login", `type` := "password")
@@ -73,7 +76,7 @@ object SelectDemo {
         formDropDown.render
       ),
       Rx {
-        div("Selected: " + selected().readableValue)
+        div(s"Selected: ${selected()}")
       }
     ).render
 

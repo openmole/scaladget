@@ -349,10 +349,11 @@ object BootstrapTags {
 
 
   //DROPDOWN
-  implicit class SelectableSeqWithStyle[T](s: Seq[OptionElement[T]]) {
-    def dropdown(defaultIndex: Int = 0,
-                 key: ModifierSeq = emptyMod,
-                 onclickExtra: () ⇒ Unit = () ⇒ {}) = Selector.options(s, defaultIndex, key, onclickExtra)
+  implicit class SelectableSeqWithStyle[T](s: Seq[T]) {
+    def options(defaultIndex: Int = 0,
+                key: ModifierSeq = emptyMod,
+                naming: T => String,
+                onclickExtra: () ⇒ Unit = () ⇒ {}) = Selector.options(s, defaultIndex, key, naming, onclickExtra)
 
   }
 
@@ -498,7 +499,7 @@ object BootstrapTags {
   def warningAlert(title: String, content: String, triggerCondition: Rx.Dynamic[Boolean] = Rx(true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
     warningAlerts(title, Seq(content), triggerCondition, todocancel)(otherButtons.toSeq: _*)
 
-  def dangerAlert(title: String, content: String, triggerCondition: Rx.Dynamic[Boolean] = Rx(true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*)=
+  def dangerAlert(title: String, content: String, triggerCondition: Rx.Dynamic[Boolean] = Rx(true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
     dangerAlerts(title, Seq(content), triggerCondition, todocancel)(otherButtons.toSeq: _*)
 
 
