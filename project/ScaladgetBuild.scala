@@ -8,7 +8,7 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 object ScaladgetBuild extends Build {
   val Organization = "fr.iscpif"
   val Name = "Scaladget"
-  val Version = "0.9.0-SNAPSHOT"
+  val Version = "0.9.1-SNAPSHOT"
   val ScalaVersion = "2.11.8"
   val Resolvers = Seq(Resolver.sonatypeRepo("snapshots"),
     DefaultMavenRepository
@@ -25,10 +25,8 @@ object ScaladgetBuild extends Build {
       resolvers in ThisBuild ++= Resolvers,
       libraryDependencies ++= Seq(
         "org.scala-js" %%% "scalajs-dom" % "0.9.1",
-        "com.lihaoyi" %%% "scalatags" % "0.6.0",
-        "com.lihaoyi" %%% "scalarx" % "0.3.1",
-        "org.querki" %%% "querki-jsext" % "0.6",
-        "org.querki" %%% "jquery-facade" % "1.0-RC3"
+        "com.lihaoyi" %%% "scalatags" % "0.6.2",
+        "com.lihaoyi" %%% "scalarx" % "0.3.1"
       ),
       publishTo := {
         val nexus = "https://oss.sonatype.org/"
