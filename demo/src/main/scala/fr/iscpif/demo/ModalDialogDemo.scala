@@ -36,15 +36,13 @@ object ModalDialogDemo extends Demo {
     lazy val modalDialog: ModalDialog = bs.ModalDialog()
 
     // Append header, body, footer elements
-    modalDialog header bs.ModalDialog.headerDialogShell(div("Header"))
-    modalDialog body bs.ModalDialog.bodyDialogShell(div("My body !"))
-    modalDialog footer bs.ModalDialog.footerDialogShell(
-      bs.buttonGroup()(
-        ModalDialog.actAndCloseButton(modalDialog, btn_info, "OK", () => {
-          println("OK")
-        }),
-        ModalDialog.closeButton(modalDialog, btn_default, "Cancel")
-      )
+    modalDialog header div("Header")
+    modalDialog body div("My body !")
+    modalDialog footer bs.buttonGroup()(
+      ModalDialog.actAndCloseButton(modalDialog, btn_info, "OK", () => {
+        println("OK")
+      }),
+      ModalDialog.closeButton(modalDialog, btn_default, "Cancel")
     )
 
 

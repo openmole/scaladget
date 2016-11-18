@@ -179,10 +179,6 @@ object BootstrapTags {
   object ModalDialog {
     def apply() = new ModalDialog
 
-    type HeaderDialog = TypedTag[_]
-    type BodyDialog = TypedTag[_]
-    type FooterDialog = TypedTag[_]
-
     val headerDialogShell = div(modalHeader +++ modalInfo)
 
     val bodyDialogShell = div(modalBody)
@@ -202,9 +198,9 @@ object BootstrapTags {
 
   class ModalDialog {
 
-    val headerDialog: Var[ModalDialog.HeaderDialog] = Var(tags.div)
-    val bodyDialog: Var[ModalDialog.BodyDialog] = Var(tags.div)
-    val footerDialog: Var[ModalDialog.FooterDialog] = Var(tags.div)
+    val headerDialog: Var[TypedTag[_]] = Var(tags.div)
+    val bodyDialog: Var[TypedTag[_]] = Var(tags.div)
+    val footerDialog: Var[TypedTag[_]] = Var(tags.div)
 
     val ID = uuID
 
@@ -226,11 +222,11 @@ object BootstrapTags {
 
     lazy val modalMapping = new fr.iscpif.scaladget.mapping.bootstrap.Modal(dialog)
 
-    def header(hDialog: ModalDialog.HeaderDialog): Unit = headerDialog() = hDialog
+    def header(hDialog: TypedTag[_]): Unit = headerDialog() = ModalDialog.headerDialogShell(hDialog)
 
-    def body(bDialog: ModalDialog.BodyDialog): Unit = bodyDialog() = bDialog
+    def body(bDialog: TypedTag[_]): Unit = bodyDialog() = ModalDialog.bodyDialogShell(bDialog)
 
-    def footer(fDialog: ModalDialog.FooterDialog): Unit = footerDialog() = fDialog
+    def footer(fDialog: TypedTag[_]): Unit = footerDialog() = ModalDialog.footerDialogShell(fDialog)
 
     def trigger[T <: HTMLElement](element: TypedTag[T]) =
       element(id := "custom-modal-template", data("toggle") := "modal", data("target") := s"#$ID")
