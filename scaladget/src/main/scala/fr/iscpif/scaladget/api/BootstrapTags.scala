@@ -360,7 +360,8 @@ object BootstrapTags {
   implicit class SelectableTypedTag[T <: HTMLElement](tt: TypedTag[T]) {
     def dropdown(triggerButtonText: String,
                  buttonModifierSeq: ModifierSeq,
-                 allModifierSeq: ModifierSeq) = Selector.dropdown(tt, triggerButtonText, buttonModifierSeq, allModifierSeq)
+                 allModifierSeq: ModifierSeq = emptyMod,
+                 onclose: ()=> Unit = () => {}) = Selector.dropdown(tt, triggerButtonText, buttonModifierSeq, allModifierSeq, onclose)
   }
 
 

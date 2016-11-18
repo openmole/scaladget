@@ -57,13 +57,15 @@ object Selector {
   def dropdown[T <: HTMLElement](content: TypedTag[T],
                                  buttonText: String,
                                  buttonModifierSeq: ModifierSeq = emptyMod,
-                                 allModifierSeq: ModifierSeq = emptyMod) = new Dropdown(content, buttonText, buttonModifierSeq, allModifierSeq)
+                                 allModifierSeq: ModifierSeq = emptyMod,
+                                 onclose: ()=> Unit = ()=> {}) = new Dropdown(content, buttonText, buttonModifierSeq, allModifierSeq, onclose)
 
 
   class Dropdown[T <: HTMLElement](content: TypedTag[T],
                                    buttonText: String,
                                    modifierSeq: ModifierSeq,
-                                   allModifierSeq: ModifierSeq) {
+                                   allModifierSeq: ModifierSeq,
+                                   onclose: ()=> Unit) {
 
     val open = Var(false)
 
@@ -80,6 +82,7 @@ object Selector {
 
 
     def close[T <: HTMLElement]: Unit = {
+      onclose()
       open() = false
     }
   }
