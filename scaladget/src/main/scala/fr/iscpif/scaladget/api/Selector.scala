@@ -123,6 +123,8 @@ object Selector {
 
     def get: Option[T] = content.now
 
+    def getOrElse(t: T) = get.getOrElse(t)
+
     def isContentsEmpty = contents.now.isEmpty
 
     lazy val selector: HTMLElement = div(
