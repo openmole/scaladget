@@ -315,12 +315,15 @@ object BootstrapTags {
   implicit class PopableTypedTag(element: TypedTag[org.scalajs.dom.raw.HTMLElement]) {
 
     def tooltip(text: String,
-                position: PopupPosition = Bottom) = {
-      element(
-        data("placement") := position.value,
-        data("toggle") := "tooltip",
-        data("original-title") := text
-      )
+                position: PopupPosition = Bottom,
+                condition: () => Boolean = () => true) = {
+      if (condition())
+        element(
+          data("placement") := position.value,
+          data("toggle") := "tooltip",
+          data("original-title") := text
+        )
+      else element
     }
 
     def popover(text: String,
