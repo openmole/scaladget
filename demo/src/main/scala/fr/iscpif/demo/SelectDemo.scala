@@ -40,11 +40,10 @@ object SelectDemo {
     case class MyElement(name: String)
 
     // Define the option sequence
-    val elements = Seq(
-      MyElement("First element"),
-      MyElement("Second Element"),
-      MyElement("Third Element")
-    )
+    val first = MyElement("First element")
+    val second = MyElement("Second Element")
+    val third = MyElement("Third Element")
+    val elements = Seq(first, second, third)
 
 
     val selected: Var[MyElement] = Var(elements(1))
@@ -53,8 +52,9 @@ object SelectDemo {
       elements.options(
         1,
         btn_success,
-        (m: MyElement)=> m.name,
-        () => selected() = optionDropDown.content.now.get
+        (m: MyElement) => m.name,
+        () => selected() = optionDropDown.content.now.get,
+        decorations = Map(first -> glyph_fire, second-> glyph_settings, third-> glyph_flash)
       )
 
     val loginInput = bs.input("")(placeholder := "Login")

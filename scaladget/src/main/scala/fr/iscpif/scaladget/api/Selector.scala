@@ -52,20 +52,22 @@ object Selector {
                  defaultIndex: Int = 0,
                  key: ModifierSeq = emptyMod,
                  naming: T => String,
-                 onclickExtra: () ⇒ Unit = () ⇒ {}) = new Options(contents, defaultIndex, key, naming, onclickExtra)
+                 onclose: () => Unit = () => {},
+                 onclickExtra: () ⇒ Unit = () ⇒ {},
+                 decorations: Map[T, ModifierSeq] = Map()) = new Options(contents, defaultIndex, key, naming, onclose, onclickExtra, decorations)
 
   def dropdown[T <: HTMLElement](content: TypedTag[T],
                                  buttonText: String,
                                  buttonModifierSeq: ModifierSeq = emptyMod,
                                  allModifierSeq: ModifierSeq = emptyMod,
-                                 onclose: ()=> Unit = ()=> {}) = new Dropdown(content, buttonText, buttonModifierSeq, allModifierSeq, onclose)
+                                 onclose: () => Unit = () => {}) = new Dropdown(content, buttonText, buttonModifierSeq, allModifierSeq, onclose)
 
 
   class Dropdown[T <: HTMLElement](content: TypedTag[T],
                                    buttonText: String,
                                    modifierSeq: ModifierSeq,
                                    allModifierSeq: ModifierSeq,
-                                   onclose: ()=> Unit) {
+                                   onclose: () => Unit) {
 
     val open = Var(false)
 
@@ -90,11 +92,13 @@ object Selector {
   class Options[T](private val _contents: Seq[T],
                    defaultIndex: Int = 0,
                    key: ModifierSeq = emptyMod,
-                   naming: T=> String,
+                   naming: T => String,
                    onclose: () => Unit = () => {},
-                   onclickExtra: () ⇒ Unit = () ⇒ {}) {
+                   onclickExtra: () ⇒ Unit = () ⇒ {},
+                   decorations: Map[T, ModifierSeq] = Map()) {
 
     implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
+
     implicit def tToString(t: T): String = naming(t)
 
     val contents = Var(_contents)
@@ -134,10 +138,15 @@ object Selector {
             if (opened()) "open"
             else ""
           ))(
-          bs.button(content().map{naming}.getOrElse("") + " ", key +++ dropdownToggle, () => {
-            opened() = !opened.now
-            onclickExtra()
-          })(
+          bs.button(content().map {
+            naming
+          }.getOrElse("") + " ", key +++ dropdownToggle,
+            content().map { ct =>
+              decorations.getOrElse(ct, emptyMod)
+            }.getOrElse(emptyMod), () => {
+              opened() = !opened.now
+              onclickExtra()
+            })(
             data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := {
               if (opened()) true else false
             }, tabindex := 0)(
@@ -146,17 +155,23 @@ object Selector {
             for {
               c <- contents.now
             } yield {
-              li(a(href := "#")(naming(c)), onclick := { () =>
-                content() = Some(c)
-                opened() = !opened.now
-                onclose()
-                false
-              })
+              li(
+                a(href := "#")(
+                  span(
+                    span(decorations.getOrElse(c, emptyMod).toSeq),
+                    span(s" ${naming(c)}")
+                  )),
+                onclick := { () =>
+                  content() = Some(c)
+                  opened() = !opened.now
+                  onclose()
+                  false
+                }
+              )
             }
           )
         )
-      }
-    ).render
+      }).render
   }
 
 }

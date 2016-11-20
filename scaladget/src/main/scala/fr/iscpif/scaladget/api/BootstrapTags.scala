@@ -124,7 +124,12 @@ object BootstrapTags {
   // displaying a text with a button style and a glyphicon
   def button(text: String = "", buttonStyle: ModifierSeq = btn_default, glyphicon: ModifierSeq = Seq(), todo: () ⇒ Unit = () => {}): TypedTag[HTMLButtonElement] = {
     val iconStyle = if (text.isEmpty) paddingAll(top = 3, bottom = 3) else sheet.marginLeft(5)
-    tags.button(text, btn +++ buttonStyle, `type` := "button", onclick := { () ⇒ todo() })(span(glyphicon +++ iconStyle))
+    tags.button(btn +++ buttonStyle, `type` := "button", onclick := { () ⇒ todo() })(
+      span(
+        span(glyphicon +++ iconStyle),
+        span(s" $text")
+      )
+    )
   }
 
   // Clickable span containing a glyphicon and a text
@@ -349,7 +354,9 @@ object BootstrapTags {
     def options(defaultIndex: Int = 0,
                 key: ModifierSeq = emptyMod,
                 naming: T => String,
-                onclickExtra: () ⇒ Unit = () ⇒ {}) = Selector.options(s, defaultIndex, key, naming, onclickExtra)
+                onclose: () => Unit = () => {},
+                onclickExtra: () ⇒ Unit = () ⇒ {},
+                decorations: Map[T, ModifierSeq] = Map()) = Selector.options(s, defaultIndex, key, naming, onclose, onclickExtra, decorations)
 
   }
 
@@ -357,7 +364,7 @@ object BootstrapTags {
     def dropdown(triggerButtonText: String,
                  buttonModifierSeq: ModifierSeq,
                  allModifierSeq: ModifierSeq = emptyMod,
-                 onclose: ()=> Unit = () => {}) = Selector.dropdown(tt, triggerButtonText, buttonModifierSeq, allModifierSeq, onclose)
+                 onclose: () => Unit = () => {}) = Selector.dropdown(tt, triggerButtonText, buttonModifierSeq, allModifierSeq, onclose)
   }
 
 
