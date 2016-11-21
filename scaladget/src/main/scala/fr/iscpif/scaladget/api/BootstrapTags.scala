@@ -183,7 +183,7 @@ def withBootstrapNative[T <: HTMLElement](relativeJSPath: String)(f: => T): Unit
 
 
   object ModalDialog {
-    def apply() = new ModalDialog
+    def apply(modifierSeq: ModifierSeq = emptyMod) = new ModalDialog(modifierSeq)
 
     val headerDialogShell = div(modalHeader +++ modalInfo)
 
@@ -202,7 +202,7 @@ def withBootstrapNative[T <: HTMLElement](relativeJSPath: String)(f: => T): Unit
       actAndCloseButton(modalDialog, modifierSeq, content)
   }
 
-  class ModalDialog {
+  class ModalDialog(modifierSeq: ModifierSeq) {
 
     val headerDialog: Var[TypedTag[_]] = Var(tags.div)
     val bodyDialog: Var[TypedTag[_]] = Var(tags.div)
@@ -213,7 +213,7 @@ def withBootstrapNative[T <: HTMLElement](relativeJSPath: String)(f: => T): Unit
     lazy val dialog = {
       val d = div(modal +++ fade)(id := ID, `class` := "modal fade",
         tabindex := "-1", role := "dialog", aria.hidden := "true")(
-        div(sheet.modalDialog)(
+        div(sheet.modalDialog +++ modifierSeq)(
           div(modalContent)(
             headerDialog.now,
             bodyDialog.now,
