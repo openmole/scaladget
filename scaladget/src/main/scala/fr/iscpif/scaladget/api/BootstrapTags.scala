@@ -43,7 +43,7 @@ object BootstrapTags {
   def withBootstrapNative[T <: HTMLElement](f: => T) = {
     org.scalajs.dom.document.body.appendChild(f)
     org.scalajs.dom.document.body.appendChild(
-      tags.script(`type` := "text/javascript", src := "js/bootstrap-native-1.0.51.min.js"))
+      tags.script(`type` := "text/javascript", src := "js/scaladget-deps.js"))
   }
 
   implicit def formTagToNode(tt: HtmlTag): org.scalajs.dom.Node = tt.render

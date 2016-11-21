@@ -15,6 +15,8 @@ object ScaladgetBuild extends Build {
   )
 
 
+  val bootstraNativeVersion = "1.0.5"
+
   lazy val scaladget = Project(
     "scaladget",
     file("scaladget"),
@@ -27,6 +29,9 @@ object ScaladgetBuild extends Build {
         "org.scala-js" %%% "scalajs-dom" % "0.9.1",
         "com.lihaoyi" %%% "scalatags" % "0.6.2",
         "com.lihaoyi" %%% "scalarx" % "0.3.1"
+      ),
+      jsDependencies ++=  Seq(
+        "org.webjars.npm" % "bootstrap.native" % "1.0.5" / s"META-INF/resources/webjars/bootstrap.native/${bootstraNativeVersion}/dist/bootstrap-native.min.js"
       ),
       publishTo := {
         val nexus = "https://oss.sonatype.org/"
@@ -74,8 +79,10 @@ object ScaladgetBuild extends Build {
     settings = Seq(
       version := Version,
       scalaVersion := ScalaVersion,
-      (runDemo <<= (fullOptJS in demo in Compile, resourceDirectory in demo in Compile, target in demo) map { (ct, r, t) =>
-        ct.map { f => IO.copyFile(f, new File(t, s"js/${f.getName}"), preserveLastModified = true) }
+      (runDemo <<= (fullOptJS in demo in Compile, packageJSDependencies in demo in Compile, resourceDirectory in demo in Compile, target in demo) map { (ct, deps, r, t) =>
+        ct.map { f =>
+          IO.copyFile(deps, new File(t, s"js/scaladget-deps.js"), preserveLastModified = true)
+          IO.copyFile(f, new File(t, s"js/scaladget.js"), preserveLastModified = true) }
         IO.copyFile(new File(r, "index.html"), new File(t, "index.html"))
         recursiveCopy(new File(r, "js"), new File(t, "js"))
         recursiveCopy(new File(r, "css"), new File(t, "css"))
