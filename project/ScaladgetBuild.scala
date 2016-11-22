@@ -15,7 +15,7 @@ object ScaladgetBuild extends Build {
   )
 
 
-  val bootstraNativeVersion = "1.0.5"
+  val bootstraNativeVersion = "1.1.0"
 
   lazy val scaladget = Project(
     "scaladget",
@@ -31,7 +31,7 @@ object ScaladgetBuild extends Build {
         "com.lihaoyi" %%% "scalarx" % "0.3.1"
       ),
       jsDependencies ++=  Seq(
-        "org.webjars.npm" % "bootstrap.native" % "1.0.5" / s"META-INF/resources/webjars/bootstrap.native/${bootstraNativeVersion}/dist/bootstrap-native.min.js"
+        "org.webjars.npm" % "bootstrap.native" % bootstraNativeVersion / s"META-INF/resources/webjars/bootstrap.native/${bootstraNativeVersion}/dist/bootstrap-native.min.js"
       ),
       publishTo := {
         val nexus = "https://oss.sonatype.org/"
