@@ -27,11 +27,10 @@ import fr.iscpif.demo._
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
-@JSExport("Demo")
+@JSExport("demo.BootstrapDemo")
 object BootstrapDemo extends JSApp {
 
   @JSExport()
@@ -46,7 +45,7 @@ object BootstrapDemo extends JSApp {
       import bs._
       """.stripMargin
 
-    bs.withBootstrapNative {
+    bs.withBootstrapNative("js/scaladget.js") {
       div(div(sheet.marginLeft(15), sheet.marginTop(25))(
         h3("Imports"),
         div(row)(
@@ -80,7 +79,7 @@ object BootstrapDemo extends JSApp {
     }
   }
 
-  @JSExport()
+  //@JSExport()
   def highlight(): Unit = {
     dom.document.body.appendChild(tags.script("hljs.initHighlighting();"))
   }

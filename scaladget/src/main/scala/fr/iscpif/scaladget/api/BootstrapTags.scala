@@ -40,7 +40,7 @@ import scalatags.JsDom
 object BootstrapTags {
   bstags =>
 
-  def withBootstrapNative[T <: HTMLElement](f: => T): Unit = withBootstrapNative("js/scaladget-deps.js")(f)
+  def withBootstrapNative[T <: HTMLElement](f: => T): Unit = withBootstrapNative("js/scaladget.js")(f)
 
 def withBootstrapNative[T <: HTMLElement](relativeJSPath: String)(f: => T): Unit = {
     org.scalajs.dom.document.body.appendChild(f)
@@ -226,7 +226,7 @@ def withBootstrapNative[T <: HTMLElement](relativeJSPath: String)(f: => T): Unit
       d
     }
 
-    lazy val modalMapping = new fr.iscpif.scaladget.mapping.bootstrap.Modal(dialog)
+    lazy val modalMapping = new bootstrapnative.Modal(dialog)
 
     def header(hDialog: TypedTag[_]): Unit = headerDialog() = ModalDialog.headerDialogShell(hDialog)
 

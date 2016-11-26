@@ -1,4 +1,4 @@
-package fr.iscpif.scaladget.mapping.bootstrap
+package bootstrapnative
 
 /*
  * Copyright (C) 18/08/16 // mathieu.leclaire@openmole.org
@@ -21,10 +21,9 @@ package fr.iscpif.scaladget.mapping.bootstrap
 import org.scalajs.dom.Element
 
 import scala.scalajs.js
-import js.annotation._
+import scala.scalajs.js.annotation.JSImport
 
-
-@JSName("Modal")
+@JSImport("bootstrapnative", "Modal")
 @js.native
 class Modal(element: Element) extends js.Object {
 
