@@ -49,9 +49,8 @@ object ModalDialogDemo extends Demo {
     // Build the dialog and the modal dialog
     tags.span(
       modalDialog.dialog,
-      modalDialog.triggerButton("Modal !", btn_primary),
-      modalDialog.trigger(tags.span(glyph_settings +++ sheet.paddingLeft(5) +++ pointer)),
-      bs.button("External trigger", btn_default +++ sheet.marginLeft(5), () => modalDialog.open)
+      bs.button("Modal !", btn_primary +++ sheet.marginLeft(5), () => modalDialog.open),
+      tags.span(glyph_settings +++ sheet.paddingLeft(5) +++ pointer, onclick := {()=> modalDialog.open})
     ).render
   }
 
