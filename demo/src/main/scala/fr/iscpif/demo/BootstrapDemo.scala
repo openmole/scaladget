@@ -45,7 +45,7 @@ object BootstrapDemo extends JSApp {
       import bs._
       """.stripMargin
 
-    bs.withBootstrapNative("js/scaladget.js") {
+    dom.document.body.appendChild {
       div(div(sheet.marginLeft(15), sheet.marginTop(25))(
         h3("Imports"),
         div(row)(

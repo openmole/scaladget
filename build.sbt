@@ -1,10 +1,8 @@
 import sbt._
 import Keys._
-import org.scalajs.core.tools.linker.backend.ModuleKind.{CommonJSModule, NoModule}
 
 import ScalaJSBundlerPlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
-import webscalajs.WebScalaJS.autoImport._
 
 
 val ScalaVersion = "2.11.8"
@@ -48,22 +46,20 @@ lazy val scaladget = project.in(file("scaladget")) settings(
   libraryDependencies += "com.lihaoyi" %%% "scalatags" % scalatagsVersion,
   libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
   npmDependencies in Compile += "bootstrap.native" -> bootstrapNativeVersion
-  ) enablePlugins(ScalaJSBundlerPlugin, ScalaJSWeb) settings (defaultSettings: _*)
+  ) enablePlugins(ScalaJSBundlerPlugin) settings (defaultSettings: _*)
 
 
 lazy val runDemo = taskKey[Unit]("runDemo")
 
-lazy val demo = project.in(file("demo")) dependsOn (scaladget) enablePlugins(ScalaJSBundlerPlugin, WebScalaJSBundlerPlugin) settings (defaultSettings: _*) settings(
+lazy val demo = project.in(file("demo")) dependsOn (scaladget) enablePlugins(ScalaJSBundlerPlugin) settings (defaultSettings: _*) settings(
   libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
   libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
   libraryDependencies += "org.scala-lang" % "scala-reflect" % ScalaVersion % "provided",
-  scalaJSModuleKind := CommonJSModule,
   runDemo := {
     val demoTarget = target.value
     val demoResource = (resourceDirectory in Compile).value
-    IO.copyFile((fullOptJS in Compile).value.data, demoTarget / "js/demo.js")
     (webpack in (Compile, fullOptJS)).value.foreach { f =>
-      IO.copyFile(f, demoTarget / "js/scaladget.js")
+      IO.copyFile(f, demoTarget / s"js/demo.js")
     }
     IO.copyFile(demoResource / "index.html", demoTarget / "index.html")
     IO.copyDirectory(demoResource / "js", demoTarget / "js")
