@@ -176,7 +176,9 @@ object BootstrapTags {
 
 
   object ModalDialog {
-    def apply(modifierSeq: ModifierSeq = emptyMod) = new ModalDialog(modifierSeq)
+    def apply(modifierSeq: ModifierSeq = emptyMod,
+              onopen: ()=> Unit = ()=> {},
+              onclose: ()=> Unit = ()=> {}) = new ModalDialog(modifierSeq, onopen, onclose)
 
     val headerDialogShell = div(modalHeader +++ modalInfo)
 
@@ -184,18 +186,13 @@ object BootstrapTags {
 
     val footerDialogShell = div(modalFooter)
 
-    def actAndCloseButton(modalDialog: ModalDialog, modifierSeq: ModifierSeq, content: String, action: () => Unit = () => {}) = {
-      tags.button(modifierSeq, content, onclick := { () =>
-        action()
+    def closeButton(modalDialog: ModalDialog, modifierSeq: ModifierSeq, content: String) =
+     tags.button(modifierSeq, content, onclick := { () =>
         modalDialog.close
       })
-    }
-
-    def closeButton(modalDialog: ModalDialog, modifierSeq: ModifierSeq, content: String) =
-      actAndCloseButton(modalDialog, modifierSeq, content)
   }
 
-  class ModalDialog(modifierSeq: ModifierSeq) {
+  class ModalDialog(modifierSeq: ModifierSeq, onopen: ()=> Unit, onclose: ()=> Unit) {
 
     val headerDialog: Var[TypedTag[_]] = Var(tags.div)
     val bodyDialog: Var[TypedTag[_]] = Var(tags.div)
@@ -227,9 +224,15 @@ object BootstrapTags {
 
     def footer(fDialog: TypedTag[_]): Unit = footerDialog() = ModalDialog.footerDialogShell(fDialog)
 
-    def open = modalMapping.open
+    def open = {
+      modalMapping.open
+      onopen()
+    }
 
-    def close = modalMapping.close
+    def close = {
+      modalMapping.close
+      onclose()
+    }
 
     def isVisible = dialog.className.contains(" in")
   }

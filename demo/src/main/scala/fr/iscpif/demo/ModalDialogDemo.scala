@@ -33,15 +33,17 @@ object ModalDialogDemo extends Demo {
     import scalatags.JsDom.tags
 
     // Create the Modal dialog
-    lazy val modalDialog: ModalDialog = bs.ModalDialog()
+    lazy val modalDialog: ModalDialog =
+      bs.ModalDialog(
+        onopen = ()=> println("OPEN"),
+        onclose = ()=> println("CLOSE")
+      )
 
     // Append header, body, footer elements
     modalDialog header div("Header")
     modalDialog body div("My body !")
     modalDialog footer bs.buttonGroup()(
-      ModalDialog.actAndCloseButton(modalDialog, btn_info, "OK", () => {
-        println("OK")
-      }),
+      ModalDialog.closeButton(modalDialog, btn_info, "OK"),
       ModalDialog.closeButton(modalDialog, btn_default, "Cancel")
     )
 

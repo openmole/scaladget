@@ -77,10 +77,6 @@ object BootstrapDemo extends JSApp {
         }
       ).render
     }
-  }
-
-  //@JSExport()
-  def highlight(): Unit = {
     dom.document.body.appendChild(tags.script("hljs.initHighlighting();"))
   }
 }
