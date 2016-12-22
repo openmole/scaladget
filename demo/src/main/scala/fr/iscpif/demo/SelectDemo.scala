@@ -54,8 +54,15 @@ object SelectDemo {
         btn_success,
         (m: MyElement) => m.name,
         () => selected() = optionDropDown.content.now.get,
-        decorations = Map(first -> glyph_fire, second-> glyph_settings, third-> glyph_flash)
+        decorations = Map(first -> glyph_fire, second -> glyph_settings, third -> glyph_flash)
       )
+
+    lazy val fixedTitleOptions: Options[MyElement] = elements.options(
+      key = btn_danger,
+      naming = (m: MyElement) => m.name,
+      onclose = () => println(fixedTitleOptions.content.now.get),
+      fixedTitle = Some("Actions")
+    )
 
     val loginInput = bs.input("")(placeholder := "Login")
     val passInput = bs.input("")(placeholder := "Login", `type` := "password")
@@ -73,6 +80,7 @@ object SelectDemo {
     div(
       hForm(
         optionDropDown.selector,
+        fixedTitleOptions.selector,
         formDropDown.render
       ),
       Rx {

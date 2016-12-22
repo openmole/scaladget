@@ -349,7 +349,8 @@ object BootstrapTags {
                 naming: T => String,
                 onclose: () => Unit = () => {},
                 onclickExtra: () ⇒ Unit = () ⇒ {},
-                decorations: Map[T, ModifierSeq] = Map()) = Selector.options(s, defaultIndex, key, naming, onclose, onclickExtra, decorations)
+                decorations: Map[T, ModifierSeq] = Map(),
+                fixedTitle: Option[String] = None) = Selector.options(s, defaultIndex, key, naming, onclose, onclickExtra, decorations, fixedTitle)
 
   }
 

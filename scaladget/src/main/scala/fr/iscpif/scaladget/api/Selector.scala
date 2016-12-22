@@ -54,7 +54,8 @@ object Selector {
                  naming: T => String,
                  onclose: () => Unit = () => {},
                  onclickExtra: () ⇒ Unit = () ⇒ {},
-                 decorations: Map[T, ModifierSeq] = Map()) = new Options(contents, defaultIndex, key, naming, onclose, onclickExtra, decorations)
+                 decorations: Map[T, ModifierSeq] = Map(),
+                 fixedTitle: Option[String] = None) = new Options(contents, defaultIndex, key, naming, onclose, onclickExtra, decorations, fixedTitle)
 
   def dropdown[T <: HTMLElement](content: TypedTag[T],
                                  buttonText: String,
@@ -93,9 +94,10 @@ object Selector {
                    defaultIndex: Int = 0,
                    key: ModifierSeq = emptyMod,
                    naming: T => String,
-                   onclose: () => Unit = () => {},
-                   onclickExtra: () ⇒ Unit = () ⇒ {},
-                   decorations: Map[T, ModifierSeq] = Map()) {
+                   onclose: () => Unit,
+                   onclickExtra: () ⇒ Unit,
+                   decorations: Map[T, ModifierSeq],
+                   fixedTitle: Option[String]) {
 
     implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 
@@ -138,9 +140,9 @@ object Selector {
             if (opened()) "open"
             else ""
           ))(
-          bs.button(content().map {
+          bs.button(fixedTitle.getOrElse(content().map {
             naming
-          }.getOrElse("") + " ", key +++ dropdownToggle,
+          }.getOrElse("") + " "), key +++ dropdownToggle,
             content().map { ct =>
               decorations.getOrElse(ct, emptyMod)
             }.getOrElse(emptyMod), () => {
