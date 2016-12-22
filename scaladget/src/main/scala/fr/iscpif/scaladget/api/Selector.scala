@@ -133,7 +133,7 @@ object Selector {
 
     def isContentsEmpty = contents.now.isEmpty
 
-    lazy val selector: HTMLElement = div(
+    lazy val selector: TypedTag[HTMLElement] = div(
       Rx {
         buttonGroup(
           toClass(
@@ -173,7 +173,7 @@ object Selector {
             }
           )
         )
-      }).render
+      })
   }
 
 }

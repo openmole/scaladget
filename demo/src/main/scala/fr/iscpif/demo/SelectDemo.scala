@@ -79,8 +79,8 @@ object SelectDemo {
 
     div(
       hForm(
-        optionDropDown.selector,
-        fixedTitleOptions.selector,
+        optionDropDown.selector.render,
+        fixedTitleOptions.selector.render,
         formDropDown.render
       ),
       Rx {
