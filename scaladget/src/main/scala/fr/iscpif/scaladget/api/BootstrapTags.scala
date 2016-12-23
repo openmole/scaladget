@@ -251,7 +251,7 @@ object BootstrapTags {
     val render = li(
       tags.a(href := "#",
         lineHeight := "35px",
-        onclick := { () =>
+       onclick := { () =>
           todo()
           false
         })(
@@ -288,7 +288,6 @@ object BootstrapTags {
                   _.active() = false
                 }
                 c.active() = true
-                c.todo()
               })
             }: _*)
         )
