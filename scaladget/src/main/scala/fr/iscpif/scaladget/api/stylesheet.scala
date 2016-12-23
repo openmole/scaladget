@@ -231,6 +231,8 @@ package bootstrap {
     lazy val glyph_alph_sorting: Glyphicon = toGlyphicon("glyphicon-sort-by-alphabet")
     lazy val glyph_triangle_bottom: Glyphicon = toGlyphicon("glyphicon-triangle-bottom")
     lazy val glyph_triangle_top: Glyphicon = toGlyphicon("glyphicon-triangle-top")
+    lazy val glyph_chevron_left: Glyphicon = toGlyphicon("glyphicon glyphicon-chevron-left")
+    lazy val glyph_chevron_rightt: Glyphicon = toGlyphicon("glyphicon glyphicon-chevron-right")
     lazy val caret: ModifierSeq = toClass("caret")
 
     //NAVBARS
