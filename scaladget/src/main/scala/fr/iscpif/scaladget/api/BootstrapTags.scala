@@ -602,10 +602,8 @@ object BootstrapTags {
     val cssglyph = glyph +++ sheet.paddingLeft(3)
 
     lazy val cssbutton: ModifierSeq = Seq(
-      backgroundColor := "transparent",
       sheet.paddingTop(8),
-      border := "none",
-      width := "auto"
+      border := "none"
     )
 
     lazy val div = button(preString, buttonStyle +++ cssbutton +++ pointer, action)(
