@@ -35,9 +35,7 @@ object CollapseDemo extends Demo {
     div(
       bs.button("Trigger !", btn_primary).expandOnclick(bs.panel("My panel")(width := 400)),
       bs.button("Set/Unset", btn_danger, () => onoff() = !onoff.now),
-      Rx {
-        onoff()
-      }.expand(div(backgroundColor := "pink", onoff.now.toString))
+      onoff.expand(div(backgroundColor := "pink", onoff.now.toString))
     )
   }
 
