@@ -109,11 +109,11 @@ object BootstrapTags {
 
   // displaying a text, with a button style and an action
   def button(content: String, buttonStyle: ModifierSeq, todo: () ⇒ Unit): TypedTag[HTMLButtonElement] =
-  tags.button(buttonStyle, `type` := "button", onclick := { () ⇒ todo() })(content)
+    tags.button(buttonStyle, `type` := "button", onclick := { () ⇒ todo() })(content)
 
   // displaying an HTHMElement, with a a button style and an action
   def button(content: TypedTag[HTMLElement], buttonStyle: ModifierSeq, todo: () ⇒ Unit): TypedTag[HTMLButtonElement] =
-  button("", buttonStyle, todo)(content)
+    button("", buttonStyle, todo)(content)
 
   // displaying a text with a button style and a glyphicon
   def button(text: String = "", buttonStyle: ModifierSeq = btn_default, glyphicon: ModifierSeq = Seq(), todo: () ⇒ Unit = () => {}): TypedTag[HTMLButtonElement] = {
@@ -128,7 +128,7 @@ object BootstrapTags {
 
   // Clickable span containing a glyphicon and a text
   def glyphSpan(glyphicon: ModifierSeq, onclickAction: () ⇒ Unit = () ⇒ {}, text: String = ""): TypedTag[HTMLSpanElement] =
-  span(glyphicon +++ pointer, aria.hidden := "true", onclick := { () ⇒ onclickAction() })(text)
+    span(glyphicon +++ pointer, aria.hidden := "true", onclick := { () ⇒ onclickAction() })(text)
 
 
   // Close buttons
@@ -154,16 +154,16 @@ object BootstrapTags {
 
   // PROGRESS BAR
   def progressBar(barMessage: String, ratio: Int): TypedTag[HTMLDivElement] =
-  div(progress)(
-    div(sheet.progressBar)(width := ratio.toString() + "%")(
-      barMessage
+    div(progress)(
+      div(sheet.progressBar)(width := ratio.toString() + "%")(
+        barMessage
+      )
     )
-  )
 
 
   // BADGE
   def badge(content: String, badgeValue: String, buttonStyle: ModifierSeq = emptyMod, todo: () => Unit = () => {}) =
-  button(s"$content ", buttonStyle, todo)(span(toClass("badge"))(badgeValue))
+    button(s"$content ", buttonStyle, todo)(span(toClass("badge"))(badgeValue))
 
 
   //BUTTON GROUP
@@ -177,8 +177,8 @@ object BootstrapTags {
 
   object ModalDialog {
     def apply(modifierSeq: ModifierSeq = emptyMod,
-              onopen: ()=> Unit = ()=> {},
-              onclose: ()=> Unit = ()=> {}) = new ModalDialog(modifierSeq, onopen, onclose)
+              onopen: () => Unit = () => {},
+              onclose: () => Unit = () => {}) = new ModalDialog(modifierSeq, onopen, onclose)
 
     val headerDialogShell = div(modalHeader +++ modalInfo)
 
@@ -187,12 +187,12 @@ object BootstrapTags {
     val footerDialogShell = div(modalFooter)
 
     def closeButton(modalDialog: ModalDialog, modifierSeq: ModifierSeq, content: String) =
-     tags.button(modifierSeq, content, onclick := { () =>
+      tags.button(modifierSeq, content, onclick := { () =>
         modalDialog.close
       })
   }
 
-  class ModalDialog(modifierSeq: ModifierSeq, onopen: ()=> Unit, onclose: ()=> Unit) {
+  class ModalDialog(modifierSeq: ModifierSeq, onopen: () => Unit, onclose: () => Unit) {
 
     val headerDialog: Var[TypedTag[_]] = Var(tags.div)
     val bodyDialog: Var[TypedTag[_]] = Var(tags.div)
@@ -251,7 +251,7 @@ object BootstrapTags {
     val render = li(
       tags.a(href := "#",
         lineHeight := "35px",
-       onclick := { () =>
+        onclick := { () =>
           todo()
           false
         })(
@@ -363,11 +363,11 @@ object BootstrapTags {
 
   // JUMBOTRON
   def jumbotron(modifiers: ModifierSeq) =
-  div(container +++ themeShowcase)(role := "main")(
-    div(sheet.jumbotron)(
-      p(modifiers)
+    div(container +++ themeShowcase)(role := "main")(
+      div(sheet.jumbotron)(
+        p(modifiers)
+      )
     )
-  )
 
 
   // SCROLL TEXT AREA
@@ -468,15 +468,15 @@ object BootstrapTags {
 
   // PANELS
   def panel(heading: String) =
-  div(sheet.panel +++ panelDefault)(
-    div(panelHeading)(heading),
-    div(panelBody)
-  )
+    div(sheet.panel +++ panelDefault)(
+      div(panelHeading)(heading),
+      div(panelBody)
+    )
 
 
   // ALERTS
   def successAlerts(title: String, content: Seq[String], triggerCondition: Rx.Dynamic[Boolean] = Rx(true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
-  new Alert(alert_success, title, content, triggerCondition, todocancel)(otherButtons: _*).render
+    new Alert(alert_success, title, content, triggerCondition, todocancel)(otherButtons: _*).render
 
   def infoAlerts(title: String, content: Seq[String], triggerCondition: Rx.Dynamic[Boolean] = Rx(true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
     new Alert(alert_info, title, content, triggerCondition, todocancel)(otherButtons: _*).render
@@ -520,9 +520,7 @@ object BootstrapTags {
     def expand[T <: TypedTag[HTMLElement]](inner: T) = {
       val collapser = new Collapser[T](inner, triggerCondition.now)
       Rx {
-        if (triggerCondition()) {
-          collapser.switch
-        }
+        collapser.switchTo(triggerCondition())
       }
       collapser.tag
     }
@@ -536,12 +534,22 @@ object BootstrapTags {
 
     val tag = div(collapseTransition +++ sheet.paddingTop(10))(innerTagRender).render
 
-    def switch = {
-      expanded() = !expanded.now
+
+    private def setHeight = {
       tag.style.height = {
         if (expanded.now) (innerTagRender.clientHeight + 15).toString
         else "0"
       }
+    }
+
+    def switch = {
+      expanded() = !expanded.now
+      setHeight
+    }
+
+    def switchTo(b: Boolean) = {
+      expanded() = b
+      setHeight
     }
 
   }

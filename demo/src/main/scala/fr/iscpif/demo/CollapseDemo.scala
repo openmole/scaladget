@@ -28,8 +28,17 @@ object CollapseDemo extends Demo {
 
 
   val sc = sourcecode.Text {
+    import rx._
 
-    bs.button("Trigger !", btn_primary).expandOnclick(bs.panel("My panel")(width := 400))
+    val onoff = Var(false)
+
+    div(
+      bs.button("Trigger !", btn_primary).expandOnclick(bs.panel("My panel")(width := 400)),
+      bs.button("Set/Unset", btn_danger, () => onoff() = !onoff.now),
+      Rx {
+        onoff()
+      }.expand(div(backgroundColor := "pink", onoff.now.toString))
+    )
   }
 
   val elementDemo = new ElementDemo {
