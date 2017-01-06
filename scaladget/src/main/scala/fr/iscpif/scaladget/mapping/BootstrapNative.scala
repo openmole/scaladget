@@ -21,9 +21,11 @@ package bootstrapnative
 import org.scalajs.dom.Element
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSImport
+import scala.scalajs.js.annotation.{JSImport, JSName}
 
-@JSImport("bootstrap.native", "Modal")
+//@JSImport("bootstrap.native", "Modal")
+
+@JSName("Modal")
 @js.native
 class Modal(element: Element) extends js.Object {
 

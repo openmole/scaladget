@@ -179,6 +179,7 @@ package bootstrap {
     type LabelStyle = ModifierSeq
     type ButtonStyle = ModifierSeq
     type AlertStyle = ModifierSeq
+    type NavStyle = ModifierSeq
 
     private def toGlyphicon(s: String) = toClass(s"glyphicon $s")
 
@@ -187,6 +188,8 @@ package bootstrap {
     private def toButton(s: String) = toClass(s"btn $s")
 
     private def toAlert(s: String) = toClass(s"alert $s")
+
+    private def toNav(s: String) = toClass(s"nav $s")
 
     //GHYPHICONS
     lazy val glyph_edit: Glyphicon = toGlyphicon("glyphicon-pencil")
@@ -297,6 +300,22 @@ package bootstrap {
     lazy val modalInfo: ModifierSeq = toClass("modal-info")
     lazy val modalBody: ModifierSeq = toClass("modal-body")
     lazy val modalFooter: ModifierSeq = toClass("modal-footer")
+
+    //NAVS
+    lazy val tabs: NavStyle = toNav("nav-tabs")
+    lazy val pills: NavStyle = toNav("nav-pills")
+    lazy val stacked_pills: NavStyle = toNav("nav-pills nav-stacked")
+    lazy val inline_list: NavStyle = toClass("list-inline")
+    lazy val nav_bar: NavStyle = toNav("navbar-nav")
+    lazy val regular_nav: NavStyle = toNav("nav-list")
+    lazy val panel_nav: NavStyle = toNav("panel panel-primary")
+    lazy val presentation_role: ModifierSeq = role := "presentation"
+    lazy val tab_panel_role: ModifierSeq = role := "tabpanel"
+    lazy val tab_list_role: ModifierSeq = role := "tablist"
+    lazy val tab_role: ModifierSeq = role := "tab"
+    lazy val tab_content: ModifierSeq = toClass("tab-content")
+    lazy val tab_pane: ModifierSeq = toClass("tab-pane")
+    lazy val nav_tabs: ModifierSeq = toClass("nav-tabs")
 
     //GRIDS
     def colMD(nbCol: Int): ModifierSeq = toClass(s"col-md-$nbCol")

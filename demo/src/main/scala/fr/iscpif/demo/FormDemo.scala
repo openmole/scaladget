@@ -48,7 +48,7 @@ object FormDemo extends Demo {
         loginValue() = loginInput.value
       }).render
 
-    val passInput = bs.input("")(placeholder := "Login", `type` := "password", inputStyle).render
+    val passInput = bs.input("")(placeholder := "Password", `type` := "password", inputStyle).render
     val cityInput = bs.input("")(placeholder := "City", inputStyle).render
 
     val genderDD = elements.options(1, btn_success, (m: MyElement) => m.name).selector.render

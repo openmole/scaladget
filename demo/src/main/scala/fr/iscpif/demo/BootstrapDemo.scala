@@ -45,7 +45,7 @@ object BootstrapDemo extends JSApp {
       import bs._
       """.stripMargin
 
-    dom.document.body.appendChild {
+    bs.withBootstrapNative {
       div(div(sheet.marginLeft(15), sheet.marginTop(25))(
         h3("Imports"),
         div(row)(
@@ -60,6 +60,7 @@ object BootstrapDemo extends JSApp {
             FormDemo.elementDemo,
             SelectDemo.elementDemo,
             ModalDialogDemo.elementDemo,
+            TabDemo.elementDemo,
             NavBarDemo.elementDemo,
             TooltipDemo.elementDemo,
             PopoverDemo.elementDemo,

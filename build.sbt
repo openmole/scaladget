@@ -1,3 +1,5 @@
+import java.io.PrintWriter
+
 import sbt._
 import Keys._
 
@@ -44,26 +46,47 @@ lazy val defaultSettings = Seq(
 lazy val scaladget = project.in(file("scaladget")) settings(
   libraryDependencies += "org.scala-js" %%% "scalajs-dom" % scalaJSdomVersion,
   libraryDependencies += "com.lihaoyi" %%% "scalatags" % scalatagsVersion,
-  libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
-  npmDependencies in Compile += "bootstrap.native" -> bootstrapNativeVersion
-  ) enablePlugins(ScalaJSBundlerPlugin) settings (defaultSettings: _*)
+  libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion/*,
+  npmDependencies in Compile += "bootstrap.native" -> bootstrapNativeVersion*/
+) enablePlugins (ScalaJSPlugin) settings (defaultSettings: _*)
 
 
 lazy val runDemo = taskKey[Unit]("runDemo")
+lazy val bootstrapJS = taskKey[TaskKey[Attributed[sbt.File]]]("bootstrapJS")
 
-lazy val demo = project.in(file("demo")) dependsOn (scaladget) enablePlugins(ScalaJSBundlerPlugin) settings (defaultSettings: _*) settings(
+//lazy val demo = project.in(file("demo")) dependsOn (scaladget) enablePlugins (ScalaJSBundlerPlugin) settings (defaultSettings: _*) settings(
+lazy val demo = project.in(file("demo")) dependsOn (scaladget) enablePlugins (ScalaJSPlugin) settings (defaultSettings: _*) settings(
   libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
   libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
   libraryDependencies += "org.scala-lang" % "scala-reflect" % ScalaVersion % "provided",
+  //  enableReloadWorkflow := false,
   runDemo := {
     val demoTarget = target.value
     val demoResource = (resourceDirectory in Compile).value
-    (webpack in (Compile, fullOptJS)).value.foreach { f =>
-      IO.copyFile(f, demoTarget / s"js/demo.js")
-    }
+  //  val bootstrapJS = (npmUpdate in Compile).value / "node_modules" / "bootstrap.native" / "dist" / "bootstrap-native.min.js"
+    val demoJS = (fullOptJS in Compile).value
+
+    IO.copyFile(demoJS.data, demoTarget / "js/demo.js")
+  //  IO.copyFile(bootstrapJS, demoTarget / "js/bootstrap.-native.min.js")
+
+
     IO.copyFile(demoResource / "index.html", demoTarget / "index.html")
     IO.copyDirectory(demoResource / "js", demoTarget / "js")
     IO.copyDirectory(demoResource / "css", demoTarget / "css")
     IO.copyDirectory(demoResource / "fonts", demoTarget / "fonts")
   }
-  )
+)
+
+
+/* (fastOptJS in Compile).map { fjs =>
+      println("XXXXX")
+      val file = fjs.data.getAbsoluteFile
+      val lines = io.Source.fromFile(file).getLines.mkString
+
+      println("file " + file)
+      val pw = new PrintWriter(file)
+      try pw.write(lines.replace("$g.require", "require")) finally pw.close()
+    }*/
+
+//  println("Update: " + bootstrapJS.getAbsolutePath)
+// (webpack in(Compile, fastOptJS in Compile)).value.foreach { f =>

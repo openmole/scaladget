@@ -36,12 +36,19 @@ import fr.iscpif.scaladget.api.SelectableButtons.{CheckBoxSelection, RadioSelect
 
 import scalatags.JsDom
 
-@JSExport("BootstrapTags")
+@JSExport("demo.BootstrapTags")
 object BootstrapTags {
   bstags =>
 
+  def withBootstrapNative[T <: HTMLElement](f: => T): Unit = {
+    org.scalajs.dom.document.body.appendChild(f)
+    org.scalajs.dom.document.body.appendChild(
+      tags.script(`type` := "text/javascript", src := "js/bootstrap-native.min.js"))
+  }
+
   implicit def formTagToNode(tt: HtmlTag): org.scalajs.dom.Node = tt.render
 
+  type BS = TypedTag[_ <: HTMLElement]
 
   def uuID: String = java.util.UUID.randomUUID.toString
 
@@ -564,6 +571,41 @@ object BootstrapTags {
 
   }
 
+  // TABS
+  case class Tab(title: String, content: BS, active: Boolean) {
+    val tabID = uuID
+    val refID = uuID
+
+    def activeClass = if (active) (ms("active"), ms("active in")) else (ms(""), ms(""))
+  }
+
+  case class Tabs(navStyle: NavStyle, tabs: Seq[Tab] = Seq()) {
+
+    def add(title: String, content: BS, active: Boolean = false): Tabs = add(Tab(title, content, active))
+
+    def add(tab: Tab): Tabs = copy(tabs = tabs :+ tab)
+
+
+    def render = {
+
+      div(
+        ul(id := "myTab", navStyle, tab_list_role)(
+          tabs.map { t =>
+            li(presentation_role +++ t.activeClass._1)(
+              a(id := t.tabID, href := s"#${t.refID}", tab_role, data("toggle") := "tab", aria.controls := t.refID)(t.title)
+            )
+          }),
+        div(id := "myTabContent", tab_content +++ sheet.paddingTop(10))(
+          tabs.map { t =>
+            div(id := t.refID, tab_pane +++ fade +++ t.activeClass._2, tab_panel_role, aria.labelledby := t.tabID)(t.content)
+          }
+        )
+      ).render
+    }
+  }
+
+  def tabs(navStyle: NavStyle) = new Tabs(navStyle)
+
 
   // EXCLUSIVE BUTTON GROUPS
   def exclusiveButtonGroup(style: ModifierSeq, defaultStyle: ModifierSeq = btn_default, selectionStyle: ModifierSeq = btn_default)(buttons: ExclusiveButton*) = new ExclusiveGroup(style, defaultStyle, selectionStyle, buttons)
@@ -762,14 +804,13 @@ object BootstrapTags {
 
   //ACCORDION
 
-  case class AccordionItem[+T <: HTMLElement](title: String, content: TypedTag[T])
+  case class AccordionItem(title: String, content: BS)
 
-  def accordionItem[T <: HTMLElement](title: String, content: TypedTag[T]) = AccordionItem(title, content)
+  def accordionItem(title: String, content: BS) = AccordionItem(title, content)
 
-  def accordion[T <: HTMLElement](accordionItems: AccordionItem[T]*): TypedTag[HTMLDivElement] =
-    accordion(emptyMod)(emptyMod)(accordionItems.toSeq: _*)
+  def accordion(accordionItems: AccordionItem*): TypedTag[HTMLDivElement] = accordion(emptyMod)(emptyMod)(accordionItems.toSeq: _*)
 
-  def accordion[T <: HTMLElement](modifierSeq: ModifierSeq)(titleModifierSeq: ModifierSeq)(accordionItems: AccordionItem[T]*): TypedTag[HTMLDivElement] = {
+  def accordion(modifierSeq: ModifierSeq)(titleModifierSeq: ModifierSeq)(accordionItems: AccordionItem*): TypedTag[HTMLDivElement] = {
     val accordionID = uuID
     div(
       modifierSeq,
