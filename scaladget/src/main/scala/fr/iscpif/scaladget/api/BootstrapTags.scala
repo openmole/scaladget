@@ -431,7 +431,7 @@ object BootstrapTags {
 
   case class ScrollableText(initText: String, _scrollMode: AutoScroll) extends Scrollable {
     val scrollMode: Var[AutoScroll] = Var(_scrollMode)
-    val tA = textArea(20)(initText, onscroll := { (e: Event) ⇒ setScrollMode })
+    val tA = textArea(20)(initText, spellcheck := false, onscroll := { (e: Event) ⇒ setScrollMode })
     val sRender = tA.render
 
     def setContent(out: String) = {
