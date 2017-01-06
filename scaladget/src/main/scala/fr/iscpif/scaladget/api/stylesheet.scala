@@ -305,7 +305,7 @@ package bootstrap {
     lazy val tabs: NavStyle = toNav("nav-tabs")
     lazy val pills: NavStyle = toNav("nav-pills")
     lazy val stacked_pills: NavStyle = toNav("nav-pills nav-stacked")
-    lazy val inline_list: NavStyle = toClass("list-inline")
+    lazy val inline_list: NavStyle = toNav("list-inline")
     lazy val nav_bar: NavStyle = toNav("navbar-nav")
     lazy val regular_nav: NavStyle = toNav("nav-list")
     lazy val panel_nav: NavStyle = toNav("panel panel-primary")
