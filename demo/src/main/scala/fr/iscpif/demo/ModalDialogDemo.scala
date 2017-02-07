@@ -47,13 +47,13 @@ object ModalDialogDemo extends Demo {
       ModalDialog.closeButton(modalDialog, btn_default, "Cancel")
     )
 
-
     // Build the dialog and the modal dialog
     tags.span(
       modalDialog.dialog,
-      bs.button("Modal !", btn_primary +++ sheet.marginLeft(5), () => modalDialog.open),
-      tags.span(glyph_settings +++ sheet.paddingLeft(5) +++ pointer, onclick := {()=> modalDialog.open})
+      bs.button("Modal !", btn_primary +++ sheet.marginLeft(5), () => modalDialog.show),
+      tags.span(glyph_settings +++ sheet.paddingLeft(5) +++ pointer, onclick := {()=> modalDialog.show})
     ).render
+
   }
 
 

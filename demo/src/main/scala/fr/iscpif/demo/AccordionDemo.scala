@@ -38,11 +38,12 @@ object AccordionDemo extends Demo {
       fontWeight := "bold"
     )
 
-    bs.accordion(margin := 10)(titleStyle)(
-      accordionItem("First Title", div("This is my life")),
-      accordionItem("Second Title", div("This is my second life")),
-      accordionItem("Third Title", div("This is my third life"))
-    ).render
+//    bs.accordion(margin := 10)(titleStyle)(
+//      accordionItem("First Title", div("This is my life")),
+//      accordionItem("Second Title", div("This is my second life")),
+//      accordionItem("Third Title", div("This is my third life"))
+//    ).render
+    div("FIX ME").render
   }
 
 

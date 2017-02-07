@@ -195,7 +195,7 @@ object BootstrapTags {
 
     def closeButton(modalDialog: ModalDialog, modifierSeq: ModifierSeq, content: String) =
       tags.button(modifierSeq, content, onclick := { () =>
-        modalDialog.close
+        modalDialog.hide
       })
   }
 
@@ -205,10 +205,8 @@ object BootstrapTags {
     val bodyDialog: Var[TypedTag[_]] = Var(tags.div)
     val footerDialog: Var[TypedTag[_]] = Var(tags.div)
 
-    val ID = uuID
-
     lazy val dialog = {
-      val d = div(modal +++ fade)(id := ID, `class` := "modal fade",
+      val d = div(modal +++ fade)(`class` := "modal fade",
         tabindex := "-1", role := "dialog", aria.hidden := "true")(
         div(sheet.modalDialog +++ modifierSeq)(
           div(modalContent)(
@@ -223,7 +221,7 @@ object BootstrapTags {
       d
     }
 
-    lazy val modalMapping = new bootstrapnative.Modal(dialog)
+    lazy val modalMapping = new fr.iscpif.scaladget.mapping.bootstrap.Modal(dialog)
 
     def header(hDialog: TypedTag[_]): Unit = headerDialog() = ModalDialog.headerDialogShell(hDialog)
 
@@ -231,13 +229,13 @@ object BootstrapTags {
 
     def footer(fDialog: TypedTag[_]): Unit = footerDialog() = ModalDialog.footerDialogShell(fDialog)
 
-    def open = {
-      modalMapping.open
+    def show = {
+      modalMapping.show
       onopen()
     }
 
-    def close = {
-      modalMapping.close
+    def hide = {
+      modalMapping.hide
       onclose()
     }
 
