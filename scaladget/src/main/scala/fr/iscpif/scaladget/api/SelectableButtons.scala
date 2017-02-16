@@ -83,4 +83,6 @@ class SelectableButtons(modifierSeq: ModifierSeq, buttonType: SelectionButtonTyp
     _.active.now
   }
 
+  def activeIndex: Int = buttons.zipWithIndex.filter{case (b, index)=> b.active.now}.head._2
+
 }

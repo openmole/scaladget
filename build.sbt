@@ -7,7 +7,7 @@ import ScalaJSBundlerPlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
 
-scalaOrganization in ThisBuild := "org.typelevel"
+//scalaOrganization in ThisBuild := "org.typelevel"
 
 val ScalaVersion = "2.11.8"
 val bootstrapNativeVersion = "1.1.0"
