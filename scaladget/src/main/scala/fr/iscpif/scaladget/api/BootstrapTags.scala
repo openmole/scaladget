@@ -324,22 +324,22 @@ object BootstrapTags {
                 position: PopupPosition = Bottom,
                 trigger: PopupType = HoverPopup,
                 title: Option[String] = None,
-                dismissable: Boolean = false
+                dismissible: Boolean = false
                ) =
       element(
         data("placement") := position.value,
         data("toggle") := "popover",
         data("content") := text,
         trigger match {
-          case ClickPopup => Seq(id := "popover-via-click", data("trigger") := "click")
+          case ClickPopup => Seq(data("trigger") := "click")
           case _ =>
         },
         title match {
-          case Some(t: String) => Seq(data("title") := t, data("dissmisibale") := "true")
+          case Some(t: String) => Seq(data("title") := t)
           case _ =>
         },
-        dismissable match {
-          case true => data("dismiss") := true
+        dismissible match {
+          case true => data("dismissible") := true
           case _ =>
         }
       )
