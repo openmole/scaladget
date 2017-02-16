@@ -75,7 +75,7 @@ object Selector {
     val render = div(allModifierSeq)(
       Rx {
         bs.buttonGroup(ms(open(), "open", ""))(
-          bs.button(buttonText, modifierSeq +++ dropdownToggle, () => open() = true)(
+          bs.button(buttonText, modifierSeq +++ dropdownToggle, () => open() = !open.now)(
             data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := open(), tabindex := 0)(
             span(caret, sheet.marginLeft(4))),
           div(dropdownMenu +++ (padding := 10))(content)
