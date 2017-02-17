@@ -23,10 +23,21 @@ import org.scalajs.dom.Element
 import scala.scalajs.js
 import scala.scalajs.js.annotation._
 
+
 @JSName("Modal")
 @js.native
 class Modal(element: Element) extends js.Object {
 
   def show(): Unit = js.native
   def hide(): Unit = js.native
+}
+
+
+@JSName("Popover")
+@js.native
+class Popover(element: Element, options: js.Dynamic) extends js.Object {
+
+  def show(): Unit = js.native
+  def hide(): Unit = js.native
+  def toggle(): Unit = js.native
 }

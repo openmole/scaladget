@@ -33,7 +33,10 @@ import Popup._
 import Selector._
 import fr.iscpif.scaladget.api.Alert.ExtraButton
 import fr.iscpif.scaladget.api.SelectableButtons.{CheckBoxSelection, RadioSelection}
+import fr.iscpif.scaladget.mapping.bootstrap.Popover
+import org.scalajs.dom
 
+import scala.scalajs.js.Dynamic.{literal => lit}
 import scalatags.JsDom
 
 @JSExport("demo.BootstrapTags")
@@ -306,6 +309,53 @@ object BootstrapTags {
   // def navPills()
 
   // POUPUS, TOOLTIPS
+  class Popover(element: TypedTag[org.scalajs.dom.raw.HTMLElement],
+                text: String,
+                modifierSeq: ModifierSeq = emptyMod,
+                position: PopupPosition = Bottom,
+                trigger: PopupType = HoverPopup,
+                title: Option[String] = None,
+                dismissible: Boolean = false) {
+
+    lazy val render = {
+      val p = element(
+        data("toggle") := "popover",
+        data("content") := text,
+        trigger match {
+          case ClickPopup => onclick := { () => show }
+          case _ => onmouseover := { () => show }
+        },
+        title match {
+          case Some(t: String) => Seq(data("title") := t)
+          case _ =>
+        },
+        dismissible match {
+          case true => data("dismissible") := true
+          case _ =>
+        }
+      ).render
+
+      org.scalajs.dom.document.body.appendChild(p)
+      p
+    }
+
+    lazy val popover: fr.iscpif.scaladget.mapping.bootstrap.Popover =
+      new fr.iscpif.scaladget.mapping.bootstrap.Popover(render, lit(
+        "placement" -> position.value
+      )
+      )
+
+    def show = {
+      popover.show
+      //onopen()
+    }
+
+    def hide = {
+      popover.hide
+    }
+  }
+
+
   implicit class PopableTypedTag(element: TypedTag[org.scalajs.dom.raw.HTMLElement]) {
 
     def tooltip(text: String,

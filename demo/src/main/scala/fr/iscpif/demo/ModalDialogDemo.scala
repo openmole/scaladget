@@ -29,7 +29,6 @@ object ModalDialogDemo extends Demo {
 
   val sc = sourcecode.Text {
 
-    import org.scalajs.dom
     import scalatags.JsDom.tags
 
     // Create the Modal dialog
@@ -41,7 +40,6 @@ object ModalDialogDemo extends Demo {
 
     // Append header, body, footer elements
     modalDialog header div("Header")
-    modalDialog body div("My body !")
     modalDialog footer bs.buttonGroup()(
       ModalDialog.closeButton(modalDialog, btn_info, "OK"),
       ModalDialog.closeButton(modalDialog, btn_default, "Cancel")

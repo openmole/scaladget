@@ -316,6 +316,8 @@ package bootstrap {
     lazy val tab_content: ModifierSeq = toClass("tab-content")
     lazy val tab_pane: ModifierSeq = toClass("tab-pane")
     lazy val nav_tabs: ModifierSeq = toClass("nav-tabs")
+    lazy val nav_item: ModifierSeq = toClass("nav-item")
+    lazy val nav_link: ModifierSeq = toClass("nav-link")
 
     //GRIDS
     def colMD(nbCol: Int): ModifierSeq = toClass(s"col-md-$nbCol")

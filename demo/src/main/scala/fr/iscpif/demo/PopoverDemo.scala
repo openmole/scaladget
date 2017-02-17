@@ -30,6 +30,8 @@ object PopoverDemo extends Demo {
   val sc = sourcecode.Text {
 
     import fr.iscpif.scaladget.api.Popup._
+    import fr.iscpif.scaladget.tools.JsRxTags._
+    import rx._
 
     val buttonStyle: ModifierSeq = Seq(
       btn_default,
@@ -37,12 +39,19 @@ object PopoverDemo extends Demo {
     )
 
 
+    val newPop: Var[Option[Popover]] = Var(None)
+
     div(
+      bs.button("Build new Popover", buttonStyle, ()=> { newPop() = Some(new Popover(bs.button("NEW Pop !", buttonStyle, ()=> {}),
+        "Pop life", modifierSeq = (width := 300),dismissible = true, title = Some("My title")))}),
       bs.button("Left", buttonStyle, () => {}).popover("Popover on hover on left", Left),
       bs.button("Title", buttonStyle, () => {}).popover("Popover on hover with Title", Top, title = Some("Pop title")),
       bs.button("Dismissable", buttonStyle, () => {}).popover("Dismissible Popover on hover with Title", Top, HoverPopup, Some("Pop title"), true),
       bs.button("Right (click)", buttonStyle, () => {}).popover("Popover on click on right", Right, ClickPopup),
-      bs.input("")(width := 320, sheet.marginTop(10), placeholder := "Bottom (click)").popover("Tooltip on click on bottom", Bottom, ClickPopup)
+      bs.input("")(width := 320, sheet.marginTop(10), placeholder := "Bottom (click)").popover("Tooltip on click on bottom", Bottom, ClickPopup),
+      Rx {
+        newPop().map{_.render}.getOrElse(div("Nothing").render)
+      }
     ).render
   }
 
