@@ -22,6 +22,7 @@ import org.scalajs.dom.Element
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation._
+import scala.scalajs.js.Dynamic.{literal => lit}
 
 
 @JSName("Modal")
@@ -35,7 +36,7 @@ class Modal(element: Element) extends js.Object {
 
 @JSName("Popover")
 @js.native
-class Popover(element: Element, options: js.Dynamic) extends js.Object {
+class Popover(element: Element, options: js.Dynamic = lit()) extends js.Object {
 
   def show(): Unit = js.native
   def hide(): Unit = js.native

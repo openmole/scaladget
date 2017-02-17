@@ -36,7 +36,6 @@ import fr.iscpif.scaladget.api.SelectableButtons.{CheckBoxSelection, RadioSelect
 import fr.iscpif.scaladget.mapping.bootstrap.Popover
 import org.scalajs.dom
 
-import scala.scalajs.js.Dynamic.{literal => lit}
 import scalatags.JsDom
 
 @JSExport("demo.BootstrapTags")
@@ -311,7 +310,6 @@ object BootstrapTags {
   // POUPUS, TOOLTIPS
   class Popover(element: TypedTag[org.scalajs.dom.raw.HTMLElement],
                 text: String,
-                modifierSeq: ModifierSeq = emptyMod,
                 position: PopupPosition = Bottom,
                 trigger: PopupType = HoverPopup,
                 title: Option[String] = None,
@@ -321,29 +319,38 @@ object BootstrapTags {
       val p = element(
         data("toggle") := "popover",
         data("content") := text,
-        trigger match {
-          case ClickPopup => onclick := { () => show }
-          case _ => onmouseover := { () => show }
+        data("placement") := position.value,
+        data("trigger") := {
+          trigger match {
+            case ClickPopup => "click"
+            case _ => "hover"
+          }
         },
         title match {
-          case Some(t: String) => Seq(data("title") := t)
+          case Some(t: String) => data("title") := t
           case _ =>
         },
-        dismissible match {
-          case true => data("dismissible") := true
-          case _ =>
-        }
+        data("dismissible") := {
+          dismissible match {
+            case true => "true"
+            case _ => "false"
+          }
+        },
+        trigger match {
+            case ClickPopup => onclick := {()=> show}
+            case _ => onmouseover := { ()=> hide}
+          }
       ).render
 
       org.scalajs.dom.document.body.appendChild(p)
       p
     }
 
-    lazy val popover: fr.iscpif.scaladget.mapping.bootstrap.Popover =
-      new fr.iscpif.scaladget.mapping.bootstrap.Popover(render, lit(
-        "placement" -> position.value
-      )
-      )
+    lazy val popover: fr.iscpif.scaladget.mapping.bootstrap.Popover = {
+      val p = new fr.iscpif.scaladget.mapping.bootstrap.Popover(render)
+      show
+      p
+    }
 
     def show = {
       popover.show
@@ -375,24 +382,9 @@ object BootstrapTags {
                 trigger: PopupType = HoverPopup,
                 title: Option[String] = None,
                 dismissible: Boolean = false
-               ) =
-      element(
-        data("placement") := position.value,
-        data("toggle") := "popover",
-        data("content") := text,
-        trigger match {
-          case ClickPopup => Seq(data("trigger") := "click")
-          case _ =>
-        },
-        title match {
-          case Some(t: String) => Seq(data("title") := t)
-          case _ =>
-        },
-        dismissible match {
-          case true => data("dismissible") := true
-          case _ =>
-        }
-      )
+               ) = {
+      new Popover(element, text, position, trigger, title, dismissible).render
+    }
   }
 
 
