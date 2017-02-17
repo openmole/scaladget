@@ -72,10 +72,12 @@ object Selector {
 
     val open = Var(false)
 
+    def toggle = open() = !open.now
+
     val render = div(allModifierSeq)(
       Rx {
         bs.buttonGroup(ms(open(), "open", ""))(
-          bs.button(buttonText, modifierSeq +++ dropdownToggle, () => open() = !open.now)(
+          bs.button(buttonText, modifierSeq +++ dropdownToggle, () => toggle)(
             data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := open(), tabindex := 0)(
             span(caret, sheet.marginLeft(4))),
           div(dropdownMenu +++ (padding := 10))(content)
@@ -86,7 +88,7 @@ object Selector {
 
     def close[T <: HTMLElement]: Unit = {
       onclose()
-      open() = false
+      toggle
     }
   }
 
