@@ -521,9 +521,9 @@ object BootstrapTags {
 
 
   // PANELS
-  def panel(heading: String = "", bodyContent: String = "") =
+  def panel(bodyContent: String = "", heading: Option[String] = None ) =
     div(sheet.panel +++ panelDefault)(
-      div(panelHeading)(heading),
+      heading.map{h=> div(panelHeading)(h)}.getOrElse(div),
       div(panelBody)(bodyContent)
     )
 
