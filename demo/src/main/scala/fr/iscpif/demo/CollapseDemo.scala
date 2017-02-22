@@ -33,7 +33,7 @@ object CollapseDemo extends Demo {
     val onoff = Var(false)
 
     div(
-      bs.button("Trigger !", btn_primary).expandOnclick(bs.panel("My panel")(width := 400)),
+      bs.button("Trigger !", btn_primary).expandOnclick(bs.panel("My panel", "My text in detail")(width := 400)),
       bs.button("Set/Unset", btn_danger, () => onoff() = !onoff.now),
       onoff.expand(div(backgroundColor := "pink", onoff.now.toString))
     )

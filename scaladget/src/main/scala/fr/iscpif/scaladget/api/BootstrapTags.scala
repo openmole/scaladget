@@ -521,10 +521,10 @@ object BootstrapTags {
 
 
   // PANELS
-  def panel(heading: String) =
+  def panel(heading: String = "", bodyContent: String = "") =
     div(sheet.panel +++ panelDefault)(
       div(panelHeading)(heading),
-      div(panelBody)
+      div(panelBody)(bodyContent)
     )
 
 

@@ -74,7 +74,7 @@ object SelectDemo {
         bs.button("OK", btn_primary, () => {
           build.now.foreach{_.close}
         }).render
-      ).dropdown("Form", btn_primary, sheet.marginLeft(10), ()=> println("OK"))
+      ).dropdown("Form", btn_primary, sheet.marginLeft(10), onclose = ()=> println("OK"))
 
     div(
       hForm()(
