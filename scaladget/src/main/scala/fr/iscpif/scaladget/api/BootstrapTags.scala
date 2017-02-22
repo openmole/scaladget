@@ -337,9 +337,9 @@ object BootstrapTags {
           }
         },
         trigger match {
-            case ClickPopup => onclick := {()=> show}
-            case _ => onmouseover := { ()=> hide}
-          }
+          case ClickPopup => onclick := { () => show }
+          case _ => onmouseover := { () => hide }
+        }
       ).render
 
       org.scalajs.dom.document.body.appendChild(p)
@@ -402,9 +402,16 @@ object BootstrapTags {
 
   implicit class SelectableTypedTag[T <: HTMLElement](tt: TypedTag[T]) {
     def dropdown(triggerButtonText: String,
-                 buttonModifierSeq: ModifierSeq,
+                 buttonModifierSeq: ModifierSeq = emptyMod,
                  allModifierSeq: ModifierSeq = emptyMod,
-                 onclose: () => Unit = () => {}) = Selector.dropdown(tt, triggerButtonText, buttonModifierSeq, allModifierSeq, onclose)
+                 dropdownModifierSeq: ModifierSeq = emptyMod,
+                 onclose: () => Unit = () => {}) = Selector.dropdown(tt, triggerButtonText, buttonModifierSeq, allModifierSeq, dropdownModifierSeq, onclose)
+
+    def dropdownWithTrigger(trigger: TypedTag[_ <: HTMLElement],
+                            allModifierSeq: ModifierSeq = emptyMod,
+                 dropdownModifierSeq: ModifierSeq = emptyMod,
+                            onclose: () => Unit = () => {}) = Selector.dropdown(tt, trigger, allModifierSeq, dropdownModifierSeq, onclose)
+
   }
 
 

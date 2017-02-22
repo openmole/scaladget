@@ -68,8 +68,7 @@ object SelectDemo {
     val passInput = bs.input("")(placeholder := "Login", `type` := "password")
     val build: Var[Option[Dropdown[HTMLDivElement]]] = Var(None)
 
-    def formDropDown: Dropdown[HTMLDivElement] =
-      bs.vForm(width := 200)(
+    val formDropDown = bs.vForm(width := 200)(
         loginInput.render.withLabel("Login"),
         passInput.render.withLabel("Pass"),
         bs.button("OK", btn_primary, () => {
@@ -82,6 +81,10 @@ object SelectDemo {
         bs.button("build", ()=> build() = Some(formDropDown)).render,
         optionDropDown.selector.render,
         fixedTitleOptions.selector.render,
+        vForm(width := 200)(loginInput.render,
+          bs.button("OK", btn_primary, () => {
+          build.now.foreach{_.close}
+        }).render).dropdownWithTrigger(label("Drop", sheet.paddingTop(10), label_warning)).render,
         Rx{
           build().map{_.render}.getOrElse(div("rien").render)
         }

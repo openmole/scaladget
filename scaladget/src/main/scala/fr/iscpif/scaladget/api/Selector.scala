@@ -59,15 +59,41 @@ object Selector {
 
   def dropdown[T <: HTMLElement](content: TypedTag[T],
                                  buttonText: String,
-                                 buttonModifierSeq: ModifierSeq = emptyMod,
-                                 allModifierSeq: ModifierSeq = emptyMod,
-                                 onclose: () => Unit = () => {}) = new Dropdown(content, buttonText, buttonModifierSeq, allModifierSeq, onclose)
+                                 buttonModifierSeq: ModifierSeq,
+                                 allModifierSeq: ModifierSeq,
+                                 dropdownModifierSeq: ModifierSeq,
+                                 onclose: () => Unit) = {
+    lazy val trigger: TypedTag[_ <: HTMLElement] =
+      bs.button(buttonText, buttonModifierSeq +++ dropdownToggle)(
+        span(caret, sheet.marginLeft(4)))
+
+    lazy val dd: Dropdown[T] = new Dropdown(
+      content,
+      trigger,
+      allModifierSeq,
+      dropdownModifierSeq,
+      onclose)
+
+    dd
+  }
+
+  def dropdown[T <: HTMLElement](content: TypedTag[T],
+                                 trigger: TypedTag[_],
+                                 allModifierSeq: ModifierSeq,
+                                 dropdownModifierSeq: ModifierSeq,
+                                 onclose: () => Unit): Dropdown[T] = new Dropdown(
+                                                                          content,
+                                                                          trigger,
+                                                                          allModifierSeq,
+                                                                          dropdownModifierSeq,
+                                                                          onclose
+                                                                          )
 
 
   class Dropdown[T <: HTMLElement](content: TypedTag[T],
-                                   buttonText: String,
-                                   modifierSeq: ModifierSeq,
+                                   trigger: TypedTag[_],
                                    allModifierSeq: ModifierSeq,
+                                   dropdownModifierSeq: ModifierSeq,
                                    onclose: () => Unit) {
 
     val open = Var(false)
@@ -77,10 +103,8 @@ object Selector {
     val render = div(allModifierSeq)(
       Rx {
         bs.buttonGroup(ms(open(), "open", ""))(
-          bs.button(buttonText, modifierSeq +++ dropdownToggle, () => toggle)(
-            data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := open(), tabindex := 0)(
-            span(caret, sheet.marginLeft(4))),
-          div(dropdownMenu +++ (padding := 10))(content)
+          trigger(data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := open(), tabindex := 0)(onclick := { () => toggle }),
+          div(dropdownMenu +++ dropdownModifierSeq +++ (padding := 10))(content)
         )
       }
     ).render
