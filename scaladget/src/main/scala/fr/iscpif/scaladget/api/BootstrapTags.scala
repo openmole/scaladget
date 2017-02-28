@@ -596,7 +596,7 @@ object BootstrapTags {
 
     private val innerTagRender = innerTag.render
 
-    val tag = div(collapseTransition +++ sheet.paddingTop(10))(innerTagRender).render
+    val tag = div(collapseTransition)(innerTagRender).render
 
 
     private def setHeight = {
