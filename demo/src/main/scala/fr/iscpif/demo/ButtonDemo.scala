@@ -68,7 +68,7 @@ object ButtonDemo {
         div(sheet.paddingAll(top = 15), s"Clicked: ${clicked()}")
       },
       h4("Badges", sheet.paddingTop(30)),
-      bs.badge("Badge", "7", buttonStyle +++ btn_primary, () => clickAction("badge")),
+      bs.button("Badge", buttonStyle +++ btn_primary, () => clickAction("badge"))(bs.badge("7", backgroundColor := "pink")),
       h4("Icon buttons", sheet.paddingTop(30)),
       bs.glyphSpan(glyph_refresh +++ buttonStyle, () => clickAction("refresh")),
       bs.glyphSpan(glyph_flash +++ buttonStyle, () => clickAction("flash")),

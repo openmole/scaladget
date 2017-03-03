@@ -171,9 +171,7 @@ object BootstrapTags {
 
 
   // BADGE
-  def badge(content: String, badgeValue: String, buttonStyle: ModifierSeq = emptyMod, todo: () => Unit = () => {}) =
-    button(s"$content ", buttonStyle, todo)(span(toClass("badge"))(badgeValue))
-
+  def badge(badgeValue: String, badgeStyle: ModifierSeq) = span(toClass("badge") +++ badgeStyle +++ sheet.marginLeft(4))(badgeValue)
 
   //BUTTON GROUP
   def buttonGroup(mod: ModifierSeq = emptyMod) = div(mod +++ btnGroup)
