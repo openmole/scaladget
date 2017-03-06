@@ -216,6 +216,7 @@ package bootstrap {
     lazy val glyph_list: Glyphicon = toGlyphicon("glyphicon-list")
     lazy val glyph_stats: Glyphicon = toGlyphicon("glyphicon-stats")
     lazy val glyph_refresh: Glyphicon = toGlyphicon("glyphicon-refresh")
+    lazy val glyph_repeat: Glyphicon = toGlyphicon("glyphicon-repeat")
     lazy val glyph_lock: Glyphicon = toGlyphicon("glyphicon-lock")
     lazy val glyph_archive: Glyphicon = toGlyphicon("glyphicon-compressed")
     lazy val glyph_market: Glyphicon = toGlyphicon("glyphicon-shopping-cart")
