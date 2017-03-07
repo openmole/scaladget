@@ -74,11 +74,16 @@ object SelectDemo {
         bs.button("OK", btn_primary, () => {
           build.now.foreach{_.close}
         }).render
-      ).dropdown("Form", btn_primary, sheet.marginLeft(10), onclose = ()=> println("OK"))
+      ).dropdown("Form", btn_primary, allModifierSeq = sheet.marginLeft(10), onclose = ()=> println("OK"))
+
+    val formDropDown2 = bs.vForm(width := 200)(
+      loginInput.render.withLabel("Login")
+    ).dropdown(buttonIcon = glyph_settings, buttonModifierSeq = btn_default)
 
     div(
       hForm()(
         bs.button("build", ()=> build() = Some(formDropDown)).render,
+        formDropDown2.render,
         optionDropDown.selector.render,
         fixedTitleOptions.selector.render,
         vForm(width := 200)(loginInput.render,

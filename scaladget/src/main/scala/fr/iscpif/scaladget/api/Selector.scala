@@ -59,13 +59,15 @@ object Selector {
 
   def dropdown[T <: HTMLElement](content: TypedTag[T],
                                  buttonText: String,
+                                 buttonIcon: ModifierSeq,
                                  buttonModifierSeq: ModifierSeq,
                                  allModifierSeq: ModifierSeq,
                                  dropdownModifierSeq: ModifierSeq,
                                  onclose: () => Unit) = {
     lazy val trigger: TypedTag[_ <: HTMLElement] =
-      bs.button(buttonText, buttonModifierSeq +++ dropdownToggle)(
-        span(caret, sheet.marginLeft(4)))
+      bs.button(buttonText, buttonModifierSeq +++ dropdownToggle, buttonIcon)(
+        span(caret, sheet.marginLeft(4))
+      )
 
     lazy val dd: Dropdown[T] = new Dropdown(
       content,

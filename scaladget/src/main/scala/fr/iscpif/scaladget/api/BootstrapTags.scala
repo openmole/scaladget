@@ -399,15 +399,18 @@ object BootstrapTags {
   }
 
   implicit class SelectableTypedTag[T <: HTMLElement](tt: TypedTag[T]) {
-    def dropdown(triggerButtonText: String,
+
+
+    def dropdown(buttonText: String = "",
                  buttonModifierSeq: ModifierSeq = emptyMod,
+                 buttonIcon: ModifierSeq = emptyMod,
                  allModifierSeq: ModifierSeq = emptyMod,
                  dropdownModifierSeq: ModifierSeq = emptyMod,
-                 onclose: () => Unit = () => {}) = Selector.dropdown(tt, triggerButtonText, buttonModifierSeq, allModifierSeq, dropdownModifierSeq, onclose)
+                 onclose: () => Unit = () => {}) = Selector.dropdown(tt, buttonText, buttonIcon, buttonModifierSeq, allModifierSeq, dropdownModifierSeq, onclose)
 
     def dropdownWithTrigger(trigger: TypedTag[_ <: HTMLElement],
                             allModifierSeq: ModifierSeq = emptyMod,
-                 dropdownModifierSeq: ModifierSeq = emptyMod,
+                            dropdownModifierSeq: ModifierSeq = emptyMod,
                             onclose: () => Unit = () => {}) = Selector.dropdown(tt, trigger, allModifierSeq, dropdownModifierSeq, onclose)
 
   }
@@ -519,9 +522,9 @@ object BootstrapTags {
 
 
   // PANELS
-  def panel(bodyContent: String = "", heading: Option[String] = None ) =
+  def panel(bodyContent: String = "", heading: Option[String] = None) =
     div(sheet.panel +++ panelDefault)(
-      heading.map{h=> div(panelHeading)(h)}.getOrElse(div),
+      heading.map { h => div(panelHeading)(h) }.getOrElse(div),
       div(panelBody)(bodyContent)
     )
 
