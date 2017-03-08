@@ -237,6 +237,7 @@ package bootstrap {
     lazy val glyph_triangle_top: Glyphicon = toGlyphicon("glyphicon-triangle-top")
     lazy val glyph_chevron_left: Glyphicon = toGlyphicon("glyphicon glyphicon-chevron-left")
     lazy val glyph_chevron_right: Glyphicon = toGlyphicon("glyphicon glyphicon-chevron-right")
+    lazy val glyph_menu_hamburger: Glyphicon = toGlyphicon("glyphicon glyphicon-menu-hamburger")
     lazy val caret: ModifierSeq = toClass("caret")
 
     //NAVBARS
