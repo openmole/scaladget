@@ -41,8 +41,10 @@ import sheet._
 import rx._
 import bs._
 import org.scalajs.dom.raw._
+
 import scalatags.JsDom.all._
 import scalatags.JsDom.{TypedTag, tags}
+import fr.iscpif.scaladget.api.listener.ElementListener
 
 object Selector {
 
@@ -102,19 +104,22 @@ object Selector {
 
     def toggle = open() = !open.now
 
-    val render = div(allModifierSeq)(
+    lazy val render = div(allModifierSeq)(
       Rx {
         bs.buttonGroup(ms(open(), "open", ""))(
-          trigger(data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := open(), tabindex := 0)(onclick := { () => toggle }),
+          trigger(data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := open(), tabindex := 0)(onclick := { () =>
+            toggle}),
           div(dropdownMenu +++ dropdownModifierSeq +++ (padding := 10))(content)
         )
       }
     ).render
 
 
+    render.onClickOutside(()=> close)
+
     def close[T <: HTMLElement]: Unit = {
       onclose()
-      toggle
+      open() = false
     }
   }
 
@@ -161,7 +166,11 @@ object Selector {
 
     def isContentsEmpty = contents.now.isEmpty
 
-    lazy val selector: TypedTag[HTMLElement] = div(
+    def close = opened() = false
+
+    selector.onClickOutside(()=> close)
+
+    lazy val selector = div(
       Rx {
         buttonGroup(
           toClass(
@@ -201,7 +210,7 @@ object Selector {
             }
           )
         )
-      })
+      }).render
   }
 
 }

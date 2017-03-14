@@ -81,8 +81,8 @@ object SelectDemo {
       hForm(padding := 5)(
         formDropDown2.render,
         formDropDown3.render,
-        optionDropDown.selector.render,
-        fixedTitleOptions.selector.render,
+        optionDropDown.selector,
+        fixedTitleOptions.selector,
         vForm(width := 200)(loginInput.render,
           bs.button("OK", btn_primary, () => {
             build.now.foreach {

@@ -52,7 +52,8 @@ object BootstrapTags {
 
   type BS = TypedTag[_ <: HTMLElement]
 
-  def uuID: String = java.util.UUID.randomUUID.toString
+  type ID = String
+  def uuID: ID = java.util.UUID.randomUUID.toString
 
   type Input = ConcreteHtmlTag[org.scalajs.dom.raw.HTMLInputElement]
 
