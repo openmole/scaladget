@@ -78,7 +78,7 @@ object SelectDemo {
     ).dropdownWithTrigger(bs.glyphSpan(glyph_refresh))
 
     div(
-      hForm()(
+      hForm(padding := 5)(
         formDropDown2.render,
         formDropDown3.render,
         optionDropDown.selector.render,
