@@ -65,43 +65,35 @@ object SelectDemo {
     )
 
     val loginInput = bs.input("")(placeholder := "Login")
-    val passInput = bs.input("")(placeholder := "Login", `type` := "password")
+    val passInput = bs.input("")(placeholder := "Pass", `type` := "password")
     val build: Var[Option[Dropdown[HTMLDivElement]]] = Var(None)
 
-    val formDropDown = bs.vForm(width := 200)(
-        loginInput.render.withLabel("Login"),
-        passInput.render.withLabel("Pass"),
-        bs.button("OK", btn_primary, () => {
-          build.now.foreach{_.close}
-        }).render
-      ).dropdown("Form", btn_primary, allModifierSeq = sheet.marginLeft(10), onclose = ()=> println("OK"))
 
     val formDropDown2 = bs.vForm(width := 200)(
       loginInput.render.withLabel("Login")
     ).dropdown(buttonIcon = glyph_settings, buttonModifierSeq = btn_default)
 
     val formDropDown3 = bs.vForm(width := 200)(
-      loginInput.render.withLabel("Login")
+      passInput.render.withLabel("Pass")
     ).dropdownWithTrigger(bs.glyphSpan(glyph_refresh))
 
     div(
       hForm()(
-        bs.button("build", ()=> build() = Some(formDropDown)).render,
         formDropDown2.render,
         formDropDown3.render,
         optionDropDown.selector.render,
         fixedTitleOptions.selector.render,
         vForm(width := 200)(loginInput.render,
           bs.button("OK", btn_primary, () => {
-          build.now.foreach{_.close}
-        }).render).dropdownWithTrigger(label("Drop", sheet.paddingTop(10), label_warning)).render,
-        Rx{
-          build().map{_.render}.getOrElse(div("rien").render)
-        }
-      ),
-      Rx {
-        div(s"Selected: ${selected()}")
-      }
+            build.now.foreach {
+              _.close
+            }
+          }).render).dropdownWithTrigger(label("Drop", label_warning +++ (height := 30))).render,
+        div(
+          Rx {
+            div(s"Selected: ${selected()}")(padding := 8)
+          }).render
+      )
     ).render
 
   }
