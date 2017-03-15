@@ -48,4 +48,5 @@ class Popover(element: Element, options: js.Dynamic = lit()) extends js.Object {
 class Tooltip(element: Element, options: js.Dynamic = lit()) extends js.Object {
 
   def show(): Unit = js.native
+  def hide(): Unit = js.native
 }

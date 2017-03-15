@@ -36,6 +36,7 @@ import fr.iscpif.scaladget.api.SelectableButtons.{CheckBoxSelection, RadioSelect
 import fr.iscpif.scaladget.mapping.bootstrap.Popover
 import org.scalajs.dom
 
+import scala.scalajs.js
 import scalatags.JsDom
 
 @JSExport("demo.BootstrapTags")
@@ -362,29 +363,48 @@ object BootstrapTags {
     }
   }
 
+  object Tooltip {
+    def cleanAll = {
+      val list = org.scalajs.dom.document.getElementsByClassName("tooltip")
+      for (nodeIndex ← 0 to (list.length - 1)) {
+        val element = list(nodeIndex)
+        if (element != js.undefined) element.parentNode.removeChild(element)
+      }
+    }
+  }
+
+  class Tooltip(element: TypedTag[org.scalajs.dom.raw.HTMLElement],
+                text: String,
+                position: PopupPosition = Bottom,
+                condition: () => Boolean = () => true) {
+
+    val elementRender = {
+      if (condition())
+        element(
+          data("placement") := position.value,
+          data("toggle") := "tooltip",
+          data("original-title") := text
+        )
+      else element
+    }.render
+
+    elementRender.onmouseover = (e: Event)=> {
+      tooltip
+    }
+
+    lazy val tooltip = new fr.iscpif.scaladget.mapping.bootstrap.Tooltip(elementRender)
+
+    def render = elementRender
+    def hide = tooltip.hide
+  }
+
 
   implicit class PopableTypedTag(element: TypedTag[org.scalajs.dom.raw.HTMLElement]) {
 
     def tooltip(text: String,
                 position: PopupPosition = Bottom,
                 condition: () => Boolean = () => true) = {
-      val elementRender = {
-        if (condition())
-          element(
-            data("placement") := position.value,
-            data("toggle") := "tooltip",
-            data("original-title") := text
-          )
-        else element
-      }.render
-
-      elementRender.onmouseover = (e: Event)=> {
-        tooltip
-      }
-
-      lazy val tooltip = new fr.iscpif.scaladget.mapping.bootstrap.Tooltip(elementRender)
-
-      elementRender
+      new Tooltip(element, text, position, condition).render
     }
 
     def popover(text: String,
