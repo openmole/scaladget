@@ -71,14 +71,12 @@ object Selector {
         span(caret, sheet.marginLeft(4))
       )
 
-    lazy val dd: Dropdown[T] = new Dropdown(
+    new Dropdown(
       content,
       trigger,
       allModifierSeq,
       dropdownModifierSeq,
       onclose)
-
-    dd
   }
 
   def dropdown[T <: HTMLElement](content: TypedTag[T],
