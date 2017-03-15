@@ -53,6 +53,7 @@ object BootstrapTags {
   type BS = TypedTag[_ <: HTMLElement]
 
   type ID = String
+
   def uuID: ID = java.util.UUID.randomUUID.toString
 
   type Input = ConcreteHtmlTag[org.scalajs.dom.raw.HTMLInputElement]
@@ -367,13 +368,23 @@ object BootstrapTags {
     def tooltip(text: String,
                 position: PopupPosition = Bottom,
                 condition: () => Boolean = () => true) = {
-      if (condition())
-        element(
-          data("placement") := position.value,
-          data("toggle") := "tooltip",
-          data("original-title") := text
-        )
-      else element
+      val elementRender = {
+        if (condition())
+          element(
+            data("placement") := position.value,
+            data("toggle") := "tooltip",
+            data("original-title") := text
+          )
+        else element
+      }.render
+
+      elementRender.onmouseover = (e: Event)=> {
+        tooltip
+      }
+
+      lazy val tooltip = new fr.iscpif.scaladget.mapping.bootstrap.Tooltip(elementRender)
+
+      elementRender
     }
 
     def popover(text: String,
