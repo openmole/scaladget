@@ -86,12 +86,12 @@ object Selector {
                                  allModifierSeq: ModifierSeq,
                                  dropdownModifierSeq: ModifierSeq,
                                  onclose: () => Unit): Dropdown[T] = new Dropdown(
-                                                                          content,
-                                                                          trigger,
-                                                                          allModifierSeq,
-                                                                          dropdownModifierSeq,
-                                                                          onclose
-                                                                          )
+    content,
+    trigger,
+    allModifierSeq,
+    dropdownModifierSeq,
+    onclose
+  )
 
 
   class Dropdown[T <: HTMLElement](content: TypedTag[T],
@@ -104,18 +104,28 @@ object Selector {
 
     def toggle = open() = !open.now
 
+    val contentRender = content.render
+
     lazy val render = div(allModifierSeq)(
       Rx {
         bs.buttonGroup(ms(open(), "open", ""))(
           trigger(data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := open(), tabindex := 0)(onclick := { () =>
-            toggle}),
-          div(dropdownMenu +++ dropdownModifierSeq +++ (padding := 10))(content)
+            toggle
+          }),
+          div(dropdownMenu +++ dropdownModifierSeq +++ (padding := 10))(contentRender)
         )
       }
     ).render
 
 
-    render.onClickOutside(()=> close)
+    contentRender.addEventListener("mousedown", (e: Event) => {
+      e.stopPropagation
+    })
+
+
+    render.onClickOutside(() => {
+      close
+    })
 
     def close[T <: HTMLElement]: Unit = {
       onclose()
@@ -168,7 +178,7 @@ object Selector {
 
     def close = opened() = false
 
-    selector.onClickOutside(()=> close)
+    selector.onClickOutside(() => close)
 
     lazy val selector = div(
       Rx {
@@ -194,19 +204,20 @@ object Selector {
             for {
               c <- contents.now
             } yield {
-              li(
+              val line = li(
                 a(href := "#")(
                   span(
                     span(decorations.getOrElse(c, emptyMod).toSeq),
                     span(s" ${naming(c)}")
-                  )),
-                onclick := { () =>
-                  content() = Some(c)
-                  opened() = !opened.now
-                  onclose()
-                  false
-                }
-              )
+                  ))
+              ).render
+              line.addEventListener("mousedown", (e: Event) => {
+                e.stopPropagation
+                content() = Some(c)
+                opened() = !opened.now
+                onclose()
+              })
+              line
             }
           )
         )
