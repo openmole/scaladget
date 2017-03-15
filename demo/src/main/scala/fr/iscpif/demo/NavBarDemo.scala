@@ -40,12 +40,12 @@ object NavBarDemo {
     )
 
     val threeItem = navItem(
-      bs.input("")(placeholder := "Name", width := 100), () ⇒
+      bs.input("")(placeholder := "Name", width := 100).render, () ⇒
         println("Three open")
     )
 
     val fourItem = navItem(
-      div(glyph_fire +++ (color := "#337ab7"), lineHeight := "35px"), () ⇒
+      div(glyph_fire +++ (color := "#337ab7"), lineHeight := "35px").render, () ⇒
         println("Four open")
     )
 
@@ -53,7 +53,7 @@ object NavBarDemo {
       buttonGroup()(
       bs.button("OK", btn_primary, ()=> {println("Five open")}),
       bs.button("Cancel", btn_default, ()=> {println("Five cancel")})
-      )
+      ).render
     )
 
     //Create the nav bar

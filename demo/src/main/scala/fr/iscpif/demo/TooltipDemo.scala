@@ -1,7 +1,6 @@
 package fr.iscpif.demo
 
 import org.scalajs.dom.Element
-import fr.iscpif.scaladget.tools.JsRxTags._
 
 /*
  * Copyright (C) 23/08/16 // mathieu.leclaire@openmole.org
@@ -23,14 +22,15 @@ import fr.iscpif.scaladget.tools.JsRxTags._
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
 import fr.iscpif.scaladget.api.{BootstrapTags => bs}
 import scalatags.JsDom.all._
+import fr.iscpif.scaladget.tools.JsRxTags._
 import sheet._
 import bs._
-    import rx._
 
 object TooltipDemo extends Demo {
-  implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
   val sc = sourcecode.Text {
 
+    import rx._
+    implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
     import fr.iscpif.scaladget.api.Popup._
 
     val buttonStyle: ModifierSeq = Seq(
@@ -51,10 +51,10 @@ object TooltipDemo extends Demo {
       bs.button("Bottom", buttonStyle, () => {
         add() = true
       }).tooltip("Tooltip on bottom", Bottom),
-        Rx {
-          if (add()) label("New", labelStyle).tooltip("Tooltip New", Right)
-          else div()
-        }
+      Rx {
+        if (add()) label("New", labelStyle).tooltip("Tooltip New", Right)
+        else div().render
+      }
     ).render
   }
 

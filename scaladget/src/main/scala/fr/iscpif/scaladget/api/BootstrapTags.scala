@@ -246,7 +246,7 @@ object BootstrapTags {
 
 
   // NAVS
-  class NavItem[T <: Modifier](contentDiv: T,
+  class NavItem[T <: HTMLElement](contentDiv: T,
                                val todo: () ⇒ Unit = () ⇒ {},
                                extraRenderPair: Seq[Modifier] = Seq(),
                                activeDefault: Boolean = false) {
@@ -273,17 +273,17 @@ object BootstrapTags {
     )(extraRenderPair: _*)
   }
 
-  def navItem[T <: Modifier](content: T,
+  def navItem[T <: HTMLElement](content: T,
                              todo: () => Unit = () => {},
                              extraRenderPair: Seq[Modifier] = Seq(),
                              activeDefault: Boolean = false) = {
     new NavItem(content, todo, extraRenderPair, activeDefault)
   }
 
-  def stringNavItem(content: String, todo: () ⇒ Unit = () ⇒ {}, activeDefault: Boolean = false): NavItem[Modifier] =
-    navItem(content, todo, activeDefault = activeDefault)
+  def stringNavItem(content: String, todo: () ⇒ Unit = () ⇒ {}, activeDefault: Boolean = false): NavItem[HTMLElement] =
+    navItem(span(content).render, todo, activeDefault = activeDefault)
 
-  def navBar(classPair: ModifierSeq, contents: NavItem[_ <: Modifier]*): TypedTag[HTMLElement] =
+  def navBar(classPair: ModifierSeq, contents: NavItem[_ <: HTMLElement]*): TypedTag[HTMLElement] =
 
     JsDom.tags2.nav(navbar +++ navbar_default +++ classPair)(
       div(toClass("container-fluid"))(
