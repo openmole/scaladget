@@ -46,6 +46,10 @@ object BootstrapDemo extends JSApp {
 
     bs.withBootstrapNative {
       div(div(sheet.marginLeft(15), sheet.marginTop(25))(
+        h3("Build"),
+        div(row)(
+          div(colMD(12))("Details on construction on ", a(href := "https://github.com/openmole/scaladget", target := "_blank")("the Scaladet Github page"))
+        ),
         h3("Imports"),
         div(row)(
           div(colMD(8))(pre(code(toClass("scala"))(imports))),
