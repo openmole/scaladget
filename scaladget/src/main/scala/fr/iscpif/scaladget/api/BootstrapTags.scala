@@ -894,7 +894,7 @@ object BootstrapTags {
     val accordionID = uuID
     div(
       modifierSeq,
-      id := accordionID,
+     // id := accordionID,
       role := "tablist",
       aria.multiselectable := "true",
       ms("panel-group"))(
@@ -908,7 +908,7 @@ object BootstrapTags {
             role := "tab"
           )(a(
             data("toggle") := "collapse",
-            data("parent") := s"#$accordionID",
+       //     data("parent") := s"#$accordionID",
             href := collapseID,
             aria.expanded := true,
             aria.controls := collapseID,
