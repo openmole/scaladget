@@ -49,6 +49,7 @@ Here is an example of bootstrap modal dialog creation in full scala:
 ```
 
 Find more examples on the: [API Demo](http://zebulon.iscpif.fr/~leclaire/scaladget/)
+An example of scaladget intensive use in the [OpenMOLE project](https://github.com/openmole/openmole/blob/master/openmole/gui/client/org.openmole.gui.client.core/src/main/scala/org/openmole/gui/client/core/ScriptClient.scala)
 
 ## D3 wrapper ##
 An example using the scaladget D3 wrapper can be found in the [ScalaWUI](https://github.com/mathieuleclaire/scalaWUI) project: [FlowChart](https://github.com/mathieuleclaire/scalaWUI/blob/master/client/src/main/scala/fr/iscpif/client/FlowChart.scala). It reproduces this [D3 flowchart](http://bl.ocks.org/cjrd/6863459).
