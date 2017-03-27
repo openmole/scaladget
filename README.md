@@ -2,76 +2,55 @@ scaladget
 =========
 
 Scaladget provides a scala facades of some famous javascript libraries. It relies on the [scala-js](http://www.scala-js.org/) project. Among them:
+* [Bootstrap-native.js](https://thednp.github.io/bootstrap.native/)
 * [D3.js](d3js.org)
-* [Bootstrap.js](http://getbootstrap.com/)
 * [Ace Editor](http://ace.c9.io)
-* [Tooltipster](http://iamceege.github.io/tooltipster/)
 
 
-##Usage##
+## Usage ##
 Just add this to your dependencies:
 ```sh
-  libraryDependencies += "fr.iscpif" %%% "scaladget" % "0.8.1"
+  libraryDependencies += "fr.iscpif" %%% "scaladget" % "0.9.2-SNAPSHOT"
 ```
 
 All the facades are intensively used in the [OpenMOLE project](https://github.com/openmole/openmole).
 
-##D3 wrapper##
+## Bootstrap-native library ##
+The boostrap-native facade (based on [https://thednp.github.io/bootstrap.native/](http://zebulon.iscpif.fr/~leclaire/scaladget/)) renders transparent the use of buttons, forms, modals, collapsers, selectors etc...
+The bootstrap-native.min.js ([bootstrap-native 2.0.+ or more](https://www.jsdelivr.com/projects/bootstrap.native)) has to be set in a js folder. Then the whole html element (like div or span) as to be placed in :
+```scala
+withBootstrapNative{
+ // your code here
+ }
+```
+The reason is that the bootstrap-native.min.js file has to be loaded lazyly after the dom is loaded. Set you code in the ```withBootstrapNative``` guarantees the bootstrap-native script is loaded last.
+
+Here is an example of bootstrap modal dialog creation in full scala:
+```scala
+  // Create the Modal dialog
+    val modalDialog: ModalDialog =
+      bs.ModalDialog(
+        onopen = () => println("OPEN"),
+        onclose = () => println("CLOSE")
+      )
+
+    // Append header, body, footer elements
+    modalDialog header div("Header")
+    modalDialog footer bs.buttonGroup()(
+      ModalDialog.closeButton(modalDialog, btn_info, "OK"),
+      ModalDialog.closeButton(modalDialog, btn_default, "Cancel")
+    )
+
+    // Build the modal dialog and the trigger button
+    tags.span(
+      modalDialog.dialog,
+      bs.button("Modal !", btn_primary +++ sheet.marginLeft(5), () => modalDialog.show)
+    ).render
+```
+
+Find more examples on the: [API Demo](http://zebulon.iscpif.fr/~leclaire/scaladget/)
+An example of scaladget intensive use in the [OpenMOLE project](https://github.com/openmole/openmole/blob/master/openmole/gui/client/org.openmole.gui.client.core/src/main/scala/org/openmole/gui/client/core/ScriptClient.scala)
+
+## D3 wrapper ##
 An example using the scaladget D3 wrapper can be found in the [ScalaWUI](https://github.com/mathieuleclaire/scalaWUI) project: [FlowChart](https://github.com/mathieuleclaire/scalaWUI/blob/master/client/src/main/scala/fr/iscpif/client/FlowChart.scala). It reproduces this [D3 flowchart](http://bl.ocks.org/cjrd/6863459).
 
-
-##Bootstrap library##
-The boostrap facade can be used directly or by means of a higher level library, which render transparent the use of simple elements such div, span, button, etc...
-
-Here are 3 examples:
-```scala
-import fr.iscpif.scaladget.api.{ BootstrapTags ⇒ bs}
-import bs._
-
-// Build a 12 columm a Boostrap div composed of 3 column divs
-bs.div("myClass")(
-  bs.div(col_md_8)("Something long to write on 8 colomuns"),
-  bs.div(col_md_2)("Something smaller on 2 colomuns"),
-  bs.div(col_md_2)("Something smaller on 2 colomuns")
-)
-
-// A button with the Primary style, doing the action todo on click.
-bs.button(
-  "Save", 
-  btn_primary + key("otherClass"), 
-  () ⇒ {todo}
-  )
-
-// Build the famous Bootstrap dialog
-modalDialog(
-  "DialogID",
-  headerDialog("My nice header"),
-  bodyDialog("My body content"),
-  footerDialog("My footer content")
-)
-```
-
-Scaladget also provides a higher level API for the Bootstrap use: [BootstrapTags](https://github.com/mathieuleclaire/scaladget/blob/master/scaladget/src/main/scala/fr/iscpif/scaladget/api/BootstrapTags.scala)
-
-
-##Tooltipster##
-Here is an example for adding a tooltip on a div dynamically, using [scalatags](https://github.com/lihaoyi/scalatags).
-```scala
-
-import org.scalajs.jquery
-import scalatags.JsDom._
-import fr.iscpif.scaladget.mapping.tooltipster._
-import fr.iscpif.scaladget.tooltipster._
-
- val ttdiv = div(
-      title := "My message"
-    ).render
-
-    ttdiv.appendChild(h)
-    val options = TooltipsterOptions.
-      position("left)".
-      delay(400)
-
-    jquery.jQuery(ttdiv).tooltipster(options)
-    ttdiv
-```
