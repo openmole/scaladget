@@ -32,7 +32,7 @@ object ModalDialogDemo extends Demo {
     import scalatags.JsDom.tags
 
     // Create the Modal dialog
-    lazy val modalDialog: ModalDialog =
+    val modalDialog: ModalDialog =
       bs.ModalDialog(
         onopen = ()=> println("OPEN"),
         onclose = ()=> println("CLOSE")
