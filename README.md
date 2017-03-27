@@ -16,6 +16,8 @@ Just add this to your dependencies:
 All the facades are intensively used in the [OpenMOLE project](https://github.com/openmole/openmole).
 
 ## Bootstrap-native library ##
+[Demo](http://zebulon.iscpif.fr/~leclaire/scaladget/)
+
 The boostrap-native facade (based on [https://thednp.github.io/bootstrap.native/](http://zebulon.iscpif.fr/~leclaire/scaladget/)) renders transparent the use of buttons, forms, modals, collapsers, selectors etc...
 The bootstrap-native.min.js ([bootstrap-native 2.0.+ or more](https://www.jsdelivr.com/projects/bootstrap.native)) has to be set in a js folder. Then the whole html element (like div or span) as to be placed in :
 ```scala
@@ -24,6 +26,7 @@ withBootstrapNative{
  }
 ```
 The reason is that the bootstrap-native.min.js file has to be loaded lazyly after the dom is loaded. Set you code in the ```withBootstrapNative``` guarantees the bootstrap-native script is loaded last.
+
 
 Here is an example of bootstrap modal dialog creation in full scala:
 ```scala
@@ -49,7 +52,8 @@ Here is an example of bootstrap modal dialog creation in full scala:
 ```
 
 Find more examples on the: [API Demo](http://zebulon.iscpif.fr/~leclaire/scaladget/)
-An example of scaladget intensive use in the [OpenMOLE project](https://github.com/openmole/openmole/blob/master/openmole/gui/client/org.openmole.gui.client.core/src/main/scala/org/openmole/gui/client/core/ScriptClient.scala)
+
+Here is an example of scaladget intensive use in the [OpenMOLE project](https://github.com/openmole/openmole/blob/master/openmole/gui/client/org.openmole.gui.client.core/src/main/scala/org/openmole/gui/client/core/ScriptClient.scala)
 
 ## D3 wrapper ##
 An example using the scaladget D3 wrapper can be found in the [ScalaWUI](https://github.com/mathieuleclaire/scalaWUI) project: [FlowChart](https://github.com/mathieuleclaire/scalaWUI/blob/master/client/src/main/scala/fr/iscpif/client/FlowChart.scala). It reproduces this [D3 flowchart](http://bl.ocks.org/cjrd/6863459).
