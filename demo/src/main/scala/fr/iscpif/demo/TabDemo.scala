@@ -16,6 +16,7 @@ package fr.iscpif.demo
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import org.scalajs.dom.Element
 import fr.iscpif.scaladget.stylesheet.{all => sheet}
 import fr.iscpif.scaladget.api.{BootstrapTags => bs}
@@ -33,7 +34,7 @@ object TabDemo extends Demo {
       "laboris nisi ut aliquip ex ea commodo consequat. Duis aute " +
       "irure dolor in reprehenderit in voluptate velit esse cillum dolore " +
       "eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, " +
-      "sunt in culpa qui officia deserunt mollit anim id est laborum.")
+      "sunt in culpa qui officia deserunt mollit anim id est laborum.", padding := 10)
 
 
     val div2 = vForm(bs.input("")(placeholder := "Name").render.withLabel("Your name"))

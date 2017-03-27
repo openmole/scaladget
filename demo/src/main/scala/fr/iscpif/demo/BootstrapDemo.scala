@@ -50,7 +50,7 @@ object BootstrapDemo extends JSApp {
         h3("Imports"),
         div(row)(
           div(colMD(8))(pre(code(toClass("scala"))(imports))),
-          div(colMD(4))("This imports have to be done before using the following examples. Specific imports will be also sometimes specified.")
+          div(colMD(4), padding := 20)("This imports have to be done before using the following examples. Specific imports will be also sometimes specified.")
         )
       ),
         for {

@@ -653,8 +653,8 @@ object BootstrapTags {
 
   // TABS
   case class Tab(title: String, content: BS, active: Boolean) {
-    val tabID = uuID
-    val refID = uuID
+    val tabID = uuID.split('-').head
+    val refID = uuID.split('-').head
 
     def activeClass = if (active) (ms("active"), ms("active in")) else (ms(""), ms(""))
   }
@@ -666,16 +666,16 @@ object BootstrapTags {
     def add(tab: Tab): Tabs = copy(tabs = tabs :+ tab)
 
 
-    def render = {
+    lazy val render = {
 
       div(
-        ul(id := "myTab", navStyle, tab_list_role)(
+        ul(navStyle, tab_list_role)(
           tabs.map { t =>
             li(presentation_role +++ t.activeClass._1)(
-              a(id := t.tabID, href := s"#${t.refID}", tab_role, data("toggle") := "tab", aria.controls := t.refID)(t.title)
+              a(id := t.tabID, href := s"#${t.refID}", tab_role, data("toggle") := "tab", data("height") := true, aria.controls := t.refID)(t.title)
             )
           }),
-        div(id := "myTabContent", tab_content +++ sheet.paddingTop(10))(
+        div(tab_content +++ sheet.paddingTop(10))(
           tabs.map { t =>
             div(id := t.refID, tab_pane +++ fade +++ t.activeClass._2, tab_panel_role, aria.labelledby := t.tabID)(t.content)
           }
