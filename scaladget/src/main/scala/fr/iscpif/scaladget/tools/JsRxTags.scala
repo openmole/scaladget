@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.iscpif.scaladget.tools
+package scaladget.tools
 
 import org.scalajs.dom.raw.{ HTMLDivElement, SVGElement, Node }
 import scalatags.JsDom._

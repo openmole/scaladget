@@ -1,4 +1,4 @@
-package fr.iscpif.demo
+package demo
 
 /*
  * Copyright (C) 24/08/16 // mathieu.leclaire@openmole.org
@@ -18,8 +18,8 @@ package fr.iscpif.demo
  */
 
 
-import fr.iscpif.scaladget.stylesheet.{all => sheet}
-import fr.iscpif.scaladget.api.{BootstrapTags => bs}
+import scaladget.stylesheet.{all => sheet}
+import scaladget.api.{BootstrapTags => bs}
 
 import scalatags.JsDom.all._
 import sheet._
@@ -29,7 +29,7 @@ import org.scalajs.dom._
 object PopoverDemo extends Demo {
   val sc = sourcecode.Text {
 
-    import fr.iscpif.scaladget.api.Popup._
+    import scaladget.api.Popup._
 
     val buttonStyle: ModifierSeq = Seq(
       btn_default,

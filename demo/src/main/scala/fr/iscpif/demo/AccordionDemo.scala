@@ -1,4 +1,4 @@
-package fr.iscpif.demo
+package demo
 
 /*
  * Copyright (C) 30/09/16 // mathieu.leclaire@openmole.org
@@ -17,14 +17,14 @@ package fr.iscpif.demo
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import fr.iscpif.scaladget.stylesheet.{all => sheet}
-import fr.iscpif.scaladget.api.{BootstrapTags => bs}
-import fr.iscpif.scaladget.tools.JsRxTags._
+import scaladget.stylesheet.{all => sheet}
+import scaladget.api.{BootstrapTags => bs}
+import scaladget.tools.JsRxTags._
 import org.scalajs.dom.raw.Element
 
 import scalatags.JsDom.all._
 import sheet._
-import fr.iscpif.scaladget.api.{BootstrapTags => bs}
+import scaladget.api.{BootstrapTags => bs}
 import bs._
 
 

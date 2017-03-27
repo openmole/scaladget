@@ -1,8 +1,8 @@
-package fr.iscpif.demo
+package demo
 
 
-import fr.iscpif.scaladget.api.Selector
-import fr.iscpif.scaladget.stylesheet.all
+import scaladget.api.Selector
+import scaladget.stylesheet.all
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.HTMLDivElement
 
@@ -23,8 +23,8 @@ import org.scalajs.dom.raw.HTMLDivElement
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import fr.iscpif.scaladget.api.{BootstrapTags => bs}
-import fr.iscpif.scaladget.stylesheet.{all => sheet}
+import scaladget.api.{BootstrapTags => bs}
+import scaladget.stylesheet.{all => sheet}
 import scalatags.JsDom.all._
 import sheet._
 import bs._
@@ -32,8 +32,8 @@ import bs._
 object SelectDemo {
 
   val sc = sourcecode.Text {
-    import fr.iscpif.scaladget.api.Selector._
-    import fr.iscpif.scaladget.tools.JsRxTags._
+    import scaladget.api.Selector._
+    import scaladget.tools.JsRxTags._
     import rx._
 
     // Define a toy case class containing at least a name attribute

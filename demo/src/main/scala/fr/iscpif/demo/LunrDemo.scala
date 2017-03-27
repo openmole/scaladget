@@ -1,7 +1,7 @@
 package demo
 
-import fr.iscpif.scaladget.mapping.lunr.{IIndexSearchResult, Importedjs, Index}
-import fr.iscpif.scaladget.tools.JsRxTags._
+import scaladget.mapping.lunr.{IIndexSearchResult, Importedjs, Index}
+import scaladget.tools.JsRxTags._
 import org.scalajs.dom
 import rx._
 

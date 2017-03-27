@@ -1,4 +1,4 @@
-package fr.iscpif.demo
+package demo
 
 import org.scalajs.dom._
 
@@ -19,11 +19,11 @@ import org.scalajs.dom._
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import fr.iscpif.scaladget.stylesheet.{all => sheet}
-import fr.iscpif.scaladget.tools.JsRxTags._
+import scaladget.stylesheet.{all => sheet}
+import scaladget.tools.JsRxTags._
 import scalatags.JsDom.all._
 import sheet._
-import fr.iscpif.scaladget.api.BootstrapTags._
+import scaladget.api.BootstrapTags._
 
 object LabelDemo {
   val sc = sourcecode.Text {

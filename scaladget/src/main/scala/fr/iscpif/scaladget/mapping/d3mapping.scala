@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.iscpif.scaladget.mapping
+package scaladget.mapping
 
 import scala.scalajs.js
 import js.annotation._

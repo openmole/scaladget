@@ -1,4 +1,4 @@
-package fr.iscpif.scaladget.mapping.ace
+package scaladget.mapping.ace
 
 
 import scala.scalajs.js

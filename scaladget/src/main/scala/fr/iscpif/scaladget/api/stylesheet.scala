@@ -1,4 +1,4 @@
-package fr.iscpif.scaladget.stylesheet
+package scaladget.stylesheet
 
 /*
  * Copyright (C) 30/03/16 // mathieu.leclaire@openmole.org

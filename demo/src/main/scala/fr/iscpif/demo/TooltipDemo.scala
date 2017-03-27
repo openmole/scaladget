@@ -1,4 +1,4 @@
-package fr.iscpif.demo
+package demo
 
 import org.scalajs.dom.Element
 
@@ -19,10 +19,10 @@ import org.scalajs.dom.Element
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import fr.iscpif.scaladget.stylesheet.{all => sheet}
-import fr.iscpif.scaladget.api.{BootstrapTags => bs}
+import scaladget.stylesheet.{all => sheet}
+import scaladget.api.{BootstrapTags => bs}
 import scalatags.JsDom.all._
-import fr.iscpif.scaladget.tools.JsRxTags._
+import scaladget.tools.JsRxTags._
 import sheet._
 import bs._
 
@@ -31,7 +31,7 @@ object TooltipDemo extends Demo {
 
     import rx._
     implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
-    import fr.iscpif.scaladget.api.Popup._
+    import scaladget.api.Popup._
 
     val buttonStyle: ModifierSeq = Seq(
       btn_default,

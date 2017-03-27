@@ -1,4 +1,4 @@
-package fr.iscpif.scaladget.api
+package scaladget.api
 
 /*
  * Copyright (C) 26/08/16 // mathieu.leclaire@openmole.org
@@ -17,14 +17,14 @@ package fr.iscpif.scaladget.api
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import fr.iscpif.scaladget.api.{BootstrapTags => bs}
-import fr.iscpif.scaladget.stylesheet.{all => sheet}
-import fr.iscpif.scaladget.tools.JsRxTags._
+import scaladget.api.{BootstrapTags => bs}
+import scaladget.stylesheet.{all => sheet}
+import scaladget.tools.JsRxTags._
 import scalatags.JsDom.tags
 import scalatags.JsDom.all._
 import sheet._
 import bs._
-import fr.iscpif.scaladget.api.SelectableButtons.SelectionButtonType
+import scaladget.api.SelectableButtons.SelectionButtonType
 import rx._
 
 

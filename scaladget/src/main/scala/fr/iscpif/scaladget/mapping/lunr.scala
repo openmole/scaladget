@@ -1,4 +1,4 @@
-package fr.iscpif.scaladget.mapping.lunr
+package scaladget.mapping.lunr
 
 /*
  * Copyright (C) 06/07/16 // mathieu.leclaire@openmole.org

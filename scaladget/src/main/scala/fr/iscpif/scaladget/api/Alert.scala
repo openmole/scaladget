@@ -1,14 +1,14 @@
-package fr.iscpif.scaladget.api
+package scaladget.api
 
-import fr.iscpif.scaladget.api.{BootstrapTags => bs}
-import fr.iscpif.scaladget.stylesheet.{all => sheet}
+import scaladget.api.{BootstrapTags => bs}
+import scaladget.stylesheet.{all => sheet}
 
 import scalatags.JsDom.all._
 import scalatags.JsDom.tags
 import sheet._
 import rx._
-import fr.iscpif.scaladget.api.Alert.ExtraButton
-import fr.iscpif.scaladget.tools.JsRxTags._
+import scaladget.api.Alert.ExtraButton
+import scaladget.tools.JsRxTags._
 import rx.Rx
 
 /*

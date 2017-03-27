@@ -1,4 +1,4 @@
-package fr.iscpif.demo
+package demo
 
 /*
  * Copyright (C) 24/08/16 // mathieu.leclaire@openmole.org
@@ -17,9 +17,9 @@ package fr.iscpif.demo
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import fr.iscpif.scaladget.api.{BootstrapTags => bs}
-import fr.iscpif.scaladget.stylesheet.{all => sheet}
-import fr.iscpif.scaladget.tools.JsRxTags._
+import scaladget.api.{BootstrapTags => bs}
+import scaladget.stylesheet.{all => sheet}
+import scaladget.tools.JsRxTags._
 
 import scalatags.JsDom.all._
 import org.scalajs.dom.raw.{Element, HTMLInputElement}
@@ -31,7 +31,7 @@ object FormDemo extends Demo {
 
   val sc = sourcecode.Text {
 
-    import fr.iscpif.scaladget.api.Selector._
+    import scaladget.api.Selector._
     import rx._
 
     case class MyElement(name: String)

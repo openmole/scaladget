@@ -1,7 +1,7 @@
 package demo
 
-import fr.iscpif.scaladget.api.{BootstrapTags => bs}
-import fr.iscpif.scaladget.stylesheet.{all => sheet}
+import scaladget.api.{BootstrapTags => bs}
+import scaladget.stylesheet.{all => sheet}
 
 import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
@@ -11,7 +11,6 @@ import scalatags.JsDom.tags
 import scalatags.JsDom.all._
 import sheet._
 import bs._
-import fr.iscpif.demo._
 
 /*
  * Copyright (C) 24/03/16 // mathieu.leclaire@openmole.org
@@ -38,8 +37,8 @@ object BootstrapDemo extends JSApp {
 
     def imports =
       """
-      import fr.iscpif.scaladget.stylesheet.{all => sheet}
-      import fr.iscpif.scaladget.api.{BootstrapTags => bs}
+      import scaladget.stylesheet.{all => sheet}
+      import scaladget.api.{BootstrapTags => bs}
       import scalatags.JsDom.all._
       import sheet._
       import bs._

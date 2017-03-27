@@ -1,4 +1,4 @@
-package fr.iscpif.scaladget.api
+package scaladget.api
 
 /*
  * Copyright (C) 27/05/15 // mathieu.leclaire@openmole.org
@@ -25,15 +25,15 @@ import org.scalajs.dom.raw._
 import scala.scalajs.js.annotation.JSExport
 import scalatags.JsDom.{TypedTag, tags}
 import scalatags.JsDom.all._
-import fr.iscpif.scaladget.tools.JsRxTags._
-import fr.iscpif.scaladget.stylesheet.{all => sheet}
+import scaladget.tools.JsRxTags._
+import scaladget.stylesheet.{all => sheet}
 import sheet.{ctx => _, _}
 import rx._
 import Popup._
 import Selector._
-import fr.iscpif.scaladget.api.Alert.ExtraButton
-import fr.iscpif.scaladget.api.SelectableButtons.{CheckBoxSelection, RadioSelection}
-import fr.iscpif.scaladget.mapping.bootstrap.Popover
+import scaladget.api.Alert.ExtraButton
+import scaladget.api.SelectableButtons.{CheckBoxSelection, RadioSelection}
+import scaladget.mapping.bootstrap.Popover
 import org.scalajs.dom
 
 import scala.scalajs.js
@@ -224,7 +224,7 @@ object BootstrapTags {
       d
     }
 
-    lazy val modalMapping = new fr.iscpif.scaladget.mapping.bootstrap.Modal(dialog)
+    lazy val modalMapping = new scaladget.mapping.bootstrap.Modal(dialog)
 
     def header(hDialog: TypedTag[_]): Unit = headerDialog() = ModalDialog.headerDialogShell(hDialog)
 
@@ -347,8 +347,8 @@ object BootstrapTags {
       p
     }
 
-    lazy val popover: fr.iscpif.scaladget.mapping.bootstrap.Popover = {
-      val p = new fr.iscpif.scaladget.mapping.bootstrap.Popover(render)
+    lazy val popover: scaladget.mapping.bootstrap.Popover = {
+      val p = new scaladget.mapping.bootstrap.Popover(render)
       show
       p
     }
@@ -392,7 +392,7 @@ object BootstrapTags {
       tooltip
     }
 
-    lazy val tooltip = new fr.iscpif.scaladget.mapping.bootstrap.Tooltip(elementRender)
+    lazy val tooltip = new scaladget.mapping.bootstrap.Tooltip(elementRender)
 
     def render = elementRender
     def hide = tooltip.hide

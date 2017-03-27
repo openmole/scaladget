@@ -1,4 +1,4 @@
-package fr.iscpif.scaladget.api
+package scaladget.api
 
 /*
  * Copyright (C) 14/03/17 // mathieu.leclaire@openmole.org

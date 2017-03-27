@@ -1,4 +1,4 @@
-package fr.iscpif.scaladget.mapping.bootstrap
+package scaladget.mapping.bootstrap
 
 /*
  * Copyright (C) 18/08/16 // mathieu.leclaire@openmole.org

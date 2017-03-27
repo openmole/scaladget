@@ -1,7 +1,7 @@
-package fr.iscpif.demo
+package demo
 
-import fr.iscpif.scaladget.stylesheet.{all => sheet}
-import fr.iscpif.scaladget.api.{BootstrapTags => bs}
+import scaladget.stylesheet.{all => sheet}
+import scaladget.api.{BootstrapTags => bs}
 import bs._
 import org.scalajs.dom.raw.Element
 import sheet._

@@ -1,4 +1,4 @@
-package fr.iscpif.demo
+package demo
 
 import org.scalajs.dom._
 

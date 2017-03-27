@@ -1,8 +1,8 @@
-package fr.iscpif.scaladget.api
+package scaladget.api
 
 
-import fr.iscpif.scaladget.stylesheet.all
-import fr.iscpif.scaladget.tools.JsRxTags._
+import scaladget.stylesheet.all
+import scaladget.tools.JsRxTags._
 import org.scalajs.dom._
 import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
