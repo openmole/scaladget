@@ -18,7 +18,7 @@ val sourceCodeVersion = "0.1.2"
 
 lazy val defaultSettings = Seq(
   organization := "fr.iscpif",
-  version := "0.9.2-SNAPSHOT",
+  version := "0.9.3-SNAPSHOT",
   scalaVersion := ScalaVersion,
   resolvers := Seq(Resolver.sonatypeRepo("snapshots"),
     DefaultMavenRepository
