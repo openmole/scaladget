@@ -17,12 +17,14 @@
  */
 package scaladget.tools
 
-import org.scalajs.dom.raw.{ HTMLDivElement, SVGElement, Node }
+import org.scalajs.dom.raw.{HTMLDivElement, Node, SVGElement}
+
 import scalatags.JsDom._
-import scala.util.{ Failure, Success }
+import scala.util.{Failure, Success}
 import all._
 import rx._
-import org.scalajs.dom.{ Element }
+import org.scalajs.dom.Element
+import org.scalajs.dom.svg.Path
 
 /**
   * A minimal binding between Scala.Rx and Scalatags and Scala-Js-Dom
@@ -65,11 +67,9 @@ object JsRxTags {
   /**
     * Idem for SVG elements
     */
-  implicit def rxSVGMod[T <: TypedTag[SVGElement]](r: Rx[T]): Modifier = {
-    def rSafe = r.toTry match {
-      case Success(v) ⇒ v.render
-      case Failure(e) ⇒ span(e.toString, backgroundColor := "red").render
-    }
+  implicit def rxSVGMod[T <: TypedTag[SVGElement]](r: Rx[T]): SVGElement = {
+    def rSafe = r.now.render
+
     var last = rSafe
     r.triggerLater {
       val newLast = rSafe
@@ -78,6 +78,8 @@ object JsRxTags {
     }
     last
   }
+
+  implicit def rxPath(r: Rx[Path]): SVGElement = rxSVGMod(r.map{svgTags.g(_)})
 
   implicit def RxAttrValue[T: scalatags.JsDom.AttrValue] = new scalatags.JsDom.AttrValue[Rx.Dynamic[T]] {
     def apply(t: Element, a: Attr, r: Rx.Dynamic[T]): Unit = {

@@ -17,48 +17,65 @@ package scaladget.api
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-import scalatags.JsDom
 import scalatags.JsDom._
 import scalatags.JsDom.all._
 import org.scalajs.dom
+import org.scalajs.dom.raw.Node
+import scaladget.stylesheet.all._
 
 package object svg {
 
   object path {
     implicit def pathToTypedTagPath(p: Path): TypedTag[dom.svg.Path] = p.render
 
+    implicit def pathToNode(p: Path): Node = p().render
+
       def start(x: Int, y: Int): Path = apply("").m(x, y)
 
-      def apply(st: String) = new Path {
+      def apply(st: String = "", ms: ModifierSeq = emptyMod) = new Path {
         val svgString = st
+        val modifierSeq = ms
     }
+
+    type PathOperator = String
+    val M: PathOperator = "M"
+    val L: PathOperator = "L"
+    val H: PathOperator = "H"
+    val V: PathOperator = "V"
+    val C: PathOperator = "C"
+    val Q: PathOperator = "Q"
+    val S: PathOperator = "S"
+    val T: PathOperator = "T"
+    val A: PathOperator = "A"
+    val Z: PathOperator = "Z"
 
 
     trait Path {
       def svgString: String
 
-      def render: TypedTag[dom.svg.Path] = svgTags.path(svgAttrs.d := svgString)
+      def modifierSeq: ModifierSeq
 
-      private def append(s: String): Path = path(svgString + s" $s")
+      def render: TypedTag[dom.svg.Path] = svgTags.path(svgAttrs.d := svgString, modifierSeq)
 
-      def m(x: Int, y: Int): Path = append(s"M $x $y")
+      private def append(s: String): Path = path(svgString + s" $s", modifierSeq)
 
-      def l(x: Int, y: Int): Path = append(s"L $x $y")
+      def m(x: Int, y: Int): Path = append(s"$M $x $y")
 
-      def h(y: Int): Path = append(s"H $y")
+      def l(x: Int, y: Int): Path = append(s"$L $x $y")
 
-      def v(x: Int): Path = append(s"V $x")
+      def h(y: Int): Path = append(s"$H $y")
 
-      def c(x1: Int, y1: Int, x2: Int, y2: Int, x: Int, y: Int): Path = append(s"C $x1 $y1 $x2 $y2 $x $y")
+      def v(x: Int): Path = append(s"$V $x")
 
-      def q(x1: Int, y1: Int, x: Int, y: Int): Path = append(s"Q $x1 $y1 $x $y")
+      def c(x1: Int, y1: Int, x2: Int, y2: Int, x: Int, y: Int): Path = append(s"$C $x1 $y1 $x2 $y2 $x $y")
 
-      def s(x2: Int, y2: Int, x: Int, y: Int): Path = append(s"S $x2 $y2 $x $y")
+      def q(x1: Int, y1: Int, x: Int, y: Int): Path = append(s"$Q $x1 $y1 $x $y")
 
-      def t(x: Int, y: Int): Path = append(s"T $x $y")
+      def s(x2: Int, y2: Int, x: Int, y: Int): Path = append(s"$S $x2 $y2 $x $y")
 
-      def a(rx: Int, ry: Int, xAxisRotation: Int, largeArcFlag: Int, sweepFlag: Int, x: Double, y: Double) = append(s"A $rx $ry $xAxisRotation $largeArcFlag $sweepFlag $x $y")
+      def t(x: Int, y: Int): Path = append(s"$T $x $y")
+
+      def a(rx: Int, ry: Int, xAxisRotation: Int, largeArcFlag: Int, sweepFlag: Int, x: Double, y: Double) = append(s"$A $rx $ry $xAxisRotation $largeArcFlag $sweepFlag $x $y")
 
       def z = append("Z")
     }
