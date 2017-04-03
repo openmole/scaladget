@@ -11,7 +11,7 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
 val ScalaVersion = "2.11.8"
 val bootstrapNativeVersion = "1.1.0"
-val scalatagsVersion = "0.6.2"
+val scalatagsVersion = "0.6.3"
 val scalaJSdomVersion = "0.9.1"
 val rxVersion = "0.3.1"
 val sourceCodeVersion = "0.1.2"
@@ -68,11 +68,14 @@ lazy val demo = project.in(file("demo")) dependsOn (scaladget) enablePlugins (Sc
   //  val bootstrapJS = (npmUpdate in Compile).value / "node_modules" / "bootstrap.native" / "dist" / "bootstrap-native.min.js"
     val demoJS = (fullOptJS in Compile).value
 
+    println("demojs " + demoJS.data.getAbsolutePath)
+    println("TAR " + (demoTarget /"js/demo.js").getAbsolutePath)
     IO.copyFile(demoJS.data, demoTarget / "js/demo.js")
   //  IO.copyFile(bootstrapJS, demoTarget / "js/bootstrap.-native.min.js")
 
 
-    IO.copyFile(demoResource / "index.html", demoTarget / "index.html")
+    IO.copyFile(demoResource / "bootstrap-native.html", demoTarget / "bootstrap-native.html")
+    IO.copyFile(demoResource / "flowchart.html", demoTarget / "flowchart.html")
     IO.copyDirectory(demoResource / "js", demoTarget / "js")
     IO.copyDirectory(demoResource / "css", demoTarget / "css")
     IO.copyDirectory(demoResource / "fonts", demoTarget / "fonts")
