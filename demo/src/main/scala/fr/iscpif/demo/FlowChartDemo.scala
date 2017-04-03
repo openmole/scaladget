@@ -1,7 +1,11 @@
 package demo
 
+import org.scalajs.dom
 import scala.scalajs.js.annotation.JSExport
+import scaladget.stylesheet.all._
 import scala.scalajs.js.JSApp
+import scalatags.JsDom.all._
+import scalatags.Text.tags
 
 /*
  * Copyright (C) 03/04/17 // mathieu.leclaire@openmole.org
@@ -39,4 +43,40 @@ object FlowChartDemo extends JSApp {
       Graph.edge(nodes(3), nodes(2)))
     val window = new Window(nodes, edges)
   }
+
+  val notesCSS: ModifierSeq = Seq(
+    width := 350,
+    height := "auto",
+    fixedPosition,
+    floatRight,
+    right := 50,
+    fontWeight := "bold",
+    backgroundColor := "#ffdd55",
+    padding := 20,
+    top := 10,
+    borderRadius := "5px"
+  )
+
+  val notes = div(
+    notesCSS,
+    "The demo provides with a small graph based on the d3 library ",
+    a(href := "http://bl.ocks.org/cjrd/68634591)", target := "_blank")("http://bl.ocks.org/cjrd/6863459 "),
+    "but with no D3.js at all. It's fully based on ",
+    a(href := "https://github.com/lihaoyi/scalatags", target := "_blank")("scalatags "),
+    ", ",
+    a(href := "https://github.com/scala-js/scala-js-dom", target := "_blank")("scala-js-dom "),
+    " and ",
+    a(href := "https://github.com/openmole/scaladget", target := "_blank")("scaladget. "),
+    "The full code can be found ",
+    a(href := "https://github.com/openmole/scaladget/blob/master/demo/src/main/scala/fr/iscpif/demo/FlowChart.scala", target := "_blank")("here. "),
+    "Try to:",
+    ul(
+      li("drag the nodes to move them"),
+      li("shift-click on the graph to create a node"),
+      li("shift-click on a node and then drag to another node to connect them with a directed edge"),
+      li("click on any node or edge and press delete to remove them")
+    )
+  )
+
+  dom.document.body.appendChild(notes.render)
 }

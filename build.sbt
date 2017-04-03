@@ -68,8 +68,6 @@ lazy val demo = project.in(file("demo")) dependsOn (scaladget) enablePlugins (Sc
   //  val bootstrapJS = (npmUpdate in Compile).value / "node_modules" / "bootstrap.native" / "dist" / "bootstrap-native.min.js"
     val demoJS = (fullOptJS in Compile).value
 
-    println("demojs " + demoJS.data.getAbsolutePath)
-    println("TAR " + (demoTarget /"js/demo.js").getAbsolutePath)
     IO.copyFile(demoJS.data, demoTarget / "js/demo.js")
   //  IO.copyFile(bootstrapJS, demoTarget / "js/bootstrap.-native.min.js")
 
