@@ -653,8 +653,8 @@ object BootstrapTags {
 
   // TABS
   case class Tab(title: String, content: BS, active: Boolean) {
-    val tabID = uuID.split('-').head
-    val refID = uuID.split('-').head
+    val tabID = "t" + uuID.split('-').head
+    val refID = "r" + uuID.split('-').head
 
     def activeClass = if (active) (ms("active"), ms("active in")) else (ms(""), ms(""))
   }
