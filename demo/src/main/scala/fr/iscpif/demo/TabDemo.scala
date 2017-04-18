@@ -41,7 +41,7 @@ object TabDemo extends Demo {
 
     Tabs(sheet.pills).
       add("My first", div1).
-      add("My second", div2, true).
+      add("My second", div2).
       render
 
   }

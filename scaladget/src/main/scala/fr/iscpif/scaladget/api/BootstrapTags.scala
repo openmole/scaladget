@@ -668,15 +668,21 @@ object BootstrapTags {
 
     lazy val render = {
 
+      val existsOneActive = tabs.map{_.active}.exists(_ == true)
+      val theTabs = {
+        if (!existsOneActive && !tabs.isEmpty) tabs.head.copy(active = true) +: tabs.tail
+        else tabs
+      }
+
       div(
         ul(navStyle, tab_list_role)(
-          tabs.map { t =>
+          theTabs.map { t =>
             li(presentation_role +++ t.activeClass._1)(
               a(id := t.tabID, href := s"#${t.refID}", tab_role, data("toggle") := "tab", data("height") := true, aria.controls := t.refID)(t.title)
             )
           }),
         div(tab_content +++ sheet.paddingTop(10))(
-          tabs.map { t =>
+          theTabs.map { t =>
             div(id := t.refID, tab_pane +++ fade +++ t.activeClass._2, tab_panel_role, aria.labelledby := t.tabID)(t.content)
           }
         )
