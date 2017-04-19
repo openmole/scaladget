@@ -64,6 +64,7 @@ object ButtonDemo {
       bs.button("Danger", buttonStyle +++ btn_danger, () => clickAction("danger")),
       bs.button("Default", buttonStyle +++ btn_default, glyph_fire, () => clickAction("fire")),
       bs.button(buttonStyle = buttonStyle +++ btn_danger, glyphicon = glyph_download, todo = () => clickAction("download")),
+      bs.linkButton("GitHub", "https://github.com/openmole/scaladget", buttonStyle +++ btn_primary),
       Rx {
         div(sheet.paddingAll(top = 15), s"Clicked: ${clicked()}")
       },

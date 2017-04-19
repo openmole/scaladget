@@ -138,6 +138,9 @@ object BootstrapTags {
     )
   }
 
+  def linkButton(content: String, link: String, buttonStyle: ModifierSeq = btn_default, openInOtherTab: Boolean = true) =
+    a(buttonStyle, href := link, role := "button", target := {if(openInOtherTab) "_blank" else ""})(content)
+
   // Clickable span containing a glyphicon and a text
   def glyphSpan(glyphicon: ModifierSeq, onclickAction: () ⇒ Unit = () ⇒ {}, text: String = ""): TypedTag[HTMLSpanElement] =
     span(glyphicon +++ pointer, aria.hidden := "true", onclick := { () ⇒ onclickAction() })(text)
