@@ -17,7 +17,7 @@ val sourceCodeVersion = "0.1.2"
 
 crossScalaVersions in ThisBuild := Seq("2.11.8", "2.12.1")
 organization in ThisBuild := "fr.iscpif"
-version in ThisBuild := "0.9.4-SNAPSHOT"
+version in ThisBuild := "0.9.5-SNAPSHOT"
 resolvers in ThisBuild := Seq(Resolver.sonatypeRepo("snapshots"),
   DefaultMavenRepository
 )
