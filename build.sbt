@@ -10,7 +10,7 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 //scalaOrganization in ThisBuild := "org.typelevel"
 
 val bootstrapNativeVersion = "1.1.0"
-val scalatagsVersion = "0.6.3"
+val scalatagsVersion = "0.6.5"
 val scalaJSdomVersion = "0.9.1"
 val rxVersion = "0.3.2"
 val sourceCodeVersion = "0.1.2"
