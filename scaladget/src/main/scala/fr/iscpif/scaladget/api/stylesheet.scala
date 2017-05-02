@@ -248,6 +248,7 @@ package bootstrap {
     lazy val navbar_default: Navbar = toClass("navbar-default")
     lazy val navbar_inverse: Navbar = toClass("navbar-inverse")
     lazy val navbar_staticTop: Navbar = toClass("navbar-static-top")
+    lazy val navbar_fixedTop: Navbar = toClass("navbar-fixed-top")
     lazy val navbar_pills: Navbar = toClass("nav-pills")
     lazy val navbar_form: Navbar = toClass("navbar-form")
     lazy val navbar_right: Navbar = toClass("navbar-right")
