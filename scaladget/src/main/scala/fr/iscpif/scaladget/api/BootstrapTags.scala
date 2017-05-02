@@ -294,7 +294,7 @@ object BootstrapTags {
 
   def navBar(classPair: ModifierSeq, contents: NavItem[_ <: HTMLElement]*) = new NavBar(classPair, None, contents)
 
-  case class NavBarBrand(src: String, modifierSeq: ModifierSeq, alt: String)
+  case class NavBarBrand(src: String, modifierSeq: ModifierSeq, todo: ()=> Unit, alt: String)
 
   case class NavBar(classPair: ModifierSeq, brand: Option[NavBarBrand], contents: Seq[NavItem[_ <: HTMLElement]]) {
 
@@ -321,8 +321,8 @@ object BootstrapTags {
             b <- brand
           } yield {
             div(navbar_header)(
-              div(navbar_brand, href := "#", padding := 0)(
-                img(b.modifierSeq, alt := b.alt, src := b.src)
+              div(navbar_brand, href := "#", padding := 0,  onclick := b.todo)(
+                img(b.modifierSeq +++ pointer, alt := b.alt, src := b.src)
               )
             )
           },
@@ -334,7 +334,7 @@ object BootstrapTags {
       )
     }
 
-    def withBrand(src: String, modifierSeq: ModifierSeq = emptyMod, alt: String = "") = copy(brand = Some(NavBarBrand(src, modifierSeq, alt)))
+    def withBrand(src: String, modifierSeq: ModifierSeq = emptyMod, todo: ()=> Unit = ()=> {}, alt: String = "") = copy(brand = Some(NavBarBrand(src, modifierSeq, todo, alt)))
 
   }
 
