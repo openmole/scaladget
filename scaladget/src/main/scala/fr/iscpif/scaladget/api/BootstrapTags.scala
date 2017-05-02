@@ -292,31 +292,49 @@ object BootstrapTags {
   def stringNavItem(content: String, todo: () ⇒ Unit = () ⇒ {}, activeDefault: Boolean = false): NavItem[HTMLElement] =
     navItem(span(content).render, todo, activeDefault = activeDefault)
 
-  def navBar(classPair: ModifierSeq, contents: NavItem[_ <: HTMLElement]*): TypedTag[HTMLElement] = {
+  def navBar(classPair: ModifierSeq, contents: NavItem[_ <: HTMLElement]*) = new NavBar(classPair, None, contents)
 
-    val sortedContents = contents.partition {
-      _.toRight
-    }
+  case class NavBarBrand(src: String, modifierSeq: ModifierSeq, alt: String)
 
-    def buildUL(cts: Seq[NavItem[_ <: HTMLElement]], modifier: ModifierSeq = emptyMod) =
-      ul(nav +++ navbar_nav +++ modifier)(
-      cts.map { c ⇒
-        c.render(scalatags.JsDom.attrs.onclick := { () ⇒
-          contents.foreach {
-            _.active() = false
-          }
-          c.active() = true
-        })
-      }: _*)
+  case class NavBar(classPair: ModifierSeq, brand: Option[NavBarBrand], contents: Seq[NavItem[_ <: HTMLElement]]) {
 
-    JsDom.tags2.nav(navbar +++ navbar_default +++ classPair)(
-      div(toClass("container-fluid"))(
-        div(toClass("collapse") +++ navbar_collapse)(
-          buildUL(sortedContents._2),
-          buildUL(sortedContents._1, navbar_right)
+    def render: TypedTag[HTMLElement] = {
+
+      val sortedContents = contents.partition {
+        _.toRight
+      }
+
+      def buildUL(cts: Seq[NavItem[_ <: HTMLElement]], modifier: ModifierSeq = emptyMod) =
+        ul(nav +++ navbar_nav +++ modifier)(
+          cts.map { c ⇒
+            c.render(scalatags.JsDom.attrs.onclick := { () ⇒
+              contents.foreach {
+                _.active() = false
+              }
+              c.active() = true
+            })
+          }: _*)
+
+      JsDom.tags2.nav(navbar +++ navbar_default +++ classPair)(
+        div(toClass("container-fluid"))(
+          for {
+            b <- brand
+          } yield {
+            div(navbar_header)(
+              div(navbar_brand, href := "#", padding := 0)(
+                img(b.modifierSeq, alt := b.alt, src := b.src)
+              )
+            )
+          },
+          div(toClass("collapse") +++ navbar_collapse)(
+            buildUL(sortedContents._2),
+            buildUL(sortedContents._1, navbar_right)
+          )
         )
       )
-    )
+    }
+
+    def withBrand(src: String, modifierSeq: ModifierSeq = emptyMod, alt: String = "") = copy(brand = Some(NavBarBrand(src, modifierSeq, alt)))
 
   }
 

@@ -64,7 +64,7 @@ object NavBarDemo {
       threeItem,
       fourItem.right,
       fiveItem.right
-    ).render
+    ).withBrand("img/iscpif.png", Seq(width := 80)).render.render
   }
 
   val elementDemo = new ElementDemo {

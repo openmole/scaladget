@@ -74,6 +74,7 @@ lazy val demo = project.in(file("demo")) dependsOn (scaladget) enablePlugins (Sc
     IO.copyDirectory(demoResource / "js", demoTarget / "js")
     IO.copyDirectory(demoResource / "css", demoTarget / "css")
     IO.copyDirectory(demoResource / "fonts", demoTarget / "fonts")
+    IO.copyDirectory(demoResource / "img", demoTarget / "img")
   }
 )
 
