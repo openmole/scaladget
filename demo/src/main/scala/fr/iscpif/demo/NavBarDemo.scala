@@ -62,8 +62,8 @@ object NavBarDemo {
       oneItem,
       twoItem,
       threeItem,
-      fourItem,
-      fiveItem
+      fourItem.right,
+      fiveItem.right
     ).render
   }
 

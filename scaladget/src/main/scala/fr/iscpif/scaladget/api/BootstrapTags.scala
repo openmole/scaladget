@@ -139,7 +139,9 @@ object BootstrapTags {
   }
 
   def linkButton(content: String, link: String, buttonStyle: ModifierSeq = btn_default, openInOtherTab: Boolean = true) =
-    a(buttonStyle, href := link, role := "button", target := {if(openInOtherTab) "_blank" else ""})(content)
+    a(buttonStyle, href := link, role := "button", target := {
+      if (openInOtherTab) "_blank" else ""
+    })(content)
 
   // Clickable span containing a glyphicon and a text
   def glyphSpan(glyphicon: ModifierSeq, onclickAction: () ⇒ Unit = () ⇒ {}, text: String = ""): TypedTag[HTMLSpanElement] =
@@ -250,10 +252,11 @@ object BootstrapTags {
 
 
   // NAVS
-  class NavItem[T <: HTMLElement](contentDiv: T,
-                               val todo: () ⇒ Unit = () ⇒ {},
-                               extraRenderPair: Seq[Modifier] = Seq(),
-                               activeDefault: Boolean = false) {
+  case class NavItem[T <: HTMLElement](contentDiv: T,
+                                       val todo: () ⇒ Unit = () ⇒ {},
+                                       extraRenderPair: Seq[Modifier] = Seq(),
+                                       activeDefault: Boolean = false,
+                                       toRight: Boolean = false) {
 
     implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 
@@ -275,36 +278,47 @@ object BootstrapTags {
         if (active()) "active" else ""
       }
     )(extraRenderPair: _*)
+
+    def right = copy(toRight = true)
   }
 
   def navItem[T <: HTMLElement](content: T,
-                             todo: () => Unit = () => {},
-                             extraRenderPair: Seq[Modifier] = Seq(),
-                             activeDefault: Boolean = false) = {
+                                todo: () => Unit = () => {},
+                                extraRenderPair: Seq[Modifier] = Seq(),
+                                activeDefault: Boolean = false) = {
     new NavItem(content, todo, extraRenderPair, activeDefault)
   }
 
   def stringNavItem(content: String, todo: () ⇒ Unit = () ⇒ {}, activeDefault: Boolean = false): NavItem[HTMLElement] =
     navItem(span(content).render, todo, activeDefault = activeDefault)
 
-  def navBar(classPair: ModifierSeq, contents: NavItem[_ <: HTMLElement]*): TypedTag[HTMLElement] =
+  def navBar(classPair: ModifierSeq, contents: NavItem[_ <: HTMLElement]*): TypedTag[HTMLElement] = {
+
+    val sortedContents = contents.partition {
+      _.toRight
+    }
+
+    def buildUL(cts: Seq[NavItem[_ <: HTMLElement]], modifier: ModifierSeq = emptyMod) =
+      ul(nav +++ navbar_nav +++ modifier)(
+      cts.map { c ⇒
+        c.render(scalatags.JsDom.attrs.onclick := { () ⇒
+          contents.foreach {
+            _.active() = false
+          }
+          c.active() = true
+        })
+      }: _*)
 
     JsDom.tags2.nav(navbar +++ navbar_default +++ classPair)(
       div(toClass("container-fluid"))(
         div(toClass("collapse") +++ navbar_collapse)(
-          ul(nav +++ navbar_nav)(
-            contents.map { c ⇒
-              c.render(scalatags.JsDom.attrs.onclick := { () ⇒
-                contents.foreach {
-                  _.active() = false
-                }
-                c.active() = true
-              })
-            }: _*)
+          buildUL(sortedContents._2),
+          buildUL(sortedContents._1, navbar_right)
         )
       )
     )
 
+  }
 
   // Nav pills
   case class NavPill(name: String, badge: Option[Int], todo: () => Unit)
@@ -391,13 +405,14 @@ object BootstrapTags {
       else element
     }.render
 
-    elementRender.onmouseover = (e: Event)=> {
+    elementRender.onmouseover = (e: Event) => {
       tooltip
     }
 
     lazy val tooltip = new scaladget.mapping.bootstrap.Tooltip(elementRender)
 
     def render = elementRender
+
     def hide = tooltip.hide
   }
 
@@ -671,7 +686,9 @@ object BootstrapTags {
 
     lazy val render = {
 
-      val existsOneActive = tabs.map{_.active}.exists(_ == true)
+      val existsOneActive = tabs.map {
+        _.active
+      }.exists(_ == true)
       val theTabs = {
         if (!existsOneActive && !tabs.isEmpty) tabs.head.copy(active = true) +: tabs.tail
         else tabs
@@ -903,7 +920,7 @@ object BootstrapTags {
     val accordionID = uuID
     div(
       modifierSeq,
-     // id := accordionID,
+      // id := accordionID,
       role := "tablist",
       aria.multiselectable := "true",
       ms("panel-group"))(
@@ -917,7 +934,7 @@ object BootstrapTags {
             role := "tab"
           )(a(
             data("toggle") := "collapse",
-       //     data("parent") := s"#$accordionID",
+            //     data("parent") := s"#$accordionID",
             href := collapseID,
             aria.expanded := true,
             aria.controls := collapseID,
