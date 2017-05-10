@@ -321,8 +321,11 @@ object BootstrapTags {
             b <- brand
           } yield {
             div(navbar_header)(
-              div(navbar_brand, href := "#", padding := 0,  onclick := b.todo)(
-                img(b.modifierSeq +++ pointer, alt := b.alt, src := b.src)
+              div(navbar_brand, href := "#", padding := 0)(
+                img(b.modifierSeq +++ pointer, alt := b.alt, src := b.src,  onclick := {
+
+                  ()=> b.todo()
+                })
               )
             )
           },
