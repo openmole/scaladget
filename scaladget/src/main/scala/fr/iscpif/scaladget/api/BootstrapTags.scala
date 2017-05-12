@@ -17,9 +17,7 @@ package scaladget.api
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.util.UUID
-
-import org.scalajs.dom.html.{Div, Input}
+import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw._
 
 import scala.scalajs.js.annotation.JSExport
@@ -54,6 +52,9 @@ object BootstrapTags {
   type BS = TypedTag[_ <: HTMLElement]
 
   type ID = String
+  implicit class ShortID(id: ID) {
+    def short = id.split('-').head
+  }
 
   def uuID: ID = java.util.UUID.randomUUID.toString
 
@@ -576,7 +577,7 @@ object BootstrapTags {
   case class ElementGroup(e1: TypedTag[HTMLElement], e2: TypedTag[HTMLElement])
 
   def inLineForm(elements: ElementGroup*) = {
-    val ID = uuID
+    val ID = uuID.short
     form(formInline)(
       for {
         e <- elements
@@ -691,16 +692,16 @@ object BootstrapTags {
   }
 
   // TABS
-  case class Tab(title: String, content: BS, active: Boolean) {
-    val tabID = "t" + uuID.split('-').head
-    val refID = "r" + uuID.split('-').head
+  case class Tab(title: String, content: BS, active: Boolean, onclickExtra: ()=> Unit) {
+    val tabID = "t" + uuID.short
+    val refID = "r" + uuID.short
 
     def activeClass = if (active) (ms("active"), ms("active in")) else (ms(""), ms(""))
   }
 
   case class Tabs(navStyle: NavStyle, tabs: Seq[Tab] = Seq()) {
 
-    def add(title: String, content: BS, active: Boolean = false): Tabs = add(Tab(title, content, active))
+    def add(title: String, content: BS, active: Boolean = false, onclickExtra: ()=> Unit= ()=> {}): Tabs = add(Tab(title, content, active, onclickExtra))
 
     def add(tab: Tab): Tabs = copy(tabs = tabs :+ tab)
 
@@ -719,7 +720,7 @@ object BootstrapTags {
         ul(navStyle, tab_list_role)(
           theTabs.map { t =>
             li(presentation_role +++ t.activeClass._1)(
-              a(id := t.tabID, href := s"#${t.refID}", tab_role, data("toggle") := "tab", data("height") := true, aria.controls := t.refID)(t.title)
+              a(id := t.tabID, href := s"#${t.refID}", tab_role, data("toggle") := "tab", data("height") := true, aria.controls := t.refID, onclick := t.onclickExtra)(t.title)
             )
           }),
         div(tab_content +++ sheet.paddingTop(10))(
@@ -938,7 +939,7 @@ object BootstrapTags {
   def accordion(accordionItems: AccordionItem*): TypedTag[HTMLDivElement] = accordion(emptyMod)(emptyMod)(accordionItems.toSeq: _*)
 
   def accordion(modifierSeq: ModifierSeq)(titleModifierSeq: ModifierSeq)(accordionItems: AccordionItem*): TypedTag[HTMLDivElement] = {
-    val accordionID = uuID
+    val accordionID = uuID.short
     div(
       modifierSeq,
       // id := accordionID,
@@ -948,7 +949,7 @@ object BootstrapTags {
       for {
         item <- accordionItems.toSeq
       } yield {
-        val collapseID = uuID
+        val collapseID = uuID.short
         div(sheet.panel +++ sheet.panelDefault)(
           div(
             panelHeading,

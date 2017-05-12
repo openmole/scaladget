@@ -40,7 +40,7 @@ object TabDemo extends Demo {
     val div2 = vForm(bs.input("")(placeholder := "Name").render.withLabel("Your name"))
 
     Tabs(sheet.pills).
-      add("My first", div1).
+      add("My first", div1, onclickExtra = ()=> println("Tab1 pressed")).
       add("My second", div2).
       render
 
