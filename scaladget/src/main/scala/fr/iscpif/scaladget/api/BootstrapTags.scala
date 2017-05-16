@@ -378,7 +378,9 @@ object BootstrapTags {
           }
         },
         trigger match {
-          case ClickPopup => onclick := { () => show }
+          case ClickPopup => onclick := { () =>
+            println("1")
+            show }
           case _ => onmouseover := { () => hide }
         }
       ).render
@@ -387,20 +389,13 @@ object BootstrapTags {
       p
     }
 
-    lazy val popover: scaladget.mapping.bootstrap.Popover = {
-      val p = new scaladget.mapping.bootstrap.Popover(render)
-      show
-      p
-    }
+    lazy val popover: scaladget.mapping.bootstrap.Popover =
+      new scaladget.mapping.bootstrap.Popover(render)
 
-    def show = {
-      popover.show
-      //onopen()
-    }
+    def show = popover.show
 
-    def hide = {
-      popover.hide
-    }
+    def hide = popover.hide
+
   }
 
   object Tooltip {
