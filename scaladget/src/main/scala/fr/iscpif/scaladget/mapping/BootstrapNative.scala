@@ -50,3 +50,12 @@ class Tooltip(element: Element, options: js.Dynamic = lit()) extends js.Object {
   def show(): Unit = js.native
   def hide(): Unit = js.native
 }
+
+@JSName("Collapse")
+@js.native
+class Collapse(element: Element, options: js.Dynamic = lit()) extends js.Object {
+
+  def show(): Unit = js.native
+  def hide(): Unit = js.native
+  def toggle(): Unit = js.native
+}

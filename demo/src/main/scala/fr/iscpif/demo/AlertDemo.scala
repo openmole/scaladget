@@ -46,7 +46,9 @@ object AlertDemo extends Demo {
     val triggers: Var[Seq[Alert]] = Var(Seq())
 
     def add(alert: Alert) = () => triggers() = triggers.now :+ alert
+
     def remove(alert: Alert) = () => triggers() = triggers.now.filterNot(_ == alert)
+
     def contains(alert: Alert) = triggers.map { t => t.contains(alert) }
 
     val buttonStyle: ModifierSeq = Seq(
@@ -58,17 +60,16 @@ object AlertDemo extends Demo {
       bs.button("Info", buttonStyle +++ btn_info, add(Info)),
       bs.button("Warning", buttonStyle +++ btn_warning, add(Warning)),
       h4("With collapser", sheet.paddingTop(30)),
-      bs.button("Success", buttonStyle +++ btn_success, add(Success)),
-      bs.button("Danger", buttonStyle +++ btn_danger, add(Danger)),
+      contains(Success).expand(bs.button("Success", buttonStyle +++ btn_success, add(Success)),
+        bs.successAlert("Success !", "Operation completed !", todocancel = remove(Success))()),
+      contains(Danger).expand(bs.button("Danger", buttonStyle +++ btn_danger, add(Danger)),
+        bs.dangerAlerts("Danger !", Seq("Operation 1 failed ", "Operation 2 failed"), todocancel = remove(Danger))(
+          ExtraButton("Run", btn_danger, action = remove(Danger)))),
       div(padding := 10)(
         bs.infoAlert("Info !", "Operation completed !", contains(Info), todocancel = remove(Info))(
           ExtraButton("Build", btn_info, action = remove(Info)),
           ExtraButton("Abort", btn_default, action = remove(Info))),
-        bs.warningAlert("Warning !", "Operation failed !", contains(Warning), todocancel = remove(Warning))(),
-        contains(Success).expand(
-          bs.successAlert("Success !", "Operation completed !", todocancel = remove(Success))()),
-        contains(Danger).expand(bs.dangerAlerts("Danger !", Seq("Operation 1 failed ", "Operation 2 failed"), todocancel = remove(Danger))(
-          ExtraButton("Run", btn_danger, action = remove(Danger))))
+        bs.warningAlert("Warning !", "Operation failed !", contains(Warning), todocancel = remove(Warning))()
       )
     ).render
   }

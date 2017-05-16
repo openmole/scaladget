@@ -52,6 +52,7 @@ object BootstrapTags {
   type BS = TypedTag[_ <: HTMLElement]
 
   type ID = String
+
   implicit class ShortID(id: ID) {
     def short = id.split('-').head
   }
@@ -295,7 +296,7 @@ object BootstrapTags {
 
   def navBar(classPair: ModifierSeq, contents: NavItem[_ <: HTMLElement]*) = new NavBar(classPair, None, contents)
 
-  case class NavBarBrand(src: String, modifierSeq: ModifierSeq, todo: ()=> Unit, alt: String)
+  case class NavBarBrand(src: String, modifierSeq: ModifierSeq, todo: () => Unit, alt: String)
 
   case class NavBar(classPair: ModifierSeq, brand: Option[NavBarBrand], contents: Seq[NavItem[_ <: HTMLElement]]) {
 
@@ -323,9 +324,9 @@ object BootstrapTags {
           } yield {
             div(navbar_header)(
               div(navbar_brand, href := "#", padding := 0)(
-                img(b.modifierSeq +++ pointer, alt := b.alt, src := b.src,  onclick := {
+                img(b.modifierSeq +++ pointer, alt := b.alt, src := b.src, onclick := {
 
-                  ()=> b.todo()
+                  () => b.todo()
                 })
               )
             )
@@ -338,7 +339,7 @@ object BootstrapTags {
       )
     }
 
-    def withBrand(src: String, modifierSeq: ModifierSeq = emptyMod, todo: ()=> Unit = ()=> {}, alt: String = "") = copy(brand = Some(NavBarBrand(src, modifierSeq, todo, alt)))
+    def withBrand(src: String, modifierSeq: ModifierSeq = emptyMod, todo: () => Unit = () => {}, alt: String = "") = copy(brand = Some(NavBarBrand(src, modifierSeq, todo, alt)))
 
   }
 
@@ -627,72 +628,71 @@ object BootstrapTags {
     dangerAlerts(title, Seq(content), triggerCondition, todocancel)(otherButtons.toSeq: _*)
 
 
-  implicit class TagCollapserOnClick[S <: TypedTag[HTMLElement]](triggerTag: S) {
+  implicit class TagCollapserOnClick[S <: TypedTag[HTMLElement]](trigger: S) {
     def expandOnclick[T <: TypedTag[HTMLElement]](inner: T) = {
-      val collapser = new Collapser[T](inner)
-      val triggerTagRender = triggerTag.render
 
-      triggerTagRender.onclick = (e: MouseEvent) => {
-        collapser.switch
+      val collapser = new Collapser(inner, trigger)
+      div(
+        collapser.triggerTag,
+        collapser.innergTag
+      )
+    }
+  }
+implicit class TagCollapserDynamicOnCondition(triggerCondition: Rx.Dynamic[Boolean]) {
+    def expand[T <: TypedTag[HTMLElement]](trigger: T, inner: T) = {
+      val collapser = new Collapser(inner, div, triggerCondition.now)
+      Rx {
+        collapser.switchTo(triggerCondition())
       }
 
       div(
-        triggerTagRender,
-        collapser.tag
+        trigger.render,
+        collapser.innergTag
       )
     }
   }
 
-  implicit class TagCollapserDynamicOnCondition(triggerCondition: Rx.Dynamic[Boolean]) {
-    def expand[T <: TypedTag[HTMLElement]](inner: T) = {
-      val collapser = new Collapser[T](inner, triggerCondition.now)
-      Rx {
-        collapser.switchTo(triggerCondition())
-      }
-      collapser.tag
-    }
-  }
 
   implicit class TagCollapserVarOnCondition(triggerCondition: Var[Boolean]) {
-    def expand[T <: TypedTag[HTMLElement]](inner: T) = {
-      val collapser = new Collapser[T](inner, triggerCondition.now)
+    def expand[T <: TypedTag[HTMLElement]](trigger: T, inner: T) = {
+      val collapser = new Collapser(inner, div, triggerCondition.now)
       Rx {
         collapser.switchTo(triggerCondition())
       }
-      collapser.tag
+
+      div(
+        trigger.render,
+        collapser.innergTag
+      )
     }
   }
 
+  def collapser(rawInnerTag: TypedTag[HTMLElement], rawTriggerTag: TypedTag[HTMLElement], initExpand: Boolean = false) =
+    new Collapser(rawInnerTag, rawTriggerTag, initExpand)
+
   // COLLAPSERS
-  class Collapser[T <: TypedTag[HTMLElement]](innerTag: T, initExpand: Boolean = false) {
-    val expanded = Var(initExpand)
+  class Collapser(rawInnerTag: TypedTag[HTMLElement], rawTriggerTag: TypedTag[HTMLElement], initExpand: Boolean = false) {
 
-    private val innerTagRender = innerTag.render
+    private val hrefID = s"c${uuID.short}"
+    val triggerTag = a(data("toggle") := "collapse", href := s"#${hrefID}", aria.expanded := true, aria.controls := hrefID)(rawTriggerTag).render
+    val innergTag = div(ms("collapse"), id := hrefID, aria.expanded := initExpand, role := presentation_role)(rawInnerTag).render
 
-    val tag = div(collapseTransition)(innerTagRender).render
+
+    private lazy val collapserMapping = new scaladget.mapping.bootstrap.Collapse(triggerTag)
 
 
-    private def setHeight = {
-      tag.style.height = {
-        if (expanded.now) (innerTagRender.clientHeight + 15).toString
-        else "0"
-      }
-    }
+    def switch: Unit = collapserMapping.toggle
 
-    def switch = {
-      expanded() = !expanded.now
-      setHeight
-    }
 
     def switchTo(b: Boolean) = {
-      expanded() = b
-      setHeight
+      if (b) collapserMapping.show
+      else collapserMapping.hide
     }
 
   }
 
   // TABS
-  case class Tab(title: String, content: BS, active: Boolean, onclickExtra: ()=> Unit) {
+  case class Tab(title: String, content: BS, active: Boolean, onclickExtra: () => Unit) {
     val tabID = "t" + uuID.short
     val refID = "r" + uuID.short
 
@@ -701,7 +701,7 @@ object BootstrapTags {
 
   case class Tabs(navStyle: NavStyle, tabs: Seq[Tab] = Seq()) {
 
-    def add(title: String, content: BS, active: Boolean = false, onclickExtra: ()=> Unit= ()=> {}): Tabs = add(Tab(title, content, active, onclickExtra))
+    def add(title: String, content: BS, active: Boolean = false, onclickExtra: () => Unit = () => {}): Tabs = add(Tab(title, content, active, onclickExtra))
 
     def add(tab: Tab): Tabs = copy(tabs = tabs :+ tab)
 
