@@ -34,14 +34,8 @@ object CollapseDemo extends Demo {
 
     div(
       bs.button("Trigger !", btn_primary +++ (sheet.marginBottom(10))).expandOnclick(bs.panel("My text in detail")(width := 400)),
-      onoff.expand(bs.button("Set/Unset", btn_danger, () => onoff() = !onoff.now), div(backgroundColor := "pink", onoff.now.toString))
+      onoff.expand(div(backgroundColor := "pink", onoff.now.toString), bs.button("Set/Unset", btn_danger, () => onoff() = !onoff.now))
     )
-
-    //    div(
-    //      bs.button("Trigger !", btn_primary +++ (sheet.marginBottom(10))).expandOnclick(bs.panel("My text in detail")(width := 400)),
-    //      bs.button("Set/Unset", btn_danger, () => onoff() = !onoff.now),
-    //      onoff.expand(div(backgroundColor := "pink", onoff.now.toString))
-    //    )
   }
 
   val elementDemo = new ElementDemo {

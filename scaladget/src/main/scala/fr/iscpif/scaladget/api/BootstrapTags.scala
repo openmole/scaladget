@@ -634,7 +634,7 @@ object BootstrapTags {
     }
   }
 implicit class TagCollapserDynamicOnCondition(triggerCondition: Rx.Dynamic[Boolean]) {
-    def expand[T <: TypedTag[HTMLElement]](trigger: T, inner: T) = {
+    def expand[T <: TypedTag[HTMLElement]](inner: T, trigger: T = tags.div()) = {
       val collapser = new Collapser(inner, div, triggerCondition.now)
       Rx {
         collapser.switchTo(triggerCondition())
@@ -649,7 +649,7 @@ implicit class TagCollapserDynamicOnCondition(triggerCondition: Rx.Dynamic[Boole
 
 
   implicit class TagCollapserVarOnCondition(triggerCondition: Var[Boolean]) {
-    def expand[T <: TypedTag[HTMLElement]](trigger: T, inner: T) = {
+    def expand[T <: TypedTag[HTMLElement]](inner: T, trigger: T = tags.div()) = {
       val collapser = new Collapser(inner, div, triggerCondition.now)
       Rx {
         collapser.switchTo(triggerCondition())
