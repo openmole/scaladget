@@ -2,9 +2,8 @@ package demo
 
 import scaladget.api.{BootstrapTags => bs}
 import scaladget.stylesheet.{all => sheet}
-
 import scala.scalajs.js.JSApp
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 import org.scalajs.dom
 
 import scalatags.JsDom.tags
@@ -29,11 +28,10 @@ import bs._
  */
 
 
-@JSExport("demo.BootstrapDemo")
-object BootstrapDemo extends JSApp {
+object BootstrapDemo {
 
-  @JSExport()
-  def main(): Unit = {
+  @JSExportTopLevel("bootstrapDemo")
+  def bootstrapDemo(): Unit = {
 
     def imports =
       """

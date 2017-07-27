@@ -11,11 +11,11 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
 val bootstrapNativeVersion = "1.1.0"
 val scalatagsVersion = "0.6.5"
-val scalaJSdomVersion = "0.9.1"
+val scalaJSdomVersion = "0.9.2"
 val rxVersion = "0.3.2"
 val sourceCodeVersion = "0.1.2"
 
-crossScalaVersions in ThisBuild := Seq("2.11.8", "2.12.1")
+crossScalaVersions in ThisBuild := Seq("2.11.8", "2.12.2")
 organization in ThisBuild := "fr.iscpif"
 version in ThisBuild := "0.9.5-SNAPSHOT"
 resolvers in ThisBuild := Seq(Resolver.sonatypeRepo("snapshots"),

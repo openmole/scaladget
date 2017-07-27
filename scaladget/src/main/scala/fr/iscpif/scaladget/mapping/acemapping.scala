@@ -43,6 +43,7 @@ trait Position extends js.Object {
   var column: Double = js.native
 }
 
+@JSGlobal
 @js.native
 class KeyBinding protected () extends js.Object {
     def this(editor: Editor) = this()
@@ -55,6 +56,7 @@ class KeyBinding protected () extends js.Object {
   def onTextInput(text: js.Any): js.Dynamic = js.native
 }
 
+@JSGlobal
 @js.native
 object KeyBinding extends js.Object {
 }
@@ -72,7 +74,7 @@ trait TextMode extends js.Object {
 }
 
 @js.native
-@JSName("ace")
+@JSGlobal
 object ace extends Ace
 
 @js.native
@@ -83,6 +85,7 @@ trait Ace extends js.Object {
   def createEditSession(text: Document, mode: TextMode): IEditSession = js.native
 }
 
+@JSGlobal
 @js.native
 class Anchor protected () extends js.Object {
   def this(doc: Document, row: Double, column: Double) = this()
@@ -94,10 +97,12 @@ class Anchor protected () extends js.Object {
   def detach(): js.Dynamic = js.native
 }
 
+@JSGlobal
 @js.native
 object Anchor extends js.Object {
 }
 
+@JSGlobal
 @js.native
 class BackgroundTokenizer protected () extends js.Object {
   def this(tokenizer: Tokenizer, editor: Editor) = this()
@@ -111,10 +116,12 @@ class BackgroundTokenizer protected () extends js.Object {
   def getState(row: Double): String = js.native
 }
 
+@JSGlobal
 @js.native
 object BackgroundTokenizer extends js.Object {
 }
 
+@JSGlobal
 @js.native
 class Document protected () extends js.Object {
   def this(text: String = ???) = this()
@@ -146,6 +153,7 @@ class Document protected () extends js.Object {
   def positionToIndex(pos: Position, startRow: Double): Double = js.native
 }
 
+@JSGlobal
 @js.native
 object Document extends js.Object {
 }
@@ -168,7 +176,6 @@ trait IEditSession extends js.Object {
   def highlight(text: String): js.Dynamic = js.native
   def setDocument(doc: Document): js.Dynamic = js.native
   def getDocument(): Document = js.native
-  @JSName("$resetRowCache")
   def `$resetRowCache`(row: Double): js.Dynamic = js.native
   def setValue(text: String): js.Dynamic = js.native
   def setMode(mode: String): js.Dynamic = js.native
@@ -202,7 +209,6 @@ trait IEditSession extends js.Object {
   def setAnnotations(annotations: js.Array[Annotation]): js.Dynamic = js.native
   def getAnnotations(): js.Dynamic = js.native
   def clearAnnotations(): js.Dynamic = js.native
-  @JSName("$detectNewLine")
   def `$detectNewLine`(text: String): js.Dynamic = js.native
   def getWordRange(row: Double, column: Double): Range = js.native
   def getAWordRange(row: Double, column: Double): js.Dynamic = js.native
@@ -211,7 +217,6 @@ trait IEditSession extends js.Object {
   def setUseWorker(useWorker: Boolean): js.Dynamic = js.native
   def getUseWorker(): Boolean = js.native
   def onReloadTokenizer(): js.Dynamic = js.native
-  @JSName("$mode")
   def `$mode`(mode: TextMode): js.Dynamic = js.native
   def getMode(): TextMode = js.native
   def setScrollTop(scrollTop: Double): js.Dynamic = js.native
@@ -241,9 +246,7 @@ trait IEditSession extends js.Object {
   def adjustWrapLimit(desiredLimit: Double): Boolean = js.native
   def getWrapLimit(): Double = js.native
   def getWrapLimitRange(): js.Dynamic = js.native
-  @JSName("$getDisplayTokens")
   def `$getDisplayTokens`(str: String, offset: Double): js.Dynamic = js.native
-  @JSName("$getStringScreenWidth")
   def `$getStringScreenWidth`(str: String, maxScreenColumn: Double, screenColumn: Double): js.Array[Double] = js.native
   def getRowLength(row: Double): Double = js.native
   def getScreenLastRowColumn(screenRow: Double): Double = js.native
@@ -258,6 +261,7 @@ trait IEditSession extends js.Object {
   def getScreenLength(): Double = js.native
 }
 
+@JSGlobal
 @js.native
 object EditSession extends js.Object {
 /* ??? ConstructorMember(FunSignature(List(),List(FunParam(Ident(text),false,Some(TypeRef(CoreType(string),List()))), FunParam(Ident(mode),true,Some(TypeRef(TypeName(TextMode),List())))),Some(TypeRef(TypeName(IEditSession),List())))) */
@@ -265,6 +269,7 @@ object EditSession extends js.Object {
 /* ??? ConstructorMember(FunSignature(List(),List(FunParam(Ident(text),false,Some(TypeRef(TypeName(Array),List(TypeRef(CoreType(string),List()))))), FunParam(Ident(mode),true,Some(TypeRef(CoreType(string),List())))),Some(TypeRef(TypeName(IEditSession),List())))) */
 }
 
+@JSGlobal
 @js.native
 class Editor protected () extends js.Object {
   def this(renderer: VirtualRenderer, session: IEditSession = ???) = this()
@@ -400,20 +405,24 @@ class Editor protected () extends js.Object {
   var completers: js.Array[js.Dynamic] = js.native
 }
 
+@JSGlobal
 @js.native
-@JSName("autocomplete")
 object autocomplete extends AutoComplete
 
+@JSGlobal
 @js.native
 class AutoComplete extends js.Object {
   def showPopup(editor: Editor): js.Dynamic = js.native
   def cancelContextMenu(): js.Dynamic = js.native
 }
 
+@JSGlobal
 @js.native
 object Editor extends js.Object {
 }
 
+
+@JSGlobal
 @js.native
 class PlaceHolder protected () extends js.Object {
   def this(session: Document, length: Double, pos: Double, others: String, mainClass: String, othersClass: String) = this()
@@ -428,6 +437,7 @@ class PlaceHolder protected () extends js.Object {
   def cancel(): js.Dynamic = js.native
 }
 
+@JSGlobal
 @js.native
 object PlaceHolder extends js.Object {
 }
@@ -442,11 +452,13 @@ trait IRangeList extends js.Object {
   def substractPoint(pos: Position): js.Dynamic = js.native
 }
 
+@JSGlobal
 @js.native
 object RangeList extends js.Object {
 /* ??? ConstructorMember(FunSignature(List(),List(),Some(TypeRef(TypeName(IRangeList),List())))) */
 }
 
+@JSGlobal
 @js.native
 class Range protected () extends js.Object {
   def this(startRow: Double, startColumn: Double, endRow: Double, endColumn: Double) = this()
@@ -484,24 +496,23 @@ class Range protected () extends js.Object {
   def fromPoints(start: Range, end: Range): Range = js.native
 }
 
-@js.native
-@JSName("range")
-object range extends Range
-
+@JSGlobal
 @js.native
 object Range extends js.Object {
   def fromPoints(pos1: Position, pos2: Position): Range = js.native
 }
 
+@JSGlobal
 @js.native
 class RenderLoop extends js.Object {
 }
 
+@JSGlobal
 @js.native
 object RenderLoop extends js.Object {
 }
 
-@JSName("AceAjax.ScrollBar")
+@JSGlobal
 @js.native
 class ScrollBar protected () extends js.Object {
  // def this(parent: HTMLElement) = this()
@@ -512,10 +523,12 @@ class ScrollBar protected () extends js.Object {
   def setScrollTop(scrollTop: Double): js.Dynamic = js.native
 }
 
+@JSGlobal
 @js.native
 object ScrollBar extends js.Object {
 }
 
+@JSGlobal
 @js.native
 class Search extends js.Object {
   def set(options: js.Any): Search = js.native
@@ -526,10 +539,12 @@ class Search extends js.Object {
   def replace(input: String, replacement: String): String = js.native
 }
 
+@JSGlobal
 @js.native
 object Search extends js.Object {
 }
 
+@JSGlobal
 @js.native
 class AceSelection protected () extends js.Object {
   def this(session: IEditSession) = this()
@@ -585,10 +600,12 @@ class AceSelection protected () extends js.Object {
   def moveCursorToScreen(row: Double, column: Double, keepDesiredColumn: Boolean): js.Dynamic = js.native
 }
 
+@JSGlobal
 @js.native
 object AceSelection extends js.Object {
 }
 
+@JSGlobal
 @js.native
 class Split extends js.Object {
   def getSplits(): Double = js.native
@@ -606,10 +623,12 @@ class Split extends js.Object {
   def resize(): js.Dynamic = js.native
 }
 
+@JSGlobal
 @js.native
 object Split extends js.Object {
 }
 
+@JSGlobal
 @js.native
 class TokenIterator protected () extends js.Object {
   def this(session: IEditSession, initialRow: Double, initialColumn: Double) = this()
@@ -620,20 +639,24 @@ class TokenIterator protected () extends js.Object {
   def getCurrentTokenColumn(): Double = js.native
 }
 
+@JSGlobal
 @js.native
 object TokenIterator extends js.Object {
 }
 
+@JSGlobal
 @js.native
 class Tokenizer protected () extends js.Object {
   def this(rules: js.Any, flag: String) = this()
   def getLineTokens(): js.Dynamic = js.native
 }
 
+@JSGlobal
 @js.native
 object Tokenizer extends js.Object {
 }
 
+@JSGlobal
 @js.native
 class UndoManager extends js.Object {
   def execute(options: js.Any): js.Dynamic = js.native
@@ -644,10 +667,12 @@ class UndoManager extends js.Object {
   def hasRedo(): Boolean = js.native
 }
 
+@JSGlobal
 @js.native
 object UndoManager extends js.Object {
 }
 
+@JSGlobal
 @js.native
 class VirtualRenderer protected () extends js.Object {
  // def this(container: HTMLElement, theme: String = ???) = this()
@@ -715,6 +740,7 @@ class VirtualRenderer protected () extends js.Object {
   def destroy(): js.Dynamic = js.native
 }
 
+@JSGlobal
 @js.native
 object VirtualRenderer extends js.Object {
 }

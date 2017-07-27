@@ -8,7 +8,7 @@ import rx._
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => lit}
 import scala.scalajs.js.{JSApp, JSON}
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 import scalatags.JsDom.tags
 import scalatags.JsDom.all._
 
@@ -29,11 +29,12 @@ import scalatags.JsDom.all._
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@JSExport
+@JSExportTopLevel("LunrDemo")
 object LunrDemo {
   val searchInput = input(placeholder:="Search").render
   val lunrIndex: Var[Option[Index]] = Var(None)
   val results: Var[Seq[IIndexSearchResult]] = Var(Seq())
+
   @JSExport
   def loadIndex(indexArray:js.Array[js.Any]): Unit = {
     val index = Importedjs.lunr((i: Index) => {

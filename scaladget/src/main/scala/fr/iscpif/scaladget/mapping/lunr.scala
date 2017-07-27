@@ -22,7 +22,7 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation._
 
 @js.native
-@JSName("lunr.EventEmitter")
+@JSGlobal
 class EventEmitter extends js.Object {
   def addListener(eventName: String, handler: js.Function): Unit = js.native
 
@@ -51,7 +51,7 @@ trait IPipelineFunction extends js.Object {
 }
 
 @js.native
-@JSName("lunr.Pipeline")
+@JSGlobal
 class Pipeline extends js.Object {
   var registeredFunctions: js.Dictionary[js.Function] = js.native
 
@@ -75,13 +75,13 @@ class Pipeline extends js.Object {
 }
 
 @js.native
-@JSName("lunr.Pipeline")
+@JSGlobal
 object Pipeline extends js.Object {
   def load(serialised: js.Any): Pipeline = js.native
 }
 
 @js.native
-@JSName("lunr.Vector")
+@JSGlobal
 class Vector extends js.Object {
   var list: Node = js.native
 
@@ -93,7 +93,7 @@ class Vector extends js.Object {
 }
 
 @js.native
-@JSName("lunr.Node")
+@JSGlobal
 class Node protected() extends js.Object {
   def this(idx: Double, `val`: Double, next: Node) = this()
 
@@ -103,7 +103,7 @@ class Node protected() extends js.Object {
 }
 
 @js.native
-@JSName("lunr.SortedSet")
+@JSGlobal
 class SortedSet[T] extends js.Object {
   var elements: js.Array[T] = js.native
   var length: Double = js.native
@@ -130,7 +130,7 @@ class SortedSet[T] extends js.Object {
 }
 
 @js.native
-@JSName("lunr.SortedSet")
+@JSGlobal
 object SortedSet extends js.Object {
   def load[T](serialisedData: js.Array[T]): SortedSet[T] = js.native
 }
@@ -148,7 +148,7 @@ trait IIndexSearchResult extends js.Object {
 }
 
 @js.native
-@JSName("lunr.Index")
+@JSGlobal
 class Index extends js.Object {
   var eventEmitter: EventEmitter = js.native
   var documentStore: Store[String] = js.native
@@ -193,13 +193,13 @@ class Index extends js.Object {
 }
 
 @js.native
-@JSName("lunr.Index")
+@JSGlobal
 object Index extends js.Object {
   def load(serialisedData: js.Any): Index = js.native
 }
 
 @js.native
-@JSName("lunr.Store")
+@JSGlobal
 class Store[T] extends js.Object {
   var store: js.Dictionary[SortedSet[T]] = js.native
   var length: Double = js.native
@@ -216,7 +216,7 @@ class Store[T] extends js.Object {
 }
 
 @js.native
-@JSName("lunr.Store")
+@JSGlobal
 object Store extends js.Object {
   def load[T](serialisedData: js.Any): Store[T] = js.native
 }
@@ -228,7 +228,7 @@ trait ITokenDocument extends js.Object {
 }
 
 @js.native
-@JSName("lunr.TokenStore")
+@JSGlobal
 class TokenStore extends js.Object {
   var root: js.Dictionary[TokenStore] = js.native
   var docs: js.Dictionary[ITokenDocument] = js.native
@@ -252,12 +252,12 @@ class TokenStore extends js.Object {
 }
 
 @js.native
-@JSName("lunr.TokenStore")
+@JSGlobal
 object TokenStore extends js.Object {
   def load(serialisedData: js.Any): TokenStore = js.native
 }
 
-@JSName("lunr")
+@JSGlobal
 @js.native
 object Lunr extends js.Object {
   var version: String = js.native
@@ -271,7 +271,7 @@ object Lunr extends js.Object {
   def trimmer(token: String): String = js.native
 }
 
-@JSName("lunr.stopWordFilter")
+@JSGlobal
 @js.native
 object StopWordFilter extends js.Object {
   var stopWords: SortedSet[String] = js.native

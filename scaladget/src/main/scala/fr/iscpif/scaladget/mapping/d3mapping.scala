@@ -56,7 +56,7 @@ trait Event extends js.Object {
   def preventDefault: Unit = js.native
 }
 
-@JSName("d3")
+@JSGlobal
 @js.native
 object d3 extends Selectors  {
 //trait Base extends Selectors {

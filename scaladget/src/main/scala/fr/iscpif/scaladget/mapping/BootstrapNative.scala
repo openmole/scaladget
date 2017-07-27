@@ -25,7 +25,7 @@ import scala.scalajs.js.annotation._
 import scala.scalajs.js.Dynamic.{literal => lit}
 
 
-@JSName("Modal")
+@JSGlobal
 @js.native
 class Modal(element: Element) extends js.Object {
 
@@ -34,7 +34,7 @@ class Modal(element: Element) extends js.Object {
 }
 
 
-@JSName("Popover")
+@JSGlobal
 @js.native
 class Popover(element: Element, options: js.Dynamic = lit()) extends js.Object {
 
@@ -43,7 +43,7 @@ class Popover(element: Element, options: js.Dynamic = lit()) extends js.Object {
   def toggle(): Unit = js.native
 }
 
-@JSName("Tooltip")
+@JSGlobal
 @js.native
 class Tooltip(element: Element, options: js.Dynamic = lit()) extends js.Object {
 
@@ -51,7 +51,7 @@ class Tooltip(element: Element, options: js.Dynamic = lit()) extends js.Object {
   def hide(): Unit = js.native
 }
 
-@JSName("Collapse")
+@JSGlobal
 @js.native
 class Collapse(element: Element, options: js.Dynamic = lit()) extends js.Object {
 

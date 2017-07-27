@@ -1,7 +1,8 @@
 package demo
 
 import org.scalajs.dom
-import scala.scalajs.js.annotation.JSExport
+
+import scala.scalajs.js.annotation._
 import scaladget.stylesheet.{all => sheet}
 import scala.scalajs.js.JSApp
 import scalatags.JsDom.all._
@@ -24,11 +25,10 @@ import sheet._
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@JSExport("demo.FlowchartDemo")
-object FlowChartDemo extends JSApp {
+object FlowChartDemo {
 
-  @JSExport()
-  def main(): Unit = {
+@JSExportTopLevel("flowchartDemo")
+  def flowchartDemo(): Unit = {
     val nodes = Seq(
       Graph.task("one", 400, 600),
       Graph.task("two", 1000, 600),
