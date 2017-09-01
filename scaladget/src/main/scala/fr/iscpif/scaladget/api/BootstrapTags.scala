@@ -20,7 +20,7 @@ package scaladget.api
 import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw._
 
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.annotation.JSExportTopLevel
 import scalatags.JsDom.{TypedTag, tags}
 import scalatags.JsDom.all._
 import scaladget.tools.JsRxTags._
@@ -28,16 +28,12 @@ import scaladget.stylesheet.{all => sheet}
 import sheet.{ctx => _, _}
 import rx._
 import Popup._
-import Selector._
 import scaladget.api.Alert.ExtraButton
 import scaladget.api.SelectableButtons.{CheckBoxSelection, RadioSelection}
-import scaladget.mapping.bootstrap.Popover
-import org.scalajs.dom
 
 import scala.scalajs.js
 import scalatags.JsDom
 
-@JSExport("demo.BootstrapTags")
 object BootstrapTags {
   bstags =>
 
@@ -346,8 +342,6 @@ object BootstrapTags {
 
   // Nav pills
   case class NavPill(name: String, badge: Option[Int], todo: () => Unit)
-
-  // def navPills()
 
   // POUPUS, TOOLTIPS
   class Popover(element: TypedTag[org.scalajs.dom.raw.HTMLElement],
