@@ -62,6 +62,7 @@ object BootstrapDemo {
             SelectDemo.elementDemo,
             ModalDialogDemo.elementDemo,
             TabDemo.elementDemo,
+            TableDemo.elementDemo,
             NavBarDemo.elementDemo,
             TooltipDemo.elementDemo,
             PopoverDemo.elementDemo,

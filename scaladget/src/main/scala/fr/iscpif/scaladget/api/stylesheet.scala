@@ -180,6 +180,7 @@ package bootstrap {
     type ButtonStyle = ModifierSeq
     type AlertStyle = ModifierSeq
     type NavStyle = ModifierSeq
+    type TableStyle = ModifierSeq
 
     private def toGlyphicon(s: String) = toClass(s"glyphicon $s")
 
@@ -190,6 +191,8 @@ package bootstrap {
     private def toAlert(s: String) = toClass(s"alert $s")
 
     private def toNav(s: String) = toClass(s"nav $s")
+
+    private def toTable(s: String) = toClass(s"table $s")
 
     //GHYPHICONS
     lazy val glyph_edit: Glyphicon = toGlyphicon("glyphicon-pencil")
@@ -322,6 +325,15 @@ package bootstrap {
     lazy val tab_pane: ModifierSeq = toClass("tab-pane")
     lazy val nav_item: ModifierSeq = toClass("nav-item")
     lazy val nav_link: ModifierSeq = toClass("nav-link")
+
+    //TABLES
+    lazy val header_no_color: ModifierSeq = emptyMod
+    lazy val default_header: ModifierSeq = toClass("thead-default")
+    lazy val default_inverse: ModifierSeq = toClass("thead-inverse")
+    lazy val default_table: TableStyle = toTable("")
+    lazy val inverse_table: TableStyle = toTable("table-inverse")
+    lazy val striped_table: TableStyle = toTable("table-striped")
+    lazy val hover_table: TableStyle = toTable("table-hover")
 
     //GRIDS
     def colMD(nbCol: Int): ModifierSeq = toClass(s"col-md-$nbCol")

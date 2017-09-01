@@ -51,6 +51,7 @@ object BootstrapTags {
 
   implicit class ShortID(id: ID) {
     def short: String = id.split('-').head
+
     def short(prefix: String): String = s"$prefix$short"
   }
 
@@ -375,7 +376,8 @@ object BootstrapTags {
         trigger match {
           case ClickPopup => onclick := { () =>
             println("1")
-            show }
+            show
+          }
           case _ => onmouseover := { () => hide }
         }
       ).render
@@ -628,7 +630,8 @@ object BootstrapTags {
       )
     }
   }
-implicit class TagCollapserDynamicOnCondition(triggerCondition: Rx.Dynamic[Boolean]) {
+
+  implicit class TagCollapserDynamicOnCondition(triggerCondition: Rx.Dynamic[Boolean]) {
     def expand[T <: TypedTag[HTMLElement]](inner: T, trigger: T = tags.div()) = {
       val collapser = new Collapser(inner, div, triggerCondition.now)
       Rx {
@@ -685,16 +688,20 @@ implicit class TagCollapserDynamicOnCondition(triggerCondition: Rx.Dynamic[Boole
   case class Tab(title: String, content: BS, active: Boolean, onclickExtra: () => Unit, tabID: String = uuID.short("t"), refID: String = uuID.short("r")) {
 
     content.copy()
+
     def activeClass = if (active) (ms("active"), ms("active in")) else (ms(""), ms(""))
   }
 
   case class Tabs(tabs: Seq[Tab] = Seq()) {
 
     def add(title: String, content: BS, active: Boolean = false, onclickExtra: () => Unit = () => {}): Tabs = add(Tab(title, content, active, onclickExtra))
+
     def add(tab: Tab): Tabs = copy(tabs = tabs :+ tab)
 
 
-    private def cloneRender = Tabs(tabs.map{_.copy(tabID = uuID.short("t"), refID = uuID.short("r"))})
+    private def cloneRender = Tabs(tabs.map {
+      _.copy(tabID = uuID.short("t"), refID = uuID.short("r"))
+    })
 
     private def rendering(navStyle: NavStyle = pills) = {
 
@@ -721,12 +728,46 @@ implicit class TagCollapserDynamicOnCondition(triggerCondition: Rx.Dynamic[Boole
       ).render
     }
 
-  def render(navStyle: NavStyle = pills) = cloneRender.rendering(navStyle)
+    def render(navStyle: NavStyle = pills) = cloneRender.rendering(navStyle)
   }
 
 
   def tabs = new Tabs
 
+  // Tables
+  case class Row(values: Seq[String])
+
+  case class Table(headers: Seq[String] = Seq(), rows: Seq[Row] = Seq()) {
+
+    def addHeaders(hs: String*) = copy(headers = hs)
+
+    def addRow(row: Row): Table = copy(rows = rows :+ row)
+
+    def addRow(row: String*): Table = addRow(Row(row))
+
+    private def fillRow(row: Seq[TypedTag[HTMLElement]]) = tags.tr(
+      for (
+        cell <- row
+      ) yield {
+        cell
+      }
+    )
+
+    def render(tableStyle: TableStyle = default_table, headerStyle: ModifierSeq = emptyMod) =
+      tags.table(tableStyle)(
+        tags.thead(headerStyle)(
+          fillRow(headers.map{th(_)})
+        ),
+        tags.tbody(
+          for (r <- rows) yield {
+            fillRow(r.values.map{td(_)})
+          }
+        )
+      )
+  }
+
+
+  def table = new Table
 
   // EXCLUSIVE BUTTON GROUPS
   def exclusiveButtonGroup(style: ModifierSeq, defaultStyle: ModifierSeq = btn_default, selectionStyle: ModifierSeq = btn_default)(buttons: ExclusiveButton*) = new ExclusiveGroup(style, defaultStyle, selectionStyle, buttons)
