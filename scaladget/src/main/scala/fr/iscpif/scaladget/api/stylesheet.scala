@@ -306,8 +306,10 @@ package bootstrap {
 
     //NAVS
     lazy val tabs: NavStyle = toNav("nav-tabs")
+    lazy val justified_tabs: NavStyle = toNav("nav-tabs nav-justified")
     lazy val pills: NavStyle = toNav("nav-pills")
     lazy val stacked_pills: NavStyle = toNav("nav-pills nav-stacked")
+    lazy val justified_pills: NavStyle = toNav("nav-pills nav-justified")
     lazy val inline_list: NavStyle = toNav("list-inline")
     lazy val nav_bar: NavStyle = toNav("navbar-nav")
     lazy val regular_nav: NavStyle = toNav("nav-list")
@@ -318,7 +320,6 @@ package bootstrap {
     lazy val tab_role: ModifierSeq = role := "tab"
     lazy val tab_content: ModifierSeq = toClass("tab-content")
     lazy val tab_pane: ModifierSeq = toClass("tab-pane")
-    lazy val nav_tabs: ModifierSeq = toClass("nav-tabs")
     lazy val nav_item: ModifierSeq = toClass("nav-item")
     lazy val nav_link: ModifierSeq = toClass("nav-link")
 

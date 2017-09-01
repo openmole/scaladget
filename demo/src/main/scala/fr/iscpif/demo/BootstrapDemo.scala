@@ -66,8 +66,7 @@ object BootstrapDemo {
             TooltipDemo.elementDemo,
             PopoverDemo.elementDemo,
             CollapseDemo.elementDemo,
-            AlertDemo.elementDemo//,
-            //AccordionDemo.elementDemo
+            AlertDemo.elementDemo
           )
         } yield {
           div(sheet.marginLeft(15), sheet.marginTop(25))(

@@ -36,13 +36,17 @@ object TabDemo extends Demo {
       "eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, " +
       "sunt in culpa qui officia deserunt mollit anim id est laborum.", padding := 10)
 
-
-    val div2 = vForm(bs.input("")(placeholder := "Name").render.withLabel("Your name"))
-
-    Tabs(sheet.pills).
+    val tabs = bs.tabs.
       add("My first", div1, onclickExtra = ()=> println("Tab1 pressed")).
-      add("My second", div2).
-      render
+      add("My second", div("Hey !"))
+
+    div(
+      tabs.render(sheet.pills),
+      tabs.render(sheet.stacked_pills),
+      tabs.render(sheet.tabs),
+      tabs.render(sheet.justified_tabs),
+      tabs.render(sheet.justified_pills)
+    ).render
 
   }
 

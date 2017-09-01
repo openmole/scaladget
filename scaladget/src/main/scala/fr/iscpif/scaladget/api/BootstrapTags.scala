@@ -54,7 +54,8 @@ object BootstrapTags {
   type ID = String
 
   implicit class ShortID(id: ID) {
-    def short = id.split('-').head
+    def short: String = id.split('-').head
+    def short(prefix: String): String = s"$prefix$short"
   }
 
   def uuID: ID = java.util.UUID.randomUUID.toString
@@ -668,7 +669,7 @@ implicit class TagCollapserDynamicOnCondition(triggerCondition: Rx.Dynamic[Boole
   // COLLAPSERS
   class Collapser(rawInnerTag: TypedTag[HTMLElement], rawTriggerTag: TypedTag[HTMLElement], initExpand: Boolean = false) {
 
-    private val hrefID = s"c${uuID.short}"
+    private val hrefID = uuID.short("c")
     val triggerTag = a(data("toggle") := "collapse", href := s"#${hrefID}", aria.expanded := true, aria.controls := hrefID)(rawTriggerTag).render
     val innergTag = div(ms("collapse"), id := hrefID, aria.expanded := initExpand, role := presentation_role)(rawInnerTag).render
 
@@ -687,21 +688,21 @@ implicit class TagCollapserDynamicOnCondition(triggerCondition: Rx.Dynamic[Boole
   }
 
   // TABS
-  case class Tab(title: String, content: BS, active: Boolean, onclickExtra: () => Unit) {
-    val tabID = "t" + uuID.short
-    val refID = "r" + uuID.short
+  case class Tab(title: String, content: BS, active: Boolean, onclickExtra: () => Unit, tabID: String = uuID.short("t"), refID: String = uuID.short("r")) {
 
+    content.copy()
     def activeClass = if (active) (ms("active"), ms("active in")) else (ms(""), ms(""))
   }
 
-  case class Tabs(navStyle: NavStyle, tabs: Seq[Tab] = Seq()) {
+  case class Tabs(tabs: Seq[Tab] = Seq()) {
 
     def add(title: String, content: BS, active: Boolean = false, onclickExtra: () => Unit = () => {}): Tabs = add(Tab(title, content, active, onclickExtra))
-
     def add(tab: Tab): Tabs = copy(tabs = tabs :+ tab)
 
 
-    lazy val render = {
+    private def cloneRender = Tabs(tabs.map{_.copy(tabID = uuID.short("t"), refID = uuID.short("r"))})
+
+    private def rendering(navStyle: NavStyle = pills) = {
 
       val existsOneActive = tabs.map {
         _.active
@@ -725,9 +726,12 @@ implicit class TagCollapserDynamicOnCondition(triggerCondition: Rx.Dynamic[Boole
         )
       ).render
     }
+
+  def render(navStyle: NavStyle = pills) = cloneRender.rendering(navStyle)
   }
 
-  def tabs(navStyle: NavStyle) = new Tabs(navStyle)
+
+  def tabs = new Tabs
 
 
   // EXCLUSIVE BUTTON GROUPS
@@ -923,55 +927,6 @@ implicit class TagCollapserDynamicOnCondition(triggerCondition: Rx.Dynamic[Boole
 
   def hForm[T <: HTMLElement](modifierSeq: ModifierSeq)(formTags: FormTag[T]*): TypedTag[HTMLFormElement] = {
     form(formInline +++ modifierSeq)(insideForm(formTags: _*))
-  }
-
-  //ACCORDION
-
-  case class AccordionItem(title: String, content: BS)
-
-  def accordionItem(title: String, content: BS) = AccordionItem(title, content)
-
-  def accordion(accordionItems: AccordionItem*): TypedTag[HTMLDivElement] = accordion(emptyMod)(emptyMod)(accordionItems.toSeq: _*)
-
-  def accordion(modifierSeq: ModifierSeq)(titleModifierSeq: ModifierSeq)(accordionItems: AccordionItem*): TypedTag[HTMLDivElement] = {
-    val accordionID = uuID.short
-    div(
-      modifierSeq,
-      // id := accordionID,
-      role := "tablist",
-      aria.multiselectable := "true",
-      ms("panel-group"))(
-      for {
-        item <- accordionItems.toSeq
-      } yield {
-        val collapseID = uuID.short
-        div(sheet.panel +++ sheet.panelDefault)(
-          div(
-            panelHeading,
-            role := "tab"
-          )(a(
-            data("toggle") := "collapse",
-            //     data("parent") := s"#$accordionID",
-            href := collapseID,
-            aria.expanded := true,
-            aria.controls := collapseID,
-            ms("collapsed"),
-            display := "block",
-            width := "100%",
-            height := 25,
-            titleModifierSeq
-          )(item.title)),
-          div(
-            id := collapseID,
-            ms("panel-collapse collapse"),
-            role := "tabpanel",
-            aria.expanded := false
-          )(div(
-            panelBody,
-            item.content))
-        )
-      }
-    )
   }
 
 }
