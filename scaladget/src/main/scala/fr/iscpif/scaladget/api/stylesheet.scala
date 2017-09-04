@@ -84,9 +84,9 @@ package stylesheetbase {
           else Seq((attrPair ++ attrPair2).reduce { (a, b) => pairing(a.v, b.v) })
 
         modifierSeq.filterNot {
-          _ == attrPair
+          attrPair.contains(_)
         } ++ modifierSeq2.filterNot {
-          _ == attrPair2
+          attrPair2.contains(_)
         } ++ classPairing
 
       }

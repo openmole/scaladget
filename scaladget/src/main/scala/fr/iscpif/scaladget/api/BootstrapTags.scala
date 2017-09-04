@@ -400,7 +400,7 @@ object BootstrapTags {
       val list = org.scalajs.dom.document.getElementsByClassName("tooltip")
       for (nodeIndex ← 0 to (list.length - 1)) {
         val element = list(nodeIndex)
-        if (element != js.undefined) element.parentNode.removeChild(element)
+        if (! js.isUndefined(element)) element.parentNode.removeChild(element)
       }
     }
   }

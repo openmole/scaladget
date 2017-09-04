@@ -3,7 +3,7 @@ import java.io.PrintWriter
 import sbt._
 import Keys._
 
-import ScalaJSBundlerPlugin.autoImport._
+//import ScalaJSBundlerPlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
 
@@ -17,7 +17,7 @@ val sourceCodeVersion = "0.1.2"
 
 crossScalaVersions in ThisBuild := Seq("2.11.8", "2.12.2")
 organization in ThisBuild := "fr.iscpif"
-version in ThisBuild := "0.9.5-SNAPSHOT"
+version in ThisBuild := "0.9.6-SNAPSHOT"
 resolvers in ThisBuild := Seq(Resolver.sonatypeRepo("snapshots"),
   DefaultMavenRepository
 )
