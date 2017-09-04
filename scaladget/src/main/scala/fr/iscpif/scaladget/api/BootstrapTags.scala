@@ -735,7 +735,7 @@ object BootstrapTags {
   def tabs = new Tabs
 
   // Tables
-  case class Row(values: Seq[String])
+  case class Row(values: Seq[TypedTag[_ <: HTMLElement]])
 
   case class Table(headers: Seq[String] = Seq(), rows: Seq[Row] = Seq()) {
 
@@ -743,7 +743,9 @@ object BootstrapTags {
 
     def addRow(row: Row): Table = copy(rows = rows :+ row)
 
-    def addRow(row: String*): Table = addRow(Row(row))
+    def addRow(row: String*): Table = addRow(Row(row.map{td(_)}))
+
+    def addRowElement(typedTags: TypedTag[_ <: HTMLElement]*): Table = addRow(Row(typedTags.map{td(_)}))
 
     private def fillRow(row: Seq[TypedTag[HTMLElement]]) = tags.tr(
       for (
@@ -760,7 +762,7 @@ object BootstrapTags {
         ),
         tags.tbody(
           for (r <- rows) yield {
-            fillRow(r.values.map{td(_)})
+            fillRow(r.values)
           }
         )
       )

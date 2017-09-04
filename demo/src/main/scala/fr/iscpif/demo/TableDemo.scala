@@ -27,15 +27,6 @@ import bs._
 object TableDemo extends Demo {
   val sc = sourcecode.Text {
 
-    val div1 = div("Lorem ipsum dolor sit amet, " +
-      "consectetur adipiscing elit, sed do eiusmod tempor " +
-      "incididunt ut labore et dolore magna aliqua. " +
-      "Ut enim ad minim veniam, quis nostrud exercitation ullamco " +
-      "laboris nisi ut aliquip ex ea commodo consequat. Duis aute " +
-      "irure dolor in reprehenderit in voluptate velit esse cillum dolore " +
-      "eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, " +
-      "sunt in culpa qui officia deserunt mollit anim id est laborum.", padding := 10)
-
     val table = bs.table.
       addHeaders("Title 1", "Title 2", "Title 3").
       addRow("My first 1", "My first 1", "My first 3").
@@ -47,7 +38,7 @@ object TableDemo extends Demo {
       table.render(hover_table),
       table.render(headerStyle = default_header),
       table.
-      addRow("My third 1", "My third 2", "My third 3").
+      addRowElement(a(href := "http://openmole.org", "My third 1"), span("My third 2"), span("My third 3")).
       addRow("My fourth 1", "My fourth 2", "My fourth 3").render(striped_table)
     ).render
   }
