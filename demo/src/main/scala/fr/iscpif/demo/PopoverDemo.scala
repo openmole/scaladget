@@ -33,7 +33,7 @@ object PopoverDemo extends Demo {
 
     val buttonStyle: ModifierSeq = Seq(
       btn_default,
-      sheet.marginRight(5)
+      marginRight := 5
     )
 
     div(
@@ -41,7 +41,7 @@ object PopoverDemo extends Demo {
       bs.button("Title", buttonStyle, () => {}).popover("Popover on hover with Title", Top, title = Some("Pop title")),
       bs.button("Dismissable", buttonStyle, () => {}).popover("Dismissible Popover on hover with Title", Top, HoverPopup, Some("Pop title"), true),
       bs.button("Left (click)", buttonStyle, () => {}).popover("Popover on click on right", Left, ClickPopup),
-      bs.input("")(width := 320, sheet.marginTop(10), placeholder := "Bottom (click)").popover("Tooltip on click on bottom", Bottom, ClickPopup)
+      bs.input("")(width := 320, marginTop := 10, placeholder := "Bottom (click)").popover("Tooltip on click on bottom", Bottom, ClickPopup)
     ).render
   }
 

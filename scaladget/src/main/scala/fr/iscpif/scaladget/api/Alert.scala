@@ -49,30 +49,34 @@ class Alert(alertStyle: AlertStyle,
   val render = tags.div(
     Rx {
       if (triggerCondition() && !closed()) {
-        tags.div(alertStyle +++ {
-          if (otherButtons.isEmpty) emptyMod else sheet.paddingBottom(50)
-        })(
-          bs.closeButton("", ()=> {
-            cancelAction()
-            closed() = true
-          }),
-          h4(title),
-          if( content.size == 1) content
-          else {
-          ul(Seq(sheet.marginLeft(-25), sheet.marginTop(20)))(
-            for{
-              c<- content
-            } yield {li(c)})},
-          p(sheet.marginTop(25))(
-            bs.buttonGroup(sheet.floatLeft)(
-              for {
-                b <- otherButtons
-              } yield {
-                b.render
-              }
+        tags.div(
+          alertStyle +++ {
+            if (otherButtons.isEmpty) emptyMod else (paddingBottom := 50).toMS
+          })(
+            bs.closeButton("", () => {
+              cancelAction()
+              closed() = true
+            }),
+            h4(title),
+            if (content.size == 1) content
+            else {
+              ul(
+                for {
+                  c <- content
+                } yield {
+                  li(c)
+                })(marginLeft := -25, marginTop := 20)
+            },
+            p(marginTop := 25)(
+              bs.buttonGroup(sheet.floatLeft)(
+                for {
+                  b <- otherButtons
+                } yield {
+                  b.render
+                }
+              )
             )
           )
-        )
       }
       else tags.div
     }

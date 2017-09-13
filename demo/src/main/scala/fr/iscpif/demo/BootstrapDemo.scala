@@ -43,7 +43,7 @@ object BootstrapDemo {
       """.stripMargin
 
     bs.withBootstrapNative {
-      div(div(sheet.marginLeft(15), sheet.marginTop(25))(
+      div(div(marginLeft := 15, marginTop := 25)(
         h3("Build"),
         div(row)(
           div(colMD(12))("Details on construction on ", a(href := "https://github.com/openmole/scaladget", target := "_blank")("the Scaladet Github page"))
@@ -70,7 +70,7 @@ object BootstrapDemo {
             AlertDemo.elementDemo
           )
         } yield {
-          div(sheet.marginLeft(15), sheet.marginTop(25))(
+          div(marginLeft := 15, marginTop := 25)(
             h3(demo.title),
             div(row)(
               div(colMD(demo.codeWidth))(pre(code(toClass("scala"))(demo.cleanCode))),

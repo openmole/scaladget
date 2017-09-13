@@ -58,12 +58,12 @@ object FormDemo extends Demo {
         loginInput.withLabel("Login"),
         passInput.withLabel("Password")
       ),
-      bs.hForm(sheet.paddingTop(20) +++ (width := 500))(
+      bs.hForm(Seq(paddingTop := 20, width := 500).toMS)(
         cityInput.withLabel("City"),
         genderDD
       ),
       Rx {
-        span(sheet.marginTop(20), s"Login : ${loginValue()}")
+        span(marginTop := 20, s"Login : ${loginValue()}")
       }
     ).render
 

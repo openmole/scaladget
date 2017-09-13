@@ -129,7 +129,7 @@ object BootstrapTags {
 
   // displaying a text with a button style and a glyphicon
   def button(text: String = "", buttonStyle: ModifierSeq = btn_default, glyphicon: ModifierSeq = Seq(), todo: () ⇒ Unit = () => {}): TypedTag[HTMLButtonElement] = {
-    val iconStyle = if (text.isEmpty) paddingAll(top = 3, bottom = 3) else sheet.marginLeft(5)
+    val iconStyle = if (text.isEmpty) Seq(paddingTop := 3, paddingBottom := 3).toMS else (marginLeft := 5).toMS
     tags.button(btn +++ buttonStyle, `type` := "button", onclick := { () ⇒ todo() })(
       span(
         span(glyphicon +++ iconStyle),
@@ -179,7 +179,7 @@ object BootstrapTags {
 
 
   // BADGE
-  def badge(badgeValue: String, badgeStyle: ModifierSeq = emptyMod) = span(toClass("badge") +++ badgeStyle +++ sheet.marginLeft(4))(badgeValue)
+  def badge(badgeValue: String, badgeStyle: ModifierSeq = emptyMod) = span(toClass("badge") +++ badgeStyle +++ (marginLeft := 4).toMS)(badgeValue)
 
   //BUTTON GROUP
   def buttonGroup(mod: ModifierSeq = emptyMod) = div(mod +++ btnGroup)
@@ -576,8 +576,8 @@ object BootstrapTags {
         e <- elements
       } yield {
         div(formGroup)(
-          e.e1(`for` := ID, sheet.marginLeft(5)),
-          e.e2(formControl, sheet.marginLeft(5), id := ID)
+          e.e1(`for` := ID, marginLeft := 5),
+          e.e2(formControl, marginLeft := 5, id := ID)
         )
       }
     )
@@ -720,7 +720,7 @@ object BootstrapTags {
               a(id := t.tabID, href := s"#${t.refID}", tab_role, data("toggle") := "tab", data("height") := true, aria.controls := t.refID, onclick := t.onclickExtra)(t.title)
             )
           }),
-        div(tab_content +++ sheet.paddingTop(10))(
+        div(tab_content +++ (paddingTop := 10).toMS)(
           theTabs.map { t =>
             div(id := t.refID, tab_pane +++ fade +++ t.activeClass._2, tab_panel_role, aria.labelledby := t.tabID)(t.content)
           }
@@ -809,7 +809,7 @@ object BootstrapTags {
                                   action2: () ⇒ Unit,
                                   preGlyph: ModifierSeq
                                  ) extends TwoStates {
-    val cssglyph = glyph +++ sheet.paddingLeft(3)
+    val cssglyph = glyph +++ (paddingLeft := 3).toMS
 
     lazy val div = {
       button("", preGlyph, cssglyph, action)
@@ -823,10 +823,10 @@ object BootstrapTags {
                            preString: String,
                            buttonStyle: ModifierSeq = emptyMod
                           ) extends TwoStates {
-    val cssglyph = glyph +++ sheet.paddingLeft(3)
+    val cssglyph = glyph +++ (paddingLeft := 3).toMS
 
     lazy val cssbutton: ModifierSeq = Seq(
-      sheet.paddingTop(8),
+      paddingTop := 8,
       border := "none"
     )
 
@@ -935,7 +935,7 @@ object BootstrapTags {
 
   implicit class LabelForModifiers[T <: HTMLElement](m: T) {
     def withLabel(title: String, labelStyle: ModifierSeq = emptyMod): LabeledFormTag[T] = new LabeledFormTag[T] {
-      val label: TypedTag[HTMLLabelElement] = tags.label(title)(labelStyle +++ (sheet.paddingRight(5)))
+      val label: TypedTag[HTMLLabelElement] = tags.label(title)(labelStyle, paddingRight := 5)
 
       val tag: T = m
     }
@@ -945,7 +945,7 @@ object BootstrapTags {
     for {
       ft <- formTags
     } yield {
-      div(formGroup +++ sheet.paddingRight(5))(
+      div(formGroup, paddingRight := 5)(
         ft match {
           case lft: LabeledFormTag[T] => lft.label
           case _ =>

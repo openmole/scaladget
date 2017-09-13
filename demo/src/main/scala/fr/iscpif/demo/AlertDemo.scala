@@ -52,14 +52,16 @@ object AlertDemo extends Demo {
     def contains(alert: Alert) = triggers.map { t => t.contains(alert) }
 
     val buttonStyle: ModifierSeq = Seq(
-      sheet.marginAll(right = 5, top = 5)
+      marginRight := 5,
+      marginTop := 5
     )
+
 
     div(
       h4("No collapser"),
       bs.button("Info", buttonStyle +++ btn_info, add(Info)),
       bs.button("Warning", buttonStyle +++ btn_warning, add(Warning)),
-      h4("With collapser", sheet.paddingTop(30)),
+      h4("With collapser", paddingTop := 30),
       contains(Success).expand(bs.button("Success", buttonStyle +++ btn_success, add(Success)),
         bs.successAlert("Success !", "Operation completed !", todocancel = remove(Success))()),
       contains(Danger).expand(bs.button("Danger", buttonStyle +++ btn_danger, add(Danger)),

@@ -35,12 +35,12 @@ object TooltipDemo extends Demo {
 
     val buttonStyle: ModifierSeq = Seq(
       btn_default,
-      sheet.marginRight(5)
+      marginRight := 5
     )
 
     val labelStyle: ModifierSeq = Seq(
       label_danger,
-      sheet.marginRight(5)
+      marginRight := 5
     )
 
     val add = Var(false)

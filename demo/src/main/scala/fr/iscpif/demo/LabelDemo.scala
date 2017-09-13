@@ -31,7 +31,7 @@ object LabelDemo {
 
     val hovered = Var("None")
     val labelStyle: ModifierSeq = Seq(
-      sheet.marginTop(20)
+      marginTop := 20
     )
 
     def overAction(tag: String) = onmouseover := { () =>  hovered() = tag }
@@ -44,7 +44,7 @@ object LabelDemo {
       label("Warning", label_warning, overAction("warning")).size5(labelStyle),
       label("Danger", label_danger, overAction("danger")).size6(labelStyle),
       Rx{
-        div(sheet.paddingTop(15), s"Hovered: ${hovered()}")
+        div(paddingTop := 15, s"Hovered: ${hovered()}")
       }
     ).render
   }

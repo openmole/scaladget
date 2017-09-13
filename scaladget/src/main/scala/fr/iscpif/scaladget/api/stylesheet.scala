@@ -49,6 +49,14 @@ package stylesheetbase {
 
     implicit def classAttrPairToModifierSeq(classAttrPair: ClassAttrPair): ModifierSeq = Seq(classAttrPair)
 
+    implicit class stylePairToModifierSeq(sPair: StylePair[dom.Element, _]) {
+      def toMS: ModifierSeq = Seq(sPair)
+    }
+
+    implicit class stylePairSeqToModifierSeq(sPair: Seq[StylePair[dom.Element, _]]) {
+      def toMS: ModifierSeq = sPair
+    }
+
     implicit def rxToModifierSeq(dyn: Rx.Dynamic[ModifierSeq]): ModifierSeq = dyn.now
 
     implicit class ComposableClassAttrPair[P <: ClassAttrPair](pair: P) {
@@ -113,38 +121,6 @@ package stylesheetbase {
     def ms(cond: Boolean, ms1: ModifierSeq, ms2: ModifierSeq = emptyMod): ModifierSeq = condOnModifierSeq3((cond, ms1, ms2))
 
     // CONVINIENT GENERAL ALIASES
-
-    def paddingTop(t: Int): ModifierSeq = Seq(JsDom.styles.paddingTop := s"$t")
-
-    def paddingBottom(t: Int): ModifierSeq = Seq(JsDom.styles.paddingBottom := s"$t")
-
-    def paddingLeft(t: Int): ModifierSeq = Seq(JsDom.styles.paddingLeft := s"$t")
-
-    def paddingRight(t: Int): ModifierSeq = Seq(JsDom.styles.paddingRight := s"$t")
-
-    def paddingAll(top: Int = 0, bottom: Int = 0, right: Int = 0, left: Int = 0): ModifierSeq = Seq(
-      JsDom.styles.paddingTop := s"$top",
-      JsDom.styles.paddingBottom := s"$bottom",
-      JsDom.styles.paddingRight := s"$right",
-      JsDom.styles.paddingLeft := s"$left"
-    )
-
-    def marginTop(t: Int): ModifierSeq = Seq(JsDom.styles.marginTop := s"$t")
-
-    def marginBottom(t: Int): ModifierSeq = Seq(JsDom.styles.marginBottom := s"$t")
-
-    def marginLeft(t: Int): ModifierSeq = Seq(JsDom.styles.marginLeft := s"$t")
-
-    def marginRight(t: Int): ModifierSeq = Seq(JsDom.styles.marginRight := s"$t")
-
-    def marginAll(top: Int = 0, bottom: Int = 0, right: Int = 0, left: Int = 0): ModifierSeq = Seq(
-      JsDom.styles.marginTop := s"$top",
-      JsDom.styles.marginBottom := s"$bottom",
-      JsDom.styles.marginRight := s"$right",
-      JsDom.styles.marginLeft := s"$left"
-    )
-
-
     lazy val floatLeft: ModifierSeq = Seq(float := "left")
 
     lazy val floatRight: ModifierSeq = Seq(float := "right")

@@ -51,7 +51,7 @@ object Selector {
                                  onclose: () => Unit) = {
     lazy val trigger: TypedTag[_ <: HTMLElement] =
       bs.button(buttonText, buttonModifierSeq +++ dropdownToggle, buttonIcon)(
-        span(caret, sheet.marginLeft(4))
+        span(caret, marginLeft := 4)
       )
 
     new Dropdown(
@@ -180,7 +180,7 @@ object Selector {
             data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := {
               if (opened()) true else false
             }, tabindex := 0)(
-            span(caret, sheet.marginLeft(4))),
+            span(caret, marginLeft := 4)),
           ul(dropdownMenu, role := "menu")(
             for {
               c <- contents.now
