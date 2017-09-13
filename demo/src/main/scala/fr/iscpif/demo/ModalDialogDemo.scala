@@ -48,8 +48,8 @@ object ModalDialogDemo extends Demo {
     // Build the dialog and the modal dialog
     tags.span(
       modalDialog.dialog,
-      bs.button("Modal !", btn_primary +++ (marginLeft := 5).toMS, () => modalDialog.show),
-      tags.span(glyph_settings +++ (paddingLeft := 5).toMS +++ pointer, onclick := {()=> modalDialog.show})
+      button("Modal !", onclick := {() => modalDialog.show}, btn_primary, marginLeft := 5),
+      tags.span(glyph_settings, paddingLeft := 5, pointer, onclick := {()=> modalDialog.show})
     ).render
 
   }

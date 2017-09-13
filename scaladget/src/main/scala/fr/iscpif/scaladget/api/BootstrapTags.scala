@@ -116,19 +116,9 @@ object BootstrapTags {
   }
 
   // BUTTONS
-  // default button with default button style and displaying a text
-  def button(content: String, todo: () ⇒ Unit): TypedTag[HTMLButtonElement] = button(content, btn_default, todo)
-
-  // displaying a text, with a button style and an action
-  def button(content: String, buttonStyle: ModifierSeq, todo: () ⇒ Unit): TypedTag[HTMLButtonElement] =
-    tags.button(buttonStyle, `type` := "button", onclick := { () ⇒ todo() })(content)
-
-  // displaying an HTHMElement, with a a button style and an action
-  def button(content: TypedTag[HTMLElement], buttonStyle: ModifierSeq, todo: () ⇒ Unit): TypedTag[HTMLButtonElement] =
-    button("", buttonStyle, todo)(content)
 
   // displaying a text with a button style and a glyphicon
-  def button(text: String = "", buttonStyle: ModifierSeq = btn_default, glyphicon: ModifierSeq = Seq(), todo: () ⇒ Unit = () => {}): TypedTag[HTMLButtonElement] = {
+  def buttonIcon(text: String = "", buttonStyle: ModifierSeq = btn_default, glyphicon: ModifierSeq = Seq(), todo: () ⇒ Unit = () => {}): TypedTag[HTMLButtonElement] = {
     val iconStyle = if (text.isEmpty) Seq(paddingTop := 3, paddingBottom := 3).toMS else (marginLeft := 5).toMS
     tags.button(btn +++ buttonStyle, `type` := "button", onclick := { () ⇒ todo() })(
       span(
@@ -149,7 +139,7 @@ object BootstrapTags {
 
 
   // Close buttons
-  def closeButton(dataDismiss: String, todo: () => Unit = () => {}) = button("", todo)(toClass("close"), aria.label := "Close", data.dismiss := dataDismiss)(
+  def closeButton(dataDismiss: String, todo: () => Unit = () => {}) = button("", onclick := todo)(toClass("close"), aria.label := "Close", data.dismiss := dataDismiss)(
     span(aria.hidden := true)(raw("&#215"))
   )
 
@@ -812,7 +802,7 @@ object BootstrapTags {
     val cssglyph = glyph +++ (paddingLeft := 3).toMS
 
     lazy val div = {
-      button("", preGlyph, cssglyph, action)
+      buttonIcon("", preGlyph, cssglyph, action)
     }
   }
 
@@ -830,7 +820,7 @@ object BootstrapTags {
       border := "none"
     )
 
-    lazy val div = button(preString, buttonStyle +++ cssbutton +++ pointer, action)(
+    lazy val div = button(preString, onclick := action)(buttonStyle +++ cssbutton +++ pointer)(
       span(cssglyph)
     )
 
@@ -890,8 +880,8 @@ object BootstrapTags {
       tags.div(style +++ btnGroup)(
         for (b ← buttons) yield {
           b match {
-            case s: ExclusiveStringButton ⇒ button(s.title, stringButtonBackground(s) +++ stringInGroup, action(b, s.action))
-            case g: ExclusiveGlyphButton ⇒ button("", glyphButtonBackground(g), g.glyph, action(b, g.action))
+            case s: ExclusiveStringButton ⇒ button(s.title, onclick := action(b, s.action))(stringButtonBackground(s) +++ stringInGroup)
+            case g: ExclusiveGlyphButton ⇒ buttonIcon("", glyphButtonBackground(g), g.glyph, action(b, g.action))
             case ts: TwoStatesGlyphButton ⇒
               if (selectedAgain()) twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph2), ts.glyph, action(ts, ts.action2), action(ts, ts.action), glyphButtonBackground(ts) +++ ts.preGlyph).div
               else twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), glyphButtonBackground(ts) +++ ts.preGlyph).div

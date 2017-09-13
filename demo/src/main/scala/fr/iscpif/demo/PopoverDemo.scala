@@ -37,10 +37,10 @@ object PopoverDemo extends Demo {
     )
 
     div(
-      bs.button("Left", buttonStyle, () => {}).popover("Popover on hover on left", Left),
-      bs.button("Title", buttonStyle, () => {}).popover("Popover on hover with Title", Top, title = Some("Pop title")),
-      bs.button("Dismissable", buttonStyle, () => {}).popover("Dismissible Popover on hover with Title", Top, HoverPopup, Some("Pop title"), true),
-      bs.button("Left (click)", buttonStyle, () => {}).popover("Popover on click on right", Left, ClickPopup),
+      button("Left", buttonStyle).popover("Popover on hover on left", Left),
+      button("Title", buttonStyle).popover("Popover on hover with Title", Top, title = Some("Pop title")),
+      button("Dismissable", buttonStyle).popover("Dismissible Popover on hover with Title", Top, HoverPopup, Some("Pop title"), true),
+      button("Left (click)", buttonStyle).popover("Popover on click on right", Left, ClickPopup),
       bs.input("")(width := 320, marginTop := 10, placeholder := "Bottom (click)").popover("Tooltip on click on bottom", Bottom, ClickPopup)
     ).render
   }

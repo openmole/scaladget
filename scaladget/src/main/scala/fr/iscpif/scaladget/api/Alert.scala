@@ -31,7 +31,7 @@ import rx.Rx
 object Alert {
 
   case class ExtraButton(content: String, buttonStyle: ModifierSeq = btn_default, action: () => Unit = () => {}) {
-    def render = bs.button(content, buttonStyle, action)
+    def render = button(content, onclick := action)(buttonStyle)
   }
 
 }

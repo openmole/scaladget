@@ -45,12 +45,12 @@ object TooltipDemo extends Demo {
 
     val add = Var(false)
     div(
-      bs.button("Left", buttonStyle, () => {}).tooltip("Tooltip on left", Left),
+      button("Left", buttonStyle).tooltip("Tooltip on left", Left),
       label("Right", labelStyle).tooltip("Tooltip on right", Right),
       label("Top", labelStyle).tooltip("Tooltip on top", Top),
-      bs.button("Bottom", buttonStyle, () => {
+      button("Bottom", buttonStyle, onclick := {() => {
         add() = true
-      }).tooltip("Tooltip on bottom", Bottom),
+      }}).tooltip("Tooltip on bottom", Bottom),
       Rx {
         if (add()) label("New", labelStyle).tooltip("Tooltip New", Right)
         else div().render

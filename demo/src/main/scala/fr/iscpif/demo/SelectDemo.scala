@@ -84,11 +84,11 @@ object SelectDemo {
         optionDropDown.selector,
         fixedTitleOptions.selector,
         vForm(width := 200)(loginInput.render,
-          bs.button("OK", btn_primary, () => {
+          button("OK", btn_primary, onclick := {() => {
             build.now.foreach {
               _.close
             }
-          }).render).dropdownWithTrigger(label("Drop", label_warning +++ (height := 30))).render,
+          }}).render).dropdownWithTrigger(label("Drop", label_warning +++ (height := 30))).render,
         div(
           Rx {
             div(s"Selected: ${selected()}")(padding := 8)

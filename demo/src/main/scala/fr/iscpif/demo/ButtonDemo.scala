@@ -38,7 +38,7 @@ object ButtonDemo {
       marginTop := 5
     )
 
-    def clickAction(tag: String) = clicked() = tag
+    def clickAction(tag: String) = () => clicked() = tag
 
     lazy val checkBoxes: SelectableButtons = bs.checkboxes()(
       bs.selectableButton("Piano", onclick = checkAction),
@@ -52,25 +52,27 @@ object ButtonDemo {
     )
 
     lazy val active: Var[Seq[SelectableButton]] = Var(checkBoxes.active)
+
     def checkAction = () => active() = checkBoxes.active
+
     def radioAction = () => active() = radios.active
 
     div(
       h4("Buttons"),
-      bs.button("Default", buttonStyle +++ btn_default, () => clickAction("default")),
-      bs.button("Primary", buttonStyle +++ btn_primary, () => clickAction("primary")),
-      bs.button("Info", buttonStyle +++ btn_info, () => clickAction("info")),
-      bs.button("Success", buttonStyle +++ btn_success, () => clickAction("success")),
-      bs.button("Warning", buttonStyle +++ btn_warning, () => clickAction("warning")),
-      bs.button("Danger", buttonStyle +++ btn_danger, () => clickAction("danger")),
-      bs.button("Default", buttonStyle +++ btn_default, glyph_fire, () => clickAction("fire")),
-      bs.button(buttonStyle = buttonStyle +++ btn_danger, glyphicon = glyph_download, todo = () => clickAction("download")),
+      button("Default", onclick := clickAction("default"), buttonStyle +++ btn_default),
+      button("Primary", onclick := clickAction("primary"), buttonStyle +++ btn_primary),
+      button("Info", onclick := clickAction("info"), buttonStyle +++ btn_info),
+      button("Success", onclick := clickAction("success"), buttonStyle +++ btn_success),
+      button("Warning", onclick := clickAction("warning"), buttonStyle +++ btn_warning),
+      button("Danger", onclick := clickAction("danger"), buttonStyle +++ btn_danger),
+      bs.buttonIcon("Default", buttonStyle +++ btn_default, glyph_fire, () => clickAction("fire")),
+      bs.buttonIcon(buttonStyle = buttonStyle +++ btn_danger, glyphicon = glyph_download, todo = () => clickAction("download")),
       bs.linkButton("GitHub", "https://github.com/openmole/scaladget", buttonStyle +++ btn_primary),
       Rx {
         div(paddingTop := 15, s"Clicked: ${clicked()}")
       },
       h4("Badges", paddingTop := 30),
-      bs.button("Badge", buttonStyle +++ btn_primary, () => clickAction("badge"))(bs.badge("7", backgroundColor := "pink")),
+      button("Badge", onclick := clickAction("badge"), buttonStyle +++ btn_primary)(bs.badge("7", backgroundColor := "pink")),
       h4("Icon buttons", paddingTop := 30),
       bs.glyphSpan(glyph_refresh +++ buttonStyle, () => clickAction("refresh")),
       bs.glyphSpan(glyph_flash +++ buttonStyle, () => clickAction("flash")),

@@ -59,12 +59,12 @@ object AlertDemo extends Demo {
 
     div(
       h4("No collapser"),
-      bs.button("Info", buttonStyle +++ btn_info, add(Info)),
-      bs.button("Warning", buttonStyle +++ btn_warning, add(Warning)),
+      button("Info", onclick := add(Info))(buttonStyle +++ btn_info),
+      button("Warning", onclick := add(Warning))(buttonStyle +++ btn_warning),
       h4("With collapser", paddingTop := 30),
-      contains(Success).expand(bs.button("Success", buttonStyle +++ btn_success, add(Success)),
+      contains(Success).expand(button("Success", onclick := add(Success), buttonStyle +++ btn_success),
         bs.successAlert("Success !", "Operation completed !", todocancel = remove(Success))()),
-      contains(Danger).expand(bs.button("Danger", buttonStyle +++ btn_danger, add(Danger)),
+      contains(Danger).expand(button("Danger", onclick := add(Danger), buttonStyle +++ btn_danger),
         bs.dangerAlerts("Danger !", Seq("Operation 1 failed ", "Operation 2 failed"), todocancel = remove(Danger))(
           ExtraButton("Run", btn_danger, action = remove(Danger)))),
       div(padding := 10)(
@@ -75,6 +75,7 @@ object AlertDemo extends Demo {
       )
     ).render
   }
+
 
   val elementDemo = new ElementDemo {
     def title: String = "Alert"

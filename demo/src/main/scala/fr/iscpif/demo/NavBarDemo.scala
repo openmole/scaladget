@@ -51,8 +51,8 @@ object NavBarDemo {
 
     val fiveItem = navItem(
       buttonGroup()(
-      bs.button("OK", btn_primary, ()=> {println("Five open")}),
-      bs.button("Cancel", btn_default, ()=> {println("Five cancel")})
+      button("OK", onclick := {()=> {println("Five open")}}, btn_primary),
+      button("Cancel", onclick := {()=> {println("Five cancel")}}, btn_default)
       ).render
     )
 

@@ -50,7 +50,7 @@ object Selector {
                                  dropdownModifierSeq: ModifierSeq,
                                  onclose: () => Unit) = {
     lazy val trigger: TypedTag[_ <: HTMLElement] =
-      bs.button(buttonText, buttonModifierSeq +++ dropdownToggle, buttonIcon)(
+      bs.buttonIcon(buttonText, buttonModifierSeq +++ dropdownToggle, buttonIcon)(
         span(caret, marginLeft := 4)
       )
 
@@ -168,7 +168,7 @@ object Selector {
             if (opened()) "open"
             else ""
           ))(
-          bs.button(fixedTitle.getOrElse(content().map {
+          bs.buttonIcon(fixedTitle.getOrElse(content().map {
             naming
           }.getOrElse("") + " "), key +++ dropdownToggle,
             content().map { ct =>
