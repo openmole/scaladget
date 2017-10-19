@@ -5,6 +5,7 @@ Scaladget provides a scala facades of some famous javascript libraries. It relie
 * [Bootstrap-native.js](https://thednp.github.io/bootstrap.native/)
 * [D3.js](d3js.org)
 * [Ace Editor](http://ace.c9.io)
+* [Bootstrap-slider](http://seiyria.com/bootstrap-slider/)
 
 
 ## Usage ##

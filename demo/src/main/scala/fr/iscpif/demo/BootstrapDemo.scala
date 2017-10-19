@@ -1,6 +1,6 @@
 package demo
 
-import scaladget.api.{BootstrapTags => bs}
+import scaladget.api.{JSDependency, BootstrapTags => bs}
 import scaladget.stylesheet.{all => sheet}
 import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
@@ -42,7 +42,7 @@ object BootstrapDemo {
       import bs._
       """.stripMargin
 
-    bs.withBootstrapNative {
+    JSDependency.withJS(JSDependency.BOOTSTRAP_NATIVE) {
       div(div(marginLeft := 15, marginTop := 25)(
         h3("Build"),
         div(row)(
@@ -56,6 +56,7 @@ object BootstrapDemo {
       ),
         for {
           demo <- Seq(
+            SliderDemo.elementDemo,
             ButtonDemo.elementDemo,
             LabelDemo.elementDemo,
             FormDemo.elementDemo,

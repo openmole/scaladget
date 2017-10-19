@@ -37,12 +37,6 @@ import scalatags.JsDom
 object BootstrapTags {
   bstags =>
 
-  def withBootstrapNative[T <: HTMLElement](f: => T): Unit = {
-    org.scalajs.dom.document.body.appendChild(f)
-    org.scalajs.dom.document.body.appendChild(
-      tags.script(`type` := "text/javascript", src := "js/bootstrap-native.min.js"))
-  }
-
   implicit def formTagToNode(tt: HtmlTag): org.scalajs.dom.Node = tt.render
 
   type BS = TypedTag[_ <: HTMLElement]

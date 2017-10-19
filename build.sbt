@@ -14,6 +14,7 @@ val scalatagsVersion = "0.6.5"
 val scalaJSdomVersion = "0.9.2"
 val rxVersion = "0.3.2"
 val sourceCodeVersion = "0.1.2"
+val querkiVersion = "0.8"
 
 crossScalaVersions in ThisBuild := Seq("2.11.8", "2.12.2")
 organization in ThisBuild := "fr.iscpif"
@@ -45,7 +46,8 @@ pomExtra in ThisBuild := {
 lazy val scaladget = project.in(file("scaladget")) settings(
   libraryDependencies += "org.scala-js" %%% "scalajs-dom" % scalaJSdomVersion,
   libraryDependencies += "com.lihaoyi" %%% "scalatags" % scalatagsVersion,
-  libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion /*,
+  libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
+libraryDependencies += "org.querki" %%% "querki-jsext" % querkiVersion /*,
   npmDependencies in Compile += "bootstrap.native" -> bootstrapNativeVersion*/
 ) enablePlugins (ScalaJSPlugin)
 
@@ -63,7 +65,7 @@ lazy val demo = project.in(file("demo")) dependsOn (scaladget) enablePlugins (Sc
     val demoTarget = target.value
     val demoResource = (resourceDirectory in Compile).value
     //  val bootstrapJS = (npmUpdate in Compile).value / "node_modules" / "bootstrap.native" / "dist" / "bootstrap-native.min.js"
-    val demoJS = (fullOptJS in Compile).value
+    val demoJS = (fastOptJS in Compile).value
 
     IO.copyFile(demoJS.data, demoTarget / "js/demo.js")
     //  IO.copyFile(bootstrapJS, demoTarget / "js/bootstrap.-native.min.js")
