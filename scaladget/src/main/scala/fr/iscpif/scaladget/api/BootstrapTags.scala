@@ -20,17 +20,17 @@ package scaladget.api
 import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw._
 
-import scala.scalajs.js.annotation.JSExportTopLevel
 import scalatags.JsDom.{TypedTag, tags}
 import scalatags.JsDom.all._
 import scaladget.tools.JsRxTags._
 import scaladget.stylesheet.{all => sheet}
-import sheet.{ctx => _, _}
+import sheet._
+import net.scalapro.sortable._
 import rx._
+
 import Popup._
 import scaladget.api.Alert.ExtraButton
 import scaladget.api.SelectableButtons.{CheckBoxSelection, RadioSelection}
-
 import scala.scalajs.js
 import scalatags.JsDom
 
@@ -384,7 +384,7 @@ object BootstrapTags {
       val list = org.scalajs.dom.document.getElementsByClassName("tooltip")
       for (nodeIndex ← 0 to (list.length - 1)) {
         val element = list(nodeIndex)
-        if (! js.isUndefined(element)) element.parentNode.removeChild(element)
+        if (!js.isUndefined(element)) element.parentNode.removeChild(element)
       }
     }
   }
@@ -668,6 +668,7 @@ object BootstrapTags {
 
   }
 
+
   // TABS
   case class Tab(title: String, content: BS, active: Boolean, onclickExtra: () => Unit, tabID: String = uuID.short("t"), refID: String = uuID.short("r")) {
 
@@ -676,7 +677,7 @@ object BootstrapTags {
     def activeClass = if (active) (ms("active"), ms("active in")) else (ms(""), ms(""))
   }
 
-  case class Tabs(tabs: Seq[Tab] = Seq()) {
+  case class Tabs(tabs: Seq[Tab]) {
 
     def add(title: String, content: BS, active: Boolean = false, onclickExtra: () => Unit = () => {}): Tabs = add(Tab(title, content, active, onclickExtra))
 
@@ -688,7 +689,6 @@ object BootstrapTags {
     })
 
     private def rendering(navStyle: NavStyle = pills) = {
-
       val existsOneActive = tabs.map {
         _.active
       }.exists(_ == true)
@@ -697,26 +697,34 @@ object BootstrapTags {
         else tabs
       }
 
-      div(
-        ul(navStyle, tab_list_role)(
-          theTabs.map { t =>
-            li(presentation_role +++ t.activeClass._1)(
-              a(id := t.tabID, href := s"#${t.refID}", tab_role, data("toggle") := "tab", data("height") := true, aria.controls := t.refID, onclick := t.onclickExtra)(t.title)
-            )
-          }),
+      val tabList = ul(navStyle, tab_list_role)(
+        theTabs.map { t =>
+          li(presentation_role +++ t.activeClass._1)(
+            a(id := t.tabID, href := s"#${t.refID}", tab_role, data("toggle") := "tab", data("height") := true, aria.controls := t.refID, onclick := t.onclickExtra)(t.title)
+          )
+        }).render
+
+      val tabDiv = div(
+        tabList,
         div(tab_content +++ (paddingTop := 10).toMS)(
           theTabs.map { t =>
             div(id := t.refID, tab_pane +++ fade +++ t.activeClass._2, tab_panel_role, aria.labelledby := t.tabID)(t.content)
           }
         )
-      ).render
+      )
+
+
+     Sortable(tabList)
+     tabDiv.render
     }
 
-    def render(navStyle: NavStyle = pills) = cloneRender.rendering(navStyle)
+    def render(navStyle: NavStyle = pills) = {
+      cloneRender.rendering(navStyle)
+    }
   }
 
 
-  def tabs = new Tabs
+  def tabs = Tabs.apply(Seq())
 
   // Tables
   case class Row(values: Seq[TypedTag[_ <: HTMLElement]])
@@ -727,9 +735,13 @@ object BootstrapTags {
 
     def addRow(row: Row): Table = copy(rows = rows :+ row)
 
-    def addRow(row: String*): Table = addRow(Row(row.map{td(_)}))
+    def addRow(row: String*): Table = addRow(Row(row.map {
+      td(_)
+    }))
 
-    def addRowElement(typedTags: TypedTag[_ <: HTMLElement]*): Table = addRow(Row(typedTags.map{td(_)}))
+    def addRowElement(typedTags: TypedTag[_ <: HTMLElement]*): Table = addRow(Row(typedTags.map {
+      td(_)
+    }))
 
     private def fillRow(row: Seq[TypedTag[HTMLElement]]) = tags.tr(
       for (
@@ -742,7 +754,9 @@ object BootstrapTags {
     def render(tableStyle: TableStyle = default_table, headerStyle: ModifierSeq = emptyMod) =
       tags.table(tableStyle)(
         tags.thead(headerStyle)(
-          fillRow(headers.map{th(_)})
+          fillRow(headers.map {
+            th(_)
+          })
         ),
         tags.tbody(
           for (r <- rows) yield {

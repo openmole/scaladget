@@ -18,11 +18,12 @@ package demo
  */
 
 import org.scalajs.dom.Element
+
 import scaladget.stylesheet.{all => sheet}
 import scaladget.api.{BootstrapTags => bs}
 import scalatags.JsDom.all._
-import sheet._
-import bs._
+//import net.scalapro.sortable._
+import org.scalajs.dom.raw.DragEvent
 
 object TabDemo extends Demo {
   val sc = sourcecode.Text {
@@ -37,7 +38,7 @@ object TabDemo extends Demo {
       "sunt in culpa qui officia deserunt mollit anim id est laborum.", padding := 10)
 
     val tabs = bs.tabs.
-      add("My first", div1, onclickExtra = ()=> println("Tab1 pressed")).
+      add("My first", div1, onclickExtra = () => println("Tab1 pressed")).
       add("My second", div("Hey !"))
 
     div(
