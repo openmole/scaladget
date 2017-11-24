@@ -16,38 +16,42 @@ val rxVersion = "0.3.2"
 val sourceCodeVersion = "0.1.2"
 val querkiVersion = "0.8"
 
-crossScalaVersions in ThisBuild := Seq("2.11.8", "2.12.2")
-organization in ThisBuild := "fr.iscpif"
-version in ThisBuild := "0.9.6-SNAPSHOT"
-resolvers in ThisBuild := Seq(Resolver.sonatypeRepo("snapshots"),
-  DefaultMavenRepository
+lazy val defaultSettings = Seq(
+  crossScalaVersions in ThisBuild := Seq("2.11.8", "2.12"),
+  scalaVersion := "2.12.4",
+  organization in ThisBuild := "fr.iscpif",
+  version in ThisBuild := "0.9.6-SNAPSHOT",
+  resolvers in ThisBuild := Seq(Resolver.sonatypeRepo("snapshots"),
+    DefaultMavenRepository
+  ),
+  publishTo in ThisBuild := {
+    val nexus = "https://oss.sonatype.org/"
+    if (version.value.trim.endsWith("SNAPSHOT"))
+      Some("snapshots" at nexus + "content/repositories/snapshots")
+    else
+      Some("releases" at nexus + "service/local/staging/deploy/maven2")
+  },
+  pomIncludeRepository in ThisBuild := { _ => false },
+  licenses in ThisBuild := Seq("Affero GPLv3" -> url("http://www.gnu.org/licenses/")),
+  homepage in ThisBuild := Some(url("https://github.com/mathieuleclaire/scaladget")),
+  scmInfo in ThisBuild := Some(ScmInfo(url("https://github.com/mathieuleclaire/scaladget.git"), "scm:git:git@github.com:mathieuleclaire/scaladget.git")),
+  pomExtra in ThisBuild := {
+    <developers>
+      <developer>
+        <id>mathieuleclaire</id>
+        <name>Mathieu Leclaire</name>
+        <url>https://github.com/mathieuleclaire/</url>
+      </developer>
+    </developers>
+  }
 )
-publishTo in ThisBuild := {
-  val nexus = "https://oss.sonatype.org/"
-  if (version.value.trim.endsWith("SNAPSHOT"))
-    Some("snapshots" at nexus + "content/repositories/snapshots")
-  else
-    Some("releases" at nexus + "service/local/staging/deploy/maven2")
-}
-pomIncludeRepository in ThisBuild := { _ => false }
-licenses in ThisBuild := Seq("Affero GPLv3" -> url("http://www.gnu.org/licenses/"))
-homepage in ThisBuild := Some(url("https://github.com/mathieuleclaire/scaladget"))
-scmInfo in ThisBuild := Some(ScmInfo(url("https://github.com/mathieuleclaire/scaladget.git"), "scm:git:git@github.com:mathieuleclaire/scaladget.git"))
-pomExtra in ThisBuild := {
-  <developers>
-    <developer>
-      <id>mathieuleclaire</id>
-      <name>Mathieu Leclaire</name>
-      <url>https://github.com/mathieuleclaire/</url>
-    </developer>
-  </developers>
-}
 
-lazy val scaladget = project.in(file("scaladget")) settings(
+lazy val scaladget = project.in(file("scaladget")) settings defaultSettings settings(
   libraryDependencies += "org.scala-js" %%% "scalajs-dom" % scalaJSdomVersion,
   libraryDependencies += "com.lihaoyi" %%% "scalatags" % scalatagsVersion,
   libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
-libraryDependencies += "org.querki" %%% "querki-jsext" % querkiVersion /*,
+  libraryDependencies += "org.querki" %%% "querki-jsext" % querkiVersion,
+  libraryDependencies += "net.scalapro" %%% "sortable-js-facade" % "0.2.1" /*,
   npmDependencies in Compile += "bootstrap.native" -> bootstrapNativeVersion*/
 ) enablePlugins (ScalaJSPlugin)
 
@@ -56,10 +60,10 @@ lazy val runDemo = taskKey[Unit]("runDemo")
 lazy val bootstrapJS = taskKey[TaskKey[Attributed[sbt.File]]]("bootstrapJS")
 
 //lazy val demo = project.in(file("demo")) dependsOn (scaladget) enablePlugins (ScalaJSBundlerPlugin) settings (defaultSettings: _*) settings(
-lazy val demo = project.in(file("demo")) dependsOn (scaladget) enablePlugins (ScalaJSPlugin) settings(
+lazy val demo = project.in(file("demo")) dependsOn (scaladget) enablePlugins (ScalaJSPlugin) settings defaultSettings settings(
   libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
-  libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion/*,
-  libraryDependencies += "org.scala-lang" %% "scala-reflect" % "provided"*/,
+  libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion /*,
+  libraryDependencies += "org.scala-lang" %% "scala-reflect" % "provided"*/ ,
   //  enableReloadWorkflow := false,
   runDemo := {
     val demoTarget = target.value
