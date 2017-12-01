@@ -1,11 +1,12 @@
 package demo
 
-import scaladget.stylesheet.{all => sheet}
-import scaladget.api.{BootstrapTags => bs}
+import org.scalajs.dom.Element
+
+import scaladget.bootstrapnative.{BootstrapTags => bs}
 import bs._
-import org.scalajs.dom.raw.Element
-import sheet._
+import scaladget.bootstrapnative.all._
 import scalatags.JsDom.all._
+import scaladget.tools.stylesheet._
 
 /*
  * Copyright (C) 30/08/16 // mathieu.leclaire@openmole.org

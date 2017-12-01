@@ -18,11 +18,12 @@ package demo
  */
 
 import org.scalajs.dom.Element
-import scaladget.stylesheet.{all => sheet}
-import scaladget.api.{BootstrapTags => bs}
-import scalatags.JsDom.all._
-import sheet._
+
+import scaladget.bootstrapnative.{BootstrapTags => bs}
 import bs._
+import scaladget.bootstrapnative.all._
+import scalatags.JsDom.all._
+import scaladget.tools.stylesheet._
 
 object TableDemo extends Demo {
   val sc = sourcecode.Text {

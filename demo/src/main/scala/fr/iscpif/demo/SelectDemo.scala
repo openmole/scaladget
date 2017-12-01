@@ -1,10 +1,13 @@
 package demo
 
 
-import scaladget.api.Selector
-import scaladget.stylesheet.all
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.HTMLDivElement
+
+import scaladget.bootstrapnative.all._
+import scaladget.tools.stylesheet._
+import scaladget.bootstrapnative.{BootstrapTags=> bs}
+import bs._
 
 /*
  * Copyright (C) 22/08/16 // mathieu.leclaire@openmole.org
@@ -22,17 +25,12 @@ import org.scalajs.dom.raw.HTMLDivElement
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import scaladget.api.{BootstrapTags => bs}
-import scaladget.stylesheet.{all => sheet}
 import scalatags.JsDom.all._
-import sheet._
-import bs._
 
 object SelectDemo {
 
   val sc = sourcecode.Text {
-    import scaladget.api.Selector._
+    import scaladget.bootstrapnative.Selector._
     import scaladget.tools.JsRxTags._
     import rx._
 

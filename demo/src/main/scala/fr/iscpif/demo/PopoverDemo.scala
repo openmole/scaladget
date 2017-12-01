@@ -18,19 +18,18 @@ package demo
  */
 
 
-import scaladget.stylesheet.{all => sheet}
-import scaladget.api.{BootstrapTags => bs}
+import org.scalajs.dom.Element
 
-import scalatags.JsDom.all._
-import sheet._
+import scaladget.bootstrapnative.{BootstrapTags => bs}
 import bs._
-import org.scalajs.dom._
+import scaladget.bootstrapnative.all._
+import scalatags.JsDom.all._
+import scaladget.tools.stylesheet._
 
 object PopoverDemo extends Demo {
   val sc = sourcecode.Text {
 
-    import scaladget.api.Popup._
-
+    import scaladget.bootstrapnative.Popup._
     val buttonStyle: ModifierSeq = Seq(
       btn_default,
       marginRight := 5

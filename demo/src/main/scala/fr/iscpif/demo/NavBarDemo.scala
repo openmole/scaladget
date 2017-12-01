@@ -1,9 +1,5 @@
 package demo
 
-import org.scalajs.dom.Element
-
-import scalatags.JsDom
-
 /*
  * Copyright (C) 22/08/16 // mathieu.leclaire@openmole.org
  *
@@ -21,11 +17,13 @@ import scalatags.JsDom
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import scaladget.stylesheet.{all => sheet}
-import scaladget.api.{BootstrapTags => bs}
-import scalatags.JsDom.all._
-import sheet._
+import org.scalajs.dom.Element
+
+import scaladget.bootstrapnative.{BootstrapTags => bs}
 import bs._
+import scaladget.bootstrapnative.all
+import scalatags.JsDom.all._
+import scaladget.tools.stylesheet._
 
 object NavBarDemo {
   val sc = sourcecode.Text {
@@ -45,20 +43,20 @@ object NavBarDemo {
     )
 
     val fourItem = navItem(
-      div(glyph_fire +++ (color := "#337ab7"), lineHeight := "35px").render, () ⇒
+      div(all.glyph_fire +++ (color := "#337ab7"), lineHeight := "35px").render, () ⇒
         println("Four open")
     )
 
     val fiveItem = navItem(
       buttonGroup()(
-      button("OK", onclick := {()=> {println("Five open")}}, btn_primary),
-      button("Cancel", onclick := {()=> {println("Five cancel")}}, btn_default)
+      button("OK", onclick := {()=> {println("Five open")}}, all.btn_primary),
+      button("Cancel", onclick := {()=> {println("Five cancel")}}, all.btn_default)
       ).render
     )
 
     //Create the nav bar
     bs.navBar(
-      navbar_staticTop,
+      all.navbar_staticTop,
       oneItem,
       twoItem,
       threeItem,

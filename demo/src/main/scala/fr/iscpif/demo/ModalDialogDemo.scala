@@ -18,12 +18,13 @@ import org.scalajs.dom.Element
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import org.scalajs.dom.Element
 
-import scaladget.api.BootstrapTags.ModalDialog
-import scaladget.stylesheet.{all => sheet}
-import scaladget.api.{BootstrapTags => bs}
+import scaladget.bootstrapnative.{BootstrapTags => bs}
+import bs._
+import scaladget.bootstrapnative.all._
 import scalatags.JsDom.all._
-import sheet._
+import scaladget.tools.stylesheet._
 
 object ModalDialogDemo extends Demo {
 

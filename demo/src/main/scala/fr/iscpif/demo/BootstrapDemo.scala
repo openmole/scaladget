@@ -1,15 +1,11 @@
 package demo
 
-import scaladget.api.{JSDependency, BootstrapTags => bs}
-import scaladget.stylesheet.{all => sheet}
-import scala.scalajs.js.JSApp
-import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
-import org.scalajs.dom
-
-import scalatags.JsDom.tags
+import scaladget.bootstrapnative.{JSDependency}
+import scala.scalajs.js.annotation._
+import scaladget.bootstrapnative.all._
+import scaladget.tools.stylesheet._
 import scalatags.JsDom.all._
-import sheet._
-import bs._
+import org.scalajs.dom
 
 /*
  * Copyright (C) 24/03/16 // mathieu.leclaire@openmole.org
@@ -27,11 +23,10 @@ import bs._
  * You should have received a copy of the GNU General Public License
  */
 
-
+@JSExportTopLevel(name = "sjs.demo.BootstrapDemo") @JSExportAll
 object BootstrapDemo {
 
-  @JSExportTopLevel("bootstrapDemo")
-  def bootstrapDemo(): Unit = {
+  def runn(): Unit = {
 
     def imports =
       """
@@ -56,7 +51,7 @@ object BootstrapDemo {
       ),
         for {
           demo <- Seq(
-            SliderDemo.elementDemo,
+          //  SliderDemo.elementDemo,
             ButtonDemo.elementDemo,
             LabelDemo.elementDemo,
             FormDemo.elementDemo,
@@ -81,6 +76,6 @@ object BootstrapDemo {
         }
       ).render
     }
-    dom.document.body.appendChild(tags.script("hljs.initHighlighting();"))
+    dom.document.body.appendChild(scalatags.JsDom.tags.script("hljs.initHighlighting();").render)
   }
 }

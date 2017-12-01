@@ -19,16 +19,15 @@ package demo
 
 import java.util.UUID
 
-import org.scalajs.dom
-import org.scalajs.dom.raw._
-import rx._
-
+import scaladget.svg._
 import scala.scalajs.js
-import scaladget.api.svg._
-import scaladget.stylesheet.all._
+import scaladget.tools.stylesheet._
 import scaladget.tools.JsRxTags._
 import scalatags.JsDom.all._
 import scalatags.JsDom.{svgAttrs, svgTags}
+import org.scalajs.dom
+import org.scalajs.dom.raw._
+import rx._
 
 trait Selectable {
   val selected: Var[Boolean] = Var(false)

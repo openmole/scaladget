@@ -17,16 +17,13 @@ package demo
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import scaladget.stylesheet.{all => sheet}
-import scaladget.api.{BootstrapTags => bs}
-import scaladget.tools.JsRxTags._
-import org.scalajs.dom.raw.Element
-
-import scalatags.JsDom.all._
-import sheet._
-import scaladget.api.Alert.ExtraButton
-import scaladget.api.{BootstrapTags => bs}
+import scaladget.tools.stylesheet._
+import scaladget.bootstrapnative.{BootstrapTags => bs}
 import bs._
+import scaladget.bootstrapnative.all._
+import scaladget.bootstrapnative.Alert.ExtraButton
+import org.scalajs.dom.raw._
+import scalatags.JsDom.all._
 
 object AlertDemo extends Demo {
 

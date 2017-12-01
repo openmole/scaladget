@@ -19,11 +19,9 @@ package demo
 
 import org.scalajs.dom.Element
 
-import scaladget.stylesheet.{all => sheet}
-import scaladget.api.{BootstrapTags => bs}
+import scaladget.bootstrapnative.{BootstrapTags => bs}
+import scaladget.bootstrapnative.all
 import scalatags.JsDom.all._
-//import net.scalapro.sortable._
-import org.scalajs.dom.raw.DragEvent
 
 object TabDemo extends Demo {
   val sc = sourcecode.Text {
@@ -42,11 +40,11 @@ object TabDemo extends Demo {
       add("My second", div("Hey !"))
 
     div(
-      tabs.render(sheet.pills),
-      tabs.render(sheet.stacked_pills),
-      tabs.render(sheet.tabs),
-      tabs.render(sheet.justified_tabs),
-      tabs.render(sheet.justified_pills)
+      tabs.render(all.pills),
+      tabs.render(all.stacked_pills),
+      tabs.render(all.tabs),
+      tabs.render(all.justified_tabs),
+      tabs.render(all.justified_pills)
     ).render
 
   }

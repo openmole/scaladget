@@ -1,7 +1,5 @@
 package demo
 
-import org.scalajs.dom.Element
-
 /*
  * Copyright (C) 23/08/16 // mathieu.leclaire@openmole.org
  *
@@ -19,19 +17,21 @@ import org.scalajs.dom.Element
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import scaladget.stylesheet.{all => sheet}
-import scaladget.api.{BootstrapTags => bs}
-import scalatags.JsDom.all._
-import scaladget.tools.JsRxTags._
-import sheet._
+import org.scalajs.dom.Element
+
+import scaladget.bootstrapnative.{BootstrapTags => bs}
 import bs._
+import scaladget.bootstrapnative.all._
+import scalatags.JsDom.all._
+import scaladget.tools.stylesheet._
+import scaladget.tools.JsRxTags._
 
 object TooltipDemo extends Demo {
   val sc = sourcecode.Text {
 
+    import scaladget.bootstrapnative.Popup._
     import rx._
     implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
-    import scaladget.api.Popup._
 
     val buttonStyle: ModifierSeq = Seq(
       btn_default,
@@ -48,9 +48,10 @@ object TooltipDemo extends Demo {
       button("Left", buttonStyle).tooltip("Tooltip on left", Left),
       label("Right", labelStyle).tooltip("Tooltip on right", Right),
       label("Top", labelStyle).tooltip("Tooltip on top", Top),
-      button("Bottom", buttonStyle, onclick := {() => {
+      button("Bottom", buttonStyle, onclick := { () => {
         add() = true
-      }}).tooltip("Tooltip on bottom", Bottom),
+      }
+      }).tooltip("Tooltip on bottom", Bottom),
       Rx {
         if (add()) label("New", labelStyle).tooltip("Tooltip New", Right)
         else div().render

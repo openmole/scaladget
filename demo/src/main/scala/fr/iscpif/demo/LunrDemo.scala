@@ -1,14 +1,13 @@
 package demo
 
-import scaladget.mapping.lunr.{IIndexSearchResult, Importedjs, Index}
 import scaladget.tools.JsRxTags._
 import org.scalajs.dom
 import rx._
 
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{literal => lit}
-import scala.scalajs.js.{JSApp, JSON}
 import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
+import scaladget.lunr._
 import scalatags.JsDom.tags
 import scalatags.JsDom.all._
 

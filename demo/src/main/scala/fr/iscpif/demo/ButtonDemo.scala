@@ -1,8 +1,5 @@
 package demo
 
-import scaladget.api.{SelectableButton, SelectableButtons}
-import org.scalajs.dom._
-
 /*
  * Copyright (C) 23/08/16 // mathieu.leclaire@openmole.org
  *
@@ -20,11 +17,15 @@ import org.scalajs.dom._
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import scaladget.stylesheet.{all => sheet}
-import scaladget.api.{BootstrapTags => bs}
-import scaladget.tools.JsRxTags._
+import org.scalajs.dom.Element
+
+
+import scaladget.bootstrapnative.{SelectableButton, SelectableButtons}
+import scaladget.bootstrapnative.{BootstrapTags => bs}
+import scaladget.bootstrapnative.all._
 import scalatags.JsDom.all._
-import sheet._
+import scaladget.tools.stylesheet._
+import scaladget.tools.JsRxTags._
 
 object ButtonDemo {
   val sc = sourcecode.Text {

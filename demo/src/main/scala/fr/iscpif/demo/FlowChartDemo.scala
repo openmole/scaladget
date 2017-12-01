@@ -3,10 +3,8 @@ package demo
 import org.scalajs.dom
 
 import scala.scalajs.js.annotation._
-import scaladget.stylesheet.{all => sheet}
-import scala.scalajs.js.JSApp
 import scalatags.JsDom.all._
-import sheet._
+import scaladget.tools.stylesheet._
 
 /*
  * Copyright (C) 03/04/17 // mathieu.leclaire@openmole.org

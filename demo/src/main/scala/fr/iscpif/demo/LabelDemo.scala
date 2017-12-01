@@ -18,12 +18,14 @@ import org.scalajs.dom._
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import org.scalajs.dom.Element
 
-import scaladget.stylesheet.{all => sheet}
-import scaladget.tools.JsRxTags._
+import scaladget.bootstrapnative.{BootstrapTags => bs}
+import bs._
+import scaladget.bootstrapnative.all._
 import scalatags.JsDom.all._
-import sheet._
-import scaladget.api.BootstrapTags._
+import scaladget.tools.stylesheet._
+import scaladget.tools.JsRxTags._
 
 object LabelDemo {
   val sc = sourcecode.Text {

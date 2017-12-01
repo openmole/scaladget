@@ -17,21 +17,21 @@ package demo
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import scaladget.api.{BootstrapTags => bs}
-import scaladget.stylesheet.{all => sheet}
-import scaladget.tools.JsRxTags._
+import org.scalajs.dom.Element
+import org.scalajs.dom.raw.HTMLInputElement
 
-import scalatags.JsDom.all._
-import org.scalajs.dom.raw.{Element, HTMLInputElement}
-import sheet._
+import scaladget.bootstrapnative.{BootstrapTags => bs}
 import bs._
+import scaladget.bootstrapnative.all._
+import scalatags.JsDom.all._
+import scaladget.tools.stylesheet._
+import scaladget.tools.JsRxTags._
 
 
 object FormDemo extends Demo {
 
   val sc = sourcecode.Text {
 
-    import scaladget.api.Selector._
     import rx._
 
     case class MyElement(name: String)
