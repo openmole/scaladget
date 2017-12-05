@@ -1,6 +1,8 @@
 package demo
 
-import scaladget.bootstrapnative.{JSDependency}
+import com.karasiq.highlightjs.HighlightJS
+
+import scaladget.bootstrapnative.JSDependency
 import scala.scalajs.js.annotation._
 import scaladget.bootstrapnative.all._
 import scaladget.tools.stylesheet._
@@ -23,7 +25,7 @@ import org.scalajs.dom
  * You should have received a copy of the GNU General Public License
  */
 
-@JSExportTopLevel(name = "sjs.demo.BootstrapDemo") @JSExportAll
+@JSExportTopLevel(name = "demo.BootstrapDemo") @JSExportAll
 object BootstrapDemo {
 
   def runn(): Unit = {
@@ -37,8 +39,8 @@ object BootstrapDemo {
       import bs._
       """.stripMargin
 
-    JSDependency.withJS(JSDependency.BOOTSTRAP_NATIVE) {
-      div(div(marginLeft := 15, marginTop := 25)(
+    //JSDependency.withJS(JSDependency.BOOTSTRAP_NATIVE) {
+      val content = div(div(marginLeft := 15, marginTop := 25)(
         h3("Build"),
         div(row)(
           div(colMD(12))("Details on construction on ", a(href := "https://github.com/openmole/scaladget", target := "_blank")("the Scaladet Github page"))
@@ -57,7 +59,7 @@ object BootstrapDemo {
             FormDemo.elementDemo,
             SelectDemo.elementDemo,
             ModalDialogDemo.elementDemo,
-            TabDemo.elementDemo,
+          //  TabDemo.elementDemo,
             TableDemo.elementDemo,
             NavBarDemo.elementDemo,
             TooltipDemo.elementDemo,
@@ -75,7 +77,11 @@ object BootstrapDemo {
           )
         }
       ).render
-    }
-    dom.document.body.appendChild(scalatags.JsDom.tags.script("hljs.initHighlighting();").render)
+
+    dom.document.body.appendChild(content)
+  //  HighlightJS.initHighlightingOnLoad()
+
   }
+    //dom.document.body.appendChild(scalatags.JsDom.tags.script("hljs.initHighlighting();").render)
+ // }
 }

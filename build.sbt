@@ -8,7 +8,7 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import scalajsbundler.BundlingMode.LibraryOnly
 
 val aceVersion = "1.3.0"
-val bootstrapNativeVersion = "2.0.19"
+val bootstrapNativeVersion = "2.0.21"
 val bootstrapSliderVersion = "10.0.0"
 val d3Version = "4.12.0"
 val highlightVersion = "9.10.0"
@@ -106,15 +106,16 @@ lazy val bootstrapJS = taskKey[TaskKey[Attributed[sbt.File]]]("bootstrapJS")
 lazy val demo = project.in(file("demo")) enablePlugins (ScalaJSBundlerPlugin) settings(
   libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
   libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
+  libraryDependencies += "com.github.karasiq" %%% "scalajs-marked" % "1.0.2",
+  npmDependencies in Compile += "highlightjs"-> highlightVersion,
   webpackBundlingMode := BundlingMode.LibraryAndApplication(),
   runDemo := {
     val demoTarget = target.value
     val demoResource = (resourceDirectory in Compile).value
 
-    val demoJS = (fastOptJS in webpack in Compile).value
+    val demoJS = (webpack in fastOptJS in Compile).value
 
-    IO.copyFile(demoJS.data, demoTarget / "js/demo.js")
-
+    IO.copyFile(demoTarget / "scala-2.12/scalajs-bundler/main/demo-fastopt-bundle.js", demoTarget / "js/demo.js")
 
     IO.copyFile(demoResource / "bootstrap-native.html", demoTarget / "bootstrap-native.html")
     IO.copyFile(demoResource / "flowchart.html", demoTarget / "flowchart.html")
