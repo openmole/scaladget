@@ -17,17 +17,15 @@ val lunrVersion = "2.1.4"
 val rxVersion = "0.3.2"
 val scalatagsVersion = "0.6.5"
 val scalaJSdomVersion = "0.9.2"
-val sortableFacadeVersion = "0.2.1"
 val sortableVersion = "1.7.0"
 val sourceCodeVersion = "0.1.2"
 
-//crossScalaVersions := Seq("2.11.8", "2.12"),
 scalaVersion in ThisBuild := "2.12.4"
+
 organization in ThisBuild := "scaladget"
+
 version in ThisBuild := "0.9.6-SNAPSHOT"
-//resolvers in ThisBuild := Seq(Resolver.sonatypeRepo("snapshots")(
-//  DefaultMavenRepository
-//)
+
 publishTo in ThisBuild := {
   val nexus = "https://oss.sonatype.org/"
   if (version.value.trim.endsWith("SNAPSHOT"))
