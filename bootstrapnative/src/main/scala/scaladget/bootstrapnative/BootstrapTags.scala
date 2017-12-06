@@ -34,7 +34,6 @@ import sheet._
 import scaladget.bootstrapnative.SelectableButtons._
 import scaladget.tools.stylesheet._
 import scaladget.tools.JsRxTags._
-import net.scalapro.sortable.Sortable
 
 object BootstrapTags {
   bstags =>
@@ -716,7 +715,7 @@ object BootstrapTags {
       )
 
 
-     Sortable(tabList)
+     new Sortable(tabList)
      tabDiv.render
     }
 

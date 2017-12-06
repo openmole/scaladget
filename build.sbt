@@ -18,7 +18,7 @@ val rxVersion = "0.3.2"
 val scalatagsVersion = "0.6.5"
 val scalaJSdomVersion = "0.9.2"
 val sortableFacadeVersion = "0.2.1"
-val sortableVersion = "2.0.0"
+val sortableVersion = "1.7.0"
 val sourceCodeVersion = "0.1.2"
 
 //crossScalaVersions := Seq("2.11.8", "2.12"),
@@ -73,9 +73,8 @@ lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (Sc
   scalaJsDom,
   scalatags,
   querki,
-  libraryDependencies += "net.scalapro" %%% "sortable-js-facade" % sortableFacadeVersion,
   npmDependencies in Compile += "bootstrap.native" -> bootstrapNativeVersion,
-  npmDependencies in Compile += "sortable" -> sortableVersion,
+  npmDependencies in Compile += "sortablejs" -> sortableVersion,
 ) dependsOn (tools)
 
 lazy val d3 = project.in(file("d3")) enablePlugins (ScalaJSBundlerPlugin) settings(

@@ -19,6 +19,7 @@ package scaladget.bootstrapnative
 
 
 import org.scalajs.dom.Element
+import org.scalajs.dom.raw.Node
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation._
@@ -59,4 +60,18 @@ class Collapse(element: Element, options: js.Dynamic = lit()) extends js.Object 
   def show(): Unit = js.native
   def hide(): Unit = js.native
   def toggle(): Unit = js.native
+}
+
+@JSImport("sortablejs", JSImport.Namespace)
+@js.native
+class Sortable(element: Element) extends js.Any {
+  val el: Element = js.native
+  def option(name:String):js.Dynamic = js.native
+  def option(name:String, value: js.Any):Unit = js.native
+  def closest(el:Node, selector:String):js.UndefOr[Node] = js.native
+  def closest(el:Node):js.UndefOr[Node] = js.native
+  def toArray(): js.Array[String] = js.native
+  def sort(order:js.Array[String]):Unit = js.native
+  def save(): Unit = js.native
+  def destroy(): Unit = js.native
 }

@@ -59,7 +59,7 @@ object BootstrapDemo {
             FormDemo.elementDemo,
             SelectDemo.elementDemo,
             ModalDialogDemo.elementDemo,
-          //  TabDemo.elementDemo,
+            TabDemo.elementDemo,
             TableDemo.elementDemo,
             NavBarDemo.elementDemo,
             TooltipDemo.elementDemo,
