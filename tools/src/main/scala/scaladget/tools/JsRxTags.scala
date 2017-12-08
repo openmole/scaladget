@@ -26,10 +26,13 @@ import rx._
 import org.scalajs.dom.Element
 import org.scalajs.dom.svg.Path
 
+
+object JsRxTags extends JsRxTags
+
 /**
   * A minimal binding between Scala.Rx and Scalatags and Scala-Js-Dom
   */
-object JsRxTags {
+trait JsRxTags {
 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
   /**

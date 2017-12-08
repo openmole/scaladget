@@ -17,17 +17,12 @@ package scaladget.bootstrapnative
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import scaladget.bootstrapnative.all._
-import scaladget.bootstrapnative.{BootstrapTags=> bs}
-import scaladget.tools.stylesheet._
+import scaladget.bootstrapnative.bsn._
+import scaladget.tools._
 import rx._
-import bs._
 import org.scalajs.dom.raw._
-
 import scalatags.JsDom.all._
 import scalatags.JsDom.{TypedTag}
-import scaladget.tools.JsRxTags._
-import scaladget.tools._
 
 object Selector {
 
@@ -50,7 +45,7 @@ object Selector {
                                  dropdownModifierSeq: ModifierSeq,
                                  onclose: () => Unit) = {
     lazy val trigger: TypedTag[_ <: HTMLElement] =
-      bs.buttonIcon(buttonText, buttonModifierSeq +++ dropdownToggle, buttonIcon)(
+      bsn.buttonIcon(buttonText, buttonModifierSeq +++ dropdownToggle, buttonIcon)(
         span(caret, marginLeft := 4)
       )
 
@@ -89,7 +84,7 @@ object Selector {
 
     lazy val render = div(allModifierSeq)(
       Rx {
-        bs.buttonGroup(ms(open(), "open", ""))(
+        buttonGroup(ms(open(), "open", ""))(
           trigger(data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := open(), tabindex := 0)(onclick := { () =>
             toggle
           }),
@@ -168,7 +163,7 @@ object Selector {
             if (opened()) "open"
             else ""
           ))(
-          bs.buttonIcon(fixedTitle.getOrElse(content().map {
+          buttonIcon(fixedTitle.getOrElse(content().map {
             naming
           }.getOrElse("") + " "), key +++ dropdownToggle,
             content().map { ct =>

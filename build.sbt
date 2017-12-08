@@ -1,11 +1,8 @@
 import sbt._
 import Keys._
-import org.scalajs.core.tools.linker.backend.ModuleKind.CommonJSModule
 
 import ScalaJSBundlerPlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
-
-import scalajsbundler.BundlingMode.LibraryOnly
 
 val aceVersion = "1.3.0"
 val bootstrapNativeVersion = "2.0.21"
@@ -24,7 +21,7 @@ scalaVersion in ThisBuild := "2.12.4"
 
 organization in ThisBuild := "scaladget"
 
-version in ThisBuild := "0.9.6-SNAPSHOT"
+version in ThisBuild := "1.0.0-M1"
 
 publishTo in ThisBuild := {
   val nexus = "https://oss.sonatype.org/"

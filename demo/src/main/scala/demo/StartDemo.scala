@@ -1,13 +1,12 @@
 package demo
 
-import com.karasiq.highlightjs.HighlightJS
 
-import scaladget.bootstrapnative.JSDependency
-import scala.scalajs.js.annotation._
-import scaladget.bootstrapnative.all._
-import scaladget.tools.stylesheet._
+import scaladget.bootstrapnative.bsn._
+import scaladget.tools._
 import scalatags.JsDom.all._
 import org.scalajs.dom
+
+import scala.scalajs.js.annotation._
 
 /*
  * Copyright (C) 24/03/16 // mathieu.leclaire@openmole.org

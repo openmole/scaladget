@@ -25,7 +25,8 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation._
 import scala.scalajs.js.Dynamic.{literal => lit}
 
-package object all extends stylesheet.BootstrapPackage with stylesheet2.Bootstrap2Package
+package object bsnsheet extends stylesheet.BootstrapPackage with stylesheet2.Bootstrap2Package
+package object bsn extends stylesheet.BootstrapPackage with stylesheet2.Bootstrap2Package with BootstrapTags
 
 @JSImport("bootstrap.native", "Modal")
 @js.native

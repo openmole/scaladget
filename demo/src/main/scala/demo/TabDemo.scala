@@ -19,9 +19,9 @@ package demo
 
 import org.scalajs.dom.Element
 
-import scaladget.bootstrapnative.{BootstrapTags => bs}
-import scaladget.bootstrapnative.all
+import scaladget.bootstrapnative.bsn._
 import scalatags.JsDom.all._
+
 
 object TabDemo extends Demo {
   val sc = sourcecode.Text {
@@ -35,16 +35,16 @@ object TabDemo extends Demo {
       "eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, " +
       "sunt in culpa qui officia deserunt mollit anim id est laborum.", padding := 10)
 
-    val tabs = bs.tabs.
+    val theTabs = tabs.
       add("My first", div1, onclickExtra = () => println("Tab1 pressed")).
       add("My second", div("Hey !"))
 
     div(
-      tabs.render(all.pills),
-      tabs.render(all.stacked_pills),
-      tabs.render(all.tabs),
-      tabs.render(all.justified_tabs),
-      tabs.render(all.justified_pills)
+      tabs.render(pills),
+      tabs.render(stacked_pills),
+      tabs.render(tabsClass),
+      tabs.render(justified_tabs),
+      tabs.render(justified_pills)
     ).render
 
   }

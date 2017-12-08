@@ -20,11 +20,10 @@ import org.scalajs.dom.Element
  */
 import org.scalajs.dom.Element
 
-import scaladget.bootstrapnative.{BootstrapTags => bs}
-import bs._
-import scaladget.bootstrapnative.all._
+import scaladget.bootstrapnative.bsn._
+import scaladget.tools._
+
 import scalatags.JsDom.all._
-import scaladget.tools.stylesheet._
 
 object ModalDialogDemo extends Demo {
 
@@ -34,14 +33,14 @@ object ModalDialogDemo extends Demo {
 
     // Create the Modal dialog
     val modalDialog: ModalDialog =
-      bs.ModalDialog(
+      ModalDialog(
         onopen = ()=> println("OPEN"),
         onclose = ()=> println("CLOSE")
       )
 
     // Append header, body, footer elements
     modalDialog header div("Header")
-    modalDialog footer bs.buttonGroup()(
+    modalDialog footer buttonGroup()(
       ModalDialog.closeButton(modalDialog, btn_info, "OK"),
       ModalDialog.closeButton(modalDialog, btn_default, "Cancel")
     )

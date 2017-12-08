@@ -26,16 +26,16 @@ import rx._
 
 import Popup._
 import scala.scalajs.js
-import scaladget.bootstrapnative
 import scalatags.JsDom
-import bootstrapnative.{all => sheet}
+import scaladget.bootstrapnative
 import scaladget.bootstrapnative.Alert.ExtraButton
-import sheet._
 import scaladget.bootstrapnative.SelectableButtons._
-import scaladget.tools.stylesheet._
-import scaladget.tools.JsRxTags._
+import bsnsheet._
+import scaladget.tools._
 
-object BootstrapTags {
+object BootstrapTags extends BootstrapTags
+
+trait BootstrapTags {
   bstags =>
 
   implicit def formTagToNode(tt: HtmlTag): org.scalajs.dom.Node = tt.render
@@ -54,9 +54,9 @@ object BootstrapTags {
 
   type Input = ConcreteHtmlTag[org.scalajs.dom.raw.HTMLInputElement]
 
-  def input(content: String = "") = tags.input(formControl, scalatags.JsDom.all.value := content)
+  def inputTag(content: String = "") = tags.input(bsnsheet.formControl, scalatags.JsDom.all.value := content)
 
-  def inputGroup(modifierSeq: ModifierSeq = emptyMod) = div(modifierSeq +++ sheet.inputGroup)
+  def inputGroup(modifierSeq: ModifierSeq = emptyMod) = div(modifierSeq +++ bsnsheet.inputGroup)
 
   def inputGroupButton = span(toClass("input-group-btn"))
 
@@ -157,7 +157,7 @@ object BootstrapTags {
   // PROGRESS BAR
   def progressBar(barMessage: String, ratio: Int): TypedTag[HTMLDivElement] =
     div(progress)(
-      div(sheet.progressBar)(width := ratio.toString() + "%")(
+      div(bsnsheet.progressBar)(width := ratio.toString() + "%")(
         barMessage
       )
     )
@@ -201,7 +201,7 @@ object BootstrapTags {
     lazy val dialog = {
       val d = div(modal +++ fade)(`class` := "modal fade",
         tabindex := "-1", role := "dialog", aria.hidden := "true")(
-        div(sheet.modalDialog +++ modifierSeq)(
+        div(bsn.modalDialog +++ modifierSeq)(
           div(modalContent)(
             headerDialog.now,
             bodyDialog.now,
@@ -469,7 +469,7 @@ object BootstrapTags {
   // JUMBOTRON
   def jumbotron(modifiers: ModifierSeq) =
     div(container +++ themeShowcase)(role := "main")(
-      div(sheet.jumbotron)(
+      div(bsnsheet.jumbotron)(
         p(modifiers)
       )
     )
@@ -573,7 +573,7 @@ object BootstrapTags {
 
   // PANELS
   def panel(bodyContent: String = "", heading: Option[String] = None) =
-    div(sheet.panel +++ panelDefault)(
+    div(bsnsheet.panel +++ panelDefault)(
       heading.map { h => div(panelHeading)(h) }.getOrElse(div),
       div(panelBody)(bodyContent)
     )
@@ -581,7 +581,7 @@ object BootstrapTags {
 
   // ALERTS
   def successAlerts(title: String, content: Seq[String], triggerCondition: Rx.Dynamic[Boolean] = Rx(true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
-    new Alert(alert_success, title, content, triggerCondition, todocancel)(otherButtons: _*).render
+    new Alert(bsnsheet.alert_success, title, content, triggerCondition, todocancel)(otherButtons: _*).render
 
   def infoAlerts(title: String, content: Seq[String], triggerCondition: Rx.Dynamic[Boolean] = Rx(true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
     new Alert(alert_info, title, content, triggerCondition, todocancel)(otherButtons: _*).render

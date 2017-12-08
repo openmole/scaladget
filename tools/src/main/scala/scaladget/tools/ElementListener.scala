@@ -1,4 +1,4 @@
-package scaladget
+package scaladget.tools
 
 /*
  * Copyright (C) 14/03/17 // mathieu.leclaire@openmole.org
@@ -20,7 +20,7 @@ package scaladget
 import org.scalajs.dom
 import org.scalajs.dom.raw.{Element, Event}
 
-package object tools {
+trait Utils {
 
   implicit class ElementListener(element: Element) {
 

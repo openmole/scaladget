@@ -20,12 +20,12 @@ package demo
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.HTMLInputElement
 
-import scaladget.bootstrapnative.{BootstrapTags => bs}
-import bs._
-import scaladget.bootstrapnative.all._
+import scaladget.bootstrapnative.bsn._
+import scaladget.tools._
+
+import org.scalajs.dom.raw._
 import scalatags.JsDom.all._
-import scaladget.tools.stylesheet._
-import scaladget.tools.JsRxTags._
+
 
 
 object FormDemo extends Demo {
@@ -44,21 +44,21 @@ object FormDemo extends Demo {
     )
 
     lazy val loginInput: HTMLInputElement =
-      bs.input(loginValue.now)(placeholder := "Login", inputStyle, oninput := { () =>
+      inputTag(loginValue.now)(placeholder := "Login", inputStyle, oninput := { () =>
         loginValue() = loginInput.value
       }).render
 
-    val passInput = bs.input("")(placeholder := "Password", `type` := "password", inputStyle).render
-    val cityInput = bs.input("")(placeholder := "City", inputStyle).render
+    val passInput = inputTag("")(placeholder := "Password", `type` := "password", inputStyle).render
+    val cityInput = inputTag("")(placeholder := "City", inputStyle).render
 
     val genderDD = elements.options(1, btn_success, (m: MyElement) => m.name).selector
 
     div(
-      bs.vForm(width := 200)(
+      vForm(width := 200)(
         loginInput.withLabel("Login"),
         passInput.withLabel("Password")
       ),
-      bs.hForm(Seq(paddingTop := 20, width := 500).toMS)(
+      hForm(Seq(paddingTop := 20, width := 500).toMS)(
         cityInput.withLabel("City"),
         genderDD
       ),

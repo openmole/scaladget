@@ -17,11 +17,9 @@ package demo
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import scaladget.tools.stylesheet._
-import scaladget.bootstrapnative.{BootstrapTags => bs}
-import bs._
-import scaladget.bootstrapnative.all._
-import scaladget.bootstrapnative.Alert.ExtraButton
+import scaladget.bootstrapnative.bsn._
+import scaladget.tools._
+
 import org.scalajs.dom.raw._
 import scalatags.JsDom.all._
 
@@ -30,6 +28,8 @@ object AlertDemo extends Demo {
 
   val sc = sourcecode.Text {
 
+
+    import scaladget.bootstrapnative.Alert.ExtraButton
     import rx._
 
     implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
@@ -60,15 +60,15 @@ object AlertDemo extends Demo {
       button("Warning", onclick := add(Warning))(buttonStyle +++ btn_warning),
       h4("With collapser", paddingTop := 30),
       contains(Success).expand(button("Success", onclick := add(Success), buttonStyle +++ btn_success),
-        bs.successAlert("Success !", "Operation completed !", todocancel = remove(Success))()),
+        successAlert("Success !", "Operation completed !", todocancel = remove(Success))()),
       contains(Danger).expand(button("Danger", onclick := add(Danger), buttonStyle +++ btn_danger),
-        bs.dangerAlerts("Danger !", Seq("Operation 1 failed ", "Operation 2 failed"), todocancel = remove(Danger))(
+        dangerAlerts("Danger !", Seq("Operation 1 failed ", "Operation 2 failed"), todocancel = remove(Danger))(
           ExtraButton("Run", btn_danger, action = remove(Danger)))),
       div(padding := 10)(
-        bs.infoAlert("Info !", "Operation completed !", contains(Info), todocancel = remove(Info))(
+        infoAlert("Info !", "Operation completed !", contains(Info), todocancel = remove(Info))(
           ExtraButton("Build", btn_info, action = remove(Info)),
           ExtraButton("Abort", btn_default, action = remove(Info))),
-        bs.warningAlert("Warning !", "Operation failed !", contains(Warning), todocancel = remove(Warning))()
+        warningAlert("Warning !", "Operation failed !", contains(Warning), todocancel = remove(Warning))()
       )
     ).render
   }

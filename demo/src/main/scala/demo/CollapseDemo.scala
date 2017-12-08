@@ -2,11 +2,11 @@ package demo
 
 import org.scalajs.dom.Element
 
-import scaladget.bootstrapnative.{BootstrapTags => bs}
-import bs._
-import scaladget.bootstrapnative.all._
+import scaladget.bootstrapnative.bsn._
+import scaladget.tools._
+
+import org.scalajs.dom.raw._
 import scalatags.JsDom.all._
-import scaladget.tools.stylesheet._
 
 /*
  * Copyright (C) 30/08/16 // mathieu.leclaire@openmole.org
@@ -34,7 +34,7 @@ object CollapseDemo extends Demo {
     val onoff = Var(false)
 
     div(
-      bs.buttonIcon("Trigger !", btn_primary +++ (marginBottom := 10).toMS).expandOnclick(bs.panel("My text in detail")(width := 400)),
+      buttonIcon("Trigger !", btn_primary +++ (marginBottom := 10).toMS).expandOnclick(panel("My text in detail")(width := 400)),
       onoff.expand(div(backgroundColor := "pink", onoff.now.toString), button("Set/Unset", onclick := {() => onoff() = !onoff.now}, btn_danger))
     )
   }

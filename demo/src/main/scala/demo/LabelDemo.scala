@@ -20,12 +20,11 @@ import org.scalajs.dom._
  */
 import org.scalajs.dom.Element
 
-import scaladget.bootstrapnative.{BootstrapTags => bs}
-import bs._
-import scaladget.bootstrapnative.all._
+import scaladget.bootstrapnative.bsn._
+import scaladget.tools._
+
+import org.scalajs.dom.raw._
 import scalatags.JsDom.all._
-import scaladget.tools.stylesheet._
-import scaladget.tools.JsRxTags._
 
 object LabelDemo {
   val sc = sourcecode.Text {

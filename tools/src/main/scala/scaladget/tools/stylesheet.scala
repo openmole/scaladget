@@ -5,7 +5,9 @@ import scalatags.JsDom.all._
 import scalatags.generic.StylePair
 import rx._
 
-package object stylesheet {
+object Stylesheet extends Stylesheet
+
+trait Stylesheet {
 
     implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 

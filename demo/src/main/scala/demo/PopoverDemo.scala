@@ -20,11 +20,11 @@ package demo
 
 import org.scalajs.dom.Element
 
-import scaladget.bootstrapnative.{BootstrapTags => bs}
-import bs._
-import scaladget.bootstrapnative.all._
+import scaladget.bootstrapnative.bsn._
+import scaladget.tools._
+
+import org.scalajs.dom.raw._
 import scalatags.JsDom.all._
-import scaladget.tools.stylesheet._
 
 object PopoverDemo extends Demo {
   val sc = sourcecode.Text {
@@ -40,7 +40,7 @@ object PopoverDemo extends Demo {
       button("Title", buttonStyle).popover("Popover on hover with Title", Top, title = Some("Pop title")),
       button("Dismissable", buttonStyle).popover("Dismissible Popover on hover with Title", Top, HoverPopup, Some("Pop title"), true),
       button("Left (click)", buttonStyle).popover("Popover on click on right", Left, ClickPopup),
-      bs.input("")(width := 320, marginTop := 10, placeholder := "Bottom (click)").popover("Tooltip on click on bottom", Bottom, ClickPopup)
+      inputTag("")(width := 320, marginTop := 10, placeholder := "Bottom (click)").popover("Tooltip on click on bottom", Bottom, ClickPopup)
     ).render
   }
 

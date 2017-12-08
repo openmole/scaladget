@@ -19,12 +19,10 @@ package demo
 
 import org.scalajs.dom.Element
 
-import scaladget.bootstrapnative.{BootstrapTags => bs}
-import bs._
-import scaladget.bootstrapnative.all._
+import scaladget.bootstrapnative.bsn._
+import scaladget.tools._
+
 import scalatags.JsDom.all._
-import scaladget.tools.stylesheet._
-import scaladget.tools.JsRxTags._
 
 object TooltipDemo extends Demo {
   val sc = sourcecode.Text {

@@ -1,14 +1,11 @@
 package scaladget.bootstrapnative
 
-import scaladget.bootstrapnative.{BootstrapTags => bs}
-import scaladget.bootstrapnative.{all => sheet}
-import scaladget.tools.stylesheet._
-import sheet._
+import scaladget.bootstrapnative.bsn._
+import scaladget.tools._
+
 import scalatags.JsDom.all._
 import scalatags.JsDom.tags
 import rx._
-import scaladget.tools.JsRxTags._
-import scaladget.bootstrapnative.Alert.ExtraButton
 
 /*
  * Copyright (C) 29/08/16 // mathieu.leclaire@openmole.org
@@ -40,7 +37,7 @@ class Alert(alertStyle: AlertStyle,
             content: Seq[String],
             triggerCondition: Rx.Dynamic[Boolean],
             cancelAction: () => Unit
-           )(otherButtons: ExtraButton*) {
+           )(otherButtons: Alert.ExtraButton*) {
 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
   val closed = Var(false)
@@ -52,7 +49,7 @@ class Alert(alertStyle: AlertStyle,
           alertStyle +++ {
             if (otherButtons.isEmpty) emptyMod else (paddingBottom := 50).toMS
           })(
-            bs.closeButton("", () => {
+            closeButton("", () => {
               cancelAction()
               closed() = true
             }),
@@ -67,7 +64,7 @@ class Alert(alertStyle: AlertStyle,
                 })(marginLeft := -25, marginTop := 20)
             },
             p(marginTop := 25)(
-              bs.buttonGroup(floatLeft)(
+              buttonGroup(floatLeft)(
                 for {
                   b <- otherButtons
                 } yield {

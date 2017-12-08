@@ -4,10 +4,12 @@ package demo
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.HTMLDivElement
 
-import scaladget.bootstrapnative.all._
-import scaladget.tools.stylesheet._
-import scaladget.bootstrapnative.{BootstrapTags=> bs}
-import bs._
+import scaladget.bootstrapnative.bsn._
+import scaladget.tools._
+
+import org.scalajs.dom.raw._
+import scalatags.JsDom.all._
+
 
 /*
  * Copyright (C) 22/08/16 // mathieu.leclaire@openmole.org
@@ -62,18 +64,18 @@ object SelectDemo {
       fixedTitle = Some("Actions")
     )
 
-    val loginInput = bs.input("")(placeholder := "Login")
-    val passInput = bs.input("")(placeholder := "Pass", `type` := "password")
+    val loginInput = inputTag("")(placeholder := "Login")
+    val passInput = inputTag("")(placeholder := "Pass", `type` := "password")
     val build: Var[Option[Dropdown[HTMLDivElement]]] = Var(None)
 
 
-    val formDropDown2 = bs.vForm(width := 200)(
+    val formDropDown2 = vForm(width := 200)(
       loginInput.render.withLabel("Login")
     ).dropdown(buttonIcon = glyph_settings, buttonModifierSeq = btn_default)
 
-    val formDropDown3 = bs.vForm(width := 200)(
+    val formDropDown3 = vForm(width := 200)(
       passInput.render.withLabel("Pass")
-    ).dropdownWithTrigger(bs.glyphSpan(glyph_refresh))
+    ).dropdownWithTrigger(glyphSpan(glyph_refresh))
 
     div(
       hForm(padding := 5)(

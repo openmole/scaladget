@@ -23,8 +23,7 @@ import org.scalajs.dom.raw.Node
 import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 import scalatags.JsDom._
-
-import scaladget.tools.stylesheet._
+import scaladget.tools._
 
 object path {
   implicit def pathToTypedTagPath(p: Path): TypedTag[dom.svg.Path] = p.render

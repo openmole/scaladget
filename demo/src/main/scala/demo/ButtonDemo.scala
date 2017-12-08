@@ -19,17 +19,16 @@ package demo
 
 import org.scalajs.dom.Element
 
+import scaladget.bootstrapnative.bsn._
+import scaladget.tools._
 
-import scaladget.bootstrapnative.{SelectableButton, SelectableButtons}
-import scaladget.bootstrapnative.{BootstrapTags => bs}
-import scaladget.bootstrapnative.all._
 import scalatags.JsDom.all._
-import scaladget.tools.stylesheet._
-import scaladget.tools.JsRxTags._
+
 
 object ButtonDemo {
   val sc = sourcecode.Text {
-
+    
+    import scaladget.bootstrapnative.{SelectableButton, SelectableButtons}
     import rx._
 
     val clicked = Var("None")
@@ -41,22 +40,22 @@ object ButtonDemo {
 
     def clickAction(tag: String) = () => clicked() = tag
 
-    lazy val checkBoxes: SelectableButtons = bs.checkboxes()(
-      bs.selectableButton("Piano", onclick = checkAction),
-      bs.selectableButton("Guitar", onclick = checkAction),
-      bs.selectableButton("Bass", true, onclick = checkAction)
+    lazy val checkBoxes: SelectableButtons = checkboxes()(
+      selectableButton("Piano", onclick = checkAction),
+      selectableButton("Guitar", onclick = checkAction),
+      selectableButton("Bass", true, onclick = checkAction)
     )
 
-    lazy val radios: SelectableButtons = bs.radios()(
-      bs.selectableButton("Male", onclick = radioAction),
-      bs.selectableButton("Female", true, onclick = radioAction)
+    lazy val theRadios: SelectableButtons = radios()(
+      selectableButton("Male", onclick = radioAction),
+      selectableButton("Female", true, onclick = radioAction)
     )
 
     lazy val active: Var[Seq[SelectableButton]] = Var(checkBoxes.active)
 
     def checkAction = () => active() = checkBoxes.active
 
-    def radioAction = () => active() = radios.active
+    def radioAction = () => active() = theRadios.active
 
     div(
       h4("Buttons"),
@@ -66,21 +65,21 @@ object ButtonDemo {
       button("Success", onclick := clickAction("success"), buttonStyle +++ btn_success),
       button("Warning", onclick := clickAction("warning"), buttonStyle +++ btn_warning),
       button("Danger", onclick := clickAction("danger"), buttonStyle +++ btn_danger),
-      bs.buttonIcon("Default", buttonStyle +++ btn_default, glyph_fire, () => clickAction("fire")),
-      bs.buttonIcon(buttonStyle = buttonStyle +++ btn_danger, glyphicon = glyph_download, todo = () => clickAction("download")),
-      bs.linkButton("GitHub", "https://github.com/openmole/scaladget", buttonStyle +++ btn_primary),
+      buttonIcon("Default", buttonStyle +++ btn_default, glyph_fire, () => clickAction("fire")),
+      buttonIcon(buttonStyle = buttonStyle +++ btn_danger, glyphicon = glyph_download, todo = () => clickAction("download")),
+      linkButton("GitHub", "https://github.com/openmole/scaladget", buttonStyle +++ btn_primary),
       Rx {
         div(paddingTop := 15, s"Clicked: ${clicked()}")
       },
       h4("Badges", paddingTop := 30),
-      button("Badge", onclick := clickAction("badge"), buttonStyle +++ btn_primary)(bs.badge("7", backgroundColor := "pink")),
+      button("Badge", onclick := clickAction("badge"), buttonStyle +++ btn_primary)(badge("7", backgroundColor := "pink")),
       h4("Icon buttons", paddingTop := 30),
-      bs.glyphSpan(glyph_refresh +++ buttonStyle, () => clickAction("refresh")),
-      bs.glyphSpan(glyph_flash +++ buttonStyle, () => clickAction("flash")),
+      glyphSpan(glyph_refresh +++ buttonStyle, () => clickAction("refresh")),
+      glyphSpan(glyph_flash +++ buttonStyle, () => clickAction("flash")),
       h4("Check boxes", paddingTop := 30),
       checkBoxes.render,
       h4("Radio buttons", paddingTop := 30),
-      radios.render,
+      theRadios.render,
       Rx {
         div(paddingTop := 15, s"Active: ${
           active().map {

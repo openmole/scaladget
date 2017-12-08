@@ -20,7 +20,7 @@ package scaladget.bootstrapnative
 
 import scalatags.JsDom.{styles => sty}
 import scalatags.JsDom.all._
-import scaladget.tools.stylesheet._
+import scaladget.tools._
 
 package stylesheet {
 
@@ -162,7 +162,7 @@ package stylesheet {
     lazy val modalFooter: ModifierSeq = toClass("modal-footer")
 
     //NAVS
-    lazy val tabs: NavStyle = toNav("nav-tabs")
+    lazy val tabsClass: NavStyle = toNav("nav-tabs")
     lazy val justified_tabs: NavStyle = toNav("nav-tabs nav-justified")
     lazy val pills: NavStyle = toNav("nav-pills")
     lazy val stacked_pills: NavStyle = toNav("nav-pills nav-stacked")
@@ -206,7 +206,7 @@ package stylesheet {
 
 
     //TABLES
-    lazy val table: ModifierSeq = toClass("table")
+    lazy val tableClass: ModifierSeq = toClass("table")
     lazy val bordered: ModifierSeq = toClass("table-bordered")
     lazy val striped: ModifierSeq = toClass("table-striped")
     lazy val active: ModifierSeq = toClass("active")
@@ -218,8 +218,8 @@ package stylesheet {
 
     //INPUTS
     lazy val inputGroup: ModifierSeq = toClass("input-group")
-    lazy val inputGroupButton: ModifierSeq = toClass("input-group-btn")
-    lazy val inputGroupAddon: ModifierSeq = toClass("input-group-addon")
+    lazy val inputGroupButtonClass: ModifierSeq = toClass("input-group-btn")
+    lazy val inputGroupAddonClass: ModifierSeq = toClass("input-group-addon")
 
     //FORMS
     lazy val formControl: ModifierSeq = toClass("form-control")

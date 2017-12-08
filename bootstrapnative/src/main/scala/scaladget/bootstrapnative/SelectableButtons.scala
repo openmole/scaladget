@@ -17,14 +17,11 @@ package scaladget.bootstrapnative
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import scaladget.tools.JsRxTags._
 import scalatags.JsDom.tags
 import scalatags.JsDom.all._
-import scaladget.bootstrapnative.all._
-import BootstrapTags._
+import scaladget.bootstrapnative.bsn._
+import scaladget.tools._
 import rx._
-
-import scaladget.tools.stylesheet._
 
 case class SelectableButton(text: String, defaultActive: Boolean, modifierSeq: ModifierSeq, onclick: () => Unit) {
   val active = Var(defaultActive)

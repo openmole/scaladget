@@ -19,11 +19,11 @@ package demo
 
 import org.scalajs.dom.Element
 
-import scaladget.bootstrapnative.{BootstrapTags => bs}
-import bs._
-import scaladget.bootstrapnative.all
+import scaladget.bootstrapnative.bsn._
+import scaladget.tools._
+
 import scalatags.JsDom.all._
-import scaladget.tools.stylesheet._
+
 
 object NavBarDemo {
   val sc = sourcecode.Text {
@@ -38,25 +38,25 @@ object NavBarDemo {
     )
 
     val threeItem = navItem(
-      bs.input("")(placeholder := "Name", width := 100).render, () ⇒
+      inputTag("")(placeholder := "Name", width := 100).render, () ⇒
         println("Three open")
     )
 
     val fourItem = navItem(
-      div(all.glyph_fire +++ (color := "#337ab7"), lineHeight := "35px").render, () ⇒
+      div(glyph_fire +++ (color := "#337ab7"), lineHeight := "35px").render, () ⇒
         println("Four open")
     )
 
     val fiveItem = navItem(
       buttonGroup()(
-      button("OK", onclick := {()=> {println("Five open")}}, all.btn_primary),
-      button("Cancel", onclick := {()=> {println("Five cancel")}}, all.btn_default)
+      button("OK", onclick := {()=> {println("Five open")}}, btn_primary),
+      button("Cancel", onclick := {()=> {println("Five cancel")}}, btn_default)
       ).render
     )
 
     //Create the nav bar
-    bs.navBar(
-      all.navbar_staticTop,
+    navBar(
+      navbar_staticTop,
       oneItem,
       twoItem,
       threeItem,

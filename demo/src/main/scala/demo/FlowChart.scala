@@ -20,13 +20,15 @@ package demo
 import java.util.UUID
 
 import scaladget.svg._
+import scaladget.tools._
+
 import scala.scalajs.js
-import scaladget.tools.stylesheet._
-import scaladget.tools.JsRxTags._
+import org.scalajs.dom.raw._
+import org.scalajs.dom
+
 import scalatags.JsDom.all._
 import scalatags.JsDom.{svgAttrs, svgTags}
-import org.scalajs.dom
-import org.scalajs.dom.raw._
+
 import rx._
 
 trait Selectable {
