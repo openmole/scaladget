@@ -22,7 +22,6 @@ import org.scalajs.dom.Element
 import scaladget.bootstrapnative.bsn
 import scaladget.bootstrapnative.bsn._
 import scalatags.JsDom.all._
-import scaladget.tools.stylesheet._
 
 object TableDemo extends Demo {
   val sc = sourcecode.Text {

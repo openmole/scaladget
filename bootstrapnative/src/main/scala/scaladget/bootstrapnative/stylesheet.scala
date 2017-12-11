@@ -198,7 +198,7 @@ package stylesheet {
 
 
     //PANELS
-    lazy val panel: ModifierSeq = toClass("panel")
+    lazy val panelClass: ModifierSeq = toClass("panel")
     lazy val panelDefault: ModifierSeq = toClass("panel-default")
     lazy val panelHeading: ModifierSeq = toClass("panel-heading")
     lazy val panelTitle: ModifierSeq = toClass("panel-title")

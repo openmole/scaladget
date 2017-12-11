@@ -573,7 +573,7 @@ trait BootstrapTags {
 
   // PANELS
   def panel(bodyContent: String = "", heading: Option[String] = None) =
-    div(bsnsheet.panel +++ panelDefault)(
+    div(bsnsheet.panelClass +++ panelDefault)(
       heading.map { h => div(panelHeading)(h) }.getOrElse(div),
       div(panelBody)(bodyContent)
     )
