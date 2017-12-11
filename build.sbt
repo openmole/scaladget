@@ -109,7 +109,7 @@ lazy val demo = project.in(file("demo")) enablePlugins (ScalaJSBundlerPlugin) se
 
     val demoJS = (webpack in fastOptJS in Compile).value
 
-    IO.copyFile(demoTarget / "scala-2.12/scalajs-bundler/main/demo-fastopt-bundle.js", demoTarget / "js/demo.js")
+    IO.copyFile(demoJS.head.data, demoTarget / "js/demo.js")
 
     IO.copyFile(demoResource / "bootstrap-native.html", demoTarget / "bootstrap-native.html")
     IO.copyFile(demoResource / "flowchart.html", demoTarget / "flowchart.html")
