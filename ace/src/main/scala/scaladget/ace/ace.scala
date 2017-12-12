@@ -5,6 +5,8 @@ import js.annotation._
 import org.scalajs.dom.raw.Element
 import org.scalajs.dom.raw.HTMLElement
 
+import scala.scalajs.js.annotation.JSImport._
+
 @js.native
 trait Delta extends js.Object {
   var action: String = js.native
@@ -73,7 +75,7 @@ trait TextMode extends js.Object {
 }
 
 @js.native
-@JSGlobal
+@JSImport("brace", Namespace)
 object ace extends Ace
 
 @js.native
@@ -268,7 +270,8 @@ object EditSession extends js.Object {
 /* ??? ConstructorMember(FunSignature(List(),List(FunParam(Ident(text),false,Some(TypeRef(TypeName(Array),List(TypeRef(CoreType(string),List()))))), FunParam(Ident(mode),true,Some(TypeRef(CoreType(string),List())))),Some(TypeRef(TypeName(IEditSession),List())))) */
 }
 
-@JSGlobal
+
+@JSImport("brace","Editor")
 @js.native
 class Editor protected () extends js.Object {
   def this(renderer: VirtualRenderer, session: IEditSession = ???) = this()

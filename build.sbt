@@ -3,8 +3,9 @@ import Keys._
 
 import ScalaJSBundlerPlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
-val aceVersion = "1.3.0"
+val aceVersion = "0.11.0"
 val bootstrapNativeVersion = "2.0.21"
 val bootstrapSliderVersion = "10.0.0"
 val d3Version = "4.12.0"
@@ -30,10 +31,15 @@ publishTo in ThisBuild := {
   else
     Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
+
 pomIncludeRepository in ThisBuild := { _ => false }
+
 licenses in ThisBuild := Seq("Affero GPLv3" -> url("http://www.gnu.org/licenses/"))
+
 homepage in ThisBuild := Some(url("https://github.com/mathieuleclaire/scaladget"))
+
 scmInfo in ThisBuild := Some(ScmInfo(url("https://github.com/mathieuleclaire/scaladget.git"), "scm:git:git@github.com:mathieuleclaire/scaladget.git"))
+
 pomExtra in ThisBuild := {
   <developers>
     <developer>
@@ -44,6 +50,27 @@ pomExtra in ThisBuild := {
   </developers>
 }
 
+
+releaseVersionBump in ThisBuild := sbtrelease.Version.Bump.Minor
+
+releaseTagComment in ThisBuild := s"Releasing ${(version in ThisBuild).value}"
+
+releaseCommitMessage in ThisBuild := s"Bump version to ${(version in ThisBuild).value}"
+
+releaseProcess  in ThisBuild  := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  setReleaseVersion,
+  tagRelease,
+  releaseStepCommand("publishSigned"),
+  setNextVersion,
+  commitNextVersion,
+  releaseStepCommand("sonatypeReleaseAll"),
+  pushChanges
+)
+
 useYarn in ThisBuild := true
 
 lazy val scalatags = libraryDependencies += "com.lihaoyi" %%% "scalatags" % scalatagsVersion
@@ -53,7 +80,7 @@ lazy val querki = libraryDependencies += "org.querki" %%% "querki-jsext" % querk
 
 lazy val ace = project.in(file("ace")) enablePlugins (ScalaJSBundlerPlugin) settings(
   scalaJsDom,
-  npmDependencies in Compile += "ace" -> aceVersion
+  npmDependencies in Compile += "brace" -> aceVersion
 )
 
 lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (ScalaJSBundlerPlugin) settings(
@@ -71,11 +98,6 @@ lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (Sc
   npmDependencies in Compile += "bootstrap.native" -> bootstrapNativeVersion,
   npmDependencies in Compile += "sortablejs" -> sortableVersion,
 ) dependsOn (tools)
-
-lazy val d3 = project.in(file("d3")) enablePlugins (ScalaJSBundlerPlugin) settings(
-  scalaJsDom,
-  npmDependencies in Compile += "d3" -> d3Version
-)
 
 lazy val lunr = project.in(file("lunr")) enablePlugins (ScalaJSBundlerPlugin) settings (
   npmDependencies in Compile += "lunr" -> lunrVersion
@@ -118,4 +140,4 @@ lazy val demo = project.in(file("demo")) enablePlugins (ScalaJSBundlerPlugin) se
     IO.copyDirectory(demoResource / "fonts", demoTarget / "fonts")
     IO.copyDirectory(demoResource / "img", demoTarget / "img")
   }
-) dependsOn(bootstrapnative, lunr, tools, svg)
+) dependsOn(bootstrapnative, lunr, tools, svg, ace)

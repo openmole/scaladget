@@ -53,6 +53,7 @@ object StartDemo {
       for {
         demo <- Seq(
           //  SliderDemo.elementDemo,
+          AceDemo.elementDemo,
           ButtonDemo.elementDemo,
           LabelDemo.elementDemo,
           FormDemo.elementDemo,
