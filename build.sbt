@@ -20,9 +20,11 @@ val sourceCodeVersion = "0.1.2"
 
 scalaVersion in ThisBuild := "2.12.4"
 
-organization in ThisBuild := "fr.iscpif.scaladget"
+organization in ThisBuild := "fr.iscpif"
 
-version in ThisBuild := "1.0.3"
+name in ThisBuild := "scaladget"
+
+version in ThisBuild := "1.0.5"
 
 publishTo in ThisBuild := {
   val nexus = "https://oss.sonatype.org/"
