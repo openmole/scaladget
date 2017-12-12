@@ -22,7 +22,7 @@ scalaVersion in ThisBuild := "2.12.4"
 
 organization in ThisBuild := "scaladget"
 
-version in ThisBuild := "1.0.0-M2"
+version in ThisBuild := "1.0.1"
 
 publishTo in ThisBuild := {
   val nexus = "https://oss.sonatype.org/"
