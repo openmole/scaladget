@@ -40,11 +40,11 @@ object TabDemo extends Demo {
       add("My second", div("Hey !"))
 
     div(
-      tabs.render(pills),
-      tabs.render(stacked_pills),
-      tabs.render(tabsClass),
-      tabs.render(justified_tabs),
-      tabs.render(justified_pills)
+      theTabs.render(pills),
+      theTabs.render(stacked_pills),
+      theTabs.render(tabsClass),
+      theTabs.render(justified_tabs),
+      theTabs.render(justified_pills)
     ).render
 
   }
