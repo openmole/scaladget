@@ -671,37 +671,70 @@ trait BootstrapTags {
 
 
   // TABS
-  case class Tab(title: String, content: BS, active: Boolean, onclickExtra: () => Unit, tabID: String = uuID.short("t"), refID: String = uuID.short("r")) {
+  case class Tab(title: String, content: BS, active: Boolean, onclickExtra: () => Unit, onRemoved: Tab => Unit = Tab => {}, tabID: String = uuID.short("t"), refID: String = uuID.short("r")) {
 
     content.copy()
 
     def activeClass = if (active) (ms("active"), ms("active in")) else (ms(""), ms(""))
   }
 
-  case class Tabs(tabs: Seq[Tab]) {
+  case class Tabs(tabs: Var[Seq[Tab]], closable: Boolean = false, onCloseExtra: Tab => Unit = Tab => {}) {
 
-    def add(title: String, content: BS, active: Boolean = false, onclickExtra: () => Unit = () => {}): Tabs = add(Tab(title, content, active, onclickExtra))
+    implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 
-    def add(tab: Tab): Tabs = copy(tabs = tabs :+ tab)
+    def add(title: String, content: BS, active: Boolean = false, onclickExtra: () => Unit = () => {}, onAddedTab: Tab => Unit = Tab => {}, onRemovedTab: Tab => Unit = Tab => {}): Tabs =
+      add(Tab(title, content, active, onclickExtra, onRemovedTab), onAddedTab)
+
+    def add(tab: Tab, onAdded: Tab => Unit): Tabs = {
+      val ts = Tabs(Var(tabs.now :+ tab))
+      onAdded(tab)
+      ts
+    }
+
+    def remove(tab: Tab) = {
+      tabs() = {
+        tabs.now.filterNot {
+          _.tabID == tab.tabID
+        }
+      }
+      tab.onRemoved(tab)
+    }
+
+    def closable(isClosable: Boolean, onclose: (Tab) => Unit) = copy(closable = isClosable, onCloseExtra = onclose)
 
 
-    private def cloneRender = Tabs(tabs.map {
-      _.copy(tabID = uuID.short("t"), refID = uuID.short("r"))
-    })
+    lazy val tabClose: ModifierSeq = Seq(
+      relativePosition,
+      fontSize := 20,
+      color := "#222",
+      right := -10
+    )
 
-    private def rendering(navStyle: NavStyle = pills) = {
-      val existsOneActive = tabs.map {
+        private def cloneRender = Tabs(Var(tabs.now.map {
+          _.copy(tabID = uuID.short("t"), refID = uuID.short("r"))
+        }))
+
+    private def rendering(navStyle: NavStyle = pills) = Rx {
+      val existsOneActive = tabs().map {
         _.active
       }.exists(_ == true)
       val theTabs = {
-        if (!existsOneActive && !tabs.isEmpty) tabs.head.copy(active = true) +: tabs.tail
-        else tabs
+        val ts = tabs()
+        if (!existsOneActive && !ts.isEmpty) ts.head.copy(active = true) +: ts.tail
+        else ts
       }
 
       val tabList = ul(navStyle, tab_list_role)(
         theTabs.map { t =>
           li(presentation_role +++ t.activeClass._1)(
-            a(id := t.tabID, href := s"#${t.refID}", tab_role, data("toggle") := "tab", data("height") := true, aria.controls := t.refID, onclick := t.onclickExtra)(t.title)
+            a(id := t.tabID,
+              href := s"#${t.refID}",
+              tab_role,
+              data("toggle") := "tab",
+              data("height") := true,
+              aria.controls := t.refID,
+              onclick := t.onclickExtra
+            )(button(ms("close") +++ tabClose, `type` := "button", onclick := { () ⇒ remove(t) })(raw("&#215")), t.title)
           )
         }).render
 
@@ -715,17 +748,19 @@ trait BootstrapTags {
       )
 
 
-     new Sortable(tabList)
-     tabDiv.render
+      new Sortable(tabList)
+      tabDiv.render
     }
 
-    def render(navStyle: NavStyle = pills) = {
-      cloneRender.rendering(navStyle)
-    }
+    def render(navStyle: NavStyle = pills): HTMLDivElement = div(
+      {
+        cloneRender.rendering(navStyle)
+      }
+    ).render
   }
 
 
-  def tabs = Tabs.apply(Seq())
+  def tabs = Tabs.apply(Var(Seq()))
 
   // Tables
   case class Row(values: Seq[TypedTag[_ <: HTMLElement]])
