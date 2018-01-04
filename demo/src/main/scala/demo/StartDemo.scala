@@ -24,10 +24,9 @@ import scala.scalajs.js.annotation._
  * You should have received a copy of the GNU General Public License
  */
 
-@JSExportTopLevel(name = "demo.StartDemo")
-@JSExportAll
 object StartDemo {
 
+  @JSExportTopLevel("demo.bootstrap")
   def bootstrap(): Unit = {
 
     def imports =

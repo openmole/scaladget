@@ -28,7 +28,8 @@ import scala.scalajs.js.Dynamic.{literal => lit}
 package object bsnsheet extends stylesheet.BootstrapPackage with stylesheet2.Bootstrap2Package
 package object bsn extends stylesheet.BootstrapPackage with stylesheet2.Bootstrap2Package with BootstrapTags
 
-@JSImport("bootstrap.native", "Modal")
+//@JSImport("bootstrap.native", "Modal")
+@JSGlobal
 @js.native
 class Modal(element: Element) extends js.Object {
 
@@ -36,8 +37,8 @@ class Modal(element: Element) extends js.Object {
   def hide(): Unit = js.native
 }
 
-
-@JSImport("bootstrap.native", "Popover")
+@JSGlobal
+//@JSImport("bootstrap.native", "Popover")
 @js.native
 class Popover(element: Element, options: js.Dynamic = lit()) extends js.Object {
 
@@ -46,7 +47,8 @@ class Popover(element: Element, options: js.Dynamic = lit()) extends js.Object {
   def toggle(): Unit = js.native
 }
 
-@JSImport("bootstrap.native", "Tooltip")
+@JSGlobal
+//@JSImport("bootstrap.native", "Tooltip")
 @js.native
 class Tooltip(element: Element, options: js.Dynamic = lit()) extends js.Object {
 
@@ -54,7 +56,8 @@ class Tooltip(element: Element, options: js.Dynamic = lit()) extends js.Object {
   def hide(): Unit = js.native
 }
 
-@JSImport("bootstrap.native", "Collapse")
+@JSGlobal
+//@JSImport("bootstrap.native", "Collapse")
 @js.native
 class Collapse(element: Element, options: js.Dynamic = lit()) extends js.Object {
 
@@ -63,7 +66,8 @@ class Collapse(element: Element, options: js.Dynamic = lit()) extends js.Object 
   def toggle(): Unit = js.native
 }
 
-@JSImport("sortablejs", JSImport.Namespace)
+//@JSImport("sortablejs", JSImport.Namespace)
+@JSGlobal
 @js.native
 class Sortable(element: Element) extends js.Any {
   val el: Element = js.native
