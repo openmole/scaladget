@@ -20,7 +20,7 @@ lazy val defaultSettings = Seq(
   crossScalaVersions in ThisBuild := Seq("2.11.8", "2.12"),
   scalaVersion := "2.12.4",
   organization in ThisBuild := "fr.iscpif",
-  version in ThisBuild := "0.9.6-SNAPSHOT",
+  version in ThisBuild := "0.9.7-SNAPSHOT",
   resolvers in ThisBuild := Seq(Resolver.sonatypeRepo("snapshots"),
     DefaultMavenRepository
   ),

@@ -282,6 +282,8 @@ object BootstrapTags {
 
   case class NavBar(classPair: ModifierSeq, brand: Option[NavBarBrand], contents: Seq[NavItem[_ <: HTMLElement]]) {
 
+    val navId = uuID.short("n")
+
     def render: TypedTag[HTMLElement] = {
 
       val sortedContents = contents.partition {
@@ -299,24 +301,29 @@ object BootstrapTags {
             })
           }: _*)
 
+      val content = div(toClass("navbar-collapse collapse"), aria.expanded := false, id := navId)(
+        buildUL(sortedContents._2),
+        buildUL(sortedContents._1, navbar_right)
+      )
+
       JsDom.tags2.nav(navbar +++ navbar_default +++ classPair)(
         div(toClass("container-fluid"))(
           for {
             b <- brand
           } yield {
             div(navbar_header)(
-              div(navbar_brand, href := "#", padding := 0)(
+              button(`type` := "button", `class` := "navbar-toggle", data("toggle") := "collapse", data("target") := s"#$navId")(
+                span(toClass("icon-bar")),
+                span(toClass("icon-bar")),
+                span(toClass("icon-bar"))
+              ),
+              a(navbar_brand, href := "#", padding := 0)(
                 img(b.modifierSeq +++ pointer, alt := b.alt, src := b.src, onclick := {
-
                   () => b.todo()
                 })
               )
             )
-          },
-          div(toClass("collapse") +++ navbar_collapse)(
-            buildUL(sortedContents._2),
-            buildUL(sortedContents._1, navbar_right)
-          )
+          },content
         )
       )
     }
@@ -714,8 +721,8 @@ object BootstrapTags {
       )
 
 
-     Sortable(tabList)
-     tabDiv.render
+      Sortable(tabList)
+      tabDiv.render
     }
 
     def render(navStyle: NavStyle = pills) = {
