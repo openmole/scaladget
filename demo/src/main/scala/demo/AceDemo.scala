@@ -31,6 +31,7 @@ object AceDemo extends Demo {
 
     session.setValue("val a = 7")
     session.setMode("ace/mode/scala")
+    editor.setTheme("ace/theme/github")
 
     editorDiv
   }

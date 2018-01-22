@@ -1,11 +1,14 @@
 import sbt._
 import Keys._
 
-import ScalaJSBundlerPlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
-val braceVersion = "0.11.0"
+import scalajsbundler.sbtplugin.NpmDepsPlugin.autoImport._
+import scalajsbundler.NpmDeps.Dep
+
+
+val aceVersion = "1.2.9"
 val bootstrapNativeVersion = "2.0.21"
 val bootstrapSliderVersion = "10.0.0"
 val d3Version = "4.12.0"
@@ -73,7 +76,7 @@ releaseProcess in ThisBuild := Seq[ReleaseStep](
   pushChanges
 )
 
-useYarn in ThisBuild := true
+//useYarn in ThisBuild := true
 
 lazy val defaultSettings = Seq(
   organization := "fr.iscpif.scaladget"
@@ -84,27 +87,27 @@ lazy val scalaJsDom = libraryDependencies += "org.scala-js" %%% "scalajs-dom" % 
 lazy val rx = libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion
 lazy val querki = libraryDependencies += "org.querki" %%% "querki-jsext" % querkiVersion
 
-lazy val ace = project.in(file("ace")) enablePlugins (ScalaJSPlugin) settings (defaultSettings) settings (
+lazy val ace = project.in(file("ace")) enablePlugins (NpmDepsPlugin) settings (defaultSettings) settings (
   scalaJsDom,
-  // npmDependencies in Compile += "brace" -> braceVersion
+  npmDeps in Compile += Dep("ace-builds", aceVersion, List("ace.js", "mode-scala.js", "theme-github.js"))
   )
 
-lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (ScalaJSPlugin) settings (defaultSettings) settings(
+lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (NpmDepsPlugin) settings (defaultSettings) settings(
   scalaJsDom,
-  querki
-  //  npmDependencies in Compile += "bootstrap-slider" -> bootstrapSliderVersion,
-  // jsDependencies += ProvidedJS / "jquery-stub.js",
-  // webpackConfigFile := Some(baseDirectory.value / "jqueryConfig.config.js")
+  querki,
+  npmDeps in Compile += Dep("bootstrap-slider", bootstrapSliderVersion, List("bootstrap-slider.min.js"))
 )
 
-lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (ScalaJSPlugin) settings (defaultSettings) settings(
+lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (NpmDepsPlugin) settings (defaultSettings) settings(
   scalaJsDom,
   scalatags,
   querki,
+  npmDeps in Compile += Dep("bootstrap.native", bootstrapNativeVersion, List("bootstrap-native.min.js")),
+  npmDeps in Compile += Dep("sortablejs", sortableVersion, List("Sortable.min.js"))
 ) dependsOn (tools)
 
-lazy val lunr = project.in(file("lunr")) enablePlugins (ScalaJSPlugin) settings (defaultSettings) settings(
-  // npmDependencies in Compile += "lunr" -> lunrVersion
+lazy val lunr = project.in(file("lunr")) enablePlugins (NpmDepsPlugin) settings (defaultSettings) settings(
+  npmDeps in Compile += Dep("lunr", "2.1.5", List("lunr.js"))
 )
 
 lazy val svg = project.in(file("svg")) enablePlugins (ScalaJSPlugin) settings (defaultSettings) settings(
@@ -118,68 +121,22 @@ lazy val tools = project.in(file("tools")) enablePlugins (ScalaJSPlugin) setting
   scalaJsDom,
   rx
 )
-
-
 lazy val runDemo = taskKey[Unit]("runDemo")
-lazy val fetchJS = taskKey[Seq[sbt.File]]("fetchJS")
-lazy val bootstrapJS = taskKey[TaskKey[Attributed[sbt.File]]]("bootstrapJS")
 
-
-lazy val modules = Seq(
-  ("bootstrap.native", Seq("bootstrap-native.min.js"), bootstrapNativeVersion),
-  ("sortablejs", Seq("Sortable.min.js"), sortableVersion),
-  ("brace", Seq("index.js", "scala.js"), braceVersion)
-)
-
-lazy val jsdeps = project.in(file("target/jsdeps")) enablePlugins (ScalaJSBundlerPlugin) settings(
-  modules.map { m =>
-    npmDependencies in Compile += m._1 -> m._3
-  },
-  fetchJS := {
-    def recursiveListFiles(f: File): Array[File] = {
-      val these = f.listFiles
-      these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)
-    }
-
-    def get(path: File, jsFile: String) = {
-      val files = recursiveListFiles(path)
-      files.find(_.getName == jsFile)
-    }
-
-    val nodeModules = (webpack in fullOptJS in Compile).value.head.data.getParentFile / "node_modules"
-
-    val jsFiles = (for {
-      m <- modules
-      js <- m._2
-    } yield {
-      get(nodeModules / m._1, js)
-    }).flatten
-
-    println("jsFiles " + jsFiles)
-    jsFiles
-  }
-
-)
-
-
-lazy val demo = project.in(file("demo")) enablePlugins (ScalaJSPlugin) settings (defaultSettings) settings(
+lazy val demo = project.in(file("demo")) enablePlugins (NpmDepsPlugin) settings (defaultSettings) settings(
   libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
   libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
   libraryDependencies += "com.github.karasiq" %%% "scalajs-marked" % "1.0.2",
   runDemo := {
+
     val demoTarget = target.value
     val demoResource = (resourceDirectory in Compile).value
 
+    val jsTarget = demoTarget / "js"
     val demoJS = (fullOptJS in Compile).value
 
-    val jsTarget = demoTarget / "js"
-    val JSs = (fetchJS in jsdeps in Compile).value
-
     IO.copyFile(demoJS.data, jsTarget / "demo.js")
-
-    JSs.foreach { f =>
-      IO.copyFile(f, jsTarget / f.getName)
-    }
+    IO.copyFile(dependencyFile.value, jsTarget / "deps.js")
 
     IO.copyFile(demoResource / "bootstrap-native.html", demoTarget / "bootstrap-native.html")
     IO.copyFile(demoResource / "flowchart.html", demoTarget / "flowchart.html")
@@ -188,4 +145,4 @@ lazy val demo = project.in(file("demo")) enablePlugins (ScalaJSPlugin) settings 
     IO.copyDirectory(demoResource / "fonts", demoTarget / "fonts")
     IO.copyDirectory(demoResource / "img", demoTarget / "img")
   }
-) dependsOn(bootstrapnative, lunr, tools, svg, ace)
+) dependsOn(bootstrapnative, bootstrapslider, lunr, tools, svg, ace)

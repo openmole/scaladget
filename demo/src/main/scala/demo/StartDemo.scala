@@ -26,7 +26,7 @@ import scala.scalajs.js.annotation._
 
 object StartDemo {
 
-  @JSExportTopLevel("demo.bootstrap")
+  @JSExportTopLevel("bootstrap")
   def bootstrap(): Unit = {
 
     def imports =
@@ -51,7 +51,7 @@ object StartDemo {
     ),
       for {
         demo <- Seq(
-          //  SliderDemo.elementDemo,
+          SliderDemo.elementDemo,
           AceDemo.elementDemo,
           ButtonDemo.elementDemo,
           LabelDemo.elementDemo,

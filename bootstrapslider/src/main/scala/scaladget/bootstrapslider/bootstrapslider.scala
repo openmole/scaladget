@@ -124,7 +124,7 @@ object Slider {
 }
 
 @js.native
-@JSImport("bootstrap-slider", JSImport.Namespace)
+@JSGlobal
 class Slider(var element: Element | String = js.native, var options: SliderOptions = js.native) extends js.Object {
 
   def this(element: Element | String) = this(element, SliderOptions)
