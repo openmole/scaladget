@@ -4,8 +4,8 @@ import Keys._
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
-import scalajsbundler.sbtplugin.NpmDepsPlugin.autoImport._
-import scalajsbundler.NpmDeps.Dep
+import execnpm.ExecNpmPlugin.autoImport._
+import execnpm.NpmDeps._
 
 
 val aceVersion = "1.2.9"
@@ -87,18 +87,18 @@ lazy val scalaJsDom = libraryDependencies += "org.scala-js" %%% "scalajs-dom" % 
 lazy val rx = libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion
 lazy val querki = libraryDependencies += "org.querki" %%% "querki-jsext" % querkiVersion
 
-lazy val ace = project.in(file("ace")) enablePlugins (NpmDepsPlugin) settings (defaultSettings) settings (
+lazy val ace = project.in(file("ace")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings (
   scalaJsDom,
   npmDeps in Compile += Dep("ace-builds", aceVersion, List("ace.js", "mode-scala.js", "theme-github.js"))
   )
 
-lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (NpmDepsPlugin) settings (defaultSettings) settings(
+lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
   scalaJsDom,
   querki,
   npmDeps in Compile += Dep("bootstrap-slider", bootstrapSliderVersion, List("bootstrap-slider.min.js"))
 )
 
-lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (NpmDepsPlugin) settings (defaultSettings) settings(
+lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
   scalaJsDom,
   scalatags,
   querki,
@@ -106,7 +106,7 @@ lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (Np
   npmDeps in Compile += Dep("sortablejs", sortableVersion, List("Sortable.min.js"))
 ) dependsOn (tools)
 
-lazy val lunr = project.in(file("lunr")) enablePlugins (NpmDepsPlugin) settings (defaultSettings) settings(
+lazy val lunr = project.in(file("lunr")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
   npmDeps in Compile += Dep("lunr", "2.1.5", List("lunr.js"))
 )
 
@@ -123,7 +123,7 @@ lazy val tools = project.in(file("tools")) enablePlugins (ScalaJSPlugin) setting
 )
 lazy val runDemo = taskKey[Unit]("runDemo")
 
-lazy val demo = project.in(file("demo")) enablePlugins (NpmDepsPlugin) settings (defaultSettings) settings(
+lazy val demo = project.in(file("demo")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
   libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
   libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
   libraryDependencies += "com.github.karasiq" %%% "scalajs-marked" % "1.0.2",
