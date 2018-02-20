@@ -27,7 +27,7 @@ organization in ThisBuild := "fr.iscpif"
 
 name := "scaladget"
 
-version in ThisBuild := "1.0.0-M2"
+version in ThisBuild := "1.0.0-M3"
 
 publishTo in ThisBuild := {
   val nexus = "https://oss.sonatype.org/"
@@ -89,7 +89,7 @@ lazy val querki = libraryDependencies += "org.querki" %%% "querki-jsext" % querk
 
 lazy val ace = project.in(file("ace")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings (
   scalaJsDom,
-  npmDeps in Compile += Dep("ace-builds", aceVersion, List("ace.js", "mode-scala.js", "theme-github.js"))
+  npmDeps in Compile += Dep("ace-builds", aceVersion, List("ace.js"))
   )
 
 lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
