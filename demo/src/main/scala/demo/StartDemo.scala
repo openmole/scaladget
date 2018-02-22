@@ -1,10 +1,13 @@
 package demo
 
 
+import com.karasiq.highlightjs.HighlightJS
+
 import scaladget.bootstrapnative.bsn._
 import scaladget.tools._
 import scalatags.JsDom.all._
 import org.scalajs.dom
+import org.scalajs.dom.raw.Event
 
 import scala.scalajs.js.annotation._
 
@@ -78,7 +81,7 @@ object StartDemo {
     ).render
 
     dom.document.body.appendChild(content)
-    //  HighlightJS.initHighlightingOnLoad()
+    HighlightJS.initHighlightingOnLoad()
 
   }
 
