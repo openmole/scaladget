@@ -102,6 +102,7 @@ lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (Ex
   scalaJsDom,
   scalatags,
   querki,
+  libraryDependencies += "net.scalapro" %%% "sortable-js-facade" % "0.2.1",
   npmDeps in Compile += Dep("bootstrap.native", bootstrapNativeVersion, List("bootstrap-native.min.js")),
   npmDeps in Compile += Dep("sortablejs", sortableVersion, List("Sortable.min.js"))
 ) dependsOn (tools)

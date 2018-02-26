@@ -710,9 +710,9 @@ trait BootstrapTags {
       right := -10
     )
 
-        private def cloneRender = Tabs(Var(tabs.now.map {
-          _.copy(tabID = uuID.short("t"), refID = uuID.short("r"))
-        }))
+    private def cloneRender = Tabs(Var(tabs.now.map {
+      _.copy(tabID = uuID.short("t"), refID = uuID.short("r"))
+    }))
 
     private def rendering(navStyle: NavStyle = pills) = Rx {
       val existsOneActive = tabs().map {
@@ -747,9 +747,9 @@ trait BootstrapTags {
         )
       )
 
-
-      new Sortable(tabList)
-      tabDiv.render
+      import net.scalapro.sortable._
+      Sortable(tabList)
+        tabDiv.render
     }
 
     def render(navStyle: NavStyle = pills): HTMLDivElement = div(
