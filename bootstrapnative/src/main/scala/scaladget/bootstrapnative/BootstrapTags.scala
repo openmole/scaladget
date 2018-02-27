@@ -347,7 +347,7 @@ trait BootstrapTags {
         data("placement") := position.value,
         data("trigger") := {
           trigger match {
-            case ClickPopup => "click"
+            case ClickPopup => "focus"
             case _ => "hover"
           }
         },
