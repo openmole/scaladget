@@ -23,7 +23,6 @@ import org.scalajs.dom.Element
 import scaladget.bootstrapnative.bsn._
 import scaladget.tools._
 
-import org.scalajs.dom.raw._
 import scalatags.JsDom.all._
 
 object PopoverDemo extends Demo {
@@ -36,7 +35,7 @@ object PopoverDemo extends Demo {
     )
 
     div(
-      button("Left", buttonStyle).popover("Popover on hover on left", Left),
+      button("Left", buttonStyle).popover(vForm(width := 100)(label("Nice content", label_danger).render, span("A important message").render), Left, title = Some("Check this !")),
       button("Title", buttonStyle).popover("Popover on hover with Title", Top, title = Some("Pop title")),
       button("Dismissable", buttonStyle).popover("Dismissible Popover on hover with Title", Top, HoverPopup, Some("Pop title"), true),
       button("Left (click)", buttonStyle).popover("Popover on click on right", Left, ClickPopup),

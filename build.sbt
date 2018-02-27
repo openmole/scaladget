@@ -19,6 +19,7 @@ val rxVersion = "0.3.2"
 val scalatagsVersion = "0.6.5"
 val scalaJSdomVersion = "0.9.2"
 val sortableVersion = "1.7.0"
+val escapeHtmlVersion = "1.0.3"
 val sourceCodeVersion = "0.1.2"
 
 scalaVersion in ThisBuild := "2.12.4"
@@ -87,10 +88,10 @@ lazy val scalaJsDom = libraryDependencies += "org.scala-js" %%% "scalajs-dom" % 
 lazy val rx = libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion
 lazy val querki = libraryDependencies += "org.querki" %%% "querki-jsext" % querkiVersion
 
-lazy val ace = project.in(file("ace")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings (
+lazy val ace = project.in(file("ace")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
   scalaJsDom,
   npmDeps in Compile += Dep("ace-builds", aceVersion, List("ace.js"))
-  )
+)
 
 lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
   scalaJsDom,
@@ -103,13 +104,14 @@ lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (Ex
   scalatags,
   querki,
   libraryDependencies += "net.scalapro" %%% "sortable-js-facade" % "0.2.1",
+  libraryDependencies += "org.scala-lang.modules" %%% "scala-xml" % "1.1.0",
   npmDeps in Compile += Dep("bootstrap.native", bootstrapNativeVersion, List("bootstrap-native.min.js")),
-  npmDeps in Compile += Dep("sortablejs", sortableVersion, List("Sortable.min.js"))
+  npmDeps in Compile += Dep("sortablejs", sortableVersion, List("Sortable.min.js")),
 ) dependsOn (tools)
 
-lazy val lunr = project.in(file("lunr")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
+lazy val lunr = project.in(file("lunr")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings (
   npmDeps in Compile += Dep("lunr", "2.1.5", List("lunr.js"))
-)
+  )
 
 lazy val svg = project.in(file("svg")) enablePlugins (ScalaJSPlugin) settings (defaultSettings) settings(
   scalatags,

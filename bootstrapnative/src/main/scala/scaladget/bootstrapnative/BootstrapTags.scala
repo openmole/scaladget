@@ -329,18 +329,21 @@ trait BootstrapTags {
   // Nav pills
   case class NavPill(name: String, badge: Option[Int], todo: () => Unit)
 
+
+  type TypedContent = String
+
   // POUPUS, TOOLTIPS
   class Popover(element: TypedTag[org.scalajs.dom.raw.HTMLElement],
-                text: String,
+                innerElement: TypedContent,
                 position: PopupPosition = Bottom,
                 trigger: PopupType = HoverPopup,
-                title: Option[String] = None,
+                title: Option[TypedContent] = None,
                 dismissible: Boolean = false) {
 
     lazy val render = {
       val p = element(
         data("toggle") := "popover",
-        data("content") := text,
+        data("content") := innerElement,
         data("placement") := position.value,
         data("trigger") := {
           trigger match {
@@ -349,7 +352,7 @@ trait BootstrapTags {
           }
         },
         title match {
-          case Some(t: String) => data("title") := t
+          case Some(t: TypedContent) => data("title") := t
           case _ =>
         },
         data("dismissible") := {
@@ -417,6 +420,8 @@ trait BootstrapTags {
   }
 
 
+  implicit def TypedTagToTypedContent(tc: TypedTag[_]): TypedContent = tc.toString
+
   implicit class PopableTypedTag(element: TypedTag[org.scalajs.dom.raw.HTMLElement]) {
 
     def tooltip(text: String,
@@ -425,10 +430,10 @@ trait BootstrapTags {
       new Tooltip(element, text, position, condition).render
     }
 
-    def popover(text: String,
+    def popover(text: TypedContent,
                 position: PopupPosition = Bottom,
                 trigger: PopupType = HoverPopup,
-                title: Option[String] = None,
+                title: Option[TypedContent] = None,
                 dismissible: Boolean = false
                ) = {
       new Popover(element, text, position, trigger, title, dismissible).render
