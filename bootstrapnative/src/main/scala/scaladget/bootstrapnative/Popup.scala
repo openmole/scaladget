@@ -46,6 +46,8 @@ object Popup {
 
   object ClickPopup extends PopupType
 
+  object Manual extends PopupType
+
   object DialogPopup extends PopupType
 
 }

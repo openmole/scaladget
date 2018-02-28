@@ -348,6 +348,7 @@ trait BootstrapTags {
         data("trigger") := {
           trigger match {
             case ClickPopup => "focus"
+            case Manual=> "manual"
             case _ => "hover"
           }
         },
@@ -360,13 +361,6 @@ trait BootstrapTags {
             case true => "true"
             case _ => "false"
           }
-        },
-        trigger match {
-          case ClickPopup => onclick := { () =>
-            println("1")
-            show
-          }
-          case _ => onmouseover := { () => hide }
         }
       ).render
 
@@ -380,6 +374,8 @@ trait BootstrapTags {
     def show = popover.show
 
     def hide = popover.hide
+
+    def toggle = popover.toggle
 
   }
 
@@ -436,7 +432,7 @@ trait BootstrapTags {
                 title: Option[TypedContent] = None,
                 dismissible: Boolean = false
                ) = {
-      new Popover(element, text, position, trigger, title, dismissible).render
+      new Popover(element, text, position, trigger, title, dismissible)
     }
   }
 
