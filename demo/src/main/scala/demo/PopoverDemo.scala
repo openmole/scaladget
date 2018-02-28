@@ -78,27 +78,6 @@ object PopoverDemo extends Demo {
     ).render
   }
 
-  //  def buildManualPopover(trigger: TypedTag[HTMLButtonElement], title: String, position: PopupPosition) = {
-  //    lazy val pop1 = trigger.popover(title, position, Manual)
-  //    val pop1Render = pop1.render
-  //
-  //    trigger.render.onclick = { (e: Event) =>
-  //      pop1.toggle
-  //      e.stopPropagation
-  //    }
-  //
-  //    org.scalajs.dom.document.body.onclick = { (e: Event) =>
-  //      println(e.target.asInstanceOf[HTMLElement])
-  //      println(trigger.render)
-  //      println(e.target.asInstanceOf[HTMLElement] != trigger.render)
-  //      // println("contains popover " + e.target.asInstanceOf[HTMLElement].className.contains("popover"))
-  //      println("id compare " +e.target.asInstanceOf[HTMLElement].id != pop1.uid )
-  //      // if (e.target.asInstanceOf[HTMLElement] != trigger.render && !e.target.asInstanceOf[HTMLElement].className.contains("popover")) pop1.hide
-  //      if (e.target.asInstanceOf[HTMLElement] != trigger.render && e.target.asInstanceOf[HTMLElement].id != pop1.uid) pop1.hide
-  //    }
-  //    pop1Render
-  //  }
-
   val elementDemo = new ElementDemo {
     def title: String = "Popover"
 
