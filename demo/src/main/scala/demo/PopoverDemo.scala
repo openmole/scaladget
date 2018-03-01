@@ -19,7 +19,7 @@ package demo
 
 
 import org.scalajs.dom.Element
-import org.scalajs.dom.raw.{Event, HTMLButtonElement, HTMLElement}
+import org.scalajs.dom.raw.{Event, HTMLButtonElement, HTMLElement, MouseEvent}
 
 import scaladget.bootstrapnative.bsn._
 import scaladget.tools._
@@ -38,10 +38,29 @@ object PopoverDemo extends Demo {
     )
 
     val popovers: Var[Seq[Popover]] = Var(Seq())
+    val BUTTON1_ID = uuID.short("b")
+    val BUTTON2_ID = uuID.short("b")
+
+    def actions(id: String): Boolean = {
+      id match {
+        case BUTTON1_ID =>
+          println(s"button 1 with ID $BUTTON1_ID clicked")
+          true
+        case BUTTON2_ID =>
+          println(s"button 2 with ID $BUTTON2_ID clicked")
+          true
+        case _ =>
+          println("unknown")
+          false
+      }
+    }
 
     def buildManualPopover(trigger: TypedTag[HTMLButtonElement], title: String, position: PopupPosition) = {
-      lazy val pop1 = trigger.popover(title, position, Manual)
-      val pop1Render = pop1.render
+
+      val but1 = button("button1", btn_primary)(id := BUTTON1_ID, margin := 10)
+      val but2 = button("button2", btn_primary)(id := BUTTON2_ID, margin := 10)
+      lazy val pop1 = trigger.popover(span(but1,but2).toString, position, Manual)
+      lazy val pop1Render = pop1.render
 
       pop1Render.onclick = { (e: Event) =>
         popovers.now.foreach {
@@ -51,17 +70,12 @@ object PopoverDemo extends Demo {
         e.stopPropagation
       }
 
-      org.scalajs.dom.document.body.onclick = { (e: Event) =>
-        if (!e.target.asInstanceOf[HTMLElement].className.contains("popover-content")) popovers.now.foreach {
-          _.hide
-        }
-      }
       popovers() = popovers.now :+ pop1
       pop1Render
     }
 
 
-    div(
+    val content = div(
       div(
         button("Left", buttonStyle).popover(vForm(width := 100)(label("Nice content", label_danger).render, span("A important message").render), Left, title = Some("Check this !")).render,
         button("Title", buttonStyle).popover("Popover on hover with Title", Top, title = Some("Pop title")).render,
@@ -76,6 +90,15 @@ object PopoverDemo extends Demo {
         buildManualPopover(button("Bottom (click)", buttonStyle), "Popover on clic k on bottom", Bottom)
       )
     ).render
+
+    org.scalajs.dom.document.body.onclick = { (e: Event) =>
+      if (!actions(e.target.asInstanceOf[HTMLElement].id))
+        if (!e.target.asInstanceOf[HTMLElement].className.contains("popover-content")) popovers.now.foreach {
+          _.hide
+        }
+    }
+
+    content
   }
 
   val elementDemo = new ElementDemo {
