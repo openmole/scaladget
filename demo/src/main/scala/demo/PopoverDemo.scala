@@ -37,6 +37,18 @@ object PopoverDemo extends Demo {
       marginRight := 5
     )
 
+    //SIMPLE POPOVERS
+    val simplePopovers = div(
+      h2("Simple popovers"),
+      div(paddingTop := 20)("Simple popovers containing text, or simple content with no events to be fired and with basic trigger modes (click, hover)."),
+      button("Left", buttonStyle).popover(vForm(width := 100)(label("Nice content", label_danger).render, span("A important message").render), Left, title = Some("Check this !")).render,
+      button("Title", buttonStyle).popover("Popover on hover with Title", Top, title = Some("Pop title")).render,
+      button("Dismissable", buttonStyle).popover("Dismissible Popover on hover with Title", Top, HoverPopup, Some("Pop title"), true).render,
+      inputTag("")(width := 320, marginTop := 10, placeholder := "Bottom (click)").popover("Tooltip on click on bottom", Bottom, ClickPopup).render
+    )
+
+
+    //MANUAL POPOVERS
     val popovers: Var[Seq[Popover]] = Var(Seq())
     val BUTTON1_ID = uuID.short("b")
     val BUTTON2_ID = uuID.short("b")
@@ -59,7 +71,7 @@ object PopoverDemo extends Demo {
 
       val but1 = button("button1", btn_primary)(id := BUTTON1_ID, margin := 10)
       val but2 = button("button2", btn_primary)(id := BUTTON2_ID, margin := 10)
-      lazy val pop1 = trigger.popover(span(but1,but2).toString, position, Manual)
+      lazy val pop1 = trigger.popover(span(but1, but2).toString, position, Manual)
       lazy val pop1Render = pop1.render
 
       pop1Render.onclick = { (e: Event) =>
@@ -75,21 +87,16 @@ object PopoverDemo extends Demo {
     }
 
 
-    val content = div(
-      div(
-        button("Left", buttonStyle).popover(vForm(width := 100)(label("Nice content", label_danger).render, span("A important message").render), Left, title = Some("Check this !")).render,
-        button("Title", buttonStyle).popover("Popover on hover with Title", Top, title = Some("Pop title")).render,
-        button("Dismissable", buttonStyle).popover("Dismissible Popover on hover with Title", Top, HoverPopup, Some("Pop title"), true).render,
-        inputTag("")(width := 320, marginTop := 10, placeholder := "Bottom (click)").popover("Tooltip on click on bottom", Bottom, ClickPopup).render
-      ),
+    val manualPopovers = div(
+      h2("Manual popovers"),
       div(paddingTop := 20)("Manual popovers, ie popovers built with custom interaction rules. " +
-        "Here an exemple with a set of exclusive popovers, which keep alive when clicking on them"),
+        "Here an exemple with a set of exclusive popovers, which keep alive when clicking on them."),
       div(paddingTop := 10)(
         buildManualPopover(button("Left (click)", buttonStyle), "Popover on click on bottom", Left),
         buildManualPopover(button("Right (click)", buttonStyle), "Popover on clic k on bottom", Right),
         buildManualPopover(button("Bottom (click)", buttonStyle), "Popover on clic k on bottom", Bottom)
       )
-    ).render
+    )
 
     org.scalajs.dom.document.body.onclick = { (e: Event) =>
       if (!actions(e.target.asInstanceOf[HTMLElement].id))
@@ -97,8 +104,8 @@ object PopoverDemo extends Demo {
           _.hide
         }
     }
+    div(simplePopovers, manualPopovers).render
 
-    content
   }
 
   val elementDemo = new ElementDemo {
