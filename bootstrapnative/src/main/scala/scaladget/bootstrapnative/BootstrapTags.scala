@@ -348,7 +348,7 @@ trait BootstrapTags {
         data("trigger") := {
           trigger match {
             case ClickPopup => "focus"
-            case Manual=> "manual"
+            case Manual => "manual"
             case _ => "hover"
           }
         },
@@ -750,7 +750,7 @@ trait BootstrapTags {
 
       import net.scalapro.sortable._
       Sortable(tabList)
-        tabDiv.render
+      tabDiv.render
     }
 
     def render(navStyle: NavStyle = pills): HTMLDivElement = div(
@@ -764,43 +764,58 @@ trait BootstrapTags {
   def tabs = Tabs.apply(Var(Seq()))
 
   // Tables
-  case class Row(values: Seq[TypedTag[_ <: HTMLElement]])
+  case class Row(values: Seq[String])
 
-  case class Table(headers: Seq[String] = Seq(), rows: Seq[Row] = Seq()) {
+  case class BSTableStyle(tableStyle: TableStyle, headerStyle: ModifierSeq)
+
+  case class Table(headers: Seq[String] = Seq(), rows: Seq[Row] = Seq(), bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod)) {
+
+    val filteredRows = Var(rows)
 
     def addHeaders(hs: String*) = copy(headers = hs)
 
     def addRow(row: Row): Table = copy(rows = rows :+ row)
 
-    def addRow(row: String*): Table = addRow(Row(row.map {
-      td(_)
-    }))
+    def addRow(row: String*): Table = addRow(Row(row))
 
-    def addRowElement(typedTags: TypedTag[_ <: HTMLElement]*): Table = addRow(Row(typedTags.map {
-      td(_)
-    }))
+    //    def addRowElement(typedTags: TypedTag[_ <: HTMLElement]*): Table = addRow(Row(typedTags.map {
+    //      td(_)
+    //    }))
 
-    private def fillRow(row: Seq[TypedTag[HTMLElement]]) = tags.tr(
+    type RowType = String => TypedTag[HTMLElement]
+
+    private def fillRow(row: Seq[String], rowType: RowType) = tags.tr(
       for (
         cell <- row
       ) yield {
-        cell
+        rowType(cell)
       }
     )
 
-    def render(tableStyle: TableStyle = default_table, headerStyle: ModifierSeq = emptyMod) =
-      tags.table(tableStyle)(
-        tags.thead(headerStyle)(
-          fillRow(headers.map {
-            th(_)
-          })
+    def filter(containedString: String) = {
+      filteredRows() = rows.filter { r =>
+        r.values.mkString("").contains(containedString)
+      }
+    }
+
+    def style(tableStyle: TableStyle = default_table, headerStyle: ModifierSeq = emptyMod) = {
+      copy(bsTableStyle = BSTableStyle(tableStyle, headerStyle))
+    }
+
+    val render = {
+      tags.table(bsTableStyle.tableStyle)(
+        tags.thead(bsTableStyle.headerStyle)(
+          fillRow(headers, (s: String) => th(s))
         ),
-        tags.tbody(
-          for (r <- rows) yield {
-            fillRow(r.values)
+          Rx {
+            tags.tbody(
+              for (r <- filteredRows()) yield {
+                fillRow(r.values, (s: String) => td(s))
+              }
+            )
           }
-        )
       )
+    }
   }
 
 

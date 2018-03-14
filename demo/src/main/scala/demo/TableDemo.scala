@@ -18,6 +18,7 @@ package demo
  */
 
 import org.scalajs.dom.Element
+import org.scalajs.dom.raw.{Event, HTMLInputElement}
 
 import scaladget.bootstrapnative.bsn
 import scaladget.bootstrapnative.bsn._
@@ -31,15 +32,24 @@ object TableDemo extends Demo {
       addRow("My first 1", "My first 1", "My first 3").
       addRow("My second 1", "My second 2", "My second 3")
 
+
+    val filteredTable = table.style(bordered_table)
+
+    lazy val filterInput = inputTag("")(marginBottom := 20).render
+    filterInput.oninput = (e: Event) ⇒ {
+      filteredTable.filter(filterInput.value)
+    }
+
     div(
-      table.render(),
-      table.render(inverse_table),
-      table.render(hover_table),
-      table.render(headerStyle = default_header),
+      filterInput,
+      filteredTable.render,
+      table.style(inverse_table).render,
+      table.style(hover_table).render,
+      table.style(headerStyle = default_header).render,
       table.
-      addRowElement(a(href := "http://openmole.org", "My third 1"), span("My third 2"), span("My third 3")).
-      addRow("My fourth 1", "My fourth 2", "My fourth 3").render(striped_table)
+        addRow("My fourth 1", "My fourth 2", "My fourth 3").style(striped_table).render
     ).render
+
   }
 
 

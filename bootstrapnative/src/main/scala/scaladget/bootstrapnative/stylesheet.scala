@@ -187,6 +187,7 @@ package stylesheet {
     lazy val default_table: TableStyle = toTable("")
     lazy val inverse_table: TableStyle = toTable("table-inverse")
     lazy val striped_table: TableStyle = toTable("table-striped")
+    lazy val bordered_table: TableStyle = toTable("table-bordered")
     lazy val hover_table: TableStyle = toTable("table-hover")
 
     //GRIDS
