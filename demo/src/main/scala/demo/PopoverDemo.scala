@@ -53,10 +53,13 @@ object PopoverDemo extends Demo {
     val BUTTON1_ID = uuID.short("b")
     val BUTTON2_ID = uuID.short("b")
 
-    def actions(id: String): Boolean = {
-      id match {
+    def actions(element: HTMLElement): Boolean = {
+      element.id match {
         case BUTTON1_ID =>
+
           println(s"button 1 with ID $BUTTON1_ID clicked")
+          element.parentNode.replaceChild(span("YO"), element)
+
           true
         case BUTTON2_ID =>
           println(s"button 2 with ID $BUTTON2_ID clicked")
@@ -71,7 +74,16 @@ object PopoverDemo extends Demo {
 
       val but1 = button("button1", btn_primary)(id := BUTTON1_ID, margin := 10)
       val but2 = button("button2", btn_primary)(id := BUTTON2_ID, margin := 10)
-      lazy val pop1 = trigger.popover(span(but1, but2).toString, position, Manual)
+      lazy val pop1 = trigger.popover(
+        div(
+            span(
+              but1,
+              but2
+            ).render
+          ).toString,
+        position,
+        Manual
+      )
       lazy val pop1Render = pop1.render
 
       pop1Render.onclick = { (e: Event) =>
@@ -99,7 +111,7 @@ object PopoverDemo extends Demo {
     )
 
     org.scalajs.dom.document.body.onclick = { (e: Event) =>
-      if (!actions(e.target.asInstanceOf[HTMLElement].id))
+      if (!actions(e.target.asInstanceOf[HTMLElement]))
         if (!e.target.asInstanceOf[HTMLElement].className.contains("popover-content")) popovers.now.foreach {
           _.hide
         }
