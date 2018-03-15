@@ -830,7 +830,6 @@ trait BootstrapTags {
 
     val sortingDiv = (n: Int) => tags.span(
       Rx {
-        println("RX")
         val ss = sortingStatuses()
         span(pointer, floatRight, lineHeight := "25px",
           ss(n).sorting match {
@@ -844,9 +843,11 @@ trait BootstrapTags {
       onclick := { () =>
         if (sorting) {
           val ss = sortingStatuses.now
-          sortingStatuses() = ss.map{_.copy(sorting = PhantomSorting)}.updated(n, ss(n).copy(sorting = ss(n).sorting match {
-            case DescSorting | PhantomSorting => AscSorting
-            case AscSorting => DescSorting
+          sortingStatuses() = ss.map {
+            _.copy(sorting = PhantomSorting)
+          }.updated(n, ss(n).copy(sorting = ss(n).sorting match {
+            case DescSorting | PhantomSorting => sort(n, AscSorting)
+            case AscSorting => sort(n, DescSorting)
             case _ => PhantomSorting
           }
           )
@@ -854,6 +855,17 @@ trait BootstrapTags {
         }
       }
     )
+
+    def sort(col: Int, sorting: Sorting): Sorting = {
+      filteredRows() = {
+        val sort = filteredRows.now.sortBy(_.values(col))
+        sorting match {
+          case DescSorting=> sort.reverse
+          case _=> sort
+        }
+      }
+      sorting
+    }
 
     val render = {
       tags.table(bsTableStyle.tableStyle)(
