@@ -768,9 +768,33 @@ trait BootstrapTags {
 
   case class BSTableStyle(tableStyle: TableStyle, headerStyle: ModifierSeq)
 
-  case class Table(headers: Seq[String] = Seq(), rows: Seq[Row] = Seq(), bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod)) {
+  trait Sorting
+
+  object NoSorting extends Sorting
+
+  object PhantomSorting extends Sorting
+
+  object AscSorting extends Sorting
+
+  object DescSorting extends Sorting
+
+  case class SortingStatus(col: Int, sorting: Sorting)
+
+  case class Table(headers: Seq[String] = Seq(),
+                   rows: Seq[Row] = Seq(),
+                   bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod),
+                   sorting: Boolean = false) {
 
     val filteredRows = Var(rows)
+    val nbColumns = rows.headOption.map {
+      _.values.length
+    }.getOrElse(0)
+
+    val sortingStatuses = Var(
+      Seq.fill(nbColumns)(
+        if (sorting) SortingStatus(0, PhantomSorting) else SortingStatus(0, NoSorting))
+    )
+
 
     def addHeaders(hs: String*) = copy(headers = hs)
 
@@ -778,17 +802,19 @@ trait BootstrapTags {
 
     def addRow(row: String*): Table = addRow(Row(row))
 
+    def sortable = copy(sorting = true)
+
     //    def addRowElement(typedTags: TypedTag[_ <: HTMLElement]*): Table = addRow(Row(typedTags.map {
     //      td(_)
     //    }))
 
-    type RowType = String => TypedTag[HTMLElement]
+    type RowType = (String, Int) => TypedTag[HTMLElement]
 
     private def fillRow(row: Seq[String], rowType: RowType) = tags.tr(
       for (
-        cell <- row
+        (cell, id) <- row.zipWithIndex
       ) yield {
-        rowType(cell)
+        rowType(cell, id)
       }
     )
 
@@ -802,18 +828,45 @@ trait BootstrapTags {
       copy(bsTableStyle = BSTableStyle(tableStyle, headerStyle))
     }
 
+    val sortingDiv = (n: Int) => tags.span(
+      Rx {
+        println("RX")
+        val ss = sortingStatuses()
+        span(pointer, floatRight, lineHeight := "25px",
+          ss(n).sorting match {
+            case PhantomSorting => Seq(opacity := "0.4") +++ glyph_sort_by_attributes
+            case AscSorting => glyph_sort_by_attributes
+            case DescSorting => glyph_sort_by_attributes_alt
+            case _ => emptyMod
+          }
+        )
+      },
+      onclick := { () =>
+        if (sorting) {
+          val ss = sortingStatuses.now
+          sortingStatuses() = ss.map{_.copy(sorting = PhantomSorting)}.updated(n, ss(n).copy(sorting = ss(n).sorting match {
+            case DescSorting | PhantomSorting => AscSorting
+            case AscSorting => DescSorting
+            case _ => PhantomSorting
+          }
+          )
+          )
+        }
+      }
+    )
+
     val render = {
       tags.table(bsTableStyle.tableStyle)(
         tags.thead(bsTableStyle.headerStyle)(
-          fillRow(headers, (s: String) => th(s))
+          fillRow(headers, (s: String, i: Int) => th(s, sortingDiv(i)))
         ),
-          Rx {
-            tags.tbody(
-              for (r <- filteredRows()) yield {
-                fillRow(r.values, (s: String) => td(s))
-              }
-            )
-          }
+        Rx {
+          tags.tbody(
+            for (r <- filteredRows()) yield {
+              fillRow(r.values, (s: String, _) => td(s))
+            }
+          )
+        }
       )
     }
   }

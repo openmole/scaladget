@@ -33,7 +33,7 @@ object TableDemo extends Demo {
       addRow("My second 1", "My second 2", "My second 3")
 
 
-    val filteredTable = table.style(bordered_table)
+    val filteredTable = table.style(bordered_table).sortable
 
     lazy val filterInput = inputTag("")(marginBottom := 20).render
     filterInput.oninput = (e: Event) ⇒ {

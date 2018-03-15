@@ -90,6 +90,8 @@ package stylesheet {
     lazy val glyph_paste: Glyphicon = toGlyphicon("glyphicon-paste")
     lazy val glyph_time: Glyphicon = toGlyphicon("glyphicon-time")
     lazy val glyph_alph_sorting: Glyphicon = toGlyphicon("glyphicon-sort-by-alphabet")
+    lazy val glyph_sort_by_attributes: Glyphicon = toGlyphicon("glyphicon-sort-by-attributes")
+    lazy val glyph_sort_by_attributes_alt: Glyphicon = toGlyphicon("glyphicon-sort-by-attributes-alt")
     lazy val glyph_triangle_bottom: Glyphicon = toGlyphicon("glyphicon-triangle-bottom")
     lazy val glyph_triangle_top: Glyphicon = toGlyphicon("glyphicon-triangle-top")
     lazy val glyph_chevron_left: Glyphicon = toGlyphicon("glyphicon glyphicon-chevron-left")
