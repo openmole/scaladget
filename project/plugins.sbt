@@ -1,13 +1,11 @@
-addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.0.0")
+addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.0")
 
-addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.5.1")
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.2")
 
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.1.10")
+addSbtPlugin("fr.iscpif" % "scalajs-execnpm" % "0.1")
 
-//addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.4.0")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.22")
 
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.21")
+addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.7")
 
-addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.8.2")
-
-scalariformSettings
+addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "2.0")
