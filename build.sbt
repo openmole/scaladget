@@ -19,7 +19,6 @@ val rxVersion = "0.3.2"
 val scalatagsVersion = "0.6.5"
 val scalaJSdomVersion = "0.9.2"
 val sortableVersion = "1.7.0"
-val escapeHtmlVersion = "1.0.3"
 val sourceCodeVersion = "0.1.2"
 
 scalaVersion in ThisBuild := "2.12.4"
