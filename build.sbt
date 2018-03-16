@@ -28,8 +28,6 @@ organization in ThisBuild := "fr.iscpif"
 
 name := "scaladget"
 
-version in ThisBuild := "1.0.0-M3"
-
 publishTo in ThisBuild := {
   val nexus = "https://oss.sonatype.org/"
   if (version.value.trim.endsWith("SNAPSHOT"))
@@ -49,21 +47,24 @@ scmInfo in ThisBuild := Some(ScmInfo(url("https://github.com/mathieuleclaire/sca
 pomExtra in ThisBuild := {
   <developers>
     <developer>
-      <id>mathieuleclaire</id>
+      <id>mathieu.leclaire</id>
       <name>Mathieu Leclaire</name>
       <url>https://github.com/mathieuleclaire/</url>
     </developer>
   </developers>
 }
 
+releasePublishArtifactsAction := PgpKeys.publishSigned.value
 
-releaseVersionBump in ThisBuild := sbtrelease.Version.Bump.Minor
+releaseVersionBump := sbtrelease.Version.Bump.Minor
 
-releaseTagComment in ThisBuild := s"Releasing ${(version in ThisBuild).value}"
+releaseTagComment := s"Releasing ${(version in ThisBuild).value}"
 
-releaseCommitMessage in ThisBuild := s"Bump version to ${(version in ThisBuild).value}"
+releaseCommitMessage := s"Bump version to ${(version in ThisBuild).value}"
 
-releaseProcess in ThisBuild := Seq[ReleaseStep](
+import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
+
+releaseProcess := Seq[ReleaseStep](
   checkSnapshotDependencies,
   inquireVersions,
   runClean,
@@ -73,7 +74,7 @@ releaseProcess in ThisBuild := Seq[ReleaseStep](
   releaseStepCommand("publishSigned"),
   setNextVersion,
   commitNextVersion,
-  releaseStepCommand("sonatypeReleaseAll"),
+  releaseStepCommand("sonatypeRelease"),
   pushChanges
 )
 
