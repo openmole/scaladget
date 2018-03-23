@@ -86,8 +86,8 @@ object PopoverDemo extends Demo {
       lazy val pop1Render = pop1.render
 
       pop1Render.onclick = { (e: Event) =>
-        Popover.hide
-        Popover.toggle(pop1)
+        if (Popover.current.now == pop1) Popover.hide
+        else Popover.toggle(pop1)
         e.stopPropagation
       }
 
@@ -100,8 +100,8 @@ object PopoverDemo extends Demo {
       div(paddingTop := 20)("Manual popovers, ie popovers built with custom interaction rules. " +
         "Here an exemple with a set of exclusive popovers, which keep alive when clicking on them."),
       div(paddingTop := 10)(
-        (1 until 100).map{i=>
-         buildManualPopover(
+        (1 until 100).map { i =>
+          buildManualPopover(
             button(s"Button ${i.toString}", buttonStyle), "Popover on click on bottom", Left)
         }
       )

@@ -363,7 +363,7 @@ trait BootstrapTags {
   }
 
   // POUPUS, TOOLTIPS
-  class Popover(element: TypedTag[org.scalajs.dom.raw.HTMLElement],
+  case class Popover(element: TypedTag[org.scalajs.dom.raw.HTMLElement],
                 innerElement: TypedContent,
                 position: PopupPosition = Bottom,
                 trigger: PopupType = HoverPopup,
