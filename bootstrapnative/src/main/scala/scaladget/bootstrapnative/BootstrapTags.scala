@@ -324,7 +324,7 @@ trait BootstrapTags {
                 })
               )
             )
-          },content
+          }, content
         )
       )
     }
@@ -339,6 +339,29 @@ trait BootstrapTags {
 
   type TypedContent = String
 
+  object Popover {
+    val current: Var[Option[Popover]] = Var(None)
+
+    def show(popover: Popover): Unit = {
+      current() = Some(popover)
+      popover.show
+    }
+
+    def hide: Unit = {
+      current.now.foreach { c =>
+        c.hide
+      }
+      current() = None
+    }
+
+    def toggle(popover: Popover): Unit = {
+      current.now match {
+        case None => show(popover)
+        case _ => hide
+      }
+    }
+  }
+
   // POUPUS, TOOLTIPS
   class Popover(element: TypedTag[org.scalajs.dom.raw.HTMLElement],
                 innerElement: TypedContent,
@@ -347,8 +370,7 @@ trait BootstrapTags {
                 title: Option[TypedContent] = None,
                 dismissible: Boolean = false) {
 
-    lazy val render = {
-      val p = element(
+    lazy val render = element(
         data("toggle") := "popover",
         data("content") := innerElement,
         data("placement") := position.value,
@@ -370,10 +392,6 @@ trait BootstrapTags {
           }
         }
       ).render
-
-      org.scalajs.dom.document.body.appendChild(p)
-      p
-    }
 
     lazy val popover: bootstrapnative.Popover =
       new bootstrapnative.Popover(render)
@@ -867,8 +885,8 @@ trait BootstrapTags {
       filteredRows() = {
         val sort = filteredRows.now.sortBy(_.values(col))
         sorting match {
-          case DescSorting=> sort.reverse
-          case _=> sort
+          case DescSorting => sort.reverse
+          case _ => sort
         }
       }
       sorting

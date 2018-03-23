@@ -49,7 +49,6 @@ object PopoverDemo extends Demo {
 
 
     //MANUAL POPOVERS
-    val popovers: Var[Seq[Popover]] = Var(Seq())
     val BUTTON1_ID = uuID.short("b")
     val BUTTON2_ID = uuID.short("b")
 
@@ -76,25 +75,22 @@ object PopoverDemo extends Demo {
       val but2 = button("button2", btn_primary)(id := BUTTON2_ID, margin := 10)
       lazy val pop1 = trigger.popover(
         div(
-            span(
-              but1,
-              but2
-            ).render
-          ).toString,
+          span(
+            but1,
+            but2
+          ).render
+        ).toString,
         position,
         Manual
       )
       lazy val pop1Render = pop1.render
 
       pop1Render.onclick = { (e: Event) =>
-        popovers.now.foreach {
-          _.hide
-        }
-        pop1.toggle
+        Popover.hide
+        Popover.toggle(pop1)
         e.stopPropagation
       }
 
-      popovers() = popovers.now :+ pop1
       pop1Render
     }
 
@@ -104,20 +100,19 @@ object PopoverDemo extends Demo {
       div(paddingTop := 20)("Manual popovers, ie popovers built with custom interaction rules. " +
         "Here an exemple with a set of exclusive popovers, which keep alive when clicking on them."),
       div(paddingTop := 10)(
-        buildManualPopover(button("Left (click)", buttonStyle), "Popover on click on bottom", Left),
-        buildManualPopover(button("Right (click)", buttonStyle), "Popover on clic k on bottom", Right),
-        buildManualPopover(button("Bottom (click)", buttonStyle), "Popover on clic k on bottom", Bottom)
+        (1 until 100).map{i=>
+         buildManualPopover(
+            button(s"Button ${i.toString}", buttonStyle), "Popover on click on bottom", Left)
+        }
       )
     )
 
     org.scalajs.dom.document.body.onclick = { (e: Event) =>
       if (!actions(e.target.asInstanceOf[HTMLElement]))
-        if (!e.target.asInstanceOf[HTMLElement].className.contains("popover-content")) popovers.now.foreach {
-          _.hide
-        }
+        if (!e.target.asInstanceOf[HTMLElement].className.contains("popover-content"))
+          Popover.hide
     }
     div(simplePopovers, manualPopovers).render
-
   }
 
   val elementDemo = new ElementDemo {
