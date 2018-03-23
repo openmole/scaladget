@@ -87,7 +87,13 @@ object PopoverDemo extends Demo {
 
       pop1Render.onclick = { (e: Event) =>
         if (Popover.current.now == pop1) Popover.hide
-        else Popover.toggle(pop1)
+        else {
+          Popover.current.now match {
+            case Some(p)=> Popover.toggle(p)
+            case _=>
+          }
+          Popover.toggle(pop1)
+        }
         e.stopPropagation
       }
 
