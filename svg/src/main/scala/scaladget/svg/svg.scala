@@ -53,11 +53,9 @@ object path {
   trait Path {
     def svgString: String
 
-    def modifierSeq: ModifierSeq
+    def render: TypedTag[dom.svg.Path] = svgTags.path(svgAttrs.d := svgString)
 
-    def render: TypedTag[dom.svg.Path] = svgTags.path(svgAttrs.d := svgString, modifierSeq)
-
-    private def append(s: String): Path = path(svgString + s" $s", modifierSeq)
+    private def append(s: String): Path = path(svgString + s" $s")
 
     def m(x: Int, y: Int): Path = append(s"$M $x $y")
 

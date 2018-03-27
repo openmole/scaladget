@@ -85,8 +85,8 @@ object StartDemo {
 
   }
 
-  @JSExportTopLevel("svg")
-  def svg(): Unit = {
+  @JSExportTopLevel("flowchart")
+  def flowchart(): Unit = {
     val nodes = Seq(
       Graph.task("one", 400, 600),
       Graph.task("two", 1000, 600),
@@ -139,6 +139,28 @@ object StartDemo {
     )
 
     dom.document.body.appendChild(notes.render)
+  }
+
+  @JSExportTopLevel("svg")
+  def svg(): Unit = {
+    val content = div(
+      for {
+        demo <- Seq(
+          SVGStarDemo.elementDemo
+        )
+      } yield {
+        div(marginLeft := 15, marginTop := 25)(
+          h3(demo.title),
+          div(row)(
+            div(colMD(demo.codeWidth))(pre(code(toClass("scala"))(demo.cleanCode))),
+            div(colMD(12 - demo.codeWidth))(demo.element)
+          )
+        )
+      }
+    )
+    dom.document.body.appendChild(content)
+    HighlightJS.initHighlightingOnLoad()
+
   }
 
 }
