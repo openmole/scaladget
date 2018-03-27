@@ -2,7 +2,6 @@ import sbt._
 import Keys._
 
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
-import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
 import execnpm.ExecNpmPlugin.autoImport._
 import execnpm.NpmDeps._
@@ -135,18 +134,8 @@ lazy val demo = project.in(file("demo")) enablePlugins (ExecNpmPlugin) settings 
     val demoTarget = target.value
     val demoResource = (resourceDirectory in Compile).value
 
-    val jsTarget = demoTarget / "js"
-    val demoJS = (fullOptJS in Compile).value
-
-    IO.copyFile(demoJS.data, jsTarget / "demo.js")
-    IO.copyFile(dependencyFile.value, jsTarget / "deps.js")
-
-    IO.copyFile(demoResource / "bootstrap-native.html", demoTarget / "bootstrap-native.html")
-    IO.copyFile(demoResource / "flowchart.html", demoTarget / "flowchart.html")
-
-    IO.copyDirectory(demoResource / "css", demoTarget / "css")
-    IO.copyDirectory(demoResource / "js", demoTarget / "js")
-    IO.copyDirectory(demoResource / "fonts", demoTarget / "fonts")
-    IO.copyDirectory(demoResource / "img", demoTarget / "img")
+    IO.copyFile((fullOptJS in Compile).value.data, demoTarget / "js/demo.js")
+    IO.copyFile(dependencyFile.value, demoTarget / "js/deps.js")
+    IO.copyDirectory(demoResource, demoTarget)
   }
 ) dependsOn(bootstrapnative, bootstrapslider, lunr, tools, svg, ace)
