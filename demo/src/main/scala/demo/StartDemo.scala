@@ -85,8 +85,7 @@ object StartDemo {
 
   }
 
-  //dom.document.body.appendChild(scalatags.JsDom.tags.script("hljs.initHighlighting();").render)
-
+  @JSExportTopLevel("svg")
   def svg(): Unit = {
     val nodes = Seq(
       Graph.task("one", 400, 600),
@@ -139,7 +138,6 @@ object StartDemo {
       )
     )
 
-    println("Notes " + notes.render)
     dom.document.body.appendChild(notes.render)
   }
 
