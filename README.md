@@ -56,11 +56,16 @@ Here is an example of bootstrap modal dialog creation in full scala:
       button("Modal !", onclick := {() => modalDialog.show}, btn_primary, marginLeft := 5),
       tags.span(glyph_settings, paddingLeft := 5, pointer, onclick := {()=> modalDialog.show})
 ```
+![modal](demo/src/main/resources/img/modal.png)
+
 And here an example for a dynamic collapser:
 
 ```scala
 buttonIcon("Trigger !", btn_primary).expandOnclick(panel("My text in detail")(width := 400))
 ```
+![trigger](demo/src/main/resources/img/trigger.png)
+
+![triggered](demo/src/main/resources/img/triggered.png)
 
 Find more examples on the: [API Demo](http://zebulon.iscpif.fr/~leclaire/scaladget/)
 Here is an example of scaladget intensive use in the [OpenMOLE project](https://github.com/openmole/openmole/blob/master/openmole/gui/client/org.openmole.gui.client.core/src/main/scala/org/openmole/gui/client/core/ScriptClient.scala)
@@ -68,7 +73,17 @@ Here is an example of scaladget intensive use in the [OpenMOLE project](https://
 ## Bootstrap-slider library ##
 See rendering in the [API Demo](http://zebulon.iscpif.fr/~leclaire/scaladget/)
 
+![bootstrapslider](demo/src/main/resources/img/bootstrapslider.png)
+
 ## SVG rendering ##
+A SVG API for rendering typed path in SVG is provided. it is compatible with [scalatags](https://github.com/lihaoyi/scalatags).
+See a simple example [here](http://zebulon.iscpif.fr/~leclaire/scaladget/svg.html)
+
+![svg](demo/src/main/resources/img/svgstar.png)
+
 An example using the scaladget SVG tool and reactive library [scala.rx](https://github.com/lihaoyi/scala.rx) can be found in this [demo](http://zebulon.iscpif.fr/~leclaire/scaladget/flowchart.html). 
 It reproduces this [D3 flowchart](http://bl.ocks.org/cjrd/6863459).
+
+
+![flowchart](demo/src/main/resources/img/flowchart.png)
 
