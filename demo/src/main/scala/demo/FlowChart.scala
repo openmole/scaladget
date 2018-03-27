@@ -103,9 +103,9 @@ class GraphCreator(svg: SVGElement, _tasks: Seq[Task], _edges: Seq[Edge]) {
     }
 
     val render: SVGElement = Rx {
-      path(ms = ms(s"$LINK_DRAGLINE ${
+      path().m(m()._1, m()._2).l(l()._1, l()._2)(svgAttrs.markerEnd := URL_MARK_END_ARROW)( `class` := (s"$LINK_DRAGLINE ${
         if (dragging()) "" else HIDDEN
-      }")).m(m()._1, m()._2).l(l()._1, l()._2)(svgAttrs.markerEnd := URL_MARK_END_ARROW).render
+      }"))
     }
   }
 
@@ -223,14 +223,14 @@ class GraphCreator(svg: SVGElement, _tasks: Seq[Task], _edges: Seq[Edge]) {
   // DEFINE A LINK, WHICH CAN BE SELECTED AND REMOVED (DEL KEY)
   def link(edge: Edge) = {
     val sVGElement: SVGElement = Rx {
-      val p = path(ms = (if (edge.selected()) ms(SELECTED) else emptyMod) +++
-        ms(LINK)).m(
+      val p = path().m(
         edge.source().location()._1.toInt,
         edge.source().location()._2.toInt
       ).l(
         edge.target().location()._1.toInt,
         edge.target().location()._2.toInt
-      ).render(svgAttrs.markerEnd := URL_END_ARROW).render
+      ).render(svgAttrs.markerEnd := URL_END_ARROW, ((if (edge.selected()) ms(SELECTED) else emptyMod) +++
+        ms(LINK))).render
 
       p.onmousedown = (me: MouseEvent) => {
         unselectTasks
