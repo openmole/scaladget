@@ -699,12 +699,10 @@ trait BootstrapTags {
   // TABS
   case class Tab(title: String, content: BS, active: Boolean, onclickExtra: () => Unit, onRemoved: Tab => Unit = Tab => {}, tabID: String = uuID.short("t"), refID: String = uuID.short("r")) {
 
-    content.copy()
-
     def activeClass = if (active) (ms("active"), ms("active in")) else (ms(""), ms(""))
   }
 
-  case class Tabs(tabs: Var[Seq[Tab]], closable: Boolean = false, onCloseExtra: Tab => Unit = Tab => {}) {
+  case class Tabs(tabs: Var[Seq[Tab]], isClosable: Boolean, onCloseExtra: Tab => Unit = Tab => {}) {
 
     implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 
@@ -712,7 +710,7 @@ trait BootstrapTags {
       add(Tab(title, content, active, onclickExtra, onRemovedTab), onAddedTab)
 
     def add(tab: Tab, onAdded: Tab => Unit): Tabs = {
-      val ts = Tabs(Var(tabs.now :+ tab))
+      val ts = copy(tabs = Var(tabs.now :+ tab))
       onAdded(tab)
       ts
     }
@@ -726,8 +724,7 @@ trait BootstrapTags {
       tab.onRemoved(tab)
     }
 
-    def closable(isClosable: Boolean, onclose: (Tab) => Unit) = copy(closable = isClosable, onCloseExtra = onclose)
-
+    def onclose(f: (Tab)=> Unit) = copy(onCloseExtra = f)
 
     lazy val tabClose: ModifierSeq = Seq(
       relativePosition,
@@ -736,11 +733,13 @@ trait BootstrapTags {
       right := -10
     )
 
-    private def cloneRender = Tabs(Var(tabs.now.map {
+    private def cloneRender = copy(tabs = Var(tabs.now.map {
       _.copy(tabID = uuID.short("t"), refID = uuID.short("r"))
     }))
 
     private def rendering(navStyle: NavStyle = pills) = Rx {
+
+      println("ISC " + isClosable)
       val existsOneActive = tabs().map {
         _.active
       }.exists(_ == true)
@@ -760,7 +759,7 @@ trait BootstrapTags {
               data("height") := true,
               aria.controls := t.refID,
               onclick := t.onclickExtra
-            )(button(ms("close") +++ tabClose, `type` := "button", onclick := { () ⇒ remove(t) })(raw("&#215")), t.title)
+            )(if (isClosable) button(ms("close") +++ tabClose, `type` := "button", onclick := { () ⇒ remove(t) })(raw("&#215")) else span, t.title)
           )
         }).render
 
@@ -779,14 +778,12 @@ trait BootstrapTags {
     }
 
     def render(navStyle: NavStyle = pills): HTMLDivElement = div(
-      {
         cloneRender.rendering(navStyle)
-      }
     ).render
   }
 
 
-  def tabs = Tabs.apply(Var(Seq()))
+  def tabs(closable: Boolean = false) = Tabs(Var(Seq()), closable)
 
   //TABLE
   def table = new Table

@@ -35,8 +35,8 @@ object TabDemo extends Demo {
       "eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, " +
       "sunt in culpa qui officia deserunt mollit anim id est laborum.", padding := 10)
 
-    val theTabs = tabs.
-      closable(true, (t: Tab) => println("Yo " + t.title)).
+    val theTabs = tabs().
+      onclose((t: Tab) => println("Yo " + t.title)).
       add("My first", div1,
         onclickExtra = () => println("Tab1 pressed"),
         onAddedTab = (t: Tab) => println(s"${t.title} has been added"),
