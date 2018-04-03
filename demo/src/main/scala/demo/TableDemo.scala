@@ -30,9 +30,9 @@ object TableDemo extends Demo {
     val table = bsn.table.
       addHeaders("Title 1", "Title 2", "Title 3").
       addRow("0.1", "158", "3").
-      addRow("0.006", "1.2", "2.36").
-      addRow("21", "1.1", "302").
-      addRow("151", "0.0031", "3.3")
+      addRow("0.006", "bb", "236").
+      addRow("21", "zz", "302").
+      addRow("151", "a", "33")
 
 
     val filteredTable = table.style(bordered_table).sortable
