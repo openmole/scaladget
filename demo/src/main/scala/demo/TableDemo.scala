@@ -18,7 +18,7 @@ package demo
  */
 
 import org.scalajs.dom.Element
-import org.scalajs.dom.raw.{Event, HTMLInputElement}
+import org.scalajs.dom.raw.{Event}
 
 import scaladget.bootstrapnative.bsn
 import scaladget.bootstrapnative.bsn._

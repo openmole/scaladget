@@ -34,11 +34,9 @@ object StartDemo {
 
     def imports =
       """
-      import scaladget.stylesheet.{all => sheet}
-      import scaladget.api.{BootstrapTags => bs}
+      import scaladget.bootstrapnative.bsn._
+      import scaladget.tools._
       import scalatags.JsDom.all._
-      import sheet._
-      import bs._
       """.stripMargin
 
     val content = div(div(marginLeft := 15, marginTop := 25)(
