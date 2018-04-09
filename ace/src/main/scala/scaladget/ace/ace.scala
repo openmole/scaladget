@@ -373,6 +373,7 @@ class Editor protected () extends js.Object {
   def scrollPageUp(): js.Dynamic = js.native
   def scrollToRow(): js.Dynamic = js.native
   def scrollToLine(line: Double, center: Boolean, animate: Boolean, callback: js.Function): js.Dynamic = js.native
+  def setAutoScrollEditorIntoView(auto: Boolean):js.Dynamic = js.native
   def centerSelection(): js.Dynamic = js.native
   def getCursorPosition(): Position = js.native
   def getCursorPositionScreen(): Double = js.native
