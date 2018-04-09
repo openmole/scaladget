@@ -697,7 +697,7 @@ trait BootstrapTags {
 
 
   // TABS
-  case class Tab(title: String, content: BS, onclickExtra: () => Unit, tabID: String = uuID.short("t"), refID: String = uuID.short("r"))
+  case class Tab(title: String, content: BS, onclickExtra: () => Unit = ()=> {}, tabID: String = uuID.short("t"), refID: String = uuID.short("r"))
 
   object Tabs {
     def tabs(initialTabs: Seq[Tab] = Seq()) = TabHolder(initialTabs, false, 0, None)

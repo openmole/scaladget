@@ -35,21 +35,15 @@ object TabDemo extends Demo {
       "eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, " +
       "sunt in culpa qui officia deserunt mollit anim id est laborum.", padding := 10)
 
-    val theTabs = tabs().
-      onclose((t: Tab) => println("Yo " + t.title)).
-      add("My first", div1,
-        onclickExtra = () => println("Tab1 pressed"),
-        onAddedTab = (t: Tab) => println(s"${t.title} has been added"),
-        onRemovedTab = (t: Tab) => println(s"${t.title} has been removed")).
+    val theTabs = Tabs.tabs().
+    //  onclose((t: Tab) => println("Yo " + t.title)).
+      add("My first", div1).
+//        onclickExtra = () => println("Tab1 pressed"),
+//        onAddedTab = (t: Tab) => println(s"${t.title} has been added"),
+//        onRemovedTab = (t: Tab) => println(s"${t.title} has been removed")).
       add("My second", div("Hey !"))
 
-    div(
-      theTabs.render(pills),
-      theTabs.render(stacked_pills),
-      theTabs.render(tabsClass),
-      theTabs.render(justified_tabs),
-      theTabs.render(justified_pills)
-    ).render
+      theTabs.build.render.render
 
   }
 

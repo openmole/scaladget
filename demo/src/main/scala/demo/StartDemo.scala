@@ -39,44 +39,46 @@ object StartDemo {
       import scalatags.JsDom.all._
       """.stripMargin
 
-    val content = div(div(marginLeft := 15, marginTop := 25)(
-      h3("Build"),
-      div(row)(
-        div(colMD(12))("Details on construction on ", a(href := "https://github.com/openmole/scaladget", target := "_blank")("the Scaladet Github page"))
+    val content =
+      div(div(marginLeft := 15, marginTop := 25)(
+        h3("Build"),
+        div(row)(
+          div(colMD(12))("Details on construction on ", a(href := "https://github.com/openmole/scaladget", target := "_blank")("the Scaladet Github page"))
+        ),
+        h3("Imports"),
+        div(row)(
+          div(colMD(8))(pre(code(toClass("scala"))(imports))),
+          div(colMD(4), padding := 20)("This imports have to be done before using the following examples. Specific imports will be also sometimes specified.")
+        )
       ),
-      h3("Imports"),
-      div(row)(
-        div(colMD(8))(pre(code(toClass("scala"))(imports))),
-        div(colMD(4), padding := 20)("This imports have to be done before using the following examples. Specific imports will be also sometimes specified.")
-      )
-    ),
-      for {
-        demo <- Seq(
-          SliderDemo.elementDemo,
-          AceDemo.elementDemo,
-          ButtonDemo.elementDemo,
-          LabelDemo.elementDemo,
-          FormDemo.elementDemo,
-          SelectDemo.elementDemo,
-          ModalDialogDemo.elementDemo,
-          TabDemo.elementDemo,
-          TableDemo.elementDemo,
-          NavBarDemo.elementDemo,
-          TooltipDemo.elementDemo,
-          PopoverDemo.elementDemo,
-          CollapseDemo.elementDemo,
-          AlertDemo.elementDemo
-        )
-      } yield {
-        div(marginLeft := 15, marginTop := 25)(
-          h3(demo.title),
-          div(row)(
-            div(colMD(demo.codeWidth))(pre(code(toClass("scala"))(demo.cleanCode))),
-            div(colMD(12 - demo.codeWidth))(demo.element)
+        Tabs.tabs(for {
+          demo <- Seq(
+            SliderDemo.elementDemo,
+            AceDemo.elementDemo,
+            ButtonDemo.elementDemo,
+            LabelDemo.elementDemo,
+            FormDemo.elementDemo,
+            SelectDemo.elementDemo,
+            ModalDialogDemo.elementDemo,
+            TabDemo.elementDemo,
+            TableDemo.elementDemo,
+            NavBarDemo.elementDemo,
+            TooltipDemo.elementDemo,
+            PopoverDemo.elementDemo,
+            CollapseDemo.elementDemo,
+            AlertDemo.elementDemo,
+            PlayGroundDemo.elementDemo
           )
-        )
-      }
-    ).render
+        } yield {
+          Tab(demo.title,
+            div(marginLeft := 15, marginTop := 25)(
+              h3(demo.title),
+              div(row)(
+                div(colMD(demo.codeWidth))(pre(code(toClass("scala"))(demo.cleanCode))),
+                div(colMD(12 - demo.codeWidth))(demo.element)
+              )
+            ))
+        }).build.render).render
 
     dom.document.body.appendChild(content)
     HighlightJS.initHighlightingOnLoad()
