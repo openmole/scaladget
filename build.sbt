@@ -8,7 +8,7 @@ import execnpm.NpmDeps._
 
 
 val aceVersion = "1.2.9"
-val bootstrapNativeVersion = "2.0.21"
+val bootstrapNativeVersion = "2.0.22"
 val bootstrapSliderVersion = "10.0.0"
 val d3Version = "4.12.0"
 val highlightVersion = "9.10.0"
