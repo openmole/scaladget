@@ -364,34 +364,34 @@ trait BootstrapTags {
 
   // POUPUS, TOOLTIPS
   case class Popover(element: TypedTag[org.scalajs.dom.raw.HTMLElement],
-                innerElement: TypedContent,
-                position: PopupPosition = Bottom,
-                trigger: PopupType = HoverPopup,
-                title: Option[TypedContent] = None,
-                dismissible: Boolean = false) {
+                     innerElement: TypedContent,
+                     position: PopupPosition = Bottom,
+                     trigger: PopupType = HoverPopup,
+                     title: Option[TypedContent] = None,
+                     dismissible: Boolean = false) {
 
     lazy val render = element(
-        data("toggle") := "popover",
-        data("content") := innerElement,
-        data("placement") := position.value,
-        data("trigger") := {
-          trigger match {
-            case ClickPopup => "focus"
-            case Manual => "manual"
-            case _ => "hover"
-          }
-        },
-        title match {
-          case Some(t: TypedContent) => data("title") := t
-          case _ =>
-        },
-        data("dismissible") := {
-          dismissible match {
-            case true => "true"
-            case _ => "false"
-          }
+      data("toggle") := "popover",
+      data("content") := innerElement,
+      data("placement") := position.value,
+      data("trigger") := {
+        trigger match {
+          case ClickPopup => "focus"
+          case Manual => "manual"
+          case _ => "hover"
         }
-      ).render
+      },
+      title match {
+        case Some(t: TypedContent) => data("title") := t
+        case _ =>
+      },
+      data("dismissible") := {
+        dismissible match {
+          case true => "true"
+          case _ => "false"
+        }
+      }
+    ).render
 
     lazy val popover: bootstrapnative.Popover =
       new bootstrapnative.Popover(render)
@@ -697,23 +697,43 @@ trait BootstrapTags {
 
 
   // TABS
-  case class Tab(title: String, content: BS, active: Boolean, onclickExtra: () => Unit, onRemoved: Tab => Unit = Tab => {}, tabID: String = uuID.short("t"), refID: String = uuID.short("r")) {
+  case class Tab(title: String, content: BS, onclickExtra: () => Unit, tabID: String = uuID.short("t"), refID: String = uuID.short("r"))
 
-    def activeClass = if (active) (ms("active"), ms("active in")) else (ms(""), ms(""))
+  object Tabs {
+    def tabs(initialTabs: Seq[Tab] = Seq(), closable: Boolean = false, initIndex: Int = 0) = TabHolder(initialTabs, closable, initIndex)
+
+    case class TabHolder(tabs: Seq[Tab], closable: Boolean, initIndex: Int = 0) {
+      def add(title: String, content: BS, onclickExtra: () => Unit = () => {}, onAddedTab: Tab => Unit = Tab => {}): TabHolder =
+        add(Tab(title, content, onclickExtra), onAddedTab)
+
+      def add(tab: Tab, onAdded: Tab => Unit): TabHolder = {
+        copy(tabs = this.tabs :+ tab)
+      }
+
+    def build = Tabs(Var(tabs), closable, tabs.lift(initIndex))
+
+    }
   }
 
-  case class Tabs(tabs: Var[Seq[Tab]], isClosable: Boolean, onCloseExtra: Tab => Unit = Tab => {}) {
+  case class Tabs(tabs: Var[Seq[Tab]], isClosable: Boolean, initActive: Option[Tab], onCloseExtra: Tab => Unit = Tab => {}, onRemoved: Tab => Unit = Tab => {}) {
 
     implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
+    val active: Var[Option[Tab]] = Var(initActive)
 
-    def add(title: String, content: BS, active: Boolean = false, onclickExtra: () => Unit = () => {}, onAddedTab: Tab => Unit = Tab => {}, onRemovedTab: Tab => Unit = Tab => {}): Tabs =
-      add(Tab(title, content, active, onclickExtra, onRemovedTab), onAddedTab)
 
-    def add(tab: Tab, onAdded: Tab => Unit): Tabs = {
-      val ts = copy(tabs = Var(tabs.now :+ tab))
-      onAdded(tab)
-      ts
+    def setActive(index: Int) = {
+      active() = tabs.now.lift(index)
     }
+
+
+    def activeClass(activeTab: Option[Tab]) =
+      (t: Tab) => activeTab match {
+        case Some(act: Tab) =>
+          if (t == act) ("active", "active in")
+          else ("", "")
+        case _ => ("", "")
+      }
+
 
     def remove(tab: Tab) = {
       tabs() = {
@@ -721,10 +741,15 @@ trait BootstrapTags {
           _.tabID == tab.tabID
         }
       }
-      tab.onRemoved(tab)
+
+      tabs.now.headOption.foreach {
+        setActive
+      }
+
+      onRemoved(tab)
     }
 
-    def onclose(f: (Tab)=> Unit) = copy(onCloseExtra = f)
+    //def onclose(f: (Tab) => Unit) = copy(onCloseExtra = f)
 
     lazy val tabClose: ModifierSeq = Seq(
       relativePosition,
@@ -733,57 +758,55 @@ trait BootstrapTags {
       right := -10
     )
 
-    private def cloneRender = copy(tabs = Var(tabs.now.map {
-      _.copy(tabID = uuID.short("t"), refID = uuID.short("r"))
-    }))
+    def setActive(tab: Tab) = active() = Some(tab)
 
-    private def rendering(navStyle: NavStyle = pills) = Rx {
 
-      println("ISC " + isClosable)
-      val existsOneActive = tabs().map {
-        _.active
-      }.exists(_ == true)
-      val theTabs = {
-        val ts = tabs()
-        if (!existsOneActive && !ts.isEmpty) ts.head.copy(active = true) +: ts.tail
-        else ts
-      }
 
-      val tabList = ul(navStyle, tab_list_role)(
-        theTabs.map { t =>
-          li(presentation_role +++ t.activeClass._1)(
-            a(id := t.tabID,
-              href := s"#${t.refID}",
-              tab_role,
-              data("toggle") := "tab",
-              data("height") := true,
-              aria.controls := t.refID,
-              onclick := t.onclickExtra
-            )(if (isClosable) button(ms("close") +++ tabClose, `type` := "button", onclick := { () ⇒ remove(t) })(raw("&#215")) else span, t.title)
-          )
+    lazy val render = div(
+      Rx {
+        val tabList = ul(pills, tab_list_role)({
+          val actClass = activeClass(active())
+          tabs().map { t =>
+            li(presentation_role +++ ms(actClass(t)._1))(
+              a(id := t.tabID,
+                tab_role,
+                pointer,
+                data("toggle") := "tab",
+                data("height") := true,
+                aria.controls := t.refID,
+                onclick := { () =>
+
+      println("002")
+                  setActive(t) } //t.onclickExtra
+              )(if (isClosable) button(ms("close") +++ tabClose, `type` := "button", onclick := { (e: Event) ⇒ remove(t) ; e.stopPropagation()})(raw("&#215")) else span, t.title)
+            )
+          }
         }).render
 
-      val tabDiv = div(
-        tabList,
-        div(tab_content +++ (paddingTop := 10).toMS)(
-          theTabs.map { t =>
-            div(id := t.refID, tab_pane +++ fade +++ t.activeClass._2, tab_panel_role, aria.labelledby := t.tabID)(t.content)
+        val tabDiv = div(
+          div(tab_content +++ (paddingTop := 10).toMS)({
+            val actClass = activeClass(active())
+            tabs().map { t =>
+              div(id := t.refID, tab_pane +++ fade +++ ms(actClass(t)._2)
+              )(t.content)
+            }
           }
+          )
         )
-      )
 
-      import net.scalapro.sortable._
-      Sortable(tabList)
-      tabDiv.render
-    }
+        import net.scalapro.sortable._
+        Sortable(tabList)
 
-    def render(navStyle: NavStyle = pills): HTMLDivElement = div(
-        cloneRender.rendering(navStyle)
-    ).render
+        div(
+          tabList,
+          tabDiv
+        )
+      }
+
+    )
+
+    initActive.foreach{setActive}
   }
-
-
-  def tabs(closable: Boolean = false) = Tabs(Var(Seq()), closable)
 
   //TABLE
   def table = new Table
