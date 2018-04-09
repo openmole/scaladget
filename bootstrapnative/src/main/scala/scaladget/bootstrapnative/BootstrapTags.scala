@@ -19,18 +19,18 @@ package scaladget.bootstrapnative
 
 import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw._
-
 import scalatags.JsDom.{TypedTag, tags}
 import scalatags.JsDom.all._
 import rx._
-
 import Popup._
+
 import scala.scalajs.js
 import scalatags.JsDom
 import scaladget.bootstrapnative
 import scaladget.bootstrapnative.Alert.ExtraButton
 import scaladget.bootstrapnative.SelectableButtons._
 import bsnsheet._
+import net.scalapro.sortable.{EventS, SortableProps}
 import scaladget.tools._
 
 object BootstrapTags extends BootstrapTags
@@ -700,9 +700,20 @@ trait BootstrapTags {
   case class Tab(title: String, content: BS, onclickExtra: () => Unit, tabID: String = uuID.short("t"), refID: String = uuID.short("r"))
 
   object Tabs {
-    def tabs(initialTabs: Seq[Tab] = Seq(), closable: Boolean = false, initIndex: Int = 0) = TabHolder(initialTabs, closable, initIndex)
+    def tabs(initialTabs: Seq[Tab] = Seq()) = TabHolder(initialTabs, false, 0, None)
 
-    case class TabHolder(tabs: Seq[Tab], closable: Boolean, initIndex: Int = 0) {
+
+    def defaultSortOptions =  (ts: Var[Seq[Tab]], setActive: Int=> Unit)=> new SortableProps {
+          override val onEnd = scala.scalajs.js.defined {
+            (event: EventS) ⇒
+              val oldI = event.oldIndex.asInstanceOf[Int]
+              val newI = event.newIndex.asInstanceOf[Int]
+              ts() = ts.now.updated(oldI, ts.now(newI)).updated(newI, ts.now(oldI))
+              setActive(newI)
+          }
+        }
+
+    case class TabHolder(tabs: Seq[Tab], isClosable: Boolean, initIndex: Int, sortableOptions: Option[(Var[Seq[Tab]], Int=> Unit)=> SortableProps]) {
       def add(title: String, content: BS, onclickExtra: () => Unit = () => {}, onAddedTab: Tab => Unit = Tab => {}): TabHolder =
         add(Tab(title, content, onclickExtra), onAddedTab)
 
@@ -710,12 +721,21 @@ trait BootstrapTags {
         copy(tabs = this.tabs :+ tab)
       }
 
-    def build = Tabs(Var(tabs), closable, tabs.lift(initIndex))
+      def closable = copy(isClosable = true)
 
+      def initialIndex(index: Int) = copy(initIndex = index)
+
+      def withSortableOptions(options: (Var[Seq[Tab]], Int=> Unit)=> SortableProps) = copy(sortableOptions = Some(options))
+
+      def build = {
+        val ts = Var(tabs)
+        Tabs(Var(tabs), isClosable, tabs.lift(initIndex), sortableOptions.getOrElse(defaultSortOptions))
+      }
     }
+
   }
 
-  case class Tabs(tabs: Var[Seq[Tab]], isClosable: Boolean, initActive: Option[Tab], onCloseExtra: Tab => Unit = Tab => {}, onRemoved: Tab => Unit = Tab => {}) {
+  case class Tabs(tabs: Var[Seq[Tab]], isClosable: Boolean, initActive: Option[Tab], sortableOptions: (Var[Seq[Tab]], Int=> Unit)=> SortableProps, onCloseExtra: Tab => Unit = Tab => {}, onRemoved: Tab => Unit = Tab => {}) {
 
     implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
     val active: Var[Option[Tab]] = Var(initActive)
@@ -761,7 +781,6 @@ trait BootstrapTags {
     def setActive(tab: Tab) = active() = Some(tab)
 
 
-
     lazy val render = div(
       Rx {
         val tabList = ul(pills, tab_list_role)({
@@ -776,9 +795,9 @@ trait BootstrapTags {
                 aria.controls := t.refID,
                 onclick := { () =>
 
-      println("002")
-                  setActive(t) } //t.onclickExtra
-              )(if (isClosable) button(ms("close") +++ tabClose, `type` := "button", onclick := { (e: Event) ⇒ remove(t) ; e.stopPropagation()})(raw("&#215")) else span, t.title)
+                  setActive(t)
+                } //t.onclickExtra
+              )(if (isClosable) button(ms("close") +++ tabClose, `type` := "button", onclick := { (e: Event) ⇒ remove(t); e.stopPropagation() })(raw("&#215")) else span, t.title)
             )
           }
         }).render
@@ -795,7 +814,7 @@ trait BootstrapTags {
         )
 
         import net.scalapro.sortable._
-        Sortable(tabList)
+        Sortable(tabList, sortableOptions(tabs, setActive))
 
         div(
           tabList,
@@ -805,7 +824,9 @@ trait BootstrapTags {
 
     )
 
-    initActive.foreach{setActive}
+    initActive.foreach {
+      setActive
+    }
   }
 
   //TABLE
