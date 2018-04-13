@@ -17,8 +17,8 @@ package demo
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import com.karasiq.highlightjs.HighlightJS
 import org.scalajs.dom.Element
-
 
 import scala.scalajs.js
 import scalatags.JsDom.all._
@@ -47,12 +47,16 @@ object SliderDemo extends Demo {
     })
 
     // Trick for the demo. Otherwise, you only need to add myDiv input wherever you want in the dom
-    div(
+    val o = div(
       org.scalajs.dom.document.getElementsByClassName("slider slider-horizontal")(0),
       Rx {
         sliderValue()
       }
     ).render
+
+    HighlightJS.initHighlightingOnLoad()
+
+    o
   }
 
 
