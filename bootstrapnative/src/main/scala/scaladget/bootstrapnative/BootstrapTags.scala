@@ -697,23 +697,23 @@ trait BootstrapTags {
 
 
   // TABS
-  case class Tab(title: String, content: BS, onclickExtra: () => Unit = ()=> {}, tabID: String = uuID.short("t"), refID: String = uuID.short("r"))
+  case class Tab(title: String, content: BS, onclickExtra: () => Unit = () => {}, tabID: String = uuID.short("t"), refID: String = uuID.short("r"))
 
   object Tabs {
-    def tabs(initialTabs: Seq[Tab] = Seq()) = TabHolder(initialTabs, false, 0, None)
+    def tabs(initialTabs: Seq[Tab] = Seq()) = TabHolder(initialTabs, false, 0, None, (tab: Tab) => {})
 
 
-    def defaultSortOptions =  (ts: Var[Seq[Tab]], setActive: Int=> Unit)=> new SortableProps {
-          override val onEnd = scala.scalajs.js.defined {
-            (event: EventS) ⇒
-              val oldI = event.oldIndex.asInstanceOf[Int]
-              val newI = event.newIndex.asInstanceOf[Int]
-              ts() = ts.now.updated(oldI, ts.now(newI)).updated(newI, ts.now(oldI))
-              setActive(newI)
-          }
-        }
+    def defaultSortOptions = (ts: Var[Seq[Tab]], setActive: Int => Unit) => new SortableProps {
+      override val onEnd = scala.scalajs.js.defined {
+        (event: EventS) ⇒
+          val oldI = event.oldIndex.asInstanceOf[Int]
+          val newI = event.newIndex.asInstanceOf[Int]
+          ts() = ts.now.updated(oldI, ts.now(newI)).updated(newI, ts.now(oldI))
+          setActive(newI)
+      }
+    }
 
-    case class TabHolder(tabs: Seq[Tab], isClosable: Boolean, initIndex: Int, sortableOptions: Option[(Var[Seq[Tab]], Int=> Unit)=> SortableProps]) {
+    case class TabHolder(tabs: Seq[Tab], isClosable: Boolean, initIndex: Int, sortableOptions: Option[(Var[Seq[Tab]], Int => Unit) => SortableProps], onActivation: Tab => Unit) {
       def add(title: String, content: BS, onclickExtra: () => Unit = () => {}, onAddedTab: Tab => Unit = Tab => {}): TabHolder =
         add(Tab(title, content, onclickExtra), onAddedTab)
 
@@ -725,273 +725,279 @@ trait BootstrapTags {
 
       def initialIndex(index: Int) = copy(initIndex = index)
 
-      def withSortableOptions(options: (Var[Seq[Tab]], Int=> Unit)=> SortableProps) = copy(sortableOptions = Some(options))
+      def withSortableOptions(options: (Var[Seq[Tab]], Int => Unit) => SortableProps) = copy(sortableOptions = Some(options))
+
+      def onActivation(onActivation: Tab => Unit = Tab => {}) = copy(onActivation = onActivation)
 
       def build = {
         val ts = Var(tabs)
-        Tabs(Var(tabs), isClosable, tabs.lift(initIndex), sortableOptions.getOrElse(defaultSortOptions))
+        Tabs(Var(tabs), isClosable, tabs.lift(initIndex), sortableOptions.getOrElse(defaultSortOptions), onActivation)
       }
     }
 
   }
 
-  case class Tabs(tabs: Var[Seq[Tab]], isClosable: Boolean, initActive: Option[Tab], sortableOptions: (Var[Seq[Tab]], Int=> Unit)=> SortableProps, onCloseExtra: Tab => Unit = Tab => {}, onRemoved: Tab => Unit = Tab => {}) {
+  case class Tabs(tabs: Var[Seq[Tab]], isClosable: Boolean, initActive: Option[Tab], sortableOptions: (Var[Seq[Tab]], Int => Unit) => SortableProps, onActivation: Tab => Unit = Tab => {}, onCloseExtra: Tab => Unit = Tab => {}, onRemoved: Tab => Unit = Tab => {}) {
 
     implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
     val active: Var[Option[Tab]] = Var(initActive)
 
 
-    def setActive(index: Int) = {
-      active() = tabs.now.lift(index)
-    }
-
-
-    def activeClass(activeTab: Option[Tab]) =
-      (t: Tab) => activeTab match {
-        case Some(act: Tab) =>
-          if (t == act) ("active", "active in")
-          else ("", "")
-        case _ => ("", "")
-      }
-
-
-    def remove(tab: Tab) = {
-      tabs() = {
-        tabs.now.filterNot {
-          _.tabID == tab.tabID
-        }
-      }
-
-      tabs.now.headOption.foreach {
+    def setActive(index: Int):Unit = {
+      tabs.now.lift(index).foreach {
         setActive
       }
-
-      onRemoved(tab)
     }
 
-    //def onclose(f: (Tab) => Unit) = copy(onCloseExtra = f)
+    def setActive(tab: Tab):Unit = {
+      active() = Some(tab)
+      active.now.foreach {onActivation}
+    }
 
-    lazy val tabClose: ModifierSeq = Seq(
-      relativePosition,
-      fontSize := 20,
-      color := "#222",
-      right := -10
-    )
+  def activeClass(activeTab: Option[Tab]) =
+    (t: Tab) => activeTab match {
+      case Some(act: Tab) =>
+        if (t == act) ("active", "active in")
+        else ("", "")
+      case _ => ("", "")
+    }
 
-    def setActive(tab: Tab) = active() = Some(tab)
 
-
-    lazy val render = div(
-      Rx {
-        val tabList = ul(pills, tab_list_role)({
-          val actClass = activeClass(active())
-          tabs().map { t =>
-            li(presentation_role +++ ms(actClass(t)._1))(
-              a(id := t.tabID,
-                tab_role,
-                pointer,
-                data("toggle") := "tab",
-                data("height") := true,
-                aria.controls := t.refID,
-                onclick := { () =>
-
-                  setActive(t)
-                } //t.onclickExtra
-              )(if (isClosable) button(ms("close") +++ tabClose, `type` := "button", onclick := { (e: Event) ⇒ remove(t); e.stopPropagation() })(raw("&#215")) else span, t.title)
-            )
-          }
-        }).render
-
-        val tabDiv = div(
-          div(tab_content +++ (paddingTop := 10).toMS)({
-            val actClass = activeClass(active())
-            tabs().map { t =>
-              div(id := t.refID, tab_pane +++ fade +++ ms(actClass(t)._2)
-              )(t.content)
-            }
-          }
-          )
-        )
-
-        import net.scalapro.sortable._
-        Sortable(tabList, sortableOptions(tabs, setActive))
-
-        div(
-          tabList,
-          tabDiv
-        )
+  def remove(tab: Tab) = {
+    tabs() = {
+      tabs.now.filterNot {
+        _.tabID == tab.tabID
       }
+    }
 
-    )
-
-    initActive.foreach {
+    tabs.now.headOption.foreach {
       setActive
     }
+
+    onRemoved(tab)
   }
 
-  //TABLE
-  def table = new Table
+  //def onclose(f: (Tab) => Unit) = copy(onCloseExtra = f)
 
-  // EXCLUSIVE BUTTON GROUPS
-  def exclusiveButtonGroup(style: ModifierSeq, defaultStyle: ModifierSeq = btn_default, selectionStyle: ModifierSeq = btn_default)(buttons: ExclusiveButton*) = new ExclusiveGroup(style, defaultStyle, selectionStyle, buttons)
+  lazy val tabClose: ModifierSeq = Seq(
+    relativePosition,
+    fontSize := 20,
+    color := "#222",
+    right := -10
+  )
 
-  def twoStatesGlyphButton(glyph1: ModifierSeq,
-                           glyph2: ModifierSeq,
-                           todo1: () ⇒ Unit,
-                           todo2: () ⇒ Unit,
-                           preGlyph: ModifierSeq = Seq()
-                          ) = TwoStatesGlyphButton(glyph1, glyph2, todo1, todo2, preGlyph)
 
-  def twoStatesSpan(glyph1: ModifierSeq,
+  lazy val render = div(
+    Rx {
+      val tabList = ul(pills, tab_list_role)({
+        val actClass = activeClass(active())
+        tabs().map { t =>
+          li(presentation_role +++ ms(actClass(t)._1))(
+            a(id := t.tabID,
+              tab_role,
+              pointer,
+              data("toggle") := "tab",
+              data("height") := true,
+              aria.controls := t.refID,
+              onclick := { () =>
+
+                setActive(t)
+              } //t.onclickExtra
+            )(if (isClosable) button(ms("close") +++ tabClose, `type` := "button", onclick := { (e: Event) ⇒ remove(t); e.stopPropagation() })(raw("&#215")) else span, t.title)
+          )
+        }
+      }).render
+
+      val tabDiv = div(
+        div(tab_content +++ (paddingTop := 10).toMS)({
+          val actClass = activeClass(active())
+          tabs().map { t =>
+            div(id := t.refID, tab_pane +++ fade +++ ms(actClass(t)._2)
+            )(t.content)
+          }
+        }
+        )
+      )
+
+      import net.scalapro.sortable._
+      Sortable(tabList, sortableOptions(tabs, setActive))
+
+      div(
+        tabList,
+        tabDiv
+      )
+    }
+
+  )
+
+  initActive.foreach {
+    setActive
+  }
+}
+
+//TABLE
+def table = new Table
+
+// EXCLUSIVE BUTTON GROUPS
+def exclusiveButtonGroup (style: ModifierSeq, defaultStyle: ModifierSeq = btn_default, selectionStyle: ModifierSeq = btn_default) (buttons: ExclusiveButton *) = new ExclusiveGroup (style, defaultStyle, selectionStyle, buttons)
+
+def twoStatesGlyphButton (glyph1: ModifierSeq,
+glyph2: ModifierSeq,
+todo1: () ⇒ Unit,
+todo2: () ⇒ Unit,
+preGlyph: ModifierSeq = Seq ()
+) = TwoStatesGlyphButton (glyph1, glyph2, todo1, todo2, preGlyph)
+
+def twoStatesSpan (glyph1: ModifierSeq,
+glyph2: ModifierSeq,
+todo1: () ⇒ Unit,
+todo2: () ⇒ Unit,
+preString: String,
+buttonStyle: ModifierSeq = emptyMod
+) = TwoStatesSpan (glyph1, glyph2, todo1, todo2, preString, buttonStyle)
+
+sealed trait ExclusiveButton {
+  def action: () ⇒ Unit
+}
+
+trait ExclusiveGlyphButton extends ExclusiveButton {
+  def glyph: Glyphicon
+}
+
+trait ExclusiveStringButton extends ExclusiveButton {
+  def title: String
+}
+
+trait TwoStates extends ExclusiveButton
+
+case class TwoStatesGlyphButton(glyph: ModifierSeq,
+                                glyph2: ModifierSeq,
+                                action: () ⇒ Unit,
+                                action2: () ⇒ Unit,
+                                preGlyph: ModifierSeq
+                               ) extends TwoStates {
+  val cssglyph = glyph +++ (paddingLeft := 3).toMS
+
+  lazy val div = {
+    buttonIcon("", preGlyph, cssglyph, action)
+  }
+}
+
+case class TwoStatesSpan(glyph: ModifierSeq,
+                         glyph2: ModifierSeq,
+                         action: () ⇒ Unit,
+                         action2: () ⇒ Unit,
+                         preString: String,
+                         buttonStyle: ModifierSeq = emptyMod
+                        ) extends TwoStates {
+  val cssglyph = glyph +++ (paddingLeft := 3).toMS
+
+  lazy val cssbutton: ModifierSeq = Seq(
+    paddingTop := 8,
+    border := "none"
+  )
+
+  lazy val div = button(preString, onclick := action)(buttonStyle +++ cssbutton +++ pointer)(
+    span(cssglyph)
+  )
+
+}
+
+object ExclusiveButton {
+  def string(t: String, a: () ⇒ Unit) = new ExclusiveStringButton {
+    def title = t
+
+    def action = a
+  }
+
+  def glyph(g: Glyphicon, a: () ⇒ Unit) = new ExclusiveGlyphButton {
+    def glyph = g
+
+    def action = a
+  }
+
+  def twoGlyphButtonStates(
+                            glyph1: ModifierSeq,
+                            glyph2: ModifierSeq,
+                            todo1: () ⇒ Unit,
+                            todo2: () ⇒ Unit,
+                            preGlyph: ModifierSeq
+                          ) = twoStatesGlyphButton(glyph1, glyph2, todo1, todo2, preGlyph)
+
+  def twoGlyphSpan(
+                    glyph1: ModifierSeq,
                     glyph2: ModifierSeq,
                     todo1: () ⇒ Unit,
                     todo2: () ⇒ Unit,
                     preString: String,
                     buttonStyle: ModifierSeq = emptyMod
-                   ) = TwoStatesSpan(glyph1, glyph2, todo1, todo2, preString, buttonStyle)
+                  ) = twoStatesSpan(glyph1, glyph2, todo1, todo2, preString, buttonStyle)
+}
 
-  sealed trait ExclusiveButton {
-    def action: () ⇒ Unit
-  }
+class ExclusiveGroup(style: ModifierSeq,
+                     defaultStyle: ModifierSeq,
+                     selectionStyle: ModifierSeq,
+                     buttons: Seq[ExclusiveButton]) {
 
-  trait ExclusiveGlyphButton extends ExclusiveButton {
-    def glyph: Glyphicon
-  }
+  implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 
-  trait ExclusiveStringButton extends ExclusiveButton {
-    def title: String
-  }
+  val selected = Var(buttons.head)
+  val selectedAgain = Var(false)
 
-  trait TwoStates extends ExclusiveButton
+  def buttonBackground(b: ExclusiveButton) = (if (b == selected.now) btn +++ selectionStyle else btn +++ defaultStyle)
 
-  case class TwoStatesGlyphButton(glyph: ModifierSeq,
-                                  glyph2: ModifierSeq,
-                                  action: () ⇒ Unit,
-                                  action2: () ⇒ Unit,
-                                  preGlyph: ModifierSeq
-                                 ) extends TwoStates {
-    val cssglyph = glyph +++ (paddingLeft := 3).toMS
+  def glyphButtonBackground(b: ExclusiveButton) = buttonBackground(b) +++ twoGlyphButton
 
-    lazy val div = {
-      buttonIcon("", preGlyph, cssglyph, action)
-    }
-  }
+  def stringButtonBackground(b: ExclusiveButton) = buttonBackground(b) +++ stringButton
 
-  case class TwoStatesSpan(glyph: ModifierSeq,
-                           glyph2: ModifierSeq,
-                           action: () ⇒ Unit,
-                           action2: () ⇒ Unit,
-                           preString: String,
-                           buttonStyle: ModifierSeq = emptyMod
-                          ) extends TwoStates {
-    val cssglyph = glyph +++ (paddingLeft := 3).toMS
+  def glyphForTwoStates(ts: TwoStates, mod: ModifierSeq) = (ts == selected.now, mod, emptyMod)
 
-    lazy val cssbutton: ModifierSeq = Seq(
-      paddingTop := 8,
-      border := "none"
-    )
-
-    lazy val div = button(preString, onclick := action)(buttonStyle +++ cssbutton +++ pointer)(
-      span(cssglyph)
-    )
-
-  }
-
-  object ExclusiveButton {
-    def string(t: String, a: () ⇒ Unit) = new ExclusiveStringButton {
-      def title = t
-
-      def action = a
-    }
-
-    def glyph(g: Glyphicon, a: () ⇒ Unit) = new ExclusiveGlyphButton {
-      def glyph = g
-
-      def action = a
-    }
-
-    def twoGlyphButtonStates(
-                              glyph1: ModifierSeq,
-                              glyph2: ModifierSeq,
-                              todo1: () ⇒ Unit,
-                              todo2: () ⇒ Unit,
-                              preGlyph: ModifierSeq
-                            ) = twoStatesGlyphButton(glyph1, glyph2, todo1, todo2, preGlyph)
-
-    def twoGlyphSpan(
-                      glyph1: ModifierSeq,
-                      glyph2: ModifierSeq,
-                      todo1: () ⇒ Unit,
-                      todo2: () ⇒ Unit,
-                      preString: String,
-                      buttonStyle: ModifierSeq = emptyMod
-                    ) = twoStatesSpan(glyph1, glyph2, todo1, todo2, preString, buttonStyle)
-  }
-
-  class ExclusiveGroup(style: ModifierSeq,
-                       defaultStyle: ModifierSeq,
-                       selectionStyle: ModifierSeq,
-                       buttons: Seq[ExclusiveButton]) {
-
-    implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
-
-    val selected = Var(buttons.head)
-    val selectedAgain = Var(false)
-
-    def buttonBackground(b: ExclusiveButton) = (if (b == selected.now) btn +++ selectionStyle else btn +++ defaultStyle)
-
-    def glyphButtonBackground(b: ExclusiveButton) = buttonBackground(b) +++ twoGlyphButton
-
-    def stringButtonBackground(b: ExclusiveButton) = buttonBackground(b) +++ stringButton
-
-    def glyphForTwoStates(ts: TwoStates, mod: ModifierSeq) = (ts == selected.now, mod, emptyMod)
-
-    val div: Modifier = Rx {
-      selected()
-      tags.div(style +++ btnGroup)(
-        for (b ← buttons) yield {
-          b match {
-            case s: ExclusiveStringButton ⇒ button(s.title, onclick := action(b, s.action))(stringButtonBackground(s) +++ stringInGroup)
-            case g: ExclusiveGlyphButton ⇒ buttonIcon("", glyphButtonBackground(g), g.glyph, action(b, g.action))
-            case ts: TwoStatesGlyphButton ⇒
-              if (selectedAgain()) twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph2), ts.glyph, action(ts, ts.action2), action(ts, ts.action), glyphButtonBackground(ts) +++ ts.preGlyph).div
-              else twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), glyphButtonBackground(ts) +++ ts.preGlyph).div
-            case ts: TwoStatesSpan ⇒
-              if (selectedAgain()) twoStatesSpan(glyphForTwoStates(ts, ts.glyph2), ts.glyph, action(ts, ts.action2), action(ts, ts.action), ts.preString, glyphButtonBackground(ts)).div
-              else twoStatesSpan(glyphForTwoStates(ts, ts.glyph), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), ts.preString, glyphButtonBackground(ts)).div
-          }
+  val div: Modifier = Rx {
+    selected()
+    tags.div(style +++ btnGroup)(
+      for (b ← buttons) yield {
+        b match {
+          case s: ExclusiveStringButton ⇒ button(s.title, onclick := action(b, s.action))(stringButtonBackground(s) +++ stringInGroup)
+          case g: ExclusiveGlyphButton ⇒ buttonIcon("", glyphButtonBackground(g), g.glyph, action(b, g.action))
+          case ts: TwoStatesGlyphButton ⇒
+            if (selectedAgain()) twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph2), ts.glyph, action(ts, ts.action2), action(ts, ts.action), glyphButtonBackground(ts) +++ ts.preGlyph).div
+            else twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), glyphButtonBackground(ts) +++ ts.preGlyph).div
+          case ts: TwoStatesSpan ⇒
+            if (selectedAgain()) twoStatesSpan(glyphForTwoStates(ts, ts.glyph2), ts.glyph, action(ts, ts.action2), action(ts, ts.action), ts.preString, glyphButtonBackground(ts)).div
+            else twoStatesSpan(glyphForTwoStates(ts, ts.glyph), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), ts.preString, glyphButtonBackground(ts)).div
         }
-      )
-    }
+      }
+    )
+  }
 
-    private def action(b: ExclusiveButton, a: () ⇒ Unit) = () ⇒ {
-      selectedAgain() = if (b == selected.now) !selectedAgain.now else false
-      selected() = b
-      a()
-    }
-
-
-    def reset = selected() = buttons.head
+  private def action(b: ExclusiveButton, a: () ⇒ Unit) = () ⇒ {
+    selectedAgain() = if (b == selected.now) !selectedAgain.now else false
+    selected() = b
+    a()
   }
 
 
-  // FORMS
+  def reset = selected() = buttons.head
+}
 
-  trait FormTag[+T <: HTMLElement] {
-    def tag: T
-  }
 
-  trait LabeledFormTag[T <: HTMLElement] extends FormTag[T] {
-    def label: TypedTag[HTMLLabelElement]
-  }
+// FORMS
 
-  /*
-  implicit def modifierToFormTag(m: Modifier): FormTag = new FormTag {
-    val tag: T = m
-  }*/
-  implicit def htmlElementToFormTag[T <: HTMLElement](t: T): FormTag[T] = new FormTag[T] {
-    val tag: T = t
-  }
+trait FormTag[+T <: HTMLElement] {
+  def tag: T
+}
+
+trait LabeledFormTag[T <: HTMLElement] extends FormTag[T] {
+  def label: TypedTag[HTMLLabelElement]
+}
+
+/*
+implicit def modifierToFormTag(m: Modifier): FormTag = new FormTag {
+  val tag: T = m
+}*/
+implicit def htmlElementToFormTag[T <: HTMLElement] (t: T): FormTag[T] = new FormTag[T] {
+  val tag: T = t
+}
 
 
   implicit class LabelForModifiers[T <: HTMLElement](m: T) {
@@ -1002,29 +1008,29 @@ trait BootstrapTags {
     }
   }
 
-  private def insideForm[T <: HTMLElement](formTags: FormTag[T]*) =
-    for {
-      ft <- formTags
-    } yield {
-      div(formGroup, paddingRight := 5)(
-        ft match {
-          case lft: LabeledFormTag[T] => lft.label
-          case _ =>
-        },
-        ft.tag)
-    }
+  private def insideForm[T <: HTMLElement] (formTags: FormTag[T] *) =
+  for {
+  ft <- formTags
+} yield {
+  div (formGroup, paddingRight := 5) (
+  ft match {
+  case lft: LabeledFormTag[T] => lft.label
+  case _ =>
+},
+  ft.tag)
+}
 
 
-  def vForm[T <: HTMLElement](formTags: FormTag[T]*): TypedTag[HTMLDivElement] = vForm(emptyMod)(formTags.toSeq: _*)
+  def vForm[T <: HTMLElement] (formTags: FormTag[T] *): TypedTag[HTMLDivElement] = vForm (emptyMod) (formTags.toSeq: _*)
 
-  def vForm[T <: HTMLElement](modifierSeq: ModifierSeq)(formTags: FormTag[T]*): TypedTag[HTMLDivElement] =
-    div(modifierSeq +++ formVertical)(insideForm(formTags: _*))
+  def vForm[T <: HTMLElement] (modifierSeq: ModifierSeq) (formTags: FormTag[T] *): TypedTag[HTMLDivElement] =
+  div (modifierSeq +++ formVertical) (insideForm (formTags: _*) )
 
 
-  def hForm[T <: HTMLElement](formTags: FormTag[T]*): TypedTag[HTMLFormElement] = hForm(emptyMod)(formTags.toSeq: _*)
+  def hForm[T <: HTMLElement] (formTags: FormTag[T] *): TypedTag[HTMLFormElement] = hForm (emptyMod) (formTags.toSeq: _*)
 
-  def hForm[T <: HTMLElement](modifierSeq: ModifierSeq)(formTags: FormTag[T]*): TypedTag[HTMLFormElement] = {
-    form(formInline +++ modifierSeq)(insideForm(formTags: _*))
-  }
+  def hForm[T <: HTMLElement] (modifierSeq: ModifierSeq) (formTags: FormTag[T] *): TypedTag[HTMLFormElement] = {
+  form (formInline +++ modifierSeq) (insideForm (formTags: _*) )
+}
 
 }
