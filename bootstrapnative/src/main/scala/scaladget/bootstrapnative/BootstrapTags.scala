@@ -644,10 +644,7 @@ trait BootstrapTags {
 
   implicit class TagCollapserDynamicOnCondition(triggerCondition: Rx.Dynamic[Boolean]) {
     def expand[T <: TypedTag[HTMLElement]](inner: T, trigger: T = tags.div()) = {
-      val collapser = new Collapser(inner, div, triggerCondition.now)
-      Rx {
-        collapser.switchTo(triggerCondition())
-      }
+      val collapser = new Collapser(inner, div, Var(triggerCondition.now))
 
       div(
         trigger.render,
@@ -659,40 +656,32 @@ trait BootstrapTags {
 
   implicit class TagCollapserVarOnCondition(triggerCondition: Var[Boolean]) {
     def expand[T <: TypedTag[HTMLElement]](inner: T, trigger: T = tags.div()) = {
-      val collapser = new Collapser(inner, div, triggerCondition.now)
-      Rx {
-        collapser.switchTo(triggerCondition())
-      }
+
+      val collapser = new Collapser(inner, trigger, triggerCondition)
 
       div(
-        trigger.render,
+        collapser.triggerTag,
         collapser.innergTag
       )
     }
   }
 
   def collapser(rawInnerTag: TypedTag[HTMLElement], rawTriggerTag: TypedTag[HTMLElement], initExpand: Boolean = false) =
-    new Collapser(rawInnerTag, rawTriggerTag, initExpand)
+    new Collapser(rawInnerTag, rawTriggerTag, Var(initExpand))
 
   // COLLAPSERS
-  class Collapser(rawInnerTag: TypedTag[HTMLElement], rawTriggerTag: TypedTag[HTMLElement], initExpand: Boolean = false) {
+  class Collapser(rawInnerTag: TypedTag[HTMLElement], rawTriggerTag: TypedTag[HTMLElement], expand: Var[Boolean] = Var(false)) {
 
     private val hrefID = uuID.short("c")
     val triggerTag = a(data("toggle") := "collapse", href := s"#${hrefID}", aria.expanded := true, aria.controls := hrefID)(rawTriggerTag).render
-    val innergTag = div(ms("collapse"), id := hrefID, aria.expanded := initExpand, role := presentation_role)(rawInnerTag).render
-
-
+    val innergTag = div(ms("collapse"), id := hrefID, aria.expanded := expand.now, role := presentation_role)(rawInnerTag).render
+    
     private lazy val collapserMapping = new Collapse(triggerTag)
-
-
     def switch: Unit = collapserMapping.toggle
 
-
-    def switchTo(b: Boolean) = {
-      if (b) collapserMapping.show
-      else collapserMapping.hide
+    expand.triggerLater{
+      switch
     }
-
   }
 
 
