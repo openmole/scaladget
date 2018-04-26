@@ -31,11 +31,10 @@ object CollapseDemo extends Demo {
   val sc = sourcecode.Text {
     import rx._
 
-    val onoff = Var(false)
+    val onoff = Var(true)
 
     div(
-      buttonIcon("Trigger !", btn_primary +++ (marginBottom := 10).toMS).expandOnclick(panel("My text in detail")(width := 400)),
-      onoff.expand(div(backgroundColor := "pink", onoff.now.toString), button("Set/Unset", onclick := {() => onoff() = !onoff.now}, btn_danger))
+      buttonIcon("Trigger !", btn_primary +++ (marginBottom := 10).toMS).expandOnclick(panel("My text in detail")(width := 400))
     )
   }
 

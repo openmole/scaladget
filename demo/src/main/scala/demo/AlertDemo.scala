@@ -59,10 +59,10 @@ object AlertDemo extends Demo {
       button("Info", onclick := add(Info))(buttonStyle +++ btn_info),
       button("Warning", onclick := add(Warning))(buttonStyle +++ btn_warning),
       h4("With collapser", paddingTop := 30),
-      contains(Success).expand(successAlert("Success !", "Operation completed !", todocancel = remove(Success))(),
-        button("Success", onclick := {()=> add(Success)}, buttonStyle +++ btn_success)),
-      contains(Danger).expand(dangerAlerts("Danger !", Seq("Operation 1 failed ", "Operation 2 failed"), todocancel = remove(Danger))(
-          ExtraButton("Run", btn_danger, action = remove(Danger))), button("Danger", onclick := {()=> add(Danger)}, buttonStyle +++ btn_danger)),
+//      contains(Success).expand(successAlert("Success !", "Operation completed !", todocancel = remove(Success))(),
+//        button("Success", onclick := {()=> add(Success)}, buttonStyle +++ btn_success)),
+//      contains(Danger).expand(dangerAlerts("Danger !", Seq("Operation 1 failed ", "Operation 2 failed"), todocancel = remove(Danger))(
+//          ExtraButton("Run", btn_danger, action = remove(Danger))), button("Danger", onclick := {()=> add(Danger)}, buttonStyle +++ btn_danger)),
       div(padding := 10)(
         infoAlert("Info !", "Operation completed !", contains(Info), todocancel = remove(Info))(
           ExtraButton("Build", btn_info, action = remove(Info)),
