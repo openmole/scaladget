@@ -56,15 +56,17 @@ object SelectableButtons {
       for {
         button <- buttons
       } yield {
-        tags.label(btn +++ button.modifierSeq +++ rxIf(button.active, toClass("active"), emptyMod))(
-          tags.input(`type` := buttonType.cssStyle, autocomplete := "off",
-            if(button.active.now) checked := "checked" else emptyMod,
-            onclick := { () =>
-              buttonType.onselection(button, buttons)
-              button.onclick()
-            }),
-          button.text
-        )
+        Rx {
+          tags.label(btn +++ button.modifierSeq +++ rxIf(button.active, toClass("active"), emptyMod))(
+            tags.input(`type` := buttonType.cssStyle, autocomplete := "off",
+              if (button.active()) checked := "checked" else emptyMod,
+              onclick := { () =>
+                buttonType.onselection(button, buttons)
+                button.onclick()
+              }),
+            button.text
+          )
+        }
       }
     )
 }
