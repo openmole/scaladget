@@ -12,7 +12,7 @@ case class Row(values: Seq[String])
 
 case class Column(values: Seq[String])
 
-case class BSTableStyle(tableStyle: TableStyle, headerStyle: ModifierSeq)
+case class BSTableStyle(tableStyle: TableStyle, headerStyle: ModifierSeq, selectionColor: String = "#e1e1e1")
 
 trait Sorting
 
@@ -53,13 +53,13 @@ object Table {
 
 import Table._
 
-case class Table(headers: Seq[String] = Seq(),
+case class Table(headers: Row = Row(Seq()),
                  rows: Seq[Row] = Seq(),
                  bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod),
                  sorting: Boolean = false) {
 
   val filteredRows = Var(rows)
-
+  val selected: Var[Option[Row]] = Var(None)
   val nbColumns = rows.headOption.map{_.values.length}.getOrElse(0)
 
   val sortingStatuses = Var(
@@ -68,7 +68,7 @@ case class Table(headers: Seq[String] = Seq(),
   )
 
 
-  def addHeaders(hs: String*) = copy(headers = hs)
+  def addHeaders(hs: String*) = copy(headers = Row(hs))
 
   def addRow(row: Row): Table = copy(rows = rows :+ row)
 
@@ -78,13 +78,18 @@ case class Table(headers: Seq[String] = Seq(),
 
   type RowType = (String, Int) => TypedTag[HTMLElement]
 
-  private def fillRow(row: Seq[String], rowType: RowType) = tags.tr(
+  private def fillRow(row: Row, rowType: RowType) = tags.tr(
     for (
-      (cell, id) <- row.zipWithIndex
+      (cell, id) <- row.values.zipWithIndex
     ) yield {
       rowType(cell, id)
+    },
+    backgroundColor := Rx{
+      if(Some(row) == selected()) bsTableStyle.selectionColor else ""
     }
-  )
+  )(onclick := {()=>
+    selected() = Some(row)
+  })
 
   def filter(containedString: String) = {
     filteredRows() = rows.filter { r =>
@@ -150,7 +155,7 @@ case class Table(headers: Seq[String] = Seq(),
       Rx {
         tags.tbody(
           for (r <- filteredRows()) yield {
-            fillRow(r.values, (s: String, _) => td(s))
+            fillRow(r, (s: String, _) => td(s))
           }
         )
       }
