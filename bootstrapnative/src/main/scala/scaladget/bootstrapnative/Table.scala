@@ -53,7 +53,7 @@ object Table {
 
 import Table._
 
-case class Table(headers: Row = Row(Seq()),
+case class Table(headers: Option[Row] = None,
                  rows: Seq[Row] = Seq(),
                  bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod),
                  sorting: Boolean = false) {
@@ -68,7 +68,7 @@ case class Table(headers: Row = Row(Seq()),
   )
 
 
-  def addHeaders(hs: String*) = copy(headers = Row(hs))
+  def addHeaders(hs: String*) = copy(headers = Some(Row(hs)))
 
   def addRow(row: Row): Table = copy(rows = rows :+ row)
 
@@ -150,8 +150,8 @@ case class Table(headers: Row = Row(Seq()),
   val render = {
     tags.table(bsTableStyle.tableStyle)(
       tags.thead(bsTableStyle.headerStyle)(
-        fillRow(headers, (s: String, i: Int) => th(s, sortingDiv(i)))
-      ),
+        headers.map { h => fillRow(h, (s: String, i: Int) => th(s, sortingDiv(i)))
+        }),
       Rx {
         tags.tbody(
           for (r <- filteredRows()) yield {
