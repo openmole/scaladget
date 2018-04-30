@@ -88,7 +88,7 @@ case class Table(headers: Seq[String] = Seq(),
 
   def filter(containedString: String) = {
     filteredRows() = rows.filter { r =>
-      r.values.mkString("").contains(containedString)
+      r.values.mkString("").toUpperCase.contains(containedString.toUpperCase)
     }
   }
 
