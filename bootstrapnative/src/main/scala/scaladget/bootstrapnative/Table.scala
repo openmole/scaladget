@@ -1,194 +1,88 @@
 package scaladget.bootstrapnative
 
-import bsn._
 import org.scalajs.dom.raw.HTMLElement
-import scaladget.tools._
-import rx._
-import scalatags.JsDom.all._
 import scalatags.JsDom.{TypedTag, tags}
-import scala.util.Try
-
-case class SubRow(subTypedTag: TypedTag[HTMLElement], trigger: Var[Boolean] = Var(false)) {
-  def render = trigger.expand(subTypedTag)
-}
-
-case class Row(values: Seq[String], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None)
-
-case class Column(values: Seq[String])
-
-case class BSTableStyle(tableStyle: TableStyle, headerStyle: ModifierSeq, selectionColor: String = "#e1e1e1")
-
-trait Sorting
-
-object NoSorting extends Sorting
-
-object PhantomSorting extends Sorting
-
-object AscSorting extends Sorting
-
-object DescSorting extends Sorting
-
-case class SortingStatus(col: Int, sorting: Sorting)
+import scalatags.JsDom.all._
+import scaladget.tools._
+import bsn._
+import rx._
+import scaladget.bootstrapnative.Table.BSTableStyle
 
 object Table {
 
-  def sortInt(seq: Seq[String]) = Try(
-    seq.map {
-      _.toInt
-    }.zipWithIndex.sortBy {
-      _._1
-    }.map {
-      _._2
-    }
-  ).toOption
+  case class BSTableStyle(tableStyle: TableStyle, headerStyle: ModifierSeq, selectionColor: String = "#e1e1e1")
 
-  def sortDouble(seq: Seq[String]) = Try(
-    seq.map {
-      _.toDouble
-    }.zipWithIndex.sortBy {
-      _._1
-    }.map {
-      _._2
-    }
-  ).toOption
+  case class Row(values: Seq[TypedTag[HTMLElement]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None)
 
-  def sortString(seq: Seq[String]): Seq[Int] = seq.zipWithIndex.sortBy {
-    _._1
-  }.map {
-    _._2
+  type RowType = (String, Int) => TypedTag[HTMLElement]
+
+  case class SubRow(subTypedTag: TypedTag[HTMLElement], trigger: Var[Boolean] = Var(false)) {
+    def render = trigger.expand(subTypedTag)
   }
 
-  def sort(s: Column): Seq[Int] = {
-    sortInt(s.values) match {
-      case Some(i: Seq[_]) => i
-      case None => sortDouble(s.values) match {
-        case Some(d: Seq[_]) => d
-        case None => sortString(s.values)
-      }
-    }
-  }
-
-  def column(index: Int, rows: Seq[Row]): Column = Column(rows.map {
-    _.values(index)
-  })
 }
 
 import Table._
 
-case class Table(headers: Option[Row] = None,
-                 rows: Seq[Row] = Seq(),
-                 bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod),
-                 sorting: Boolean = false) {
+case class Table(headers: Option[Header] = None,
+                 rows: Seq[Table.Row] = Seq(),
+                 bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod)) {
 
-  val filteredRows = Var(rows)
+
   val selected: Var[Option[Row]] = Var(None)
   val nbColumns = rows.headOption.map {
     _.values.length
   }.getOrElse(0)
 
-  val sortingStatuses = Var(
-    Seq.fill(nbColumns)(
-      if (sorting) SortingStatus(0, PhantomSorting) else SortingStatus(0, NoSorting))
-  )
-
-
-  def addHeaders(hs: String*) = copy(headers = Some(Row(hs)))
+  def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
 
   def addRow(row: Row): Table = copy(rows = rows :+ row)
 
-  def addRow(row: String*): Table = addRow(Row(row))
-
-  def sortable = copy(sorting = true)
-
-  type RowType = (String, Int) => TypedTag[HTMLElement]
-
-  private def fillRow(row: Row, rowType: RowType) = tags.tr(
-    for (
-      (cell, id) <- row.values.zipWithIndex
-    ) yield {
-      rowType(cell, id)
-    },
-    backgroundColor := Rx {
-      if (Some(row) == selected()) bsTableStyle.selectionColor else ""
-    }
-  )(onclick := { () =>
-    selected() = Some(row)
-  })
-
-  def filter(containedString: String) = {
-    filteredRows() = rows.filter { r =>
-      r.values.mkString("").toUpperCase.contains(containedString.toUpperCase)
-    }
-  }
-
-  def style(tableStyle: TableStyle = default_table, headerStyle: ModifierSeq = emptyMod) = {
-    copy(bsTableStyle = BSTableStyle(tableStyle, headerStyle))
-  }
-
-  val sortingDiv = (n: Int) => tags.span(
-    Rx {
-      val ss = sortingStatuses()
-      span(pointer, floatRight, lineHeight := "25px",
-        ss(n).sorting match {
-          case PhantomSorting => Seq(opacity := "0.4") +++ glyph_sort_by_attributes
-          case AscSorting => glyph_sort_by_attributes
-          case DescSorting => glyph_sort_by_attributes_alt
-          case _ => emptyMod
-        }
-      )
-    },
-    onclick := { () =>
-      if (sorting) {
-        val ss = sortingStatuses.now
-        sortingStatuses() = ss.map {
-          _.copy(sorting = PhantomSorting)
-        }.updated(n, ss(n).copy(sorting = ss(n).sorting match {
-          case DescSorting | PhantomSorting => sort(n, AscSorting)
-          case AscSorting => sort(n, DescSorting)
-          case _ => PhantomSorting
-        }
-        )
-        )
-      }
-    }
-  )
-
-  def sort(colIndex: Int, sorting: Sorting): Sorting = {
-    val col = column(colIndex, filteredRows.now)
-    val indexes: Seq[Int] = {
-      val sorted = Table.sort(col)
-      sorting match {
-        case DescSorting => sorted.reverse
-        case _ => sorted
-      }
-    }
-
-    filteredRows() = {
-      for (
-        i <- indexes
-      ) yield filteredRows.now(i)
-    }
-    sorting
-  }
+  //  private def fillRow(row: Seq[_], rowType: RowType) = tags.tr(
+  //    for (
+  //      (cell, id) <- row.zipWithIndex
+  //    ) yield {
+  //      rowType(cell, id)
+  //    },
+  //    backgroundColor := Rx {
+  //      if (Some(row) == selected()) bsTableStyle.selectionColor else ""
+  //    }
+  //  )(onclick := { () =>
+  //    selected() = Some(row)
+  //  })
 
   val render = tags.table(bsTableStyle.tableStyle)(
     tags.thead(bsTableStyle.headerStyle)(
-      headers.map { h => fillRow(h, (s: String, i: Int) => th(s, sortingDiv(i)))
-      }),
-    Rx {
-      tags.tbody(
-        for (r <- filteredRows()) yield {
-          (Seq(Some(fillRow(r, (s: String, _) => td(s)))) :+
-            r.subRow.map { sr =>
-              tags.tr(r.rowStyle)(
-                tags.td(colspan := nbColumns,  padding := 0, borderTop := "0px solid black")(
-                  sr.render
-                )
+      tags.tr(
+        headers.map { h =>
+          h.values.map {
+            th(_)
+          }
+        })),
+    tags.tbody(
+      (for (r <- rows) yield {
+        Seq(Some(tags.tr(r.values.map {
+          tags.td(_)
+        },
+          backgroundColor := Rx {
+            if (Some(row) == selected()) bsTableStyle.selectionColor else ""
+          }
+        )(onclick := { () =>
+          selected() = Some(r)
+        })),
+          r.subRow.map { sr =>
+            tags.tr(r.rowStyle)(
+              tags.td(colspan := nbColumns, padding := 0, borderTop := "0px solid black")(
+                sr.render
               )
-            }).flatten
-        }
-      )
-    }
-  )
-}
+            )
+          }
+        )
+      }.flatten
+        )
+      //  (Seq(Some(fillRow(r.values, (s: String, _) => td(s))))
 
+    )
+  )
+
+}

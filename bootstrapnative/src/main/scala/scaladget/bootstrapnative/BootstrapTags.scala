@@ -812,6 +812,8 @@ trait BootstrapTags {
   }
 
   //TABLE
+  def ntable = new NTable
+
   def table = new Table
 
   // EXCLUSIVE BUTTON GROUPS

@@ -4,7 +4,8 @@ package demo
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.{Event, HTMLButtonElement}
 import scaladget.ace.ace
-import scaladget.bootstrapnative.{Row, SubRow, bsn}
+import scaladget.bootstrapnative.Table.{Row, SubRow}
+import scaladget.bootstrapnative.{NRow, bsn}
 import scaladget.bootstrapnative.bsn._
 import scalatags.JsDom.all._
 
@@ -13,14 +14,14 @@ object PlayGroundDemo {
   val sc = sourcecode.Text {
     import rx._
 
-    val table = bsn.table.
+    val table = bsn.ntable.
       addHeaders("Title 1", "Title 2", "Title 3").
       addRow("0.1", "158", "3").
       addRow("0.006", "bb", "236").
       addRow("21", "zz", "302").
       addRow("151", "a", "33")
 
-    val table2 = bsn.table.
+    val table2 = bsn.ntable.
       addHeaders("Title 10", "Title 20", "Title 30").
       addRow("0.1", "158", "3").
       addRow("0.006", "bb", "236").
@@ -111,23 +112,35 @@ object PlayGroundDemo {
     // Collapsible tables
     val expander = rx.Var(false)
 
-    val subTable = bsn.table.
-      addRow("222222","11111","33333").
+    val subTable = bsn.ntable.
+      addRow("222222", "11111", "33333").
       addRow("0.1111", "111158", "3333").
-      addRow("222222","11111","33333")
+      addRow("222222", "11111", "33333")
 
 
-    val collapsibleTable = bsn.table.
+    val collapsibleTable = bsn.ntable.
       addHeaders("Title 1", "Title 2", "Title 3").
-      addRow(Row(Seq("0.1", "158", "3"), subRow = Some(SubRow(subTable.render, expander)))).
-      addRow("22","11","33").
+      addRow(NRow(Seq("0.1", "158", "3"), subRow = Some(SubRow(subTable.render, expander)))).
+      addRow("22", "11", "33").
       addRow("0.006", "bb", "236").
       addRow("21", "zz", "302").
       addRow("151", "a", "33")
 
 
+    val expander2 = rx.Var(false)
+    val trigger2 = button(btn_danger, "Expand", onclick := { () => expander2() = !expander2.now })
+    val subTable2 = bsn.ntable.
+      addRow("222222", "11111", "33333").
+      addRow("0.1111", "111158", "3333").
+      addRow("222222", "11111", "33333")
+
+    val divCollapsibleTable = bsn.table.
+      addHeaders("Title 1", "Title 2", "Title 3").
+      addRow(Row(Seq(span("2.1"), span("3.66"), span()))).
+      addRow(Row(Seq(span("2.1"), span("3.66"), trigger2), subRow = Some(SubRow(subTable2.render, expander2))))
+
     val collapsibleExample = div(
-      button(btn_danger, "Expand", onclick := {()=> expander() = ! expander.now}),
+      button(btn_danger, "Expand", onclick := { () => expander() = !expander.now }),
       collapsibleTable.render
     ).render
 
@@ -136,7 +149,8 @@ object PlayGroundDemo {
       h3("TABS"),
       theTabs.render,
       h3("COLLAPSIBLE TABLES"),
-      collapsibleExample
+      collapsibleExample,
+      divCollapsibleTable.render
     ).render
 
 

@@ -27,7 +27,7 @@ import scalatags.JsDom.all._
 object TableDemo extends Demo {
   val sc = sourcecode.Text {
 
-    val table = bsn.table.
+    val table = bsn.ntable.
       addHeaders("Title 1", "Title 2", "Title 3").
       addRow("0.1", "158", "3").
       addRow("0.006", "bb", "236").
