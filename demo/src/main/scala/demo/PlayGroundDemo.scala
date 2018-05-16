@@ -4,7 +4,7 @@ package demo
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.{Event, HTMLButtonElement}
 import scaladget.ace.ace
-import scaladget.bootstrapnative.bsn
+import scaladget.bootstrapnative.{Row, SubRow, bsn}
 import scaladget.bootstrapnative.bsn._
 import scalatags.JsDom.all._
 
@@ -108,9 +108,35 @@ object PlayGroundDemo {
           tableRender
         )).build
 
+    // Collapsible tables
+    val expander = rx.Var(false)
+
+    val subTable = bsn.table.
+      addRow("222222","11111","33333").
+      addRow("0.1111", "111158", "3333").
+      addRow("222222","11111","33333")
+
+
+    val collapsibleTable = bsn.table.
+      addHeaders("Title 1", "Title 2", "Title 3").
+      addRow(Row(Seq("0.1", "158", "3"), subRow = Some(SubRow(subTable.render, expander)))).
+      addRow("22","11","33").
+      addRow("0.006", "bb", "236").
+      addRow("21", "zz", "302").
+      addRow("151", "a", "33")
+
+
+    val collapsibleExample = div(
+      button(btn_danger, "Expand", onclick := {()=> expander() = ! expander.now}),
+      collapsibleTable.render
+    ).render
+
+
     div(
       h3("TABS"),
-      theTabs.render
+      theTabs.render,
+      h3("COLLAPSIBLE TABLES"),
+      collapsibleExample
     ).render
 
 

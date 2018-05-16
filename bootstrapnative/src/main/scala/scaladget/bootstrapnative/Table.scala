@@ -8,7 +8,11 @@ import scalatags.JsDom.all._
 import scalatags.JsDom.{TypedTag, tags}
 import scala.util.Try
 
-case class Row(values: Seq[String])
+case class SubRow(subTypedTag: TypedTag[HTMLElement], trigger: Var[Boolean] = Var(false)) {
+  def render = trigger.expand(subTypedTag)
+}
+
+case class Row(values: Seq[String], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None)
 
 case class Column(values: Seq[String])
 
@@ -29,14 +33,30 @@ case class SortingStatus(col: Int, sorting: Sorting)
 object Table {
 
   def sortInt(seq: Seq[String]) = Try(
-    seq.map {_.toInt}.zipWithIndex.sortBy {_._1}.map {_._2}
+    seq.map {
+      _.toInt
+    }.zipWithIndex.sortBy {
+      _._1
+    }.map {
+      _._2
+    }
   ).toOption
 
   def sortDouble(seq: Seq[String]) = Try(
-    seq.map {_.toDouble}.zipWithIndex.sortBy {_._1}.map {_._2}
+    seq.map {
+      _.toDouble
+    }.zipWithIndex.sortBy {
+      _._1
+    }.map {
+      _._2
+    }
   ).toOption
 
-  def sortString(seq: Seq[String]): Seq[Int] = seq.zipWithIndex.sortBy {_._1}.map {_._2}
+  def sortString(seq: Seq[String]): Seq[Int] = seq.zipWithIndex.sortBy {
+    _._1
+  }.map {
+    _._2
+  }
 
   def sort(s: Column): Seq[Int] = {
     sortInt(s.values) match {
@@ -48,7 +68,9 @@ object Table {
     }
   }
 
-  def column(index: Int, rows: Seq[Row]): Column = Column(rows.map{_.values(index)})
+  def column(index: Int, rows: Seq[Row]): Column = Column(rows.map {
+    _.values(index)
+  })
 }
 
 import Table._
@@ -60,7 +82,9 @@ case class Table(headers: Option[Row] = None,
 
   val filteredRows = Var(rows)
   val selected: Var[Option[Row]] = Var(None)
-  val nbColumns = rows.headOption.map{_.values.length}.getOrElse(0)
+  val nbColumns = rows.headOption.map {
+    _.values.length
+  }.getOrElse(0)
 
   val sortingStatuses = Var(
     Seq.fill(nbColumns)(
@@ -84,10 +108,10 @@ case class Table(headers: Option[Row] = None,
     ) yield {
       rowType(cell, id)
     },
-    backgroundColor := Rx{
-      if(Some(row) == selected()) bsTableStyle.selectionColor else ""
+    backgroundColor := Rx {
+      if (Some(row) == selected()) bsTableStyle.selectionColor else ""
     }
-  )(onclick := {()=>
+  )(onclick := { () =>
     selected() = Some(row)
   })
 
@@ -147,19 +171,24 @@ case class Table(headers: Option[Row] = None,
     sorting
   }
 
-  val render = {
-    tags.table(bsTableStyle.tableStyle)(
-      tags.thead(bsTableStyle.headerStyle)(
-        headers.map { h => fillRow(h, (s: String, i: Int) => th(s, sortingDiv(i)))
-        }),
-      Rx {
-        tags.tbody(
-          for (r <- filteredRows()) yield {
-            fillRow(r, (s: String, _) => td(s))
-          }
-        )
-      }
-    )
-  }
+  val render = tags.table(bsTableStyle.tableStyle)(
+    tags.thead(bsTableStyle.headerStyle)(
+      headers.map { h => fillRow(h, (s: String, i: Int) => th(s, sortingDiv(i)))
+      }),
+    Rx {
+      tags.tbody(
+        for (r <- filteredRows()) yield {
+          (Seq(Some(fillRow(r, (s: String, _) => td(s)))) :+
+            r.subRow.map { sr =>
+              tags.tr(r.rowStyle)(
+                tags.td(colspan := nbColumns,  padding := 0, borderTop := "0px solid black")(
+                  sr.render
+                )
+              )
+            }).flatten
+        }
+      )
+    }
+  )
 }
 
