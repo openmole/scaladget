@@ -12,6 +12,8 @@ object Table {
 
   case class BSTableStyle(tableStyle: TableStyle, headerStyle: ModifierSeq, selectionColor: String = "#e1e1e1")
 
+  case class Header(values: Seq[String])
+
   case class Row(values: Seq[TypedTag[HTMLElement]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None)
 
   type RowType = (String, Int) => TypedTag[HTMLElement]
@@ -24,7 +26,7 @@ object Table {
 
 import Table._
 
-case class Table(headers: Option[Header] = None,
+case class Table(headers: Option[Table.Header] = None,
                  rows: Seq[Table.Row] = Seq(),
                  bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod)) {
 
@@ -37,19 +39,6 @@ case class Table(headers: Option[Header] = None,
   def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
 
   def addRow(row: Row): Table = copy(rows = rows :+ row)
-
-  //  private def fillRow(row: Seq[_], rowType: RowType) = tags.tr(
-  //    for (
-  //      (cell, id) <- row.zipWithIndex
-  //    ) yield {
-  //      rowType(cell, id)
-  //    },
-  //    backgroundColor := Rx {
-  //      if (Some(row) == selected()) bsTableStyle.selectionColor else ""
-  //    }
-  //  )(onclick := { () =>
-  //    selected() = Some(row)
-  //  })
 
   val render = tags.table(bsTableStyle.tableStyle)(
     tags.thead(bsTableStyle.headerStyle)(

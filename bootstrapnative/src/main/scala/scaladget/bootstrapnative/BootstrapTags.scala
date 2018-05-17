@@ -812,7 +812,7 @@ trait BootstrapTags {
   }
 
   //TABLE
-  def ntable = new NTable
+  def dataTable = new DataTable
 
   def table = new Table
 

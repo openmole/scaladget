@@ -1,35 +1,32 @@
 package scaladget.bootstrapnative
 
 import bsn._
-import org.scalajs.dom.raw.HTMLElement
 import scaladget.tools._
 import rx._
 import scalatags.JsDom.all._
-import scalatags.JsDom.{TypedTag, tags}
+import scalatags.JsDom.tags
 import scala.util.Try
 import Table._
 
-case class Header(values: Seq[String])
-
-case class NRow(values: Seq[String], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None)
-
-case class Column(values: Seq[String])
-
-trait Sorting
-
-object NoSorting extends Sorting
-
-object PhantomSorting extends Sorting
-
-object AscSorting extends Sorting
-
-object DescSorting extends Sorting
-
-case class SortingStatus(col: Int, sorting: Sorting)
-
 
 //NTable for Numerical table
-object NTable {
+object DataTable {
+
+  case class DataRow(values: Seq[String], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None)
+
+  case class Column(values: Seq[String])
+
+  trait Sorting
+
+  object NoSorting extends Sorting
+
+  object PhantomSorting extends Sorting
+
+  object AscSorting extends Sorting
+
+  object DescSorting extends Sorting
+
+  case class SortingStatus(col: Int, sorting: Sorting)
 
   def sortInt(seq: Seq[String]) = Try(
     seq.map {
@@ -67,20 +64,20 @@ object NTable {
     }
   }
 
-  def column(index: Int, rows: Seq[NRow]): Column = Column(rows.map {
+  def column(index: Int, rows: Seq[DataRow]): Column = Column(rows.map {
     _.values(index)
   })
 }
 
-import NTable._
+import DataTable._
 
-case class NTable(headers: Option[Header] = None,
-                 rows: Seq[NRow] = Seq(),
-                 bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod),
-                 sorting: Boolean = false) {
+case class DataTable(headers: Option[Header] = None,
+                     rows: Seq[DataTable.DataRow] = Seq(),
+                     bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod),
+                     sorting: Boolean = false) {
 
   val filteredRows = Var(rows)
-  val selected: Var[Option[NRow]] = Var(None)
+  val selected: Var[Option[DataRow]] = Var(None)
   val nbColumns = rows.headOption.map {
     _.values.length
   }.getOrElse(0)
@@ -93,9 +90,9 @@ case class NTable(headers: Option[Header] = None,
 
   def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
 
-  def addRow(row: NRow): NTable = copy(rows = rows :+ row)
+  def addRow(row: DataRow): DataTable = copy(rows = rows :+ row)
 
-  def addRow(row: String*): NTable = addRow(NRow(row))
+  def addRow(row: String*): DataTable = addRow(DataRow(row))
 
   def sortable = copy(sorting = true)
 
@@ -110,7 +107,7 @@ case class NTable(headers: Option[Header] = None,
       if (Some(row) == selected()) bsTableStyle.selectionColor else ""
     }
   )(onclick := { () =>
-    selected() = Some(NRow(vals))
+    selected() = Some(DataRow(vals))
   })
 
   def filter(containedString: String) = {
@@ -154,7 +151,7 @@ case class NTable(headers: Option[Header] = None,
   def sort(colIndex: Int, sorting: Sorting): Sorting = {
     val col = column(colIndex, filteredRows.now)
     val indexes: Seq[Int] = {
-      val sorted = NTable.sort(col)
+      val sorted = DataTable.sort(col)
       sorting match {
         case DescSorting => sorted.reverse
         case _ => sorted
@@ -179,7 +176,7 @@ case class NTable(headers: Option[Header] = None,
           (Seq(Some(fillRow(r.values, (s: String, _) => td(s)))) :+
             r.subRow.map { sr =>
               tags.tr(r.rowStyle)(
-                tags.td(colspan := nbColumns,  padding := 0, borderTop := "0px solid black")(
+                tags.td(colspan := nbColumns, padding := 0, borderTop := "0px solid black")(
                   sr.render
                 )
               )
