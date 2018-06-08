@@ -639,7 +639,7 @@ trait BootstrapTags {
     }
   }
 
-  implicit class TagCollapserWithReactive(r: Var[Boolean]) {
+  implicit class TagCollapserWithReactive(r: Rx[Boolean]) {
     def expand[T <: TypedTag[HTMLElement]](inner: T) = {
 
       val collapser = new Collapser(inner)
@@ -662,7 +662,7 @@ trait BootstrapTags {
       )
   }
 
-  class DynamicCollapser(val collapser: Collapser, expand: Var[Boolean] = Var(false)) {
+  class DynamicCollapser(val collapser: Collapser, expand: Rx[Boolean] = Var(false)) {
     expand.triggerLater {
       collapser.triggerTag.click()
     }

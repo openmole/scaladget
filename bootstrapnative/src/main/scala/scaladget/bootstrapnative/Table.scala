@@ -18,7 +18,7 @@ object Table {
 
   type RowType = (String, Int) => TypedTag[HTMLElement]
 
-  case class SubRow(subTypedTag: TypedTag[HTMLElement], trigger: Var[Boolean] = Var(false)) {
+  case class SubRow(subTypedTag: TypedTag[HTMLElement], trigger: Rx[Boolean] = Rx(false)) {
     def render = trigger.expand(subTypedTag)
   }
 
