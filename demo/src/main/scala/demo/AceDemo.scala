@@ -20,18 +20,25 @@ package demo
 import scaladget.ace._
 import org.scalajs.dom.raw._
 import scalatags.JsDom.all._
+import scalajs.js
 
 object AceDemo extends Demo {
 
 
   val sc = sourcecode.Text {
     val editorDiv = div(id := "editor", height := 100, paddingRight := 20).render
+    ace.require("ace/ext/language_tools")
     val editor = ace.edit(editorDiv)
     val session = editor.getSession()
 
     session.setValue("val a = 7")
     session.setMode("ace/mode/scala")
     editor.setTheme("ace/theme/github")
+    editor.setOptions(js.Dynamic.literal(
+      "enableBasicAutocompletion" -> true,
+      "enableSnippets" -> true,
+      "enableLiveAutocompletion" -> true
+    ))
 
     editorDiv
   }

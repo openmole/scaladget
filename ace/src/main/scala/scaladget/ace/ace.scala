@@ -404,6 +404,7 @@ class Editor protected () extends js.Object {
   def undo(): js.Dynamic = js.native
   def redo(): js.Dynamic = js.native
   def destroy(): js.Dynamic = js.native
+  def setOptions(options: js.Dynamic): js.Dynamic = js.native
   var completer: AutoComplete = js.native
   var completers: js.Array[js.Dynamic] = js.native
 }

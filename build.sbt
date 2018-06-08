@@ -128,7 +128,7 @@ lazy val demo = project.in(file("demo")) enablePlugins (ExecNpmPlugin) settings 
   libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
   libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
   libraryDependencies += "com.github.karasiq" %%% "scalajs-marked" % "1.0.2",
-  npmDeps in Compile += Dep("ace-builds", "1.2.9", List("mode-scala.js", "theme-github.js"), true),
+  npmDeps in Compile += Dep("ace-builds", "1.2.9", List("mode-scala.js", "theme-github.js", "ext-language_tools.js"), true),
   runDemo := {
 
     val demoTarget = target.value
