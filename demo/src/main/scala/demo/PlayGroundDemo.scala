@@ -111,7 +111,7 @@ object PlayGroundDemo {
         )).build
 
     // Collapsible tables
-    val expander = rx.Var(false)
+    val expander = rx.Var(true)
 
     val subTable = bsn.dataTable.
       addRow("222222", "11111", "33333").

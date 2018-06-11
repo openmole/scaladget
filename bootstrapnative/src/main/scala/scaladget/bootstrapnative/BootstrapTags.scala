@@ -642,28 +642,36 @@ trait BootstrapTags {
   implicit class TagCollapserWithReactive(r: Rx[Boolean]) {
     def expand[T <: TypedTag[HTMLElement]](inner: T) = {
 
-      val collapser = new Collapser(inner)
+      println("R " + r)
+      val collapser = new Collapser(inner, initExpand = r.now)
       val dynamic = new DynamicCollapser(collapser, r)
 
       collapser.div
 
     }
   }
+
   // COLLAPSERS
   class Collapser(rawInnerTag: TypedTag[HTMLElement], rawTriggerTag: TypedTag[HTMLElement] = div(), initExpand: Boolean = false) {
 
     private val hrefID = uuID.short("c")
-    val triggerTag = a(data("toggle") := "collapse", href := s"#${hrefID}", aria.expanded := true, aria.controls := hrefID)(rawTriggerTag).render
-    val innergTag = tags.div(ms("collapse"), id := hrefID, aria.expanded := initExpand, role := presentation_role)(rawInnerTag).render
+
+    val classTrigger = if (initExpand) "" else "collapsed"
+    val classInner = "collapse" + {
+      if (initExpand) " in" else ""
+    }
+
+    val triggerTag = a(data("toggle") := "collapse", `class` := classTrigger, href := s"#${hrefID}", aria.expanded := initExpand, aria.controls := hrefID)(rawTriggerTag).render
+    val innergTag = tags.div(ms(classInner), id := hrefID, aria.expanded := initExpand, role := presentation_role)(rawInnerTag).render
 
     val div = tags.div(
-        triggerTag,
-        innergTag
-      )
+      triggerTag,
+      innergTag
+    )
   }
 
-  class DynamicCollapser(val collapser: Collapser, expand: Rx[Boolean] = Var(false)) {
-    expand.triggerLater {
+  class DynamicCollapser(val collapser: Collapser, expand: Rx[Boolean]) {
+    expand.trigger {
       collapser.triggerTag.click()
     }
 
