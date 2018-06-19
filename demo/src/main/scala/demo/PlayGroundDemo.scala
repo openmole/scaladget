@@ -4,12 +4,12 @@ package demo
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.{Event, HTMLButtonElement}
 import scaladget.ace.ace
-import scaladget.bootstrapnative.Table.{Row, SubRow}
+import scaladget.bootstrapnative.Table._
 import scaladget.bootstrapnative.DataTable.DataRow
 import scaladget.bootstrapnative.bsn
 import scaladget.bootstrapnative.bsn._
 import scalatags.JsDom.all._
-
+import java.util.concurrent.ThreadLocalRandom
 
 object PlayGroundDemo {
   val sc = sourcecode.Text {
@@ -135,9 +135,12 @@ object PlayGroundDemo {
       addRow("0.1111", "111158", "3333").
       addRow("222222", "11111", "33333")
 
+    val aVar = Var(Seq(5,7,8))
+    val rand = ThreadLocalRandom.current()
+
     val divCollapsibleTable = bsn.table.
       addHeaders("Title 1", "Title 2", "Title 3").
-      addRow(Row(Seq(span("2.1"), span("3.66"), span()))).
+      addRow(ReactiveRow(aVar.map{i=> Seq(span(i(0).toString), span(i(1).toString), span(i(2).toString))})).
       addRow(Row(Seq(span("2.1"), span("3.66"), trigger2), subRow = Some(SubRow(subTable2.render, expander2))))
 
     val collapsibleExample = div(
@@ -146,12 +149,16 @@ object PlayGroundDemo {
     ).render
 
 
+    def updateVar = aVar() = Seq(rand.nextInt(0,1000), rand.nextInt(0,100), rand.nextInt(0,50))
+    val updateButton = button(btn_primary, "Update", onclick := {()=> updateVar})
+
     div(
       h3("TABS"),
       theTabs.render,
       h3("COLLAPSIBLE TABLES"),
       collapsibleExample,
-      divCollapsibleTable.render
+      divCollapsibleTable.render,
+      updateButton
     ).render
 
 
