@@ -10,6 +10,7 @@ import scaladget.bootstrapnative.bsn
 import scaladget.bootstrapnative.bsn._
 import scalatags.JsDom.all._
 import java.util.concurrent.ThreadLocalRandom
+import scaladget.tools._
 
 object PlayGroundDemo {
   val sc = sourcecode.Text {
@@ -130,18 +131,29 @@ object PlayGroundDemo {
 
     val expander2 = rx.Var(false)
     val trigger2 = button(btn_danger, "Expand", onclick := { () => expander2() = !expander2.now })
-    val subTable2 = bsn.dataTable.
+
+    val rand = ThreadLocalRandom.current()
+
+    def randomTable = {
+      bsn.dataTable
+        .addRow(rand.nextInt(0, 1000).toString, rand.nextInt(0, 100).toString, rand.nextInt(0, 50).toString)
+        .render
+    }
+
+    val subTable2 = Var(bsn.dataTable.
       addRow("222222", "11111", "33333").
       addRow("0.1111", "111158", "3333").
-      addRow("222222", "11111", "33333")
+      addRow("222222", "11111", "33333").render
+    )
 
-    val aVar = Var(Seq(5,7,8))
-    val rand = ThreadLocalRandom.current()
+    val aVar = Var(Seq(5, 7, 8))
 
     val divCollapsibleTable = bsn.table.
       addHeaders("Title 1", "Title 2", "Title 3").
-      addRow(ReactiveRow(aVar.map{i=> Seq(span(i(0).toString), span(i(1).toString), span(i(2).toString))})).
-      addRow(Row(Seq(span("2.1"), span("3.66"), trigger2), subRow = Some(SubRow(subTable2.render, expander2))))
+      addRow(ReactiveRow(aVar.map { i => Seq(span(i(0).toString), span(i(1).toString), span(i(2).toString)) })).
+      addRow(ReactiveRow(Var(Seq(span("2.1"), span("3.66"), trigger2)), subRow = Some(SubRow(div(Rx {
+        subTable2()
+      }), expander2))))
 
     val collapsibleExample = div(
       button(btn_danger, "Expand", onclick := { () => expander() = !expander.now }),
@@ -149,8 +161,16 @@ object PlayGroundDemo {
     ).render
 
 
-    def updateVar = aVar() = Seq(rand.nextInt(0,1000), rand.nextInt(0,100), rand.nextInt(0,50))
-    val updateButton = button(btn_primary, "Update", onclick := {()=> updateVar})
+    def updateVar = aVar() = Seq(rand.nextInt(0, 1000), rand.nextInt(0, 100), rand.nextInt(0, 50))
+
+    def updateTable = {
+      val rt = randomTable
+      println("RT " + rt)
+      subTable2() = rt
+    }
+
+    val updateButton = button(btn_primary, "Update", onclick := { () => updateVar })
+    val updateSubTableButton = button(btn_primary, marginLeft := 10, "Update sub table", onclick := { () => updateTable })
 
     div(
       h3("TABS"),
@@ -158,7 +178,8 @@ object PlayGroundDemo {
       h3("COLLAPSIBLE TABLES"),
       collapsibleExample,
       divCollapsibleTable.render,
-      updateButton
+      updateButton,
+      updateSubTableButton
     ).render
 
 

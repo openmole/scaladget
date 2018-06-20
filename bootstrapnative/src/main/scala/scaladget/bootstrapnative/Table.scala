@@ -22,7 +22,8 @@ object Table {
   type RowType = (String, Int) => TypedTag[HTMLElement]
 
   case class SubRow(subTypedTag: TypedTag[HTMLElement], trigger: Rx[Boolean] = Rx(false)) {
-    def render = trigger.expand(subTypedTag)
+    val stableDiv = div(subTypedTag)
+    def render = trigger.expand(stableDiv)
   }
 
   implicit def rowToReactiveRow(r: Row): ReactiveRow = ReactiveRow(Rx(r.values), r.rowStyle, r.subRow)
