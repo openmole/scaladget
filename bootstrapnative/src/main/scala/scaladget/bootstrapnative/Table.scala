@@ -5,7 +5,6 @@ import scalatags.JsDom.{TypedTag, tags}
 import scalatags.JsDom.all._
 import scaladget.tools._
 import bsn._
-import org.scalajs.dom.html.TableCell
 import rx._
 import scaladget.bootstrapnative.Table.BSTableStyle
 
@@ -23,6 +22,7 @@ object Table {
 
   case class SubRow(subTypedTag: TypedTag[HTMLElement], trigger: Rx[Boolean] = Rx(false)) {
     val stableDiv = div(subTypedTag)
+
     def render = trigger.expand(stableDiv)
   }
 
@@ -33,62 +33,77 @@ object Table {
 import Table._
 
 case class Table(headers: Option[Table.Header] = None,
-                 rows: Seq[Table.ReactiveRow] = Seq(),
+                 // rows: Seq[Table.ReactiveRow] = Seq(),
                  bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod)) {
 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
   val selected: Var[Option[ReactiveRow]] = Var(None)
-  val nbColumns = rows.headOption.map {
-    _.values.now.length
-  }.getOrElse(0)
 
   def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
 
-  def addRow(row: ReactiveRow): Table = copy(rows = rows :+ row)
+  def addRow(row: ReactiveRow): Table = {
+    getRows(row).foreach { r =>
+      tableBody.appendChild(r)
+    }
+    this
+  }
 
-  val render = tags.table(bsTableStyle.tableStyle)(
-    tags.thead(bsTableStyle.headerStyle)(
-      tags.tr(
-        headers.map { h =>
-          h.values.map {
-            th(_)
-          }
-        })),
-    tags.tbody(
-      (for (r <- rows) yield {
-        val aRow = tags.tr(r.values.now.map {
-          tags.td(_)
-        },
-          backgroundColor := Rx {
-            if (Some(row) == selected()) bsTableStyle.selectionColor else ""
-          }
-        )(onclick := { () =>
-          selected() = Some(r)
-        }).render
 
-        r.values.trigger {
-          while (aRow.firstChild != null) {
-            aRow.removeChild(aRow.firstChild)
-          }
-          r.values.now.foreach { x =>
-            aRow.appendChild(tags.td(x.render))
-          }
-        }
+  def insertRow(row: ReactiveRow): Table = {
+    getRows(row).foreach { n =>
+      tableBody.insertBefore(n, tableBody.firstChild)
+    }
+    this
+  }
 
-        Seq(Some(aRow),
-          r.subRow.map { sr =>
-            tags.tr(r.rowStyle)(
-              tags.td(colspan := nbColumns, padding := 0, borderTop := "0px solid black")(
-                sr.render
-              )
-            ).render
-          }
+  def deleteRow(index: Int) = {
+    if (tableBody.rows.length >= index)
+      tableBody.deleteRow(index)
+  }
+
+  val tableBody = tags.tbody.render
+
+  private def getRows(r: ReactiveRow) = {
+    val aRow = tags.tr(r.values.now.map {
+      tags.td(_)
+    },
+      backgroundColor := Rx {
+        if (Some(row) == selected()) bsTableStyle.selectionColor else ""
+      }
+    )(onclick := { () =>
+      selected() = Some(r)
+    }).render
+
+    r.values.trigger {
+      while (aRow.firstChild != null) {
+        aRow.removeChild(aRow.firstChild)
+      }
+      r.values.now.foreach { x =>
+        aRow.appendChild(tags.td(x.render))
+      }
+    }
+
+    Seq(Some(aRow), r.subRow.map { sr =>
+      tags.tr(r.rowStyle)(
+        tags.td(colspan := 999, padding := 0, borderTop := "0px solid black")(
+          sr.render
         )
-      }.flatten
-        //  (Seq(Some(fillRow(r.values, (s: String, _) => td(s))))
+      ).render
+    }).flatten
+  }
 
-        )
+  lazy val render = {
+
+    tags.table(bsTableStyle.tableStyle)(
+      tags.thead(bsTableStyle.headerStyle)(
+        tags.tr(
+          headers.map { h =>
+            h.values.map {
+              th(_)
+            }
+          })),
+      tableBody
     )
-  )
+  }
 
 }

@@ -169,8 +169,20 @@ object PlayGroundDemo {
       subTable2() = rt
     }
 
+    def insert = {
+      divCollapsibleTable.insertRow(ReactiveRow(Var(Seq(span("2001"), span("30066"), span("9.88")))))
+    }
+
+    def deleteSecond = {
+      divCollapsibleTable.deleteRow(1)
+    }
+
     val updateButton = button(btn_primary, "Update", onclick := { () => updateVar })
     val updateSubTableButton = button(btn_primary, marginLeft := 10, "Update sub table", onclick := { () => updateTable })
+    val insertRowButton = button(btn_primary, marginLeft := 10, "Inert row", onclick := { () => insert })
+    val deleteSecondButton = button(btn_danger, marginLeft := 10, "Delete second", onclick := { () => deleteSecond })
+
+
 
     div(
       h3("TABS"),
@@ -179,7 +191,9 @@ object PlayGroundDemo {
       collapsibleExample,
       divCollapsibleTable.render,
       updateButton,
-      updateSubTableButton
+      updateSubTableButton,
+      insertRowButton,
+      deleteSecondButton
     ).render
 
 
