@@ -16,7 +16,43 @@ object Table {
 
   case class Row(values: Seq[TypedTag[HTMLElement]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None)
 
-  case class ReactiveRow(values: Rx[Seq[TypedTag[HTMLElement]]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None)
+  case class ReactiveRow(values: Rx[Seq[TypedTag[HTMLElement]]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None, autoDelete: Option[Rx[Boolean]] = None) {
+
+    val tr = tags.tr(values.now.map {
+      tags.td(_)
+    }
+      //      ,
+      //      backgroundColor := Rx {
+      //        if (Some(row) == selected()) tableStyle.selectionColor else ""
+      //      }
+    )
+      //    (onclick := { () =>
+      //      table.selected() = Some(this)
+      //    }
+      //    )
+      .render
+
+    val subtr = subRow.map { sr =>
+      tags.tr(rowStyle)(
+        tags.td(colspan := 999, padding := 0, borderTop := "0px solid black")(
+          sr.render
+        )
+      ).render
+    }
+
+    def rows = Seq(Some(tr), subtr).flatten
+
+    values.trigger {
+      while (tr.firstChild != null) {
+        tr.removeChild(tr.firstChild)
+      }
+      values.now.foreach { x =>
+        tr.appendChild(tags.td(x.render))
+      }
+    }
+
+    def withAutoDelete(ad: Rx[Boolean]) = copy(autoDelete = Some(ad))
+  }
 
   type RowType = (String, Int) => TypedTag[HTMLElement]
 
@@ -33,7 +69,6 @@ object Table {
 import Table._
 
 case class Table(headers: Option[Table.Header] = None,
-                 // rows: Seq[Table.ReactiveRow] = Seq(),
                  bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod)) {
 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
@@ -42,7 +77,7 @@ case class Table(headers: Option[Table.Header] = None,
   def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
 
   def addRow(row: ReactiveRow): Table = {
-    getRows(row).foreach { r =>
+    row.rows.foreach { r =>
       tableBody.appendChild(r)
     }
     this
@@ -50,7 +85,7 @@ case class Table(headers: Option[Table.Header] = None,
 
 
   def insertRow(row: ReactiveRow): Table = {
-    getRows(row).foreach { n =>
+    row.rows.foreach { n =>
       tableBody.insertBefore(n, tableBody.firstChild)
     }
     this
@@ -62,35 +97,6 @@ case class Table(headers: Option[Table.Header] = None,
   }
 
   val tableBody = tags.tbody.render
-
-  private def getRows(r: ReactiveRow) = {
-    val aRow = tags.tr(r.values.now.map {
-      tags.td(_)
-    },
-      backgroundColor := Rx {
-        if (Some(row) == selected()) bsTableStyle.selectionColor else ""
-      }
-    )(onclick := { () =>
-      selected() = Some(r)
-    }).render
-
-    r.values.trigger {
-      while (aRow.firstChild != null) {
-        aRow.removeChild(aRow.firstChild)
-      }
-      r.values.now.foreach { x =>
-        aRow.appendChild(tags.td(x.render))
-      }
-    }
-
-    Seq(Some(aRow), r.subRow.map { sr =>
-      tags.tr(r.rowStyle)(
-        tags.td(colspan := 999, padding := 0, borderTop := "0px solid black")(
-          sr.render
-        )
-      ).render
-    }).flatten
-  }
 
   lazy val render = {
 

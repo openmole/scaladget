@@ -42,16 +42,6 @@ trait BootstrapTags {
 
   type BS = TypedTag[_ <: HTMLElement]
 
-  type ID = String
-
-  implicit class ShortID(id: ID) {
-    def short: String = id.split('-').head
-
-    def short(prefix: String): String = s"$prefix$short"
-  }
-
-  def uuID: ID = java.util.UUID.randomUUID.toString
-
   type Input = ConcreteHtmlTag[org.scalajs.dom.raw.HTMLInputElement]
 
   def inputTag(content: String = "") = tags.input(bsnsheet.formControl, scalatags.JsDom.all.value := content)

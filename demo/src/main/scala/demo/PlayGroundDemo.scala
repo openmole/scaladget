@@ -6,10 +6,12 @@ import org.scalajs.dom.raw.{Event, HTMLButtonElement}
 import scaladget.ace.ace
 import scaladget.bootstrapnative.Table._
 import scaladget.bootstrapnative.DataTable.DataRow
-import scaladget.bootstrapnative.bsn
+import scaladget.bootstrapnative.{Table, bsn}
 import scaladget.bootstrapnative.bsn._
 import scalatags.JsDom.all._
 import java.util.concurrent.ThreadLocalRandom
+
+import com.sun.xml.internal.bind.v2.model.core.ID
 import scaladget.tools._
 
 object PlayGroundDemo {
@@ -130,7 +132,9 @@ object PlayGroundDemo {
 
 
     val expander2 = rx.Var(false)
-    val trigger2 = button(btn_danger, "Expand", onclick := { () => expander2() = !expander2.now })
+    val trigger2 = button(btn_danger, "Expand", onclick := { () =>
+      expander2() = !expander2.now
+    })
 
     val rand = ThreadLocalRandom.current()
 
@@ -147,13 +151,21 @@ object PlayGroundDemo {
     )
 
     val aVar = Var(Seq(5, 7, 8))
+    val toBeRemoved: Var[Seq[ReactiveRow]] = Var(Seq())
+
+    lazy val rr: ReactiveRow = {
+      ReactiveRow(Var(Seq(span("2.1"), span("3.66"), trigger2)), subRow = Some(SubRow(div(Rx {
+        subTable2()
+      }), expander2))
+      )
+    }
 
     val divCollapsibleTable = bsn.table.
       addHeaders("Title 1", "Title 2", "Title 3").
+      addRow(rr).
+      addRow(ReactiveRow(Var(Seq(span("11"), span("222"), span("333"))))).
       addRow(ReactiveRow(aVar.map { i => Seq(span(i(0).toString), span(i(1).toString), span(i(2).toString)) })).
-      addRow(ReactiveRow(Var(Seq(span("2.1"), span("3.66"), trigger2)), subRow = Some(SubRow(div(Rx {
-        subTable2()
-      }), expander2))))
+      addRow(ReactiveRow(Var(Seq(span("11"), span("222"), span("333")))))
 
     val collapsibleExample = div(
       button(btn_danger, "Expand", onclick := { () => expander() = !expander.now }),
@@ -180,8 +192,9 @@ object PlayGroundDemo {
     val updateButton = button(btn_primary, "Update", onclick := { () => updateVar })
     val updateSubTableButton = button(btn_primary, marginLeft := 10, "Update sub table", onclick := { () => updateTable })
     val insertRowButton = button(btn_primary, marginLeft := 10, "Inert row", onclick := { () => insert })
-    val deleteSecondButton = button(btn_danger, marginLeft := 10, "Delete second", onclick := { () => deleteSecond })
-
+    val deleteRRButton = button(btn_danger, marginLeft := 10, "Delete second", onclick := { () =>
+      toBeRemoved() = toBeRemoved.now :+ rr
+    })
 
 
     div(
@@ -193,7 +206,7 @@ object PlayGroundDemo {
       updateButton,
       updateSubTableButton,
       insertRowButton,
-      deleteSecondButton
+      deleteRRButton
     ).render
 
 
