@@ -11,7 +11,6 @@ import scaladget.bootstrapnative.bsn._
 import scalatags.JsDom.all._
 import java.util.concurrent.ThreadLocalRandom
 
-import com.sun.xml.internal.bind.v2.model.core.ID
 import scaladget.tools._
 
 object PlayGroundDemo {
@@ -151,19 +150,32 @@ object PlayGroundDemo {
     )
 
     val aVar = Var(Seq(5, 7, 8))
-    val toBeRemoved: Var[Seq[ReactiveRow]] = Var(Seq())
+    val toBeRemoved: Var[Seq[ID]] = Var(Seq())
 
-    lazy val rr: ReactiveRow =
-      reactiveRow(
-        Var(Seq(span("2.1"), span("3.66"), trigger2)), subRow = Some(SubRow(div(Rx {
-        subTable2()
-      }), expander2))
+    def deleteRRButton(id: ID) = button(btn_danger, marginLeft := 10, "Delete", onclick := { () =>
+      toBeRemoved() = toBeRemoved.now :+ id
+    })
+
+    lazy val rr: ReactiveRow = {
+      val id = uuID.short("rr")
+      ReactiveRow(
+        id,
+        Var(Seq(span("2.1"), span("3.66"), trigger2, deleteRRButton(id))), subRow = Some(SubRow(div(Rx {
+          subTable2()
+        }), expander2))
       )
+    }
 
 
-    val rr2 = reactiveRow(Var(Seq(span("11"), span("11"), span("111"))))
+    val rr2 = {
+      val id = uuID.short("rr")
+      ReactiveRow(id, Var(Seq(span("11"), span("11"), span("111"), deleteRRButton(id))))
+    }
 
     val divCollapsibleTable = bsn.table.
+      withAutoDelete((id: ID) => toBeRemoved.map {
+        _.contains(id)
+      }).
       addHeaders("Title 1", "Title 2", "Title 3").
       addRow(rr).
       addRow(rr2).
@@ -180,7 +192,6 @@ object PlayGroundDemo {
 
     def updateTable = {
       val rt = randomTable
-      println("RT " + rt)
       subTable2() = rt
     }
 
@@ -190,10 +201,7 @@ object PlayGroundDemo {
 
     val updateButton = button(btn_primary, "Update", onclick := { () => updateVar })
     val updateSubTableButton = button(btn_primary, marginLeft := 10, "Update sub table", onclick := { () => updateTable })
-    val insertRowButton = button(btn_primary, marginLeft := 10, "Inert row", onclick := { () => insert })
-    def deleteRRButton = button(btn_danger, marginLeft := 10, "Delete First", onclick := { () =>
-      divCollapsibleTable.delete(rr)
-    })
+    val insertRowButton = button(btn_primary, marginLeft := 10, "Insert row", onclick := { () => insert })
 
 
     div(
@@ -204,8 +212,7 @@ object PlayGroundDemo {
       divCollapsibleTable.render,
       updateButton,
       updateSubTableButton,
-      insertRowButton,
-      deleteRRButton
+      insertRowButton
     ).render
 
 

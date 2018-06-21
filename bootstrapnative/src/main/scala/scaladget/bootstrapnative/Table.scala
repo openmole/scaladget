@@ -19,10 +19,10 @@ object Table {
 
   case class Row(values: Seq[TypedTag[HTMLElement]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None)
 
-  def reactiveRow(values: Rx[Seq[TypedTag[HTMLElement]]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None, autoDelete: Option[Rx[Boolean]] = None) =
-    ReactiveRow(uuID.short("rr"), values, rowStyle, subRow, autoDelete)
+  def reactiveRow(values: Rx[Seq[TypedTag[HTMLElement]]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None) =
+    ReactiveRow(uuID.short("rr"), values, rowStyle, subRow)
 
-  case class ReactiveRow(uuid: String, values: Rx[Seq[TypedTag[HTMLElement]]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None, autoDelete: Option[Rx[Boolean]] = None) {
+  case class ReactiveRow(uuid: ID, values: Rx[Seq[TypedTag[HTMLElement]]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None) {
 
     val tr = tags.tr(id := uuid)(values.now.map {
       tags.td(_)
@@ -56,8 +56,6 @@ object Table {
         tr.appendChild(tags.td(x.render))
       }
     }
-
-    def withAutoDelete(ad: Rx[Boolean]) = copy(autoDelete = Some(ad))
   }
 
   type RowType = (String, Int) => TypedTag[HTMLElement]
@@ -75,7 +73,8 @@ object Table {
 import Table._
 
 case class Table(headers: Option[Table.Header] = None,
-                 bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod)) {
+                 bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod),
+                 autoDelete: Option[ID=> Rx[Boolean]] = None) {
 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
   val selected: Var[Option[ReactiveRow]] = Var(None)
@@ -86,15 +85,28 @@ case class Table(headers: Option[Table.Header] = None,
     row.rows.foreach { r =>
       tableBody.appendChild(r)
     }
+    setAutoDelete(row)
     this
   }
 
+  def withAutoDelete(ad: (ID)=> Rx[Boolean]) = copy(autoDelete = Some(ad))
 
   def insertRow(row: ReactiveRow): Table = {
     row.rows.foreach { n =>
       tableBody.insertBefore(n, tableBody.firstChild)
     }
+    setAutoDelete(row)
     this
+  }
+
+  private def setAutoDelete(row: ReactiveRow) =
+    autoDelete.foreach { ad =>
+    val reactive = ad(row.uuid)
+    reactive.trigger {
+      if (reactive.now) {
+        delete(row)
+      }
+    }
   }
 
   def delete(row: ReactiveRow) = {
@@ -108,7 +120,7 @@ case class Table(headers: Option[Table.Header] = None,
 
   def findIndex(reactiveRow: ReactiveRow): Option[Int] = findIndex(reactiveRow.uuid)
 
-  def findIndex(id: String): Option[Int] = {
+  def findIndex(id: ID): Option[Int] = {
     val lenght = tableBody.rows.length
 
     def findIndex0(currentIndex: Int, found: Boolean): Option[Int] = {
