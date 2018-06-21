@@ -153,19 +153,22 @@ object PlayGroundDemo {
     val aVar = Var(Seq(5, 7, 8))
     val toBeRemoved: Var[Seq[ReactiveRow]] = Var(Seq())
 
-    lazy val rr: ReactiveRow = {
-      ReactiveRow(Var(Seq(span("2.1"), span("3.66"), trigger2)), subRow = Some(SubRow(div(Rx {
+    lazy val rr: ReactiveRow =
+      reactiveRow(
+        Var(Seq(span("2.1"), span("3.66"), trigger2)), subRow = Some(SubRow(div(Rx {
         subTable2()
       }), expander2))
       )
-    }
+
+
+    val rr2 = reactiveRow(Var(Seq(span("11"), span("11"), span("111"))))
 
     val divCollapsibleTable = bsn.table.
       addHeaders("Title 1", "Title 2", "Title 3").
       addRow(rr).
-      addRow(ReactiveRow(Var(Seq(span("11"), span("222"), span("333"))))).
-      addRow(ReactiveRow(aVar.map { i => Seq(span(i(0).toString), span(i(1).toString), span(i(2).toString)) })).
-      addRow(ReactiveRow(Var(Seq(span("11"), span("222"), span("333")))))
+      addRow(rr2).
+      addRow(reactiveRow(aVar.map { i => Seq(span(i(0).toString), span(i(1).toString), span(i(2).toString)) })).
+      addRow(reactiveRow(Var(Seq(span("11"), span("222"), span("333")))))
 
     val collapsibleExample = div(
       button(btn_danger, "Expand", onclick := { () => expander() = !expander.now }),
@@ -182,18 +185,14 @@ object PlayGroundDemo {
     }
 
     def insert = {
-      divCollapsibleTable.insertRow(ReactiveRow(Var(Seq(span("2001"), span("30066"), span("9.88")))))
-    }
-
-    def deleteSecond = {
-      divCollapsibleTable.deleteRow(1)
+      divCollapsibleTable.insertRow(reactiveRow(Var(Seq(span("2001"), span("30066"), span("9.88")))))
     }
 
     val updateButton = button(btn_primary, "Update", onclick := { () => updateVar })
     val updateSubTableButton = button(btn_primary, marginLeft := 10, "Update sub table", onclick := { () => updateTable })
     val insertRowButton = button(btn_primary, marginLeft := 10, "Inert row", onclick := { () => insert })
-    val deleteRRButton = button(btn_danger, marginLeft := 10, "Delete second", onclick := { () =>
-      toBeRemoved() = toBeRemoved.now :+ rr
+    def deleteRRButton = button(btn_danger, marginLeft := 10, "Delete First", onclick := { () =>
+      divCollapsibleTable.delete(rr)
     })
 
 

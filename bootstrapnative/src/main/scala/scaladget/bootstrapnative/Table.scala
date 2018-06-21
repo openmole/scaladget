@@ -1,10 +1,13 @@
 package scaladget.bootstrapnative
 
-import org.scalajs.dom.raw.HTMLElement
+import java.util.UUID
+
+import org.scalajs.dom.raw.{HTMLElement, HTMLTableRowElement}
 import scalatags.JsDom.{TypedTag, tags}
 import scalatags.JsDom.all._
 import scaladget.tools._
 import bsn._
+import org.scalajs.dom.html.{TableRow, TableSection}
 import rx._
 import scaladget.bootstrapnative.Table.BSTableStyle
 
@@ -16,9 +19,12 @@ object Table {
 
   case class Row(values: Seq[TypedTag[HTMLElement]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None)
 
-  case class ReactiveRow(values: Rx[Seq[TypedTag[HTMLElement]]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None, autoDelete: Option[Rx[Boolean]] = None) {
+  def reactiveRow(values: Rx[Seq[TypedTag[HTMLElement]]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None, autoDelete: Option[Rx[Boolean]] = None) =
+    ReactiveRow(uuID.short("rr"), values, rowStyle, subRow, autoDelete)
 
-    val tr = tags.tr(values.now.map {
+  case class ReactiveRow(uuid: String, values: Rx[Seq[TypedTag[HTMLElement]]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None, autoDelete: Option[Rx[Boolean]] = None) {
+
+    val tr = tags.tr(id := uuid)(values.now.map {
       tags.td(_)
     }
       //      ,
@@ -62,7 +68,7 @@ object Table {
     def render = trigger.expand(stableDiv)
   }
 
-  implicit def rowToReactiveRow(r: Row): ReactiveRow = ReactiveRow(Rx(r.values), r.rowStyle, r.subRow)
+  implicit def rowToReactiveRow(r: Row): ReactiveRow = reactiveRow(Rx(r.values), r.rowStyle, r.subRow)
 
 }
 
@@ -91,9 +97,29 @@ case class Table(headers: Option[Table.Header] = None,
     this
   }
 
-  def deleteRow(index: Int) = {
-    if (tableBody.rows.length >= index)
-      tableBody.deleteRow(index)
+  def delete(row: ReactiveRow) = {
+    findIndex(row).foreach { ind =>
+      tableBody.deleteRow(ind)
+      row.subRow.foreach { x =>
+        tableBody.deleteRow(ind)
+      }
+    }
+  }
+
+  def findIndex(reactiveRow: ReactiveRow): Option[Int] = findIndex(reactiveRow.uuid)
+
+  def findIndex(id: String): Option[Int] = {
+    val lenght = tableBody.rows.length
+
+    def findIndex0(currentIndex: Int, found: Boolean): Option[Int] = {
+      if (found) Some(currentIndex - 1)
+      else if (currentIndex == lenght - 1) None
+      else {
+        findIndex0(currentIndex + 1, tableBody.rows(currentIndex).id == id)
+      }
+    }
+
+    findIndex0(0, false)
   }
 
   val tableBody = tags.tbody.render
