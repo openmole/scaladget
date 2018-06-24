@@ -31,6 +31,7 @@ import scaladget.bootstrapnative.Alert.ExtraButton
 import scaladget.bootstrapnative.SelectableButtons._
 import bsnsheet._
 import net.scalapro.sortable.{EventS, SortableProps}
+import scaladget.bootstrapnative.Table.ReactiveRow
 import scaladget.tools._
 
 object BootstrapTags extends BootstrapTags
@@ -812,7 +813,7 @@ trait BootstrapTags {
   //TABLE
   def dataTable = new DataTable
 
-  def table = new Table
+  def table(rows: Rx[Seq[ReactiveRow]]) = new Table(rows)
 
   // EXCLUSIVE BUTTON GROUPS
   def exclusiveButtonGroup(style: ModifierSeq, defaultStyle: ModifierSeq = btn_default, selectionStyle: ModifierSeq = btn_default)(buttons: ExclusiveButton*) = new ExclusiveGroup(style, defaultStyle, selectionStyle, buttons)

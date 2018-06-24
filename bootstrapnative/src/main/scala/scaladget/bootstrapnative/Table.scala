@@ -1,13 +1,10 @@
 package scaladget.bootstrapnative
 
-import java.util.UUID
-
-import org.scalajs.dom.raw.{HTMLElement, HTMLTableRowElement}
+import org.scalajs.dom.raw.{Element, HTMLElement}
 import scalatags.JsDom.{TypedTag, tags}
 import scalatags.JsDom.all._
 import scaladget.tools._
 import bsn._
-import org.scalajs.dom.html.{TableRow, TableSection}
 import rx._
 import scaladget.bootstrapnative.Table.BSTableStyle
 
@@ -19,12 +16,12 @@ object Table {
 
   case class Row(values: Seq[TypedTag[HTMLElement]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None)
 
-  def reactiveRow(values: Rx[Seq[TypedTag[HTMLElement]]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None) =
+  def reactiveRow(values: Seq[TypedTag[HTMLElement]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None) =
     ReactiveRow(uuID.short("rr"), values, rowStyle, subRow)
 
-  case class ReactiveRow(uuid: ID, values: Rx[Seq[TypedTag[HTMLElement]]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None) {
+  case class ReactiveRow(uuid: ID, values: Seq[TypedTag[HTMLElement]] = Seq(), rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None) {
 
-    val tr = tags.tr(id := uuid)(values.now.map {
+    lazy val tr = tags.tr(id := uuid)(values.map {
       tags.td(_)
     }
       //      ,
@@ -38,8 +35,8 @@ object Table {
       //    )
       .render
 
-    val subtr = subRow.map { sr =>
-      tags.tr(rowStyle)(
+    lazy val subtr = subRow.map { sr =>
+      tags.tr(id:= uuid, rowStyle)(
         tags.td(colspan := 999, padding := 0, borderTop := "0px solid black")(
           sr.render
         )
@@ -47,15 +44,6 @@ object Table {
     }
 
     def rows = Seq(Some(tr), subtr).flatten
-
-    values.trigger {
-      while (tr.firstChild != null) {
-        tr.removeChild(tr.firstChild)
-      }
-      values.now.foreach { x =>
-        tr.appendChild(tags.td(x.render))
-      }
-    }
   }
 
   type RowType = (String, Int) => TypedTag[HTMLElement]
@@ -66,49 +54,76 @@ object Table {
     def render = trigger.expand(stableDiv)
   }
 
-  implicit def rowToReactiveRow(r: Row): ReactiveRow = reactiveRow(Rx(r.values), r.rowStyle, r.subRow)
+  implicit def rowToReactiveRow(r: Row): ReactiveRow = reactiveRow(r.values, r.rowStyle, r.subRow)
 
+
+  def updateValues(element: Element, values: Seq[TypedTag[HTMLElement]]) = {
+    while (element.firstChild != null) {
+      element.removeChild(element.firstChild)
+    }
+    values.foreach { x =>
+      element.appendChild(tags.td(x.render))
+    }
+  }
 }
 
 import Table._
 
-case class Table(headers: Option[Table.Header] = None,
+case class Table(rows: Rx[Seq[ReactiveRow]],
+                 updater: Option[ID=> Rx[Seq[TypedTag[HTMLElement]]]] = None,
+                 headers: Option[Table.Header] = None,
                  bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod),
-                 autoDelete: Option[ID=> Rx[Boolean]] = None) {
+                ) {
 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
   val selected: Var[Option[ReactiveRow]] = Var(None)
 
   def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
 
-  def addRow(row: ReactiveRow): Table = {
-    row.rows.foreach { r =>
-      tableBody.appendChild(r)
-    }
-    setAutoDelete(row)
-    this
-  }
-
-  def withAutoDelete(ad: (ID)=> Rx[Boolean]) = copy(autoDelete = Some(ad))
-
-  def insertRow(row: ReactiveRow): Table = {
+  private def insertRowInDom(row: ReactiveRow) = {
     row.rows.foreach { n =>
       tableBody.insertBefore(n, tableBody.firstChild)
     }
-    setAutoDelete(row)
-    this
   }
 
-  private def setAutoDelete(row: ReactiveRow) =
-    autoDelete.foreach { ad =>
-    val reactive = ad(row.uuid)
-    reactive.trigger {
-      if (reactive.now) {
-        delete(row)
-      }
+  private def addRowInDom(row: ReactiveRow) = {
+    row.rows.foreach { r =>
+      tableBody.appendChild(r)
+      setUpdater(row.uuid)
     }
   }
 
+  rows.trigger {
+    val inBody = getIndexedTrIds
+
+    rows.now.foreach { rr =>
+      if (!inBody.values.toSeq.contains(rr.uuid)) {
+        addRowInDom(rr)
+
+      }
+    }
+
+    inBody.foreach {
+      case (index, id) =>
+        if (!rows.now.map {
+          _.uuid
+        }.contains(id)) {
+          tableBody.deleteRow(index)
+        }
+    }
+  }
+
+
+  def setUpdater(id: ID) = {
+    updater.map{u=>
+      val rx = u(id)
+      rx.triggerLater{
+        findIndex(id).map{i=>
+          Table.updateValues(tableBody.rows(i), rx.now)
+        }
+      }
+    }
+  }
   def delete(row: ReactiveRow) = {
     findIndex(row).foreach { ind =>
       tableBody.deleteRow(ind)
@@ -117,6 +132,24 @@ case class Table(headers: Option[Table.Header] = None,
       }
     }
   }
+
+  def deleteID(id: ID) = {
+    rows.now.filter {
+      _.uuid == id
+    }.foreach { rr =>
+      delete(rr)
+    }
+  }
+
+  def getIndexedTrIds = {
+    val size = tableBody.rows.length
+    if (size > 0) {
+      (0 to size - 1).map { i =>
+        i -> tableBody.rows(i).id
+      }.toMap
+    } else Map()
+  }
+
 
   def findIndex(reactiveRow: ReactiveRow): Option[Int] = findIndex(reactiveRow.uuid)
 
@@ -131,10 +164,11 @@ case class Table(headers: Option[Table.Header] = None,
       }
     }
 
-    findIndex0(0, false)
+    if(lenght == 0) None
+    else findIndex0(0, false)
   }
 
-  val tableBody = tags.tbody.render
+  lazy val tableBody = tags.tbody.render
 
   lazy val render = {
 

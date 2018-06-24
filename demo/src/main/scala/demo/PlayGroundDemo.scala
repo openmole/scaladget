@@ -13,6 +13,9 @@ import java.util.concurrent.ThreadLocalRandom
 
 import scaladget.tools._
 
+import scala.scalajs.js.timers
+import scala.scalajs.js.timers.SetTimeoutHandle
+
 object PlayGroundDemo {
   val sc = sourcecode.Text {
     import rx._
@@ -150,37 +153,63 @@ object PlayGroundDemo {
     )
 
     val aVar = Var(Seq(5, 7, 8))
-    val toBeRemoved: Var[Seq[ID]] = Var(Seq())
+    case class MyData(a: String, b: String, c: String)
+
+    val inTable: Var[Map[ID, MyData]] = Var(Map())
+
+    def refresh: SetTimeoutHandle = {
+      timers.setTimeout(3000) {
+        val next = rand.nextInt(0, 5).toString
+        println("\n\n\n##################### timeout ")
+        update(next)
+        refresh
+      }
+    }
+
+    def update(id: ID) = {
+      val data = MyData(rand.nextInt(0, 1000).toString, rand.nextInt(0, 100).toString, rand.nextInt(0, 50).toString)
+      inTable() = inTable.now.updated(id, data)
+    }
 
     def deleteRRButton(id: ID) = button(btn_danger, marginLeft := 10, "Delete", onclick := { () =>
-      toBeRemoved() = toBeRemoved.now :+ id
+      inTable() = inTable.now.filterNot(_._1 == id)
     })
 
     lazy val rr: ReactiveRow = {
       val id = uuID.short("rr")
       ReactiveRow(
         id,
-        Var(Seq(span("2.1"), span("3.66"), trigger2, deleteRRButton(id))), subRow = Some(SubRow(div(Rx {
+        Seq(span("2.1"), trigger2, deleteRRButton(id)), subRow = Some(SubRow(div(Rx {
           subTable2()
         }), expander2))
       )
     }
 
 
-    val rr2 = {
+    lazy val rr2 = {
       val id = uuID.short("rr")
-      ReactiveRow(id, Var(Seq(span("11"), span("11"), span("111"), deleteRRButton(id))))
+      ReactiveRow(id, Seq(span("11"), span("11"), span("111"), deleteRRButton(id)))
     }
 
-    val divCollapsibleTable = bsn.table.
-      withAutoDelete((id: ID) => toBeRemoved.map {
-        _.contains(id)
-      }).
-      addHeaders("Title 1", "Title 2", "Title 3").
-      addRow(rr).
-      addRow(rr2).
-      addRow(reactiveRow(aVar.map { i => Seq(span(i(0).toString), span(i(1).toString), span(i(2).toString)) })).
-      addRow(reactiveRow(Var(Seq(span("11"), span("222"), span("333")))))
+    val divCollapsibleTable =
+      Table(inTable.map { t =>
+        t.map {
+          case (id, md) =>
+            ReactiveRow(id, Seq(span("11"), span("22"), span("33"), deleteRRButton(id))
+//              , subRow = Some(SubRow(div(Rx {
+//              subTable2()
+//            }), expander2))
+            )
+        }.toSeq
+      }, Some(
+        (id: ID) => inTable.map { t =>
+          t.get(id).map { md =>
+            Seq(span(md.a), span(md.b), span(md.c), deleteRRButton(id))
+          }.getOrElse(Seq())
+        }
+      )
+      )
+        .addHeaders("Title 1", "Title 2", "Title 3", "")
 
     val collapsibleExample = div(
       button(btn_danger, "Expand", onclick := { () => expander() = !expander.now }),
@@ -195,14 +224,9 @@ object PlayGroundDemo {
       subTable2() = rt
     }
 
-    def insert = {
-      divCollapsibleTable.insertRow(reactiveRow(Var(Seq(span("2001"), span("30066"), span("9.88")))))
-    }
-
     val updateButton = button(btn_primary, "Update", onclick := { () => updateVar })
     val updateSubTableButton = button(btn_primary, marginLeft := 10, "Update sub table", onclick := { () => updateTable })
-    val insertRowButton = button(btn_primary, marginLeft := 10, "Insert row", onclick := { () => insert })
-
+    refresh
 
     div(
       h3("TABS"),
@@ -211,8 +235,8 @@ object PlayGroundDemo {
       collapsibleExample,
       divCollapsibleTable.render,
       updateButton,
-      updateSubTableButton,
-      insertRowButton
+      updateSubTableButton
+      //   insertRowButton
     ).render
 
 
