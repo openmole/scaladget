@@ -1,9 +1,11 @@
 package scaladget.bootstrapnative
 
-import org.scalajs.dom.raw.{Element, HTMLElement}
+import org.scalajs.dom.raw.{Element, HTMLElement, HTMLTableRowElement, Node}
 import scalatags.JsDom.{TypedTag, tags}
 import scalatags.JsDom.all._
-import scaladget.tools._
+import scaladget.tools.{ModifierSeq, emptyMod}
+import scaladget.tools.Utils._
+import scaladget.tools.JsRxTags._
 import bsn._
 import rx._
 import scaladget.bootstrapnative.Table.BSTableStyle
@@ -16,13 +18,22 @@ object Table {
 
   case class Row(values: Seq[TypedTag[HTMLElement]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None)
 
-  def reactiveRow(values: Seq[TypedTag[HTMLElement]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None) =
-    ReactiveRow(uuID.short("rr"), values, rowStyle, subRow)
+  sealed trait Cell{
+    def value: TypedTag[HTMLElement]
+    def cellIndex: Int
+  }
+  case class VarCell(value: TypedTag[HTMLElement], cellIndex: Int) extends Cell
+  case class FixedCell(value: TypedTag[HTMLElement], cellIndex: Int) extends Cell
 
-  case class ReactiveRow(uuid: ID, values: Seq[TypedTag[HTMLElement]] = Seq(), rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None) {
+  def collectVar(cells: Seq[Cell]) = cells.collect{case v: VarCell=> v}
 
-    lazy val tr = tags.tr(id := uuid)(values.map {
-      tags.td(_)
+  def reactiveRow(cells: Seq[Cell], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None) =
+    ReactiveRow(uuID.short("rr"), cells, rowStyle, subRow)
+
+  case class ReactiveRow(uuid: ID, cells: Seq[Cell] = Seq(), rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None) {
+
+    lazy val tr = tags.tr(id := uuid)(cells.map { c =>
+      tags.td(c.value)
     }
       //      ,
       //      backgroundColor := Rx {
@@ -36,14 +47,21 @@ object Table {
       .render
 
     lazy val subtr = subRow.map { sr =>
-      tags.tr(id:= uuid, rowStyle)(
+      tags.tr(id := s"${uuid}sub", rowStyle)(
         tags.td(colspan := 999, padding := 0, borderTop := "0px solid black")(
           sr.render
         )
       ).render
     }
 
-    def rows = Seq(Some(tr), subtr).flatten
+    lazy val rows = {
+      println("############$ ROZS " + Seq(Some(tr), subtr).flatten.map {
+        _.id
+      })
+      Seq(Some(tr), subtr).flatten
+    }
+
+    def varCells = (uuid, collectVar(cells))
   }
 
   type RowType = (String, Int) => TypedTag[HTMLElement]
@@ -51,32 +69,37 @@ object Table {
   case class SubRow(subTypedTag: TypedTag[HTMLElement], trigger: Rx[Boolean] = Rx(false)) {
     val stableDiv = div(subTypedTag)
 
-    def render = trigger.expand(stableDiv)
+    val render = {
+      trigger.expand(stableDiv)
+    }
   }
 
-  implicit def rowToReactiveRow(r: Row): ReactiveRow = reactiveRow(r.values, r.rowStyle, r.subRow)
+  implicit def rowToReactiveRow(r: Row): ReactiveRow = reactiveRow(r.values.zipWithIndex.map{v=> VarCell(v._1, v._2)}, r.rowStyle, r.subRow)
 
-
-  def updateValues(element: Element, values: Seq[TypedTag[HTMLElement]]) = {
-    while (element.firstChild != null) {
-      element.removeChild(element.firstChild)
-    }
-    values.foreach { x =>
-      element.appendChild(tags.td(x.render))
+  def updateValues(element: HTMLTableRowElement, values: Seq[(TypedTag[HTMLElement], Int)]) = {
+    for (
+      (el, ind) <- values
+    ) yield {
+      val old = element.childNodes(ind)
+      println("REPLACE " + old + " by " + el)
+      element.replaceChild(td(el), old)
     }
   }
 }
 
 import Table._
 
+
 case class Table(rows: Rx[Seq[ReactiveRow]],
-                 updater: Option[ID=> Rx[Seq[TypedTag[HTMLElement]]]] = None,
+                 //  updater: Option[Rx[ID=> Seq[(Int,TypedTag[HTMLElement])]]] = None,
+                 //  toBeApdated: Rx[ID]
                  headers: Option[Table.Header] = None,
                  bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod),
                 ) {
 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
   val selected: Var[Option[ReactiveRow]] = Var(None)
+  val previousState: Var[Seq[(ID, Seq[VarCell])]] = Var(rows.now.map{_.varCells})
 
   def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
 
@@ -87,43 +110,57 @@ case class Table(rows: Rx[Seq[ReactiveRow]],
   }
 
   private def addRowInDom(row: ReactiveRow) = {
+    println("ADD ROZ in DON " + row.rows.length)
     row.rows.foreach { r =>
+      println("APPENDDD " + row.uuid)
       tableBody.appendChild(r)
-      setUpdater(row.uuid)
     }
   }
 
+  // CASE ADD
   rows.trigger {
-    val inBody = getIndexedTrIds
 
+    println("subrows " + rows.now.map{_.subRow})
+    val inBody = getIndexedTrIds
+    val varCells = rows.now.map{_.varCells}
+
+    var modif = false
     rows.now.foreach { rr =>
       if (!inBody.values.toSeq.contains(rr.uuid)) {
+        modif = true
         addRowInDom(rr)
-
       }
     }
 
+    // CASE DELETE
+    val rowsAndSubs = rows.now.map { r =>
+      Seq(r.uuid, s"${r.uuid}sub")
+    }.flatten
     inBody.foreach {
       case (index, id) =>
-        if (!rows.now.map {
-          _.uuid
-        }.contains(id)) {
+        if (!rowsAndSubs.contains(id)) {
+          println("--  DELETE " + index)
+          modif = true
           tableBody.deleteRow(index)
         }
     }
-  }
 
-
-  def setUpdater(id: ID) = {
-    updater.map{u=>
-      val rx = u(id)
-      rx.triggerLater{
-        findIndex(id).map{i=>
-          Table.updateValues(tableBody.rows(i), rx.now)
+    //CASE UPDATE
+    if (!modif) {
+      val di = varCells diff previousState.now
+      println("DIFF " + di)
+      di.foreach { m =>
+        println("--------UPDATE " + m)
+        findIndex(m._1).map { i =>
+          Table.updateValues(tableBody.rows(i).asInstanceOf[HTMLTableRowElement], m._2.map{v=> (v.value, v.cellIndex)})
         }
       }
     }
+
+    previousState() = varCells
+    println("END " + previousState.now)
   }
+
   def delete(row: ReactiveRow) = {
     findIndex(row).foreach { ind =>
       tableBody.deleteRow(ind)
@@ -164,7 +201,7 @@ case class Table(rows: Rx[Seq[ReactiveRow]],
       }
     }
 
-    if(lenght == 0) None
+    if (lenght == 0) None
     else findIndex0(0, false)
   }
 

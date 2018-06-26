@@ -12,6 +12,7 @@ import scalatags.JsDom.all._
 import java.util.concurrent.ThreadLocalRandom
 
 import scaladget.tools._
+import scalatags.JsDom.TypedTag
 
 import scala.scalajs.js.timers
 import scala.scalajs.js.timers.SetTimeoutHandle
@@ -133,9 +134,31 @@ object PlayGroundDemo {
       addRow("151", "a", "33")
 
 
-    val expander2 = rx.Var(false)
-    val trigger2 = button(btn_danger, "Expand", onclick := { () =>
-      expander2() = !expander2.now
+    val expander2: Var[Seq[ID]] = Var(Seq())
+
+    //  val expander2: Var[Boolean] = Var(false)
+
+    val triggerCache: Var[Map[ID, TypedTag[HTMLButtonElement]]] = Var(Map())
+
+    def trigger2(id: ID) = triggerCache.now.getOrElse(id, {
+      println("Need new triggr")
+      val b = button(btn_default, "Expand", onclick := { () =>
+        expander2() = {
+          expander2.now.find {
+            _ == id
+          } match {
+            case Some(i) => expander2.now.filterNot {
+              _ == i
+            }
+            case _ => expander2.now :+ id
+          }
+        }
+        println("CONTAINS ? " + expander2.now)
+      })
+
+      triggerCache() = triggerCache.now.updated(id, b)
+
+      b
     })
 
     val rand = ThreadLocalRandom.current()
@@ -159,7 +182,7 @@ object PlayGroundDemo {
 
     def refresh: SetTimeoutHandle = {
       timers.setTimeout(3000) {
-        val next = rand.nextInt(0, 5).toString
+        val next = rand.nextInt(0, 2).toString
         println("\n\n\n##################### timeout ")
         update(next)
         refresh
@@ -175,41 +198,21 @@ object PlayGroundDemo {
       inTable() = inTable.now.filterNot(_._1 == id)
     })
 
-    lazy val rr: ReactiveRow = {
-      val id = uuID.short("rr")
-      ReactiveRow(
-        id,
-        Seq(span("2.1"), trigger2, deleteRRButton(id)), subRow = Some(SubRow(div(Rx {
-          subTable2()
-        }), expander2))
-      )
-    }
-
-
-    lazy val rr2 = {
-      val id = uuID.short("rr")
-      ReactiveRow(id, Seq(span("11"), span("11"), span("111"), deleteRRButton(id)))
-    }
-
     val divCollapsibleTable =
       Table(inTable.map { t =>
+        println("/// UPDATE in ROWES")
         t.map {
           case (id, md) =>
-            ReactiveRow(id, Seq(span("11"), span("22"), span("33"), deleteRRButton(id))
-//              , subRow = Some(SubRow(div(Rx {
-//              subTable2()
-//            }), expander2))
+            ReactiveRow(id, Seq(VarCell(span(md.a),0), VarCell(span(md.b),1), VarCell(span(md.c),2), FixedCell(trigger2(id),3), FixedCell(deleteRRButton(id),4)),
+              subRow = Some(SubRow(div(Rx {
+                subTable2()
+              }), trigger = expander2.map {
+                _.contains(id)
+              }))
             )
         }.toSeq
-      }, Some(
-        (id: ID) => inTable.map { t =>
-          t.get(id).map { md =>
-            Seq(span(md.a), span(md.b), span(md.c), deleteRRButton(id))
-          }.getOrElse(Seq())
-        }
-      )
-      )
-        .addHeaders("Title 1", "Title 2", "Title 3", "")
+      }
+      ).addHeaders("Title 1", "Title 2", "Title 3", "")
 
     val collapsibleExample = div(
       button(btn_danger, "Expand", onclick := { () => expander() = !expander.now }),
@@ -232,7 +235,7 @@ object PlayGroundDemo {
       h3("TABS"),
       theTabs.render,
       h3("COLLAPSIBLE TABLES"),
-      collapsibleExample,
+     // collapsibleExample,
       divCollapsibleTable.render,
       updateButton,
       updateSubTableButton

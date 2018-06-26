@@ -20,15 +20,31 @@ package scaladget.tools
 import org.scalajs.dom
 import org.scalajs.dom.raw.{Element, Event}
 
-trait Utils {
+object Utils extends utils.Utils
 
-  implicit class ElementListener(element: Element) {
+package object utils {
 
-    def onClickOutside(f: () => Unit) = {
-      dom.document.addEventListener("mousedown", (e: Event) => {
-        f()
-      })
+  trait Utils {
+
+    implicit class ElementListener(element: Element) {
+
+      def onClickOutside(f: () => Unit) = {
+        dom.document.addEventListener("mousedown", (e: Event) => {
+          f()
+        })
+      }
     }
+
+    type ID = String
+
+    def uuID: ID = java.util.UUID.randomUUID.toString
+
+    implicit class ShortID(id: ID) {
+      def short: String = id.split('-').head
+
+      def short(prefix: String): String = s"$prefix$short"
+    }
+
   }
 
 }
