@@ -200,7 +200,6 @@ object PlayGroundDemo {
 
     val divCollapsibleTable =
       Table(inTable.map { t =>
-        println("/// UPDATE in ROWES")
         t.map {
           case (id, md) =>
             ReactiveRow(id, Seq(VarCell(span(md.a),0), VarCell(span(md.b),1), VarCell(span(md.c),2), FixedCell(trigger2(id),3), FixedCell(deleteRRButton(id),4)),

@@ -18,14 +18,17 @@ object Table {
 
   case class Row(values: Seq[TypedTag[HTMLElement]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None)
 
-  sealed trait Cell{
+  sealed trait Cell {
     def value: TypedTag[HTMLElement]
+
     def cellIndex: Int
   }
+
   case class VarCell(value: TypedTag[HTMLElement], cellIndex: Int) extends Cell
+
   case class FixedCell(value: TypedTag[HTMLElement], cellIndex: Int) extends Cell
 
-  def collectVar(cells: Seq[Cell]) = cells.collect{case v: VarCell=> v}
+  def collectVar(cells: Seq[Cell]) = cells.collect { case v: VarCell => v }
 
   def reactiveRow(cells: Seq[Cell], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None) =
     ReactiveRow(uuID.short("rr"), cells, rowStyle, subRow)
@@ -54,12 +57,8 @@ object Table {
       ).render
     }
 
-    lazy val rows = {
-      println("############$ ROZS " + Seq(Some(tr), subtr).flatten.map {
-        _.id
-      })
-      Seq(Some(tr), subtr).flatten
-    }
+    lazy val rows = Seq(Some(tr), subtr).flatten
+
 
     def varCells = (uuid, collectVar(cells))
   }
@@ -74,7 +73,7 @@ object Table {
     }
   }
 
-  implicit def rowToReactiveRow(r: Row): ReactiveRow = reactiveRow(r.values.zipWithIndex.map{v=> VarCell(v._1, v._2)}, r.rowStyle, r.subRow)
+  implicit def rowToReactiveRow(r: Row): ReactiveRow = reactiveRow(r.values.zipWithIndex.map { v => VarCell(v._1, v._2) }, r.rowStyle, r.subRow)
 
   def updateValues(element: HTMLTableRowElement, values: Seq[(TypedTag[HTMLElement], Int)]) = {
     for (
@@ -91,15 +90,15 @@ import Table._
 
 
 case class Table(rows: Rx[Seq[ReactiveRow]],
-                 //  updater: Option[Rx[ID=> Seq[(Int,TypedTag[HTMLElement])]]] = None,
-                 //  toBeApdated: Rx[ID]
                  headers: Option[Table.Header] = None,
                  bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod),
                 ) {
 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
   val selected: Var[Option[ReactiveRow]] = Var(None)
-  val previousState: Var[Seq[(ID, Seq[VarCell])]] = Var(rows.now.map{_.varCells})
+  val previousState: Var[Seq[(ID, Seq[VarCell])]] = Var(rows.now.map {
+    _.varCells
+  })
 
   def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
 
@@ -110,23 +109,23 @@ case class Table(rows: Rx[Seq[ReactiveRow]],
   }
 
   private def addRowInDom(row: ReactiveRow) = {
-    println("ADD ROZ in DON " + row.rows.length)
     row.rows.foreach { r =>
-      println("APPENDDD " + row.uuid)
       tableBody.appendChild(r)
     }
   }
 
-  // CASE ADD
   rows.trigger {
 
-    println("subrows " + rows.now.map{_.subRow})
-    val inBody = getIndexedTrIds
-    val varCells = rows.now.map{_.varCells}
+    val inBody = bodyIds
+    val varCells = rows.now.map {
+      _.varCells
+    }
 
     var modif = false
+
+    // CASE ADD
     rows.now.foreach { rr =>
-      if (!inBody.values.toSeq.contains(rr.uuid)) {
+      if (!inBody.contains(rr.uuid)) {
         modif = true
         addRowInDom(rr)
       }
@@ -136,23 +135,23 @@ case class Table(rows: Rx[Seq[ReactiveRow]],
     val rowsAndSubs = rows.now.map { r =>
       Seq(r.uuid, s"${r.uuid}sub")
     }.flatten
-    inBody.foreach {
-      case (index, id) =>
+    inBody.foreach {id=>
         if (!rowsAndSubs.contains(id)) {
-          println("--  DELETE " + index)
           modif = true
-          tableBody.deleteRow(index)
+          findIndex(id).foreach {
+            tableBody.deleteRow
+          }
         }
     }
+
 
     //CASE UPDATE
     if (!modif) {
       val di = varCells diff previousState.now
-      println("DIFF " + di)
       di.foreach { m =>
         println("--------UPDATE " + m)
         findIndex(m._1).map { i =>
-          Table.updateValues(tableBody.rows(i).asInstanceOf[HTMLTableRowElement], m._2.map{v=> (v.value, v.cellIndex)})
+          Table.updateValues(tableBody.rows(i).asInstanceOf[HTMLTableRowElement], m._2.map { v => (v.value, v.cellIndex) })
         }
       }
     }
@@ -161,30 +160,13 @@ case class Table(rows: Rx[Seq[ReactiveRow]],
     println("END " + previousState.now)
   }
 
-  def delete(row: ReactiveRow) = {
-    findIndex(row).foreach { ind =>
-      tableBody.deleteRow(ind)
-      row.subRow.foreach { x =>
-        tableBody.deleteRow(ind)
-      }
-    }
-  }
-
-  def deleteID(id: ID) = {
-    rows.now.filter {
-      _.uuid == id
-    }.foreach { rr =>
-      delete(rr)
-    }
-  }
-
-  def getIndexedTrIds = {
+  def bodyIds = {
     val size = tableBody.rows.length
     if (size > 0) {
       (0 to size - 1).map { i =>
-        i -> tableBody.rows(i).id
-      }.toMap
-    } else Map()
+        tableBody.rows(i).id
+      }
+    } else Seq()
   }
 
 
@@ -195,7 +177,7 @@ case class Table(rows: Rx[Seq[ReactiveRow]],
 
     def findIndex0(currentIndex: Int, found: Boolean): Option[Int] = {
       if (found) Some(currentIndex - 1)
-      else if (currentIndex == lenght - 1) None
+      else if (currentIndex == lenght) None
       else {
         findIndex0(currentIndex + 1, tableBody.rows(currentIndex).id == id)
       }
