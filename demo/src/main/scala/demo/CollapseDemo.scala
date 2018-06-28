@@ -1,11 +1,10 @@
 package demo
 
 import org.scalajs.dom.Element
-
 import scaladget.bootstrapnative.bsn._
 import scaladget.tools._
-
 import org.scalajs.dom.raw._
+import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 
 /*
@@ -33,11 +32,20 @@ object CollapseDemo extends Demo {
 
     val onoff = Var(true)
 
-    div(
-      buttonIcon("Trigger !", btn_primary +++ (marginBottom := 10).toMS).expandOnclick(panel("My text in detail")(width := 400)),
+    lazy val aDiv: HTMLDivElement = div(
+      buttonIcon("Trigger !", btn_primary +++ (marginBottom := 10).toMS).expandOnclick(panel("My text in detail")(width := 400, height := 200)),
       button("Set Var", btn_danger, onclick := {()=> onoff() = !onoff.now}),
-      onoff.expand(div("Yes", backgroundColor := "orange"))
-    )
+      onoff.expand(div("Yes", backgroundColor := "orange", height := 150)),
+
+      button(btn_default, "Build", onclick := {() =>
+        println("Build")
+        aDiv.appendChild(
+          onoff.expand(div("YAA", backgroundColor := "yellow", height := 300))
+        )
+      })
+    ).render
+
+    aDiv
   }
 
   val elementDemo = new ElementDemo {
@@ -45,6 +53,6 @@ object CollapseDemo extends Demo {
 
     def code: String = sc.source
 
-    def element: Element = sc.value.render
+    def element: Element = sc.value
   }
 }

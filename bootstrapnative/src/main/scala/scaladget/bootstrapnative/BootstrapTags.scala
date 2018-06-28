@@ -622,11 +622,18 @@ trait BootstrapTags {
     dangerAlerts(title, Seq(content), triggerCondition, todocancel)(otherButtons.toSeq: _*)
 
 
+  // COLLAPSERS
   implicit class TagCollapserOnClick[S <: TypedTag[HTMLElement]](trigger: S) {
     def expandOnclick[T <: TypedTag[HTMLElement]](inner: T) = {
 
-      val collapser = new Collapser(inner, trigger)
-      collapser.div
+      val clicked: Var[Boolean] = Var(false)
+
+      div(
+        trigger(onclick := { () =>
+          clicked() = !clicked.now
+        }),
+      clicked.expand(inner)
+      )
     }
   }
 
@@ -634,40 +641,16 @@ trait BootstrapTags {
     def expand[T <: TypedTag[HTMLElement]](inner: T) = {
 
       println("R " + r)
-      val collapser = new Collapser(inner, initExpand = r.now)
-      val dynamic = new DynamicCollapser(collapser, r)
+      r.trigger {
+        if (r.now) wrapper.style.height = inner.render.style.height
+        else wrapper.style.height = "0px"
+      }
 
-      collapser.div
+      lazy val wrapper = div(overflow := "hidden", transition := "height 300ms")(inner).render
 
+      wrapper
     }
   }
-
-  // COLLAPSERS
-  class Collapser(rawInnerTag: TypedTag[HTMLElement], rawTriggerTag: TypedTag[HTMLElement] = div(), initExpand: Boolean = false) {
-
-    private val hrefID = uuID.short("c")
-
-    val classTrigger = if (initExpand) "" else "collapsed"
-    val classInner = "collapse" + {
-      if (initExpand) " in" else ""
-    }
-
-    val triggerTag = a(data("toggle") := "collapse", `class` := classTrigger, href := s"#${hrefID}", aria.expanded := initExpand, aria.controls := hrefID)(rawTriggerTag).render
-    val innergTag = tags.div(ms(classInner), id := hrefID, aria.expanded := initExpand, role := presentation_role)(rawInnerTag).render
-
-    val div = tags.div(
-      triggerTag,
-      innergTag
-    )
-  }
-
-  class DynamicCollapser(val collapser: Collapser, expand: Rx[Boolean]) {
-    expand.trigger {
-      collapser.triggerTag.click()
-    }
-
-  }
-
 
   // TABS
   case class Tab(title: String, content: BS, onclickExtra: () => Unit = () => {}, tabID: String = uuID.short("t"), refID: String = uuID.short("r"))
@@ -813,7 +796,7 @@ trait BootstrapTags {
   //TABLE
   def dataTable = new DataTable
 
-  def table(rows: Rx[Seq[ReactiveRow]]) = new Table(rows)
+  def table(rows: Rx.Dynamic[Seq[ReactiveRow]]) = new Table(rows)
 
   // EXCLUSIVE BUTTON GROUPS
   def exclusiveButtonGroup(style: ModifierSeq, defaultStyle: ModifierSeq = btn_default, selectionStyle: ModifierSeq = btn_default)(buttons: ExclusiveButton*) = new ExclusiveGroup(style, defaultStyle, selectionStyle, buttons)
