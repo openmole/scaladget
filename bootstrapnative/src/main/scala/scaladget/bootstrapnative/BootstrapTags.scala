@@ -640,13 +640,14 @@ trait BootstrapTags {
   implicit class TagCollapserWithReactive(r: Rx[Boolean]) {
     def expand[T <: TypedTag[HTMLElement]](inner: T) = {
 
-      println("R " + r)
+      val innerRender = inner.render
+
       r.trigger {
-        if (r.now) wrapper.style.height = inner.render.style.height
+        if (r.now) wrapper.style.height = innerRender.style.height
         else wrapper.style.height = "0px"
       }
 
-      lazy val wrapper = div(overflow := "hidden", transition := "height 300ms")(inner).render
+      lazy val wrapper = div(overflow := "hidden", transition := "height 300ms")(innerRender).render
 
       wrapper
     }
