@@ -1,6 +1,6 @@
 package scaladget.bootstrapnative
 
-import org.scalajs.dom.raw.{Element, HTMLElement, HTMLTableRowElement, Node}
+import org.scalajs.dom.raw._
 import scalatags.JsDom.{TypedTag, tags}
 import scalatags.JsDom.all._
 import scaladget.tools.{ModifierSeq, emptyMod}
@@ -16,7 +16,7 @@ object Table {
 
   case class Header(values: Seq[String])
 
-  case class Row(values: Seq[TypedTag[HTMLElement]], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None)
+  case class Row(values: Seq[TypedTag[HTMLElement]], rowStyle: ModifierSeq = emptyMod)
 
   sealed trait Cell {
     def value: TypedTag[HTMLElement]
@@ -30,10 +30,10 @@ object Table {
 
   def collectVar(cells: Seq[Cell]) = cells.collect { case v: VarCell => v }
 
-  def reactiveRow(cells: Seq[Cell], rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None) =
-    ReactiveRow(uuID.short("rr"), cells, rowStyle, subRow)
+  def reactiveRow(cells: Seq[Cell], rowStyle: ModifierSeq = emptyMod) =
+    ReactiveRow(uuID.short("rr"), cells, rowStyle)
 
-  case class ReactiveRow(uuid: ID, cells: Seq[Cell] = Seq(), rowStyle: ModifierSeq = emptyMod, subRow: Option[SubRow] = None) {
+  case class ReactiveRow(uuid: ID, cells: Seq[Cell] = Seq(), rowStyle: ModifierSeq = emptyMod) {
 
     lazy val tr = tags.tr(id := uuid)(cells.map { c =>
       tags.td(c.value)
@@ -49,38 +49,21 @@ object Table {
       //    )
       .render
 
-    lazy val subtr = subRow.map { sr =>
-      tags.tr(id := s"${uuid}sub", rowStyle)(
-        tags.td(colspan := 999, padding := 0, borderTop := "0px solid black")(
-          sr.render
-        )
-      ).render
-    }
-
-    lazy val rows = Seq(Some(tr), subtr).flatten
-
 
     def varCells = (uuid, collectVar(cells))
   }
 
   type RowType = (String, Int) => TypedTag[HTMLElement]
 
-  case class SubRow(subTypedTag: TypedTag[HTMLElement], trigger: Rx[Boolean] = Rx(false)) {
-    val stableDiv = div(subTypedTag)
+  case class SubRow(subTypedTag: TypedTag[HTMLElement], trigger: Rx[Boolean] = Rx(false))
 
-    val render = {
-      trigger.expand(stableDiv)
-    }
-  }
-
-  implicit def rowToReactiveRow(r: Row): ReactiveRow = reactiveRow(r.values.zipWithIndex.map { v => VarCell(v._1, v._2) }, r.rowStyle, r.subRow)
+  implicit def rowToReactiveRow(r: Row): ReactiveRow = reactiveRow(r.values.zipWithIndex.map { v => VarCell(v._1, v._2) }, r.rowStyle)
 
   def updateValues(element: HTMLTableRowElement, values: Seq[(TypedTag[HTMLElement], Int)]) = {
     for (
       (el, ind) <- values
     ) yield {
       val old = element.childNodes(ind)
-      println("REPLACE " + old + " by " + el)
       element.replaceChild(td(el), old)
     }
   }
@@ -89,82 +72,96 @@ object Table {
 import Table._
 
 
-case class Table(rows: Rx[Seq[ReactiveRow]],
+case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
+                 subRow: Option[ID => Table.SubRow] = None,
                  headers: Option[Table.Header] = None,
-                 bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod),
-                ) {
+                 bsTableStyle: BSTableStyle = BSTableStyle(default_table, emptyMod)) {
 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
   val selected: Var[Option[ReactiveRow]] = Var(None)
-  val previousState: Var[Seq[(ID, Seq[VarCell])]] = Var(rows.now.map {
-    _.varCells
-  })
+  var previousState: Seq[(ID, Seq[VarCell])] = Seq()
 
   def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
 
-  private def insertRowInDom(row: ReactiveRow) = {
-    row.rows.foreach { n =>
-      tableBody.insertBefore(n, tableBody.firstChild)
+  //  private def insertRowInDom(row: ReactiveRow) = {
+  //    row.rows.foreach { n =>
+  //      tableBody.insertBefore(n, tableBody.firstChild)
+  //    }
+  //  }
+
+  private def buildSubRow(rr: ReactiveRow, element: HTMLElement) = {
+    println("BUILD SUB ROW " + element)
+    tags.tr(id := s"${rr.uuid}sub" /*, rowStyle*/)(
+      tags.td(colspan := 999, padding := 0, borderTop := "0px solid black")(
+        element
+      )
+    ).render
+  }
+
+  private def addRowInDom(r: ReactiveRow) = {
+    val aSubRow = subRow.map { sr =>
+      sr(r.uuid)
+    }
+
+    Seq(Some(r.tr), aSubRow.map { s => buildSubRow(r, s.trigger.expand(s.subTypedTag)) }).flatten.foreach { node =>
+      tableBody.appendChild(node)
     }
   }
 
-  private def addRowInDom(row: ReactiveRow) = {
-    row.rows.foreach { r =>
-      tableBody.appendChild(r)
-    }
-  }
 
-  rows.trigger {
-
+  reactiveRows.trigger {
     val inBody = bodyIds
-    val varCells = rows.now.map {
+    val rowsAndSubs = reactiveRows.now.map {
+      r =>
+        Seq(r.uuid, s"${
+          r.uuid
+        }sub")
+    }.flatten
+    val varCells = reactiveRows.now.map {
       _.varCells
     }
 
-    var modif = false
-
-    // CASE ADD
-    rows.now.foreach { rr =>
-      if (!inBody.contains(rr.uuid)) {
-        modif = true
-        addRowInDom(rr)
-      }
-    }
-
-    // CASE DELETE
-    val rowsAndSubs = rows.now.map { r =>
-      Seq(r.uuid, s"${r.uuid}sub")
-    }.flatten
-    inBody.foreach {id=>
-        if (!rowsAndSubs.contains(id)) {
-          modif = true
-          findIndex(id).foreach {
-            tableBody.deleteRow
-          }
+    (rowsAndSubs.length - bodyIds.length) match {
+      case x if x > 0 =>
+        // CASE ADD
+        reactiveRows.now.foreach {
+          rr =>
+            if (!inBody.contains(rr.uuid)) {
+              addRowInDom(rr)
+            }
+        }
+      case x if x < 0 =>
+        // CASE DELETE
+        inBody.foreach {
+          id =>
+            if (!rowsAndSubs.contains(id)) {
+              findIndex(id).foreach {
+                tableBody.deleteRow
+              }
+            }
+        }
+      case _ =>
+        // CASE UPDATE
+        val di = varCells diff previousState
+        di.foreach {
+          m =>
+            findIndex(m._1).map {
+              i =>
+                Table.updateValues(tableBody.rows(i).asInstanceOf[HTMLTableRowElement], m._2.map {
+                  v => (v.value, v.cellIndex)
+                })
+            }
         }
     }
-
-
-    //CASE UPDATE
-    if (!modif) {
-      val di = varCells diff previousState.now
-      di.foreach { m =>
-        println("--------UPDATE " + m)
-        findIndex(m._1).map { i =>
-          Table.updateValues(tableBody.rows(i).asInstanceOf[HTMLTableRowElement], m._2.map { v => (v.value, v.cellIndex) })
-        }
-      }
-    }
-
-    previousState() = varCells
-    println("END " + previousState.now)
+    previousState = varCells
   }
 
   def bodyIds = {
     val size = tableBody.rows.length
     if (size > 0) {
-      (0 to size - 1).map { i =>
-        tableBody.rows(i).id
+      (0 to size - 1).map {
+        i =>
+          tableBody.rows(i).id
       }
     } else Seq()
   }
@@ -194,10 +191,11 @@ case class Table(rows: Rx[Seq[ReactiveRow]],
     tags.table(bsTableStyle.tableStyle)(
       tags.thead(bsTableStyle.headerStyle)(
         tags.tr(
-          headers.map { h =>
-            h.values.map {
-              th(_)
-            }
+          headers.map {
+            h =>
+              h.values.map {
+                th(_)
+              }
           })),
       tableBody
     )

@@ -127,7 +127,7 @@ object PlayGroundDemo {
 
     val collapsibleTable = bsn.dataTable.
       addHeaders("Title 1", "Title 2", "Title 3").
-      addRow(DataRow(Seq("0.1", "158", "3"), subRow = Some(SubRow(subTable.render, expander)))).
+      addRow(DataRow(Seq("0.1", "158", "3"))).
       addRow("22", "11", "33").
       addRow("0.006", "bb", "236").
       addRow("21", "zz", "302").
@@ -175,14 +175,21 @@ object PlayGroundDemo {
       addRow("222222", "11111", "33333").render
     )
 
+    def fakeDIV(id: String) = div(backgroundColor := "pink", height := 400)(s"my fake $id")
+
     val aVar = Var(Seq(5, 7, 8))
     case class MyData(a: String, b: String, c: String)
 
     val inTable: Var[Map[ID, MyData]] = Var(Map())
+    val ids: Var[Seq[ID]] = Var(Seq())
+
+    //      Rx{
+    //      inTable().keys
+    //    }
 
     def refresh: SetTimeoutHandle = {
       timers.setTimeout(3000) {
-        val next = rand.nextInt(0, 2).toString
+        val next = rand.nextInt(0, 10).toString
         println("\n\n\n##################### timeout ")
         update(next)
         refresh
@@ -200,17 +207,15 @@ object PlayGroundDemo {
 
     val divCollapsibleTable =
       Table(inTable.map { t =>
+        println("INtable modified " + inTable.now.size)
         t.map {
           case (id, md) =>
-            ReactiveRow(id, Seq(VarCell(span(md.a),0), VarCell(span(md.b),1), VarCell(span(md.c),2), FixedCell(trigger2(id),3), FixedCell(deleteRRButton(id),4)),
-              subRow = Some(SubRow(div(Rx {
-                subTable2()
-              }), trigger = expander2.map {
-                _.contains(id)
-              }))
-            )
+            ReactiveRow(id, Seq(VarCell(span(md.a), 0), VarCell(span(md.b), 1), VarCell(span(md.c), 2), FixedCell(trigger2(id), 3), FixedCell(deleteRRButton(id), 4)))
         }.toSeq
-      }
+      },
+        subRow = Some((id: ID) => SubRow(fakeDIV(id), expander2.map {
+          _.contains(id)
+        }))
       ).addHeaders("Title 1", "Title 2", "Title 3", "")
 
     val collapsibleExample = div(
@@ -234,7 +239,7 @@ object PlayGroundDemo {
       h3("TABS"),
       theTabs.render,
       h3("COLLAPSIBLE TABLES"),
-     // collapsibleExample,
+      collapsibleExample,
       divCollapsibleTable.render,
       updateButton,
       updateSubTableButton
