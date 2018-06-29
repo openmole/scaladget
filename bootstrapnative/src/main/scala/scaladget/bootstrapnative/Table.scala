@@ -55,18 +55,12 @@ object Table {
 
   type RowType = (String, Int) => TypedTag[HTMLElement]
 
-  case class SubRow(subTypedTag: TypedTag[HTMLElement], trigger: Rx[Boolean] = Rx(false))
+  case class SubRow(subTypedTag: TypedTag[HTMLElement], trigger: Rx[Boolean] = Rx(false)){
+    def expander = trigger.expand(subTypedTag)
+  }
 
   implicit def rowToReactiveRow(r: Row): ReactiveRow = reactiveRow(r.values.zipWithIndex.map { v => VarCell(v._1, v._2) }, r.rowStyle)
 
-  def updateValues(element: HTMLTableRowElement, values: Seq[(TypedTag[HTMLElement], Int)]) = {
-    for (
-      (el, ind) <- values
-    ) yield {
-      val old = element.childNodes(ind)
-      element.replaceChild(td(el), old)
-    }
-  }
 }
 
 import Table._
@@ -103,8 +97,17 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
       sr(r.uuid)
     }
 
-    Seq(Some(r.tr), aSubRow.map { s => buildSubRow(r, s.trigger.expand(s.subTypedTag)) }).flatten.foreach { node =>
+    Seq(Some(r.tr), aSubRow.map { s => buildSubRow(r, s.expander) }).flatten.foreach { node =>
       tableBody.appendChild(node)
+    }
+  }
+
+  private def updateValues(element: HTMLTableRowElement, values: Seq[(TypedTag[HTMLElement], Int)]) = {
+    for (
+      (el, ind) <- values
+    ) yield {
+      val old = element.childNodes(ind)
+      element.replaceChild(td(el), old)
     }
   }
 
@@ -147,7 +150,7 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
           m =>
             findIndex(m._1).map {
               i =>
-                Table.updateValues(tableBody.rows(i).asInstanceOf[HTMLTableRowElement], m._2.map {
+                updateValues(tableBody.rows(i).asInstanceOf[HTMLTableRowElement], m._2.map {
                   v => (v.value, v.cellIndex)
                 })
             }
