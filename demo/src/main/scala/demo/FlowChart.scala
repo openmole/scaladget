@@ -132,10 +132,10 @@ class GraphCreator(svg: SVGElement, _tasks: Seq[Task], _edges: Seq[Edge]) {
 
   def mousemove(me: MouseEvent) = {
     Seq(mouseDownTask.now).flatten.map { t ⇒
-      val x = me.clientX.toInt
-      val y = me.clientY.toInt
+      val x = me.clientX
+      val y = me.clientY
       if (me.shiftKey) {
-        dragLine.move(t.location.now._1.toInt, t.location.now._2.toInt).line(x, y)
+        dragLine.move(t.location.now._1.toInt, t.location.now._2.toInt).line(x.toInt, y.toInt)
       }
       else {
         t.location() = (x, y)
