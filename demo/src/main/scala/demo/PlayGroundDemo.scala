@@ -213,7 +213,7 @@ object PlayGroundDemo {
             ReactiveRow(id, Seq(VarCell(span(md.a), 0), VarCell(span(md.b), 1), VarCell(span(md.c), 2), FixedCell(trigger2(id), 3), FixedCell(deleteRRButton(id), 4)))
         }.toSeq
       },
-        subRow = Some((id: ID) => SubRow(fakeDIV(id), expander2.map {
+        subRow = Some((id: ID) => SubRow(span(Rx{subTable2()}), expander2.map {
           _.contains(id)
         }))
       ).addHeaders("Title 1", "Title 2", "Title 3", "")
