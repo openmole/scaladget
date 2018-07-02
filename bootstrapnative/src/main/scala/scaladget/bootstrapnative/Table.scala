@@ -53,6 +53,7 @@ object Table {
     def varCells = (uuid, collectVar(cells))
   }
 
+  def subID(id: ID) = s"${id}sub"
   type RowType = (String, Int) => TypedTag[HTMLElement]
 
   case class SubRow(subTypedTag: TypedTag[HTMLElement], trigger: Rx[Boolean] = Rx(false)) {
@@ -74,6 +75,7 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
   val selected: Var[Option[ReactiveRow]] = Var(None)
   var previousState: Seq[(ID, Seq[VarCell])] = Seq()
+  val inDOM: Var[Seq[ID]] = Var(Seq())
 
   def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
 
@@ -84,7 +86,7 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
   //  }
 
   private def buildSubRow(rr: ReactiveRow, element: HTMLElement) = {
-    tags.tr(id := s"${rr.uuid}sub" /*, rowStyle*/)(
+    tags.tr(id := subID(rr.uuid) /*, rowStyle*/)(
       tags.td(colspan := 999, padding := 0, borderTop := "0px solid black")(
         element
       )
@@ -92,10 +94,15 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
   }
 
   private def addRowInDom(r: ReactiveRow) = {
+   // println("--ADD " + r.uuid)
     tableBody.appendChild(r.tr)
 
+    inDOM() = inDOM.now :+ r.uuid
+
     subRow.foreach { sr =>
-      tableBody.appendChild(buildSubRow(r, sr(r.uuid).expander))
+      inDOM() = inDOM.now :+ subID(r.uuid)
+      println("--ADD " + subID(r.uuid))
+      tableBody.appendChild(buildSubRow(r, sr(r.uuid).expander).render)
     }
   }
 
@@ -110,24 +117,21 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
 
 
   reactiveRows.trigger {
-    val inBody = bodyIds
+    val inBody = inDOM.now
     val rowsAndSubs = reactiveRows.now.map {
       r =>
-        Seq(r.uuid, s"${
-          r.uuid
-        }sub")
+        Seq(r.uuid, subID(r.uuid))
     }.flatten
     val varCells = reactiveRows.now.map {
       _.varCells
     }
 
-    println("TRIGGER")
-    (rowsAndSubs.length - bodyIds.length) match {
+    (rowsAndSubs.length - inBody.length) match {
       case x if x > 0 =>
         // CASE ADD
         reactiveRows.now.foreach {
           rr =>
-            if (!inBody.contains(rr.uuid)) {
+            if(!inDOM.now.contains(rr.uuid)){
               addRowInDom(rr)
             }
         }
@@ -137,6 +141,9 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
           id =>
             if (!rowsAndSubs.contains(id)) {
               findIndex(id).foreach {
+                println("-- DELETE " + id)
+                inDOM() = inDOM.now.filterNot(_ == id)
+
                 tableBody.deleteRow
               }
             }
@@ -156,17 +163,6 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
     }
     previousState = varCells
   }
-
-  def bodyIds = {
-    val size = tableBody.rows.length
-    if (size > 0) {
-      (0 to size - 1).map {
-        i =>
-          tableBody.rows(i).id
-      }
-    } else Seq()
-  }
-
 
   def findIndex(reactiveRow: ReactiveRow): Option[Int] = findIndex(reactiveRow.uuid)
 

@@ -2,7 +2,7 @@ package demo
 
 
 import org.scalajs.dom.Element
-import org.scalajs.dom.raw.{Event, HTMLButtonElement}
+import org.scalajs.dom.raw.{Event, HTMLButtonElement, HTMLDivElement, HTMLElement}
 import scaladget.ace.ace
 import scaladget.bootstrapnative.Table._
 import scaladget.bootstrapnative.DataTable.DataRow
@@ -169,11 +169,15 @@ object PlayGroundDemo {
         .render
     }
 
-    val subTable2 = Var(bsn.dataTable.
-      addRow("222222", "11111", "33333").
-      addRow("0.1111", "111158", "3333").
-      addRow("222222", "11111", "33333").render
-    )
+    val subTable2: Var[Seq[(ID, TypedTag[HTMLDivElement])]] = Var((0 to 10).map{i=>
+      println("II " + i)
+      (i.toString, div(randomTable.render))})
+
+    //    bsn.dataTable.
+    //      addRow("222222", "11111", "33333").
+    //      addRow("0.1111", "111158", "3333").
+    //      addRow("222222", "11111", "33333").render
+    //    )
 
     def fakeDIV(id: String) = div(backgroundColor := "pink", height := 400)(s"my fake $id")
 
@@ -189,17 +193,26 @@ object PlayGroundDemo {
 
     def refresh: SetTimeoutHandle = {
       timers.setTimeout(3000) {
-        val next = rand.nextInt(0, 10).toString
+        val next = rand.nextInt(0, 4).toString
         println("\n\n\n##################### timeout ")
         update(next)
         refresh
       }
     }
 
+    def updateTable = {
+      val rt = randomTable
+      val ind = rand.nextInt(0, 10)
+      subTable2() = subTable2.now.updated(ind, (ind.toString, div(randomTable.render)))
+    }
+
+
     def update(id: ID) = {
       val data = MyData(rand.nextInt(0, 1000).toString, rand.nextInt(0, 100).toString, rand.nextInt(0, 50).toString)
       inTable() = inTable.now.updated(id, data)
+      updateTable
     }
+
 
     def deleteRRButton(id: ID) = button(btn_danger, marginLeft := 10, "Delete", onclick := { () =>
       inTable() = inTable.now.filterNot(_._1 == id)
@@ -213,10 +226,10 @@ object PlayGroundDemo {
             ReactiveRow(id, Seq(VarCell(span(md.a), 0), VarCell(span(md.b), 1), VarCell(span(md.c), 2), FixedCell(trigger2(id), 3), FixedCell(deleteRRButton(id), 4)))
         }.toSeq
       },
-        subRow = Some((id: ID) => SubRow(span(Rx{subTable2()}), expander2.map {
-          _.contains(id)
+        subRow = Some((i:ID)=>SubRow(subTable2.now.filter(_._1 == i).head._2, expander2.map {
+          _.contains(i)
         }))
-      ).addHeaders("Title 1", "Title 2", "Title 3", "")
+    ).addHeaders("Title 1", "Title 2", "Title 3", "")
 
     val collapsibleExample = div(
       button(btn_danger, "Expand", onclick := { () => expander() = !expander.now }),
@@ -226,10 +239,6 @@ object PlayGroundDemo {
 
     def updateVar = aVar() = Seq(rand.nextInt(0, 1000), rand.nextInt(0, 100), rand.nextInt(0, 50))
 
-    def updateTable = {
-      val rt = randomTable
-      subTable2() = rt
-    }
 
     val updateButton = button(btn_primary, "Update", onclick := { () => updateVar })
     val updateSubTableButton = button(btn_primary, marginLeft := 10, "Update sub table", onclick := { () => updateTable })
