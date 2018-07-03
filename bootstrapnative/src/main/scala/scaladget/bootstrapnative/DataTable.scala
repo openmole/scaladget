@@ -177,7 +177,7 @@ case class DataTable(headers: Option[Header] = None,
             r.subRow.map { sr =>
               tags.tr(r.rowStyle)(
                 tags.td(colspan := nbColumns, padding := 0, borderTop := "0px solid black")(
-                 // sr.render
+                  sr.stableDiv
                 )
               )
             }).flatten
