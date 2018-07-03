@@ -165,12 +165,12 @@ object PlayGroundDemo {
 
     val inTable: Var[Map[ID, MyData]] = Var(Map())
     val plusMinus = Var(1)
-    val subTable2: Var[Seq[(ID, Rx.Dynamic[TypedTag[HTMLElement]])]] = Var((0 to 10).map{i=>
+    val subTable2: Seq[(ID, Rx[TypedTag[HTMLElement]])] = (0 to 4).map{i=>
       (i.toString, Rx{
         if(plusMinus() > 0)
-        div(randomTable.render)
-        else div(div("Toto", backgroundColor := "pink"))
-      })})
+        div("Tata", backgroundColor := "orange")/*div(randomTable.render)*/
+        else div("Toto", backgroundColor := "pink")
+      })}
 
 
     def fakeDIV(id: String) = div(backgroundColor := "pink", height := 400)(s"my fake $id")
@@ -179,7 +179,6 @@ object PlayGroundDemo {
     case class MyData(a: String, b: String, c: String)
 
     def refresh: SetTimeoutHandle = {
-      println("----------------")
       timers.setTimeout(3000) {
         val next = rand.nextInt(0, 4).toString
         update(next)
@@ -219,7 +218,7 @@ object PlayGroundDemo {
       },
         subRow = Some((i:ID)=>{
         //  println("SUBTAB "  + i +" // " + subTable2.now.filter(_._1 == i).head._2.now)
-          SubRow(i, subTable2.now.filter(_._1 == i).head._2, expander2.map {
+          SubRow(i, subTable2.filter(_._1 == i).head._2, expander2.map {
             _.contains(i)
           })
         })

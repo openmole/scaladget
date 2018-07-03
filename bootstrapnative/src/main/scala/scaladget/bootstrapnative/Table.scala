@@ -56,9 +56,8 @@ object Table {
   def subID(id: ID) = s"${id}sub"
   type RowType = (String, Int) => TypedTag[HTMLElement]
 
-  case class SubRow(id: ID, subTypedTag: Rx.Dynamic[TypedTag[HTMLElement]], trigger: Rx[Boolean] = Rx(false)) {
+  case class SubRow(id: ID, subTypedTag: Rx[TypedTag[HTMLElement]], trigger: Rx[Boolean] = Rx(false)) {
     lazy val stableDiv = div(Rx{
-      println("sub:: " + id + " // " + subTypedTag.now)
       subTypedTag()
     })
     lazy val expander = trigger.expand(stableDiv)
