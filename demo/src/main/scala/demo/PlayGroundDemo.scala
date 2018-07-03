@@ -140,9 +140,8 @@ object PlayGroundDemo {
 
     val triggerCache: Var[Map[ID, TypedTag[HTMLButtonElement]]] = Var(Map())
 
-    def trigger2(id: ID) = triggerCache.now.getOrElse(id, {
-      println("Need new triggr")
-      val b = button(btn_default, "Expand", onclick := { () =>
+    def trigger2(id: ID) = {
+      button(btn_default, s"Expand $id", onclick := { () =>
         expander2() = {
           expander2.now.find {
             _ == id
@@ -153,13 +152,8 @@ object PlayGroundDemo {
             case _ => expander2.now :+ id
           }
         }
-        println("CONTAINS ? " + expander2.now)
       })
-
-      triggerCache() = triggerCache.now.updated(id, b)
-
-      b
-    })
+    }
 
     val rand = ThreadLocalRandom.current()
 
@@ -169,48 +163,46 @@ object PlayGroundDemo {
         .render
     }
 
-    val subTable2: Var[Seq[(ID, TypedTag[HTMLDivElement])]] = Var((0 to 10).map{i=>
-      println("II " + i)
-      (i.toString, div(randomTable.render))})
+    val inTable: Var[Map[ID, MyData]] = Var(Map())
+    val plusMinus = Var(1)
+    val subTable2: Var[Seq[(ID, Rx.Dynamic[TypedTag[HTMLElement]])]] = Var((0 to 10).map{i=>
+      (i.toString, Rx{
+        if(plusMinus() > 0)
+        div(randomTable.render)
+        else div(div("Toto", backgroundColor := "pink"))
+      })})
 
-    //    bsn.dataTable.
-    //      addRow("222222", "11111", "33333").
-    //      addRow("0.1111", "111158", "3333").
-    //      addRow("222222", "11111", "33333").render
-    //    )
 
     def fakeDIV(id: String) = div(backgroundColor := "pink", height := 400)(s"my fake $id")
 
     val aVar = Var(Seq(5, 7, 8))
     case class MyData(a: String, b: String, c: String)
 
-    val inTable: Var[Map[ID, MyData]] = Var(Map())
-    val ids: Var[Seq[ID]] = Var(Seq())
-
-    //      Rx{
-    //      inTable().keys
-    //    }
-
     def refresh: SetTimeoutHandle = {
+      println("----------------")
       timers.setTimeout(3000) {
         val next = rand.nextInt(0, 4).toString
-        println("\n\n\n##################### timeout ")
         update(next)
         refresh
       }
     }
 
+    def refreshSub: SetTimeoutHandle = {
+      timers.setTimeout(2000) {
+        val next = rand.nextInt(0, 4).toString
+        updateTable
+        refreshSub
+      }
+    }
+
     def updateTable = {
-      val rt = randomTable
-      val ind = rand.nextInt(0, 10)
-      subTable2() = subTable2.now.updated(ind, (ind.toString, div(randomTable.render)))
+      plusMinus() = plusMinus.now * -1
     }
 
 
     def update(id: ID) = {
       val data = MyData(rand.nextInt(0, 1000).toString, rand.nextInt(0, 100).toString, rand.nextInt(0, 50).toString)
       inTable() = inTable.now.updated(id, data)
-      updateTable
     }
 
 
@@ -220,15 +212,17 @@ object PlayGroundDemo {
 
     val divCollapsibleTable =
       Table(inTable.map { t =>
-        println("INtable modified " + inTable.now.size)
         t.map {
           case (id, md) =>
             ReactiveRow(id, Seq(VarCell(span(md.a), 0), VarCell(span(md.b), 1), VarCell(span(md.c), 2), FixedCell(trigger2(id), 3), FixedCell(deleteRRButton(id), 4)))
         }.toSeq
       },
-        subRow = Some((i:ID)=>SubRow(subTable2.now.filter(_._1 == i).head._2, expander2.map {
-          _.contains(i)
-        }))
+        subRow = Some((i:ID)=>{
+        //  println("SUBTAB "  + i +" // " + subTable2.now.filter(_._1 == i).head._2.now)
+          SubRow(i, subTable2.now.filter(_._1 == i).head._2, expander2.map {
+            _.contains(i)
+          })
+        })
     ).addHeaders("Title 1", "Title 2", "Title 3", "")
 
     val collapsibleExample = div(
@@ -236,23 +230,15 @@ object PlayGroundDemo {
       collapsibleTable.render
     ).render
 
-
-    def updateVar = aVar() = Seq(rand.nextInt(0, 1000), rand.nextInt(0, 100), rand.nextInt(0, 50))
-
-
-    val updateButton = button(btn_primary, "Update", onclick := { () => updateVar })
-    val updateSubTableButton = button(btn_primary, marginLeft := 10, "Update sub table", onclick := { () => updateTable })
     refresh
+    refreshSub
 
     div(
       h3("TABS"),
       theTabs.render,
       h3("COLLAPSIBLE TABLES"),
       collapsibleExample,
-      divCollapsibleTable.render,
-      updateButton,
-      updateSubTableButton
-      //   insertRowButton
+      divCollapsibleTable.render
     ).render
 
 

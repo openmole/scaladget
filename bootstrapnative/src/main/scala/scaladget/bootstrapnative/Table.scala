@@ -56,8 +56,12 @@ object Table {
   def subID(id: ID) = s"${id}sub"
   type RowType = (String, Int) => TypedTag[HTMLElement]
 
-  case class SubRow(subTypedTag: TypedTag[HTMLElement], trigger: Rx[Boolean] = Rx(false)) {
-    lazy val expander = trigger.expand(subTypedTag)
+  case class SubRow(id: ID, subTypedTag: Rx.Dynamic[TypedTag[HTMLElement]], trigger: Rx[Boolean] = Rx(false)) {
+    lazy val stableDiv = div(Rx{
+      println("sub:: " + id + " // " + subTypedTag.now)
+      subTypedTag()
+    })
+    lazy val expander = trigger.expand(stableDiv)
   }
 
   implicit def rowToReactiveRow(r: Row): ReactiveRow = reactiveRow(r.values.zipWithIndex.map { v => VarCell(v._1, v._2) }, r.rowStyle)
@@ -65,7 +69,6 @@ object Table {
 }
 
 import Table._
-
 
 case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
                  subRow: Option[ID => Table.SubRow] = None,
@@ -79,12 +82,6 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
 
   def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
 
-  //  private def insertRowInDom(row: ReactiveRow) = {
-  //    row.rows.foreach { n =>
-  //      tableBody.insertBefore(n, tableBody.firstChild)
-  //    }
-  //  }
-
   private def buildSubRow(rr: ReactiveRow, element: HTMLElement) = {
     tags.tr(id := subID(rr.uuid) /*, rowStyle*/)(
       tags.td(colspan := 999, padding := 0, borderTop := "0px solid black")(
@@ -94,14 +91,11 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
   }
 
   private def addRowInDom(r: ReactiveRow) = {
-   // println("--ADD " + r.uuid)
     tableBody.appendChild(r.tr)
-
     inDOM() = inDOM.now :+ r.uuid
 
     subRow.foreach { sr =>
       inDOM() = inDOM.now :+ subID(r.uuid)
-      println("--ADD " + subID(r.uuid))
       tableBody.appendChild(buildSubRow(r, sr(r.uuid).expander).render)
     }
   }
@@ -141,7 +135,6 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
           id =>
             if (!rowsAndSubs.contains(id)) {
               findIndex(id).foreach {
-                println("-- DELETE " + id)
                 inDOM() = inDOM.now.filterNot(_ == id)
 
                 tableBody.deleteRow
