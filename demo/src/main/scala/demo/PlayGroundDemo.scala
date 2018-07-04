@@ -218,7 +218,7 @@ object PlayGroundDemo {
       },
         subRow = Some((i:ID)=>{
         //  println("SUBTAB "  + i +" // " + subTable2.now.filter(_._1 == i).head._2.now)
-          SubRow(i, subTable2.filter(_._1 == i).head._2, expander2.map {
+          SubRow(subTable2.filter(_._1 == i).head._2, expander2.map {
             _.contains(i)
           })
         })
