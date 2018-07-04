@@ -169,7 +169,7 @@ object PlayGroundDemo {
       (i.toString, Rx{
         if(plusMinus() > 0)
         div("Tata", backgroundColor := "orange")/*div(randomTable.render)*/
-        else div("Toto", backgroundColor := "pink")
+        else div("Toto", backgroundColor := "pink", height := 250)
       })}
 
 
@@ -187,7 +187,7 @@ object PlayGroundDemo {
     }
 
     def refreshSub: SetTimeoutHandle = {
-      timers.setTimeout(2000) {
+      timers.setTimeout(5000) {
         val next = rand.nextInt(0, 4).toString
         updateTable
         refreshSub
@@ -213,7 +213,7 @@ object PlayGroundDemo {
       Table(inTable.map { t =>
         t.map {
           case (id, md) =>
-            ReactiveRow(id, Seq(VarCell(span(md.a), 0), VarCell(span(md.b), 1), VarCell(span(md.c), 2), FixedCell(trigger2(id), 3), FixedCell(deleteRRButton(id), 4)))
+            ReactiveRow(id, Seq(VarCell(span(md.a), 0), VarCell(span(md.b), 1), VarCell(span(md.c), 2), VarCell(trigger2(id), 3), FixedCell(deleteRRButton(id), 4)))
         }.toSeq
       },
         subRow = Some((i:ID)=>{

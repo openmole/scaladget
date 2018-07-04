@@ -54,14 +54,10 @@ object Table {
   }
 
   def subID(id: ID) = s"${id}sub"
+
   type RowType = (String, Int) => TypedTag[HTMLElement]
 
-  case class SubRow(subTypedTag: Rx[TypedTag[HTMLElement]], trigger: Rx[Boolean] = Rx(false)) {
-    lazy val stableDiv = div(Rx{
-      subTypedTag()
-    })
-    lazy val expander = trigger.expand(stableDiv)
-  }
+  case class SubRow(subTypedTag: Rx[TypedTag[HTMLElement]], trigger: Rx[Boolean] = Rx(false))
 
   implicit def rowToReactiveRow(r: Row): ReactiveRow = reactiveRow(r.values.zipWithIndex.map { v => VarCell(v._1, v._2) }, r.rowStyle)
 
@@ -81,10 +77,14 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
 
   def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
 
-  private def buildSubRow(rr: ReactiveRow, element: HTMLElement) = {
+  private def buildSubRow(rr: ReactiveRow, sr: ID => SubRow) = {
+    val sub = sr(rr.uuid)
     tags.tr(id := subID(rr.uuid) /*, rowStyle*/)(
       tags.td(colspan := 999, padding := 0, borderTop := "0px solid black")(
-        element
+        div(Rx {
+          sub.trigger.expand(sub.subTypedTag())
+        }
+        )
       )
     ).render
   }
@@ -95,7 +95,7 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
 
     subRow.foreach { sr =>
       inDOM() = inDOM.now :+ subID(r.uuid)
-      tableBody.appendChild(buildSubRow(r, sr(r.uuid).expander).render)
+      tableBody.appendChild(buildSubRow(r, sr).render)
     }
   }
 
@@ -124,7 +124,7 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
         // CASE ADD
         reactiveRows.now.foreach {
           rr =>
-            if(!inDOM.now.contains(rr.uuid)){
+            if (!inDOM.now.contains(rr.uuid)) {
               addRowInDom(rr)
             }
         }
