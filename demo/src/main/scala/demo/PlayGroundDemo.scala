@@ -165,12 +165,13 @@ object PlayGroundDemo {
 
     val inTable: Var[Map[ID, MyData]] = Var(Map())
     val plusMinus = Var(1)
-    val subTable2: Seq[(ID, Rx[TypedTag[HTMLElement]])] = (0 to 4).map{i=>
-      (i.toString, Rx{
-        if(plusMinus() > 0)
-        div("Tata", backgroundColor := "orange")/*div(randomTable.render)*/
+    val subTable2: Seq[(ID, Rx[TypedTag[HTMLElement]])] = (0 to 4).map { i =>
+      (i.toString, Rx {
+        if (plusMinus() > 0)
+          div("Tata", backgroundColor := "orange") /*div(randomTable.render)*/
         else div("Toto", backgroundColor := "pink", height := 250)
-      })}
+      })
+    }
 
 
     def fakeDIV(id: String) = div(backgroundColor := "pink", height := 400)(s"my fake $id")
@@ -216,13 +217,16 @@ object PlayGroundDemo {
             ReactiveRow(id, Seq(VarCell(span(md.a), 0), VarCell(span(md.b), 1), VarCell(span(md.c), 2), VarCell(trigger2(id), 3), FixedCell(deleteRRButton(id), 4)))
         }.toSeq
       },
-        subRow = Some((i:ID)=>{
-        //  println("SUBTAB "  + i +" // " + subTable2.now.filter(_._1 == i).head._2.now)
+        subRow = Some((i: ID) => {
+          //  println("SUBTAB "  + i +" // " + subTable2.now.filter(_._1 == i).head._2.now)
           SubRow(subTable2.filter(_._1 == i).head._2, expander2.map {
             _.contains(i)
           })
-        })
-    ).addHeaders("Title 1", "Title 2", "Title 3", "")
+        }),
+        bsTableStyle = BSTableStyle(tableStyle = inverse_table)
+      )
+        .addHeaders("Title 1", "Title 2", "Title 3", "")
+
 
     val collapsibleExample = div(
       button(btn_danger, "Expand", onclick := { () => expander() = !expander.now }),

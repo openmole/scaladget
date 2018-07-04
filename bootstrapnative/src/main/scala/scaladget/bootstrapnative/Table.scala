@@ -12,7 +12,7 @@ import scaladget.bootstrapnative.Table.BSTableStyle
 
 object Table {
 
-  case class BSTableStyle(tableStyle: TableStyle, headerStyle: ModifierSeq, selectionColor: String = "#e1e1e1")
+  case class BSTableStyle(tableStyle: TableStyle = emptyMod, headerStyle: ModifierSeq= emptyMod, selectionColor: String = "#e1e1e1")
 
   case class Header(values: Seq[String])
 
@@ -76,6 +76,10 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
   val inDOM: Var[Seq[ID]] = Var(Seq())
 
   def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
+
+  def style(tableStyle: TableStyle = default_table, headerStyle: ModifierSeq = emptyMod) = {
+    copy(bsTableStyle = BSTableStyle(tableStyle, headerStyle))
+  }
 
   private def buildSubRow(rr: ReactiveRow, sr: ID => SubRow) = {
     val sub = sr(rr.uuid)
