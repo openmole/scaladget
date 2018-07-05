@@ -33,14 +33,17 @@ object CollapseDemo extends Demo {
     val onoff = Var(true)
 
     lazy val aDiv: HTMLDivElement = div(
-      buttonIcon("Trigger !", btn_primary +++ (marginBottom := 10).toMS).expandOnclick(panel("My text in detail")(width := 400, height := 200)),
+      buttonIcon("Trigger !", btn_primary +++ (marginBottom := 10).toMS).expandOnclick(div(
+        Rx{
+          panel("My text in detail " + onoff())(width := 400, height := 200)
+        })),
       button("Set Var", btn_danger, onclick := {()=> onoff() = !onoff.now}),
-      onoff.expand(div("Yes", backgroundColor := "orange", height := 150)),
+      onoff.expand(div("Yes", backgroundColor := "orange", height := 150).render),
 
       button(btn_default, "Build", onclick := {() =>
         println("Build")
         aDiv.appendChild(
-          onoff.expand(div("YAA", backgroundColor := "yellow", height := 300))
+          onoff.expand(div("YAA", backgroundColor := "yellow", height := 300).render)
         )
       })
     ).render

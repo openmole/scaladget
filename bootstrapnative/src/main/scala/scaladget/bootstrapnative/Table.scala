@@ -12,7 +12,7 @@ import scaladget.bootstrapnative.Table.BSTableStyle
 
 object Table {
 
-  case class BSTableStyle(tableStyle: TableStyle = emptyMod, headerStyle: ModifierSeq= emptyMod, selectionColor: String = "#e1e1e1")
+  case class BSTableStyle(tableStyle: TableStyle = emptyMod, headerStyle: ModifierSeq = emptyMod, selectionColor: String = "#e1e1e1")
 
   case class Header(values: Seq[String])
 
@@ -57,7 +57,12 @@ object Table {
 
   type RowType = (String, Int) => TypedTag[HTMLElement]
 
-  case class SubRow(subTypedTag: Rx[TypedTag[HTMLElement]], trigger: Rx[Boolean] = Rx(false))
+  case class SubRow(subTypedTag: Rx[TypedTag[HTMLElement]], trigger: Rx[Boolean] = Rx(false)) {
+    val expander = div(Rx {
+      trigger.expand(subTypedTag())
+    }
+    )
+  }
 
   implicit def rowToReactiveRow(r: Row): ReactiveRow = reactiveRow(r.values.zipWithIndex.map { v => VarCell(v._1, v._2) }, r.rowStyle)
 
@@ -85,10 +90,8 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
     val sub = sr(rr.uuid)
     tags.tr(id := subID(rr.uuid) /*, rowStyle*/)(
       tags.td(colspan := 999, padding := 0, borderTop := "0px solid black")(
-        div(Rx {
-          sub.trigger.expand(sub.subTypedTag())
-        }
-        )
+        sub.expander
+
       )
     ).render
   }

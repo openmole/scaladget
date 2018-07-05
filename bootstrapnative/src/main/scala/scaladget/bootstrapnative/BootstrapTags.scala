@@ -632,14 +632,28 @@ trait BootstrapTags {
         trigger(onclick := { () =>
           clicked() = !clicked.now
         }),
-      clicked.expand(inner)
+      clicked.expand(inner.render)
       )
     }
   }
-
   implicit class TagCollapserWithReactive(r: Rx[Boolean]) {
-    def expand[T <: TypedTag[HTMLElement]](inner: T) = {
+    def expand[T <: HTMLElement](inner: T) = {
+      println("Éuild Expand")
 
+      r.trigger {
+        if (r.now) wrapper.style.height = inner.style.height
+        else wrapper.style.height = "0px"
+      }
+
+      lazy val wrapper = div(overflow := "hidden", transition := "height 300ms")(inner).render
+
+      wrapper
+    }
+  }
+
+  implicit class TTagCollapserWithReactive(r: Rx[Boolean]) {
+    def expand[T <: TypedTag[HTMLElement]](inner: T) = {
+println("Éuild Expand")
       val innerRender = inner.render
 
       r.trigger {
