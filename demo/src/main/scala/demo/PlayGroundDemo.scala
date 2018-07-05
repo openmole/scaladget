@@ -167,9 +167,7 @@ object PlayGroundDemo {
     val plusMinus = Var(1)
     val subTable2: Seq[(ID, Rx[TypedTag[HTMLElement]])] = (0 to 4).map { i =>
       (i.toString, Rx {
-        if (plusMinus() > 0)
-          div("Tata", backgroundColor := "orange") /*div(randomTable.render)*/
-        else div("Toto", backgroundColor := "pink", height := 250)
+        div(s"Tata ${plusMinus() }", color:= "black", backgroundColor := "pink", height := 250)
       })
     }
 
