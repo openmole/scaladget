@@ -57,10 +57,10 @@ object Table {
 
   type RowType = (String, Int) => TypedTag[HTMLElement]
 
-  case class SubRow(subTypedTag: Rx[TypedTag[HTMLElement]], trigger: Rx[Boolean] = Rx(false)) {
+  case class SubRow(element: Rx[TypedTag[HTMLElement]], trigger: Rx[Boolean] = Rx(false)) {
     val expander = div(Rx {
-      trigger.expand(subTypedTag())
-    }
+        trigger.expand(element())
+      }
     )
   }
 

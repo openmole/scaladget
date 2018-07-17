@@ -167,7 +167,7 @@ object PlayGroundDemo {
     val plusMinus = Var(1)
     val subTable2: Seq[(ID, Rx[TypedTag[HTMLElement]])] = (0 to 4).map { i =>
       (i.toString, Rx {
-        div(s"Tata ${plusMinus() }", color:= "black", backgroundColor := "pink", height := 250)
+        textarea(s"Tata ${plusMinus() }\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nEnd", color:= "black", backgroundColor := "pink", height := 250)
       })
     }
 
