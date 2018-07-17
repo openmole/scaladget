@@ -73,6 +73,7 @@ object ButtonDemo {
       },
       h4("Badges", paddingTop := 30),
       button("Badge", onclick := clickAction("badge"), buttonStyle +++ btn_primary)(badge("7", backgroundColor := "pink")),
+      div("Badge", onclick := clickAction("badge"))(badge("7", Seq(backgroundColor := "yellow", scalatags.JsDom.all.color := "#ccc"))),
       h4("Icon buttons", paddingTop := 30),
       glyphSpan(glyph_refresh +++ buttonStyle, () => clickAction("refresh")),
       glyphSpan(glyph_flash +++ buttonStyle, () => clickAction("flash")),

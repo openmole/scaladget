@@ -212,11 +212,10 @@ object PlayGroundDemo {
       Table(inTable.map { t =>
         t.map {
           case (id, md) =>
-            ReactiveRow(id, Seq(VarCell(span(md.a), 0), VarCell(span(md.b), 1), VarCell(span(md.c), 2), VarCell(trigger2(id), 3), FixedCell(deleteRRButton(id), 4)))
+            ReactiveRow(id, Seq(VarCell(span(md.a), 0), VarCell(span(md.b), 1), VarCell(span(md.c), 2), VarCell(trigger2(id), 3), FixedCell(deleteRRButton(id), 4)), Seq(borderTop := "2px solid brown"))
         }.toSeq
       },
         subRow = Some((i: ID) => {
-          //  println("SUBTAB "  + i +" // " + subTable2.now.filter(_._1 == i).head._2.now)
           SubRow(subTable2.filter(_._1 == i).head._2, expander2.map {
             _.contains(i)
           })

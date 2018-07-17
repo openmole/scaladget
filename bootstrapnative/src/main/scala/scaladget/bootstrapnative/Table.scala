@@ -12,7 +12,9 @@ import scaladget.bootstrapnative.Table.BSTableStyle
 
 object Table {
 
-  case class BSTableStyle(tableStyle: TableStyle = emptyMod, headerStyle: ModifierSeq = emptyMod, selectionColor: String = "#e1e1e1")
+  case class BSTableStyle(tableStyle: TableStyle = emptyMod,
+                          headerStyle: ModifierSeq = emptyMod,
+                          selectionColor: String = "#e1e1e1")
 
   case class Header(values: Seq[String])
 
@@ -42,7 +44,7 @@ object Table {
       //      backgroundColor := Rx {
       //        if (Some(row) == selected()) tableStyle.selectionColor else ""
       //      }
-    )
+    )(rowStyle)
       //    (onclick := { () =>
       //      table.selected() = Some(this)
       //    }
