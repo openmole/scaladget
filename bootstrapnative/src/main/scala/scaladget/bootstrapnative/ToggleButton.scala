@@ -5,15 +5,16 @@ import scalatags.JsDom.all._
 import scaladget.tools._
 
 object ToggleButton {
-  def apply(default: Boolean, valueOn: String = "ON", valueOff: String = "OFF"): ToggleButton = new ToggleButton(default, valueOn, valueOff)
+  def apply(default: Boolean, valueOn: String = "ON", valueOff: String = "OFF", onToggled: ()=> {} =()=> Unit): ToggleButton = new ToggleButton(default, valueOn, valueOff, onToggled)
 }
 
-class ToggleButton(default: Boolean, valueOn: String = "ON", valueOff: String = "OFF") {
+class ToggleButton(default: Boolean, valueOn: String = "ON", valueOff: String = "OFF", onToggled: ()=> {} =()=> Unit) {
 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
   val position = Var(default)
 
   position.trigger {
+    onToggled()
     mainDiv.style.marginLeft = toggleMargin(position.now)
   }
 
