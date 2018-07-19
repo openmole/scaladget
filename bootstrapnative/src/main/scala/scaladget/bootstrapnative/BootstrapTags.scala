@@ -130,7 +130,7 @@ trait BootstrapTags {
   )
 
   //Toggle buttons
-  def toggle(default: Boolean = false, valueOn: String = "ON", valueOff: String = "OFF") = ToggleButton(default, valueOn, valueOff)
+  def toggle(default: Boolean = false, valueOn: String = "ON", valueOff: String = "OFF", onToggled: ()=> {} = ()=> Unit) = ToggleButton(default, valueOn, valueOff, onToggled)
 
   //Label decorators to set the label size
   implicit class TypedTagLabel(lab: TypedTag[HTMLLabelElement]) {
@@ -641,7 +641,6 @@ trait BootstrapTags {
   }
   implicit class TagCollapserWithReactive(r: Rx[Boolean]) {
     def expand[T <: HTMLElement](inner: T) = {
-      println("Éuild Expand")
 
       r.trigger {
         if (r.now) wrapper.style.height = inner.style.height
@@ -656,7 +655,6 @@ trait BootstrapTags {
 
   implicit class TTagCollapserWithReactive(r: Rx[Boolean]) {
     def expand[T <: TypedTag[HTMLElement]](inner: T) = {
-println("Éuild Expand")
       val innerRender = inner.render
 
       r.trigger {
