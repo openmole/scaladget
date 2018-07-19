@@ -87,7 +87,9 @@ object ButtonDemo {
             _.text
           }.toSeq
         }")
-      }
+      },
+      h4("Toggle buttons", paddingTop := 30),
+      toggle(true, "Yes", "No").render
     ).render
   }
 

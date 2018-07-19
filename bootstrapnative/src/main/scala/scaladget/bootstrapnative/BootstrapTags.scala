@@ -129,6 +129,9 @@ trait BootstrapTags {
     span(aria.hidden := true)(raw("&#215"))
   )
 
+  //Toggle buttons
+  def toggle(default: Boolean = false, valueOn: String = "ON", valueOff: String = "OFF") = ToggleButton(default, valueOn, valueOff)
+
   //Label decorators to set the label size
   implicit class TypedTagLabel(lab: TypedTag[HTMLLabelElement]) {
     def size1(modifierSeq: ModifierSeq = emptyMod) = h1(modifierSeq)(lab)
