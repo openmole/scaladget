@@ -19,7 +19,9 @@ package demo
 
 import scaladget.ace._
 import org.scalajs.dom.raw._
+import scaladget.bootstrapnative.bsn
 import scalatags.JsDom.all._
+
 import scalajs.js
 
 object AceDemo extends Demo {
@@ -46,8 +48,14 @@ object AceDemo extends Demo {
     editor.session.addMarker(scaladget.ace.Utils.rangeFor(2, 0, 2, 5), "myMarker", "", false)
     editor.session.addMarker(scaladget.ace.Utils.rangeFor(4, 0, 4, 5), "myMarker", "", false)
 
-    editor.session.addGutterDecoration(2, "gutterDecoration")
-    editorDiv
+    session.addGutterDecoration(2, "gutterDecoration")
+
+    div(
+      editorDiv,
+      button(bsn.btn_primary, marginTop := 20, "Reset", onclick := { () =>
+        session.removeGutterDecoration(2, "gutterDecoration")
+      })
+    ).render
   }
 
 

@@ -305,7 +305,7 @@ trait IEditSession extends js.Object {
 
   def clearBreakpoint(row: Double): js.Dynamic = js.native
 
-  def addMarker(range: Range, clazz: String, `type`: String, inFront: Boolean): js.Dynamic = js.native
+  def addMarker(range: Range, clazz: String, `type`: String, inFront: Boolean): Int = js.native
 
   def addDynamicMarker(marker: js.Any, inFront: Boolean): js.Dynamic = js.native
 
