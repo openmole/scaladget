@@ -57,3 +57,16 @@ h3 {
 .table-responsive.table-bordered {
   border: 0;
 }
+
+.myMarker {
+     position:absolute;
+    background:rgba(255,0,0,0.5);
+     z-index:20;
+   }
+
+.gutterDecoration{
+     background:rgba(255,0,0,0.5);
+  color:white;
+  font-weight: bold;
+
+}

@@ -53,8 +53,8 @@ object StartDemo {
       ),
         Tabs.tabs(for {
           demo <- Seq(
-            SliderDemo.elementDemo,
             AceDemo.elementDemo,
+            SliderDemo.elementDemo,
             ButtonDemo.elementDemo,
             LabelDemo.elementDemo,
             FormDemo.elementDemo,

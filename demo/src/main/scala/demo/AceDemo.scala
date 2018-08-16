@@ -27,11 +27,14 @@ object AceDemo extends Demo {
 
   val sc = sourcecode.Text {
     val editorDiv = div(id := "editor", height := 100, paddingRight := 20).render
+
     ace.require("ace/ext/language_tools")
+
     val editor = ace.edit(editorDiv)
     val session = editor.getSession()
 
-    session.setValue("val a = 7")
+
+    session.setValue("val axx = 7\nval b = 8\nval c = a*b\n\nprintln(c)")
     session.setMode("ace/mode/scala")
     editor.setTheme("ace/theme/github")
     editor.setOptions(js.Dynamic.literal(
@@ -40,6 +43,10 @@ object AceDemo extends Demo {
       "enableLiveAutocompletion" -> true
     ))
 
+    editor.session.addMarker(scaladget.ace.Utils.rangeFor(2, 0, 2, 5), "myMarker", "", false)
+    editor.session.addMarker(scaladget.ace.Utils.rangeFor(4, 0, 4, 5), "myMarker", "", false)
+
+    editor.session.addGutterDecoration(2, "gutterDecoration")
     editorDiv
   }
 
