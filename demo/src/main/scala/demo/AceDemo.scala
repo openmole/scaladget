@@ -19,8 +19,14 @@ package demo
 
 import scaladget.ace._
 import org.scalajs.dom.raw._
-import scaladget.bootstrapnative.bsn
+import scaladget.bootstrapnative.{Popup, bsn}
+import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
+import bsn._
+import scaladget.tools._
+import org.scalajs.dom
+import scaladget.bootstrapnative.Popup.{Manual, PopupPosition}
+import rx._
 
 import scalajs.js
 
@@ -28,7 +34,7 @@ object AceDemo extends Demo {
 
 
   val sc = sourcecode.Text {
-    val editorDiv = div(id := "editor", height := 100, paddingRight := 20).render
+    val editorDiv = div(id := "editor", height := 200, paddingRight := 20).render
 
     ace.require("ace/ext/language_tools")
 
@@ -45,19 +51,63 @@ object AceDemo extends Demo {
       "enableLiveAutocompletion" -> true
     ))
 
-    editor.session.addMarker(scaladget.ace.Utils.rangeFor(2, 0, 2, 5), "myMarker", "", false)
-    editor.session.addMarker(scaladget.ace.Utils.rangeFor(4, 0, 4, 5), "myMarker", "", false)
+    val nbLines: Var[(Int, Int)] = Var((editor.getFirstVisibleRow.toInt, editor.getLastVisibleRow.toInt))
 
-    session.addGutterDecoration(2, "gutterDecoration")
+    session.on("change", (x) => {
+      nbLines() = (editor.getFirstVisibleRow.toInt, editor.getLastVisibleRow.toInt)
+      println("Change " + nbLines.now)
+    })
+
+    session.on("changeScrollTop", x => {
+      Popover.current.now.foreach { p =>
+        Popover.toggle(p)
+      }
+      nbLines() = (editor.renderer.getScrollTopRow.toInt, editor.renderer.getScrollBottomRow.toInt)
+    })
+
+    val errors = Seq(0, 2, 13, 21, 29, 35, 43, 54)
+
+    def buildManualPopover(i: Int, title: String, position: PopupPosition) = {
+      if (errors.contains(i)) {
+        lazy val pop1 = div(i)(`class` := "error").popover(
+          title,
+          position,
+          Manual
+        )
+        lazy val pop1Render = pop1.render
+
+        pop1Render.onclick = { (e: Event) =>
+          if (Popover.current.now == pop1) Popover.hide
+          else {
+            Popover.current.now.foreach {p=>
+              Popover.toggle(p)
+            }
+            Popover.toggle(pop1)
+          }
+          e.stopPropagation
+        }
+
+        pop1Render
+      } else div(height := 13, opacity := 0).render
+    }
+
+
+    val errorDiv = div(`class` := "uuu")(
+      Rx {
+        val topMargin = if (session.getScrollTop() > 0) marginTop := -8 else marginTop := 0
+        div(topMargin)(
+          (nbLines()._1 until nbLines()._2).map { i =>
+            buildManualPopover(i, s"YYY $i", Popup.Left)
+          }
+        )
+      }
+    )
 
     div(
-      editorDiv,
-      button(bsn.btn_primary, marginTop := 20, "Reset", onclick := { () =>
-        session.removeGutterDecoration(2, "gutterDecoration")
-      })
+      errorDiv,
+      editorDiv
     ).render
   }
-
 
   val elementDemo = new ElementDemo {
     def title: String = "Ace"
