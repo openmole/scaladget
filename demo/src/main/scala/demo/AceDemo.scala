@@ -55,7 +55,6 @@ object AceDemo extends Demo {
 
     session.on("change", (x) => {
       nbLines() = (editor.getFirstVisibleRow.toInt, editor.getLastVisibleRow.toInt)
-      println("Change " + nbLines.now)
     })
 
     session.on("changeScrollTop", x => {
@@ -74,7 +73,6 @@ object AceDemo extends Demo {
           position,
           Manual
         )
-        println("I " + i)
         session.addMarker(scaladget.ace.Utils.rangeFor(i, 0, i, 5), "myMarker", "", false)
         lazy val pop1Render = pop1.render
 
