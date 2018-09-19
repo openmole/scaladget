@@ -81,9 +81,20 @@ h3 {
   text-align:center;
 }
 
-.error {
-background:rgba(255,0,0) !important;
-height: 13px;
-  cursor: pointer;
+.error{
+    background: rgba(255,0,0,0.5);
+    height: 13px;
+    cursor: pointer;
+    border-radius: 3px;
+    color: white;
+    font-weight: bold;
+    margin-left: -8px;
+    width: 25px;
 }
 
+.myMarker {
+    position:absolute;
+    background:rgba(255,0,0,0.1);
+    z-index:20;
+    border-radius: 1px !important;
+   }
