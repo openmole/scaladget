@@ -30,7 +30,7 @@ object AceDiffDemo extends Demo {
     val editorDiv = div(width := 400, height := 200).render
 
     org.scalajs.dom.document.body.appendChild(editorDiv)
-    new AceDiff(AceDiffConstructorBuilder.element(editorDiv).right(LR.content("eaiunesrairnts")).left(LR.content("ooof")))
+    AceDiff(editorDiv, LR.content("eaiunesrairnts"), LR.content("ooof"))
 
     div(
       editorDiv

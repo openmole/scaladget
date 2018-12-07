@@ -8,6 +8,12 @@ import scala.scalajs.js
 import js.annotation._
 import js.|
 
+object AceDiff {
+  def apply(element: String | HTMLElement,
+            left: LR,
+            right: LR) = new AceDiff(AceDiffConstructorBuilder.element(element).left(left).right(right))
+}
+
 
 @js.native
 @JSGlobal
