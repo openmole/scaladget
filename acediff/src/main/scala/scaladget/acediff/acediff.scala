@@ -3,26 +3,27 @@ package scaladget.acediff
 import scala.scalajs.js
 import org.scalajs.dom.raw.HTMLElement
 import org.querki.jsext._
+import scaladget.ace.Editor
 
 import scala.scalajs.js
 import js.annotation._
 import js.|
 
 object AceDiff {
-  def apply(element: String | HTMLElement,
-            left: LR,
-            right: LR) = new AceDiff(AceDiffConstructorBuilder.element(element).left(left).right(right))
+  def apply() = AceDiffConstructorBuilder
 }
-
 
 @js.native
 @JSGlobal
-class AceDiff protected () extends js.Object {
+class AceDiff protected() extends js.Object {
   def this(opts: AceDiffConstructor) = this()
-  def getEditors(): js.Any = js.native
-  def setOptions(options: AceDiffOpts): Unit = js.native
+
+  def getEditors(): Editors = js.native
+
   def getNumDiffs(): Double = js.native
+
   def diff(): Unit = js.native
+
   def destroy(): Unit = js.native
 }
 
@@ -33,9 +34,21 @@ trait AceDiffConstructor extends js.Object {
   var left: js.UndefOr[LR] = js.native
 
   var right: js.UndefOr[LR] = js.native
+
+  var mode: String = js.native
+
+  var theme: String = js.native
+
+  var diffGranularity: String = js.native
+
+  var showDiffs: Boolean = js.native
+
+  var showConnectors: Boolean = js.native
+
+  var maxDiffs: Double = js.native
 }
 
-object  AceDiffConstructorBuilder extends AceDiffConstructorBuilder(noOpts)
+object AceDiffConstructorBuilder extends AceDiffConstructorBuilder(noOpts)
 
 class AceDiffConstructorBuilder(val dict: OptMap) extends JSOptionBuilder[AceDiffConstructor, AceDiffConstructorBuilder](new AceDiffConstructorBuilder(_)) {
 
@@ -44,19 +57,41 @@ class AceDiffConstructorBuilder(val dict: OptMap) extends JSOptionBuilder[AceDif
   def left(v: LR) = jsOpt("left", v)
 
   def right(v: LR) = jsOpt("right", v)
+
+  def showDiffs(v: Boolean) = jsOpt("showDiffs", v)
+
+  def mode(v: String) = jsOpt("mode", v)
+
+  def theme(v: String) = jsOpt("theme", v)
+
+  def diffGranularity(v: String) = jsOpt("diffGranularity", v)
+
+  def showConnectors(v: Boolean) = jsOpt("showConnectors", v)
+
+  def maxDiffs(v: Double) = jsOpt("maxDiffs", v)
+
+  def build = new AceDiff(this)
 }
 
 @js.native
-@JSGlobal
-class LR extends js.Object
+trait LR extends js.Object {
+  def content: String = js.native
 
-object LR extends LRBuilder(noOpts) {
-  implicit def LRBuilderToLR(LRBuilder: LRBuilder): LR = LRBuilder._result
+  var mode: js.UndefOr[String] = js.native
+
+  var theme: js.UndefOr[String] = js.native
+
+  var editable: js.UndefOr[Boolean] = js.native
+
+  var copyLinkEnabled: js.UndefOr[Boolean] = js.native
+
 }
+
+object LR extends LRBuilder(noOpts)
 
 class LRBuilder(val dict: OptMap) extends JSOptionBuilder[LR, LRBuilder](new LRBuilder(_)) {
 
-  def content(v: String | HTMLElement) = jsOpt("content", v)
+  def content(v: String) = jsOpt("content", v)
 
   def mode(v: String) = jsOpt("mode", v)
 
@@ -68,13 +103,8 @@ class LRBuilder(val dict: OptMap) extends JSOptionBuilder[LR, LRBuilder](new LRB
 }
 
 @js.native
-trait AceDiffOpts extends js.Object {
-  var mode: String = js.native
-  var theme: String = js.native
-  var diffGranularity: String = js.native
-  var showDiffs: Boolean = js.native
-  var showConnectors: Boolean = js.native
-  var maxDiffs: Double = js.native
-  var left: LR = js.native
-  var right: LR = js.native
+trait Editors extends js.Object {
+  var right: Editor = js.native
+
+  var left: Editor = js.native
 }

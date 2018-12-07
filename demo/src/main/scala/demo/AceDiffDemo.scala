@@ -19,6 +19,7 @@ package demo
 
 import org.scalajs.dom.raw._
 import scaladget.acediff._
+import scaladget.bootstrapnative.bsn
 import scalatags.JsDom.all._
 
 import scala.scalajs.js
@@ -27,12 +28,17 @@ object AceDiffDemo extends Demo {
 
 
   val sc = sourcecode.Text {
-    val editorDiv = div(width := 400, height := 200).render
+    val editorDiv = div(width := 600, height := 200, marginTop := 50, position := "absolute").render
 
     org.scalajs.dom.document.body.appendChild(editorDiv)
-    AceDiff(editorDiv, LR.content("eaiunesrairnts"), LR.content("ooof"))
+    val right: LR = LR.content("ooof")
+    val left: LR = LR.content("ooof\nuuf")
+    val aceDiff = AceDiff().element(editorDiv).left(left).right(right).build
+
+    val rightButton = button(bsn.btn_default, "RIGHT", onclick := {()=> println(aceDiff.getEditors().right.session.getValue)})
 
     div(
+      rightButton,
       editorDiv
     ).render
   }

@@ -94,7 +94,7 @@ lazy val ace = project.in(file("ace")) enablePlugins (ExecNpmPlugin) settings (d
   npmDeps in Compile += Dep("ace-builds", aceVersion, List("ace.js"))
 )
 
-lazy val aceDiff = project.in(file("acediff")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
+lazy val aceDiff = project.in(file("acediff")) enablePlugins (ExecNpmPlugin) dependsOn(ace) settings (defaultSettings) settings(
   scalaJsDom,
   querki,
   npmDeps in Compile += Dep("ace-builds", aceVersion, List("ace.js")),
