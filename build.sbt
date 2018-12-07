@@ -7,8 +7,9 @@ import execnpm.ExecNpmPlugin.autoImport._
 import execnpm.NpmDeps._
 
 
-val aceVersion = "1.2.9"
-val bootstrapNativeVersion = "2.0.22"
+val aceVersion = "1.4.1"
+val aceDiffVersion = "2.3.0"
+val bootstrapNativeVersion = "2.0.24"
 val bootstrapSliderVersion = "10.0.0"
 val d3Version = "4.12.0"
 val highlightVersion = "9.10.0"
@@ -93,6 +94,13 @@ lazy val ace = project.in(file("ace")) enablePlugins (ExecNpmPlugin) settings (d
   npmDeps in Compile += Dep("ace-builds", aceVersion, List("ace.js"))
 )
 
+lazy val aceDiff = project.in(file("acediff")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
+  scalaJsDom,
+  querki,
+  npmDeps in Compile += Dep("ace-builds", aceVersion, List("ace.js")),
+  npmDeps in Compile += Dep("ace-diff", aceDiffVersion, List("ace-diff.min.js"))
+)
+
 lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
   scalaJsDom,
   querki,
@@ -139,4 +147,4 @@ lazy val demo = project.in(file("demo")) enablePlugins (ExecNpmPlugin) settings 
     IO.copyFile(dependencyFile.value, demoTarget / "js/deps.js")
     IO.copyDirectory(demoResource, demoTarget)
   }
-) dependsOn(bootstrapnative, bootstrapslider, lunr, tools, svg, ace)
+) dependsOn(bootstrapnative, bootstrapslider, lunr, tools, svg, ace, aceDiff)

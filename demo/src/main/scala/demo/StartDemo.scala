@@ -53,6 +53,7 @@ object StartDemo {
       ),
         Tabs.tabs(for {
           demo <- Seq(
+            AceDiffDemo.elementDemo,
             AceDemo.elementDemo,
             SliderDemo.elementDemo,
             ButtonDemo.elementDemo,
