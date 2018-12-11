@@ -10,6 +10,7 @@ import execnpm.NpmDeps._
 val aceVersion = "1.4.1"
 val aceDiffVersion = "2.3.0"
 val bootstrapNativeVersion = "2.0.24"
+val bootstrapSwitchVersion = "3.3.4"
 val bootstrapVersion = "3.3.7"
 val bootstrapSliderVersion = "10.0.0"
 val d3Version = "4.12.0"
@@ -113,6 +114,7 @@ lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (Ex
   querki,
   libraryDependencies += "net.scalapro" %%% "sortable-js-facade" % "0.2.1",
   npmDeps in Compile += Dep("bootstrap.native", bootstrapNativeVersion, List("bootstrap-native.min.js")),
+  npmDeps in Compile += Dep("bootstrap-switch", bootstrapSwitchVersion, List("bootstrap-switch.min.css")),
   npmDeps in Compile += Dep("bootstrap", bootstrapVersion, List("bootstrap.min.css")),
   npmDeps in Compile += Dep("sortablejs", sortableVersion, List("Sortable.min.js")),
 ) dependsOn (tools)
