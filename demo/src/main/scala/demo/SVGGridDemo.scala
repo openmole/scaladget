@@ -45,9 +45,7 @@ object SVGGridDemo {
   @JSExportTopLevel("grid")
   def grid(): Unit = {
     lazy val rng = scala.util.Random
-
     def randomDoubles(nb: Int = 100) = Seq.fill(nb)(rng.nextDouble)
-
 
     val gridSize = 1000
     val nbCellsByDimension = 50
@@ -55,29 +53,23 @@ object SVGGridDemo {
     val cellDimension = gridSize.toDouble / nbCellsByDimension
     val values = (1 to nbCellsByDimension).foldLeft(Seq[Seq[Double]]())((elems, _) => elems :+ randomDoubles(nbCellsByDimension))
 
-
     val scene = svgTags.svg(
       width := gridSize,
       height := gridSize
     ).render
 
     for {
-        col <- (0 to nbCellsByDimension - 1).toArray
-      } yield {
-        val colCoord = (col * cellDimension) + 1
-          for {
-            row <- (0 to nbCellsByDimension - 1).toArray
-          } yield {
-            scene.appendChild(
-            svgTags.rect(x := ((row * cellDimension) + 1), y := colCoord, width := cellDimension, height := cellDimension,
-              style := s"fill:rgb${Color.color(values(row)(col))};").render
-            )
-          }
-      }
-
+      col <- (0 to nbCellsByDimension - 1).toArray
+      val colCoord = (col * cellDimension) + 1
+      row <- (0 to nbCellsByDimension - 1).toArray
+    } yield {
+      scene.appendChild(
+        svgTags.rect(x := ((row * cellDimension) + 1), y := colCoord, width := cellDimension, height := cellDimension,
+          style := s"fill:rgb${Color.color(values(row)(col))};").render
+      )
+    }
 
     org.scalajs.dom.document.body.appendChild(scene)
 
   }
-
 }
