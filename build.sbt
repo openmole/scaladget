@@ -12,7 +12,7 @@ val aceDiffVersion = "2.3.0"
 val bootstrapNativeVersion = "2.0.24"
 val bootstrapSwitchVersion = "3.3.4"
 val bootstrapVersion = "3.3.7"
-val bootstrapSliderVersion = "10.0.0"
+val bootstrapSliderVersion = "10.4.0"
 val d3Version = "4.12.0"
 val highlightVersion = "9.12.0"
 val querkiVersion = "0.8"
@@ -104,6 +104,7 @@ lazy val aceDiff = project.in(file("acediff")) enablePlugins (ExecNpmPlugin) dep
 
 lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
   scalaJsDom,
+  scalatags,
   querki,
   npmDeps in Compile += Dep("bootstrap-slider", bootstrapSliderVersion, List("bootstrap-slider.min.js", "bootstrap-slider.min.css"))
 )

@@ -1,13 +1,14 @@
 package scaladget.bootstrapslider
 
 import org.querki.jsext._
-import org.scalajs.dom.raw.Element
+import org.scalajs.dom.raw.{Element, HTMLElement}
 
 import scala.scalajs.js
 import js.|
 import scala.scalajs.js.annotation._
 import scaladget.bootstrapslider.Slider.SliderValue
 import scaladget.bootstrapslider.SliderOptions.SliderTooltip
+import scalatags.JsDom.all.{input, paddingTop}
 
 @js.native
 trait SliderOptions extends js.Object {
@@ -121,6 +122,12 @@ object Slider {
 
   // This event fires when the slider is disabled
   lazy val SLIDE_DISABLED = "slideDisabled"
+
+  def apply(element: HTMLElement, options: SliderOptions) = {
+    val theInput = input.render
+    element.appendChild(theInput)
+    new Slider(theInput, options)
+  }
 }
 
 @js.native

@@ -29,34 +29,29 @@ import rx._
 object SliderDemo extends Demo {
   val sc = sourcecode.Text {
 
-    import scaladget.bootstrapslider._
+    import scaladget.bootstrapslider
 
     val sliderValue = Var("None")
-    val myDiv = input(paddingTop := 100).render
-    org.scalajs.dom.document.body.appendChild(myDiv)
+    // org.scalajs.dom.document.body.appendChild(myDiv)
 
-    val options = SliderOptions
+
+    val myDiv = div.render
+
+    val options = bootstrapslider.SliderOptions
       .max(100)
       .min(0.0)
       .value(js.Array[scala.Double](14.0, 92.0))
-      .tooltip(SliderOptions.ALWAYS)
+      .tooltip(bootstrapslider.SliderOptions.ALWAYS)
 
-    val slider = new Slider(myDiv, options._result)
-    slider.on(Slider.STOP_SLIDER, () => {
+    val slider = bootstrapslider.Slider(myDiv, options)
+
+    slider.on(bootstrapslider.Slider.CHANGE, () => {
       sliderValue() = slider.getValue.toString
     })
 
-    // Trick for the demo. Otherwise, you only need to add myDiv input wherever you want in the dom
-    val o = div(
-      org.scalajs.dom.document.getElementsByClassName("slider slider-horizontal")(0),
-      Rx {
-        sliderValue()
-      }
-    ).render
-
     HighlightJS.initHighlightingOnLoad()
 
-    o
+    myDiv
   }
 
 
