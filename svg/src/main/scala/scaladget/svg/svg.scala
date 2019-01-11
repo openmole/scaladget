@@ -30,12 +30,13 @@ object path {
 
   implicit def pathToNode(p: Path): Node = p().render
 
-  def start(x: Int, y: Int): Path = apply("").m(x, y)
+  def start(x: Int, y: Int): Path = Path("").m(x, y)
 
-  def apply(st: String = "", ms: ModifierSeq = emptyMod) = new Path {
-    val svgString = st
-    val modifierSeq = ms
-  }
+//  def apply(st: String = "", ms: ModifierSeq = emptyMod, precisionPattern: String = "") = new Path {
+//    val svgString = st
+//    val modifierSeq = ms
+//    val precision = precisionPattern
+//  }
 
   type PathOperator = String
   val M: PathOperator = "M"
@@ -50,30 +51,35 @@ object path {
   val Z: PathOperator = "Z"
 
 
-  trait Path {
-    def svgString: String
+  // presicion: Ex: 1.5f)
+  case class Path(svgString: String = "", precisionPattern: String = "") {
 
     def render: TypedTag[dom.svg.Path] = svgTags.path(svgAttrs.d := svgString)
 
-    private def append(s: String): Path = path(svgString + s" $s")
+    def expand(value: Double) = {
+      if (precisionPattern.isEmpty) value
+      else precisionPattern.format(value)
+    }
 
-    def m(x: Double, y: Double): Path = append(s"$M $x $y")
+    private def append(s: String): Path = copy(svgString = svgString + s" $s")
 
-    def l(x: Double, y: Double): Path = append(s"$L $x $y")
+    def m(x: Double, y: Double): Path = append(s"$M ${expand(x)} ${expand(y)}")
 
-    def h(y: Double): Path = append(s"$H $y")
+    def l(x: Double, y: Double): Path = append(s"$L ${expand(x)} ${expand(y)}")
 
-    def v(x: Double): Path = append(s"$V $x")
+    def h(y: Double): Path = append(s"$H ${expand(y)}")
 
-    def c(x1: Double, y1: Double, x2: Double, y2: Double, x: Double, y: Double): Path = append(s"$C $x1 $y1 $x2 $y2 $x $y")
+    def v(x: Double): Path = append(s"$V ${expand(x)}")
 
-    def q(x1: Double, y1: Double, x: Double, y: Double): Path = append(s"$Q $x1 $y1 $x $y")
+    def c(x1: Double, y1: Double, x2: Double, y2: Double, x: Double, y: Double): Path = append(s"$C ${expand(x1)} ${expand(y)}1 ${expand(x1)} ${expand(y)}2 ${expand(x)} ${expand(y)}")
 
-    def s(x2: Double, y2: Double, x: Double, y: Double): Path = append(s"$S $x2 $y2 $x $y")
+    def q(x1: Double, y1: Double, x: Double, y: Double): Path = append(s"$Q ${expand(x1)} ${expand(y1)} ${expand(x)} ${expand(y)}")
 
-    def t(x: Double, y: Double): Path = append(s"$T $x $y")
+    def s(x2: Double, y2: Double, x: Double, y: Double): Path = append(s"$S ${expand(x2)} ${expand(y2)} ${expand(x)} ${expand(y)}")
 
-    def a(rx: Double, ry: Double, xAxisRotation: Double, largeArcFlag: Double, sweepFlag: Double, x: Double, y: Double) = append(s"$A $rx $ry $xAxisRotation $largeArcFlag $sweepFlag $x $y")
+    def t(x: Double, y: Double): Path = append(s"$T ${expand(x)} ${expand(y)}")
+
+    def a(rx: Double, ry: Double, xAxisRotation: Double, largeArcFlag: Double, sweepFlag: Double, x: Double, y: Double) = append(s"$A ${expand(rx)} ${expand(ry)} ${expand(xAxisRotation)} $largeArcFlag $sweepFlag ${expand(x)} ${expand(y)}")
 
     def z = append("Z")
   }

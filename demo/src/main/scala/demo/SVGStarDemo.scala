@@ -18,6 +18,7 @@ package demo
  */
 
 import org.scalajs.dom.raw.Element
+import scaladget.svg.path.Path
 import scalatags.JsDom.all._
 
 object SVGStarDemo {
@@ -30,7 +31,7 @@ object SVGStarDemo {
 
     val scene = svgTags.g.render
 
-    val star = path().m(150, 20).l(240, 240).l(30, 90).l(270, 90).l(60, 240).z
+    val star = Path(precisionPattern = "%1.2f").m(150.2235, 20).l(240.22201, 240).l(30.3666, 90).l(270, 90).l(60, 240).z
     scene.appendChild(star.render(fill := "red").render)
     scene.appendChild(star.render(fill := "yellow", transform := "scale(0.5) translate(150,130)").render)
     scene.appendChild(star.render(fill := "green", transform := "scale(0.25) translate(450,390)").render)

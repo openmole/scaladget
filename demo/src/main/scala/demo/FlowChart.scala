@@ -25,11 +25,10 @@ import scaladget.tools._
 import scala.scalajs.js
 import org.scalajs.dom.raw._
 import org.scalajs.dom
-
 import scalatags.JsDom.all._
 import scalatags.JsDom.{svgAttrs, svgTags}
-
 import rx._
+import scaladget.svg.path.Path
 
 trait Selectable {
   val selected: Var[Boolean] = Var(false)
@@ -103,7 +102,7 @@ class GraphCreator(svg: SVGElement, _tasks: Seq[Task], _edges: Seq[Edge]) {
     }
 
     val render: SVGElement = Rx {
-      path().m(m()._1, m()._2).l(l()._1, l()._2)(svgAttrs.markerEnd := URL_MARK_END_ARROW)( `class` := (s"$LINK_DRAGLINE ${
+      Path().m(m()._1, m()._2).l(l()._1, l()._2)(svgAttrs.markerEnd := URL_MARK_END_ARROW)( `class` := (s"$LINK_DRAGLINE ${
         if (dragging()) "" else HIDDEN
       }"))
     }
@@ -223,7 +222,7 @@ class GraphCreator(svg: SVGElement, _tasks: Seq[Task], _edges: Seq[Edge]) {
   // DEFINE A LINK, WHICH CAN BE SELECTED AND REMOVED (DEL KEY)
   def link(edge: Edge) = {
     val sVGElement: SVGElement = Rx {
-      val p = path().m(
+      val p = Path().m(
         edge.source().location()._1.toInt,
         edge.source().location()._2.toInt
       ).l(
