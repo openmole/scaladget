@@ -33,9 +33,9 @@ object AceDiffDemo extends Demo {
     org.scalajs.dom.document.body.appendChild(editorDiv)
     val right: LR = LR.content("ooof")
     val left: LR = LR.content("ooof\nuuf")
-    val aceDiff = AceDiff().element(editorDiv).left(left).right(right).build
+    val diff = aceDiff().element(editorDiv).left(left).right(right).build
 
-    val rightButton = button(bsn.btn_default, "RIGHT", onclick := {()=> println(aceDiff.getEditors().right.session.getValue)})
+    val rightButton = button(bsn.btn_default, "RIGHT", onclick := {()=> println(diff.getEditors().right.session.getValue)})
 
     div(
       rightButton,

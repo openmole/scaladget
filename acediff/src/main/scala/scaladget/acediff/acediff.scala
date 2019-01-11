@@ -9,7 +9,7 @@ import scala.scalajs.js
 import js.annotation._
 import js.|
 
-object AceDiff {
+object aceDiff {
   def apply() = AceDiffConstructorBuilder
 }
 
