@@ -99,7 +99,7 @@ lazy val ace = project.in(file("ace")) enablePlugins (ExecNpmPlugin) settings (d
 lazy val aceDiff = project.in(file("acediff")) enablePlugins (ExecNpmPlugin) dependsOn(ace) settings (defaultSettings) settings(
   scalaJsDom,
   querki,
-  npmDeps in Compile += Dep("ace-diff", aceDiffVersion, List("ace-diff.min.js", "ace-diff.min.css"))
+  npmDeps in Compile += Dep("ace-diff", aceDiffVersion, List("ace-diff.min.js", "ace-diff.min.css"), true)
 )
 
 lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
