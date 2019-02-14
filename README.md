@@ -18,7 +18,7 @@ Just add this to your dependencies:
   libraryDependencies += "fr.iscpif.scaladget" %%% "lunr" % scaladgetVersion
 ```
 
-Current version : **1.0.2**
+Current version : see release tags section
 
 All the facades are intensively used in the [OpenMOLE project](https://github.com/openmole/openmole).
 
