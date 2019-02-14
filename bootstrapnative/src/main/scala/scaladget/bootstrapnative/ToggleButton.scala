@@ -13,7 +13,7 @@ class ToggleButton(default: Boolean, valueOn: String = "ON", valueOff: String = 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
   val position = Var(default)
 
-  position.trigger {
+  position.triggerLater {
     onToggled()
     mainDiv.style.marginLeft = toggleMargin(position.now)
   }

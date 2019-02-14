@@ -18,10 +18,9 @@ package demo
  */
 
 import org.scalajs.dom.Element
-
+import scaladget.bootstrapnative.ToggleButton
 import scaladget.bootstrapnative.bsn._
 import scaladget.tools._
-
 import scalatags.JsDom.all._
 
 
@@ -57,6 +56,8 @@ object ButtonDemo {
 
     def radioAction = () => active() = theRadios.active
 
+    lazy val toggleButton: ToggleButton = toggle(true, "Yes", "No", ()=> {println("Position " + toggleButton.position.now)})
+
     div(
       h4("Buttons"),
       button("Default", onclick := clickAction("default"), buttonStyle +++ btn_default),
@@ -89,7 +90,7 @@ object ButtonDemo {
         }")
       },
       h4("Toggle buttons", paddingTop := 30),
-      toggle(true, "Yes", "No").render
+      toggleButton.render
     ).render
   }
 
