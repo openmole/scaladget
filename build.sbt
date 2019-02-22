@@ -63,6 +63,8 @@ releaseTagComment := s"Releasing ${(version in ThisBuild).value}"
 
 releaseCommitMessage := s"Bump version to ${(version in ThisBuild).value}"
 
+publishConfiguration in ThisBuild:= publishConfiguration.value.withOverwrite(true)
+
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
 releaseProcess := Seq[ReleaseStep](
