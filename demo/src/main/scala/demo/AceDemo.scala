@@ -34,13 +34,18 @@ object AceDemo extends Demo {
 
 
   val sc = sourcecode.Text {
-    val editorDiv = div(id := "editor", height := 200, paddingRight := 20).render
+    val numberOfLines = 15
+    val lineHeight = 13
+
+    val editorDiv = div(id := "editor", height := numberOfLines * lineHeight, paddingRight := 20).render
 
     ace.require("ace/ext/language_tools")
 
     val editor = ace.edit(editorDiv)
     val session = editor.getSession()
 
+    editor.container.style.lineHeight = s"${lineHeight}px"
+    editor.renderer.updateFontSize
 
     session.setValue("val axx = 7\nval b = 8\nval c = a*b\n\nprintln(c)")
     session.setMode("ace/mode/scala")
@@ -51,53 +56,47 @@ object AceDemo extends Demo {
       "enableLiveAutocompletion" -> true
     ))
 
-    val nbLines: Var[(Int, Int)] = Var((editor.getFirstVisibleRow.toInt, editor.getLastVisibleRow.toInt))
+    val sT = Var(0.0)
+
+    def updateScrollTop = sT.update(editor.renderer.getScrollTop)
 
     session.on("change", (x) => {
-      nbLines() = (editor.getFirstVisibleRow.toInt, editor.getLastVisibleRow.toInt)
+      updateScrollTop
     })
 
     session.on("changeScrollTop", x => {
-      Popover.current.now.foreach { p =>
-        Popover.toggle(p)
-      }
-      nbLines() = (editor.renderer.getScrollTopRow.toInt, editor.renderer.getScrollBottomRow.toInt)
+      updateScrollTop
     })
 
-    val errors = Seq(0, 2, 13, 21, 29, 35, 43, 54)
+    val errors = Seq(1, 2, 3, 4, 5, 9, 10, 11, 12, 13, 14, 15, 16, 21, 29, 35, 43, 54)
 
-    def buildManualPopover(i: Int, title: String, position: PopupPosition) = {
-      if (errors.contains(i)) {
-        lazy val pop1 = div(i)(`class` := "error").popover(
-          title,
-          position,
-          Manual
-        )
-        session.addMarker(scaladget.ace.Utils.rangeFor(i, 0, i, 5), "myMarker", "", false)
-        lazy val pop1Render = pop1.render
+    def buildManualPopover(line: Int, y: Double, title: String, position: PopupPosition) = {
+      lazy val pop1 = div(line)(`class` := "errorBackground", top := y).popover(
+        title,
+        position,
+        Manual
+      )
+      lazy val pop1Render = pop1.render
 
-        pop1Render.onclick = { (e: Event) =>
-          if (Popover.current.now == pop1) Popover.hide
-          else {
-            Popover.current.now.foreach {p=>
-              Popover.toggle(p)
-            }
-            Popover.toggle(pop1)
-          }
-          e.stopPropagation
-        }
-
-        pop1Render
-      } else div(height := 13, opacity := 0).render
+      pop1Render.onclick = { (e: Event) =>
+        Popover.hide
+        Popover.toggle(pop1)
+        e.stopPropagation
+      }
+      pop1Render
     }
 
-
-    val errorDiv = div(`class` := "uuu")(
+    val errorDiv = div(`class` := "errorForeground")(
       Rx {
-        val topMargin = if (session.getScrollTop() > 0) marginTop := -8 else marginTop := 0
-        div(topMargin)(
-          (nbLines()._1 until nbLines()._2).map { i =>
-            buildManualPopover(i, s"YYY $i", Popup.Left)
+        val scrollAsLines = sT() / lineHeight
+        val max = numberOfLines + scrollAsLines
+        div(
+          for {
+            i <- errors.filter { e =>
+              e > scrollAsLines && e < max
+            }
+          } yield {
+            buildManualPopover(i, (i - scrollAsLines - 1) * lineHeight, s"YYY $i", Popup.Left)
           }
         )
       }
