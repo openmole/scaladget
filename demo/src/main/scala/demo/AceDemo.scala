@@ -34,10 +34,12 @@ object AceDemo extends Demo {
 
 
   val sc = sourcecode.Text {
-    val numberOfLines = 15
+    
+    val editorHeight = 200
     val lineHeight = 13
+    val visibleLines = 200/13
 
-    val editorDiv = div(id := "editor", height := numberOfLines * lineHeight, paddingRight := 20).render
+    val editorDiv = div(id := "editor", height := editorHeight, paddingRight := 20).render
 
     ace.require("ace/ext/language_tools")
 
@@ -89,7 +91,7 @@ object AceDemo extends Demo {
     val errorDiv = div(`class` := "errorForeground")(
       Rx {
         val scrollAsLines = sT() / lineHeight
-        val max = numberOfLines + scrollAsLines
+        val max = visibleLines + scrollAsLines
         div(
           for {
             i <- errors.filter { e =>
