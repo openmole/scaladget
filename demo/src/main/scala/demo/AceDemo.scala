@@ -104,6 +104,7 @@ object AceDemo extends Demo {
       }
     )
 
+    editor.focus()
     div(
       errorDiv,
       editorDiv
