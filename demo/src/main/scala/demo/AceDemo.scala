@@ -37,9 +37,9 @@ object AceDemo extends Demo {
     
     val editorHeight = 200
     val lineHeight = 13
-    val visibleLines = 200/13
 
     val editorDiv = div(id := "editor", height := editorHeight, paddingRight := 20).render
+    val visibleLines =  editorHeight / lineHeight
 
     ace.require("ace/ext/language_tools")
 
