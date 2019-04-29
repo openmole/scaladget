@@ -6,7 +6,7 @@ addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.2")
 
 addSbtPlugin("fr.iscpif" % "scalajs-execnpm" % "0.5")
 
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.22")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.27")
 
 addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.7")
 
