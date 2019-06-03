@@ -28,13 +28,7 @@ organization in ThisBuild := "fr.iscpif"
 
 name := "scaladget"
 
-publishTo in ThisBuild := {
-  val nexus = "https://oss.sonatype.org/"
-  if (version.value.trim.endsWith("SNAPSHOT"))
-    Some("snapshots" at nexus + "content/repositories/snapshots")
-  else
-    Some("releases" at nexus + "service/local/staging/deploy/maven2")
-}
+
 
 pomIncludeRepository in ThisBuild := { _ => false }
 
@@ -54,36 +48,39 @@ pomExtra in ThisBuild := {
   </developers>
 }
 
-releasePublishArtifactsAction := PgpKeys.publishSigned.value
 
-releaseVersionBump := sbtrelease.Version.Bump.Minor
-
-releaseTagComment := s"Releasing ${(version in ThisBuild).value}"
-
-releaseCommitMessage := s"Bump version to ${(version in ThisBuild).value}"
-
-publishConfiguration in ThisBuild:= publishConfiguration.value.withOverwrite(true)
-
-import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
-
-releaseProcess := Seq[ReleaseStep](
-  checkSnapshotDependencies,
-  inquireVersions,
-  runClean,
-  runTest,
-  setReleaseVersion,
-  tagRelease,
-  releaseStepCommand("publishSigned"),
-  setNextVersion,
-  commitNextVersion,
-  releaseStepCommand("sonatypeReleaseAll"),
-  pushChanges
-)
 
 //useYarn in ThisBuild := true
 
+import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
+
 lazy val defaultSettings = Seq(
-  organization := "fr.iscpif.scaladget"
+  organization := "fr.iscpif.scaladget",
+  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+  releaseVersionBump := sbtrelease.Version.Bump.Minor,
+  releaseTagComment := s"Releasing ${(version in ThisBuild).value}",
+  releaseCommitMessage := s"Bump version to ${(version in ThisBuild).value}",
+  publishConfiguration in ThisBuild := publishConfiguration.value.withOverwrite(true),
+  releaseProcess := Seq[ReleaseStep](
+    checkSnapshotDependencies,
+    inquireVersions,
+    runClean,
+    runTest,
+    setReleaseVersion,
+    tagRelease,
+    releaseStepCommand("publishSigned"),
+    setNextVersion,
+    commitNextVersion,
+    releaseStepCommand("sonatypeReleaseAll"),
+    pushChanges
+  ),
+  publishTo in ThisBuild := {
+    val nexus = "https://oss.sonatype.org/"
+    if (version.value.trim.endsWith("SNAPSHOT"))
+      Some("snapshots" at nexus + "content/repositories/snapshots")
+    else
+      Some("releases" at nexus + "service/local/staging/deploy/maven2")
+  }
 )
 
 lazy val scalatags = libraryDependencies += "com.lihaoyi" %%% "scalatags" % scalatagsVersion
@@ -97,7 +94,7 @@ lazy val ace = project.in(file("ace")) enablePlugins (ExecNpmPlugin) settings (d
   npmDeps in Compile += Dep("ace-builds", aceVersion, List("ace.js"))
 )
 
-lazy val aceDiff = project.in(file("acediff")) enablePlugins (ExecNpmPlugin) dependsOn(ace) settings (defaultSettings) settings(
+lazy val aceDiff = project.in(file("acediff")) enablePlugins (ExecNpmPlugin) dependsOn (ace) settings (defaultSettings) settings(
   scalaJsDom,
   querki,
   npmDeps in Compile += Dep("ace-diff", aceDiffVersion, List("ace-diff.min.js", "ace-diff.min.css"), true)
@@ -138,7 +135,7 @@ lazy val tools = project.in(file("tools")) enablePlugins (ScalaJSPlugin) setting
 )
 lazy val runDemo = taskKey[Unit]("runDemo")
 
-lazy val demo = project.in(file("demo")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
+lazy val demo = project.in(file("demo")) enablePlugins (ExecNpmPlugin) settings(
   libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
   libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
   libraryDependencies += "com.github.karasiq" %%% "scalajs-marked" % "1.0.2",
