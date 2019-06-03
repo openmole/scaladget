@@ -7,9 +7,9 @@ import execnpm.ExecNpmPlugin.autoImport._
 import execnpm.NpmDeps._
 
 
-val aceVersion = "1.4.1"
+val aceVersion = "1.4.3"
 val aceDiffVersion = "2.3.0"
-val bootstrapNativeVersion = "2.0.25"
+val bootstrapNativeVersion = "2.0.26"
 val bootstrapSwitchVersion = "3.3.4"
 val bootstrapVersion = "3.4.1"
 val bootstrapSliderVersion = "10.4.0"
