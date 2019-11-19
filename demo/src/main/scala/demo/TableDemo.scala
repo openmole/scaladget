@@ -18,11 +18,15 @@ package demo
  */
 
 import org.scalajs.dom.Element
-import org.scalajs.dom.raw.{Event}
-
-import scaladget.bootstrapnative.bsn
+import org.scalajs.dom.raw.Event
+import scaladget.bootstrapnative.Table.{BSTableStyle, ReactiveRow}
+import scaladget.bootstrapnative.{EdiTable, EditableRow, PasswordCell, Table, TextCell, TriggerCell, bsn}
+import scaladget.bootstrapnative.EdiTable._
 import scaladget.bootstrapnative.bsn._
+import scaladget.tools._
 import scalatags.JsDom.all._
+import rx._
+import scalatags.JsDom.styles
 
 object TableDemo extends Demo {
   val sc = sourcecode.Text {
@@ -42,9 +46,48 @@ object TableDemo extends Demo {
       filteredTable.filter(filterInput.value)
     }
 
+
+    val rows = Var(Seq(
+      EditableRow(Seq(TextCell("Bobi"), TextCell("bob@toto.com"), PasswordCell("totototo"))),
+      EditableRow(Seq(TextCell("Barb"), TextCell("ba@rbara.com"), PasswordCell("tiiti"))),
+      EditableRow(Seq(TextCell("Boba"), TextCell("bob@toto.com"), PasswordCell("tototoeeeuto"))),
+      EditableRow(Seq(TextCell("Barbar"), TextCell("ba@rbara.com"), PasswordCell("tiieti"))),
+      EditableRow(Seq(TextCell("Bobo"), TextCell("bob@toto.com"), PasswordCell("totototo"))),
+      EditableRow(Seq(TextCell("Barbaro"), TextCell("ba@rbara.com"), PasswordCell("tiiti"))),
+      EditableRow(Seq(TextCell("Bobu"), TextCell("bob@toto.com"), PasswordCell("totototo"))),
+      EditableRow(Seq(TextCell("Barbari"), TextCell("ba@rbara.com"), PasswordCell("tiixxxti"))),
+      EditableRow(Seq(TextCell("Bob"), TextCell("bob@toto.com"), PasswordCell("totototo"))),
+      EditableRow(Seq(TextCell("Barbaru"), TextCell("ba@rbara.com"), PasswordCell("tiitui")))
+    ))
+
+    val headerStyle: ModifierSeq = Seq(
+      height := 40.85
+    )
+
+    val editablePanel = div(
+      Rx {
+        div(styles.display.flex, flexDirection.row, styles.justifyContent.center)(
+
+          EdiTable(Seq("Name", "Email", "Password"), rows()).render(width := "80%"),
+          EdiTable(
+            Seq("", ""),
+            rows().map { r =>
+              EditableRow(Seq(
+                TriggerCell(button("Edit", btn_default, onclick := { () => r.switchEdit })(marginLeft := 20, marginBottom := 2.925, marginTop := 2.925)),
+                TriggerCell(button("Delete", btn_danger, onclick := { () => rows() = rows.now.filterNot(_ == r) })(marginLeft := 10, marginBottom := 2.925, marginTop := 2.925))
+              ))
+            },
+            BSTableStyle(headerStyle = headerStyle)
+          ).render(width := "20%")
+        )
+      }
+    )
+
+
     div(
       filterInput,
       filteredTable.render,
+      editablePanel.render,
       table.style(inverse_table).render,
       table.style(hover_table).render,
       table.style(headerStyle = default_header).render,
@@ -61,5 +104,7 @@ object TableDemo extends Demo {
     def code: String = sc.source
 
     def element: Element = sc.value
+
+    override def codeWidth: Int = 6
   }
 }

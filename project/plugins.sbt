@@ -1,12 +1,12 @@
 resolvers += "Sonatype OSS Releases" at "https://oss.sonatype.org/content/repositories/releases"
 
-addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.0")
+addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.1")
 
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.2")
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.4.2")
 
 addSbtPlugin("fr.iscpif" % "scalajs-execnpm" % "0.8")
 
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.27")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.28")
 
 addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.7")
 

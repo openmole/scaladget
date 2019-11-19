@@ -14,15 +14,14 @@ val bootstrapSwitchVersion = "3.3.4"
 val bootstrapVersion = "3.4.1"
 val bootstrapSliderVersion = "10.4.0"
 val highlightVersion = "9.12.0"
-val querkiVersion = "0.8"
+val querkiVersion = "0.9"
 val lunrVersion = "2.1.6"
 val rxVersion = "0.4.0"
-val scalatagsVersion = "0.6.5"
-val scalaJSdomVersion = "0.9.2"
+val scalatagsVersion = "0.7.0"
+val scalaJSdomVersion = "0.9.7"
 val sortableVersion = "1.7.0"
-val sourceCodeVersion = "0.1.2"
-
-scalaVersion in ThisBuild := "2.12.4"
+val sourceCodeVersion = "0.1.7"
+val scalaJsMarkedVersion = "1.0.2"
 
 organization in ThisBuild := "fr.iscpif"
 
@@ -55,6 +54,7 @@ pomExtra in ThisBuild := {
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
 lazy val defaultSettings = Seq(
+  crossScalaVersions := Seq("2.12.8" , "2.13.0"),
   organization := "fr.iscpif.scaladget",
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   releaseVersionBump := sbtrelease.Version.Bump.Minor,
@@ -138,7 +138,7 @@ lazy val runDemo = taskKey[Unit]("runDemo")
 lazy val demo = project.in(file("demo")) enablePlugins (ExecNpmPlugin) settings(
   libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
   libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
-  libraryDependencies += "com.github.karasiq" %%% "scalajs-marked" % "1.0.2",
+  libraryDependencies += "com.github.karasiq" %%% "scalajs-marked" % scalaJsMarkedVersion,
   npmDeps in Compile += Dep("ace-builds",  aceVersion, List("mode-scala.js", "theme-github.js", "ext-language_tools.js"), true),
   runDemo := {
 
