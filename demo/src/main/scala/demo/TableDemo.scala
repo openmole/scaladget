@@ -18,15 +18,16 @@ package demo
  */
 
 import org.scalajs.dom.Element
-import org.scalajs.dom.raw.Event
-import scaladget.bootstrapnative.Table.{BSTableStyle, ReactiveRow}
-import scaladget.bootstrapnative.{EdiTable, EditableRow, PasswordCell, Table, TextCell, TriggerCell, bsn}
+import org.scalajs.dom.raw.{Event, HTMLElement}
+import scaladget.bootstrapnative.Table.{BSTableStyle, ReactiveRow, StaticSubRow, SubRow}
+import scaladget.bootstrapnative.{EdiTable, EditableCell, EditableRow, ExpandableRow, GroupCell, LabelCell, PasswordCell, Table, TextCell, TriggerCell, bsn}
 import scaladget.bootstrapnative.EdiTable._
 import scaladget.bootstrapnative.bsn._
 import scaladget.tools._
 import scalatags.JsDom.all._
 import rx._
-import scalatags.JsDom.styles
+import scalatags.JsDom
+import scalatags.JsDom._
 
 object TableDemo extends Demo {
   val sc = sourcecode.Text {
@@ -46,18 +47,96 @@ object TableDemo extends Demo {
       filteredTable.filter(filterInput.value)
     }
 
+    type Role = String
+    val admin: Role = "Admin"
+    val user: Role = "User"
 
-    val rows = Var(Seq(
-      EditableRow(Seq(TextCell("Bobi"), TextCell("bob@toto.com"), PasswordCell("totototo"))),
-      EditableRow(Seq(TextCell("Barb"), TextCell("ba@rbara.com"), PasswordCell("tiiti"))),
-      EditableRow(Seq(TextCell("Boba"), TextCell("bob@toto.com"), PasswordCell("tototoeeeuto"))),
-      EditableRow(Seq(TextCell("Barbar"), TextCell("ba@rbara.com"), PasswordCell("tiieti"))),
-      EditableRow(Seq(TextCell("Bobo"), TextCell("bob@toto.com"), PasswordCell("totototo"))),
-      EditableRow(Seq(TextCell("Barbaro"), TextCell("ba@rbara.com"), PasswordCell("tiiti"))),
-      EditableRow(Seq(TextCell("Bobu"), TextCell("bob@toto.com"), PasswordCell("totototo"))),
-      EditableRow(Seq(TextCell("Barbari"), TextCell("ba@rbara.com"), PasswordCell("tiixxxti"))),
-      EditableRow(Seq(TextCell("Bob"), TextCell("bob@toto.com"), PasswordCell("totototo"))),
-      EditableRow(Seq(TextCell("Barbaru"), TextCell("ba@rbara.com"), PasswordCell("tiitui")))
+
+    val roles = Seq(user, admin)
+    val roleFilter = (r: Role) => r == admin
+
+    type Status = String
+    val running: Status = "Running"
+    val off: Status = "Off"
+    val error: Status = "Error"
+
+
+    val rowFlex = Seq(styles.display.flex, flexDirection.row, justifyContent.spaceAround, alignItems.center)
+    val columnFlex = Seq(styles.display.flex, flexDirection.column, styles.justifyContent.center)
+
+    def save(expandableRow: ExpandableRow, name: TextCell, email: TextCell, password: PasswordCell, role: LabelCell, status: Status) = {
+      rows() = rows.now.updated(rows.now.indexOf(expandableRow), buildExpandable(name.get, email.get, password.get, role.get, status, true))
+    }
+
+    def closeAll(except: ExpandableRow) = rows.now.filterNot{_ == except}.foreach{_.subRow.trigger() = false}
+
+    def buildExpandable(userName: String, userEmail: String, userPassword: String, userRole: Role, userStatus: Status, expanded: Boolean = false): ExpandableRow = {
+      val aVar = Var(expanded)
+
+      def roleStyle(s: Role) =
+        if (s == admin) label_success
+        else label_default
+
+      val name = TextCell(userName, Some("Name"))
+      val email = TextCell(userEmail, Some("Email"))
+      val password = PasswordCell(userPassword, Some("Password"))
+      val role = LabelCell(userRole, roles, optionStyle = roleStyle, title = Some("Role"))
+
+      val rowEdit = Var(false)
+
+      val buttonStyle: ModifierSeq = Seq(
+        fontSize := 22,
+        color := "#23527c",
+        opacity := 0.8
+      )
+
+      lazy val aSubRow: StaticSubRow = StaticSubRow({
+        div(height := 120, rowFlex)(
+          groupCell.build(margin := 25),
+        )
+      }, aVar)
+
+      def statusStyle(s: Status) =
+        if (s == running) label_success
+        else if (s == off) label_default
+        else label_danger
+
+      lazy val expandableRow: ExpandableRow = ExpandableRow(EditableRow(Seq(
+        TriggerCell(a(userName, onclick := { () =>
+          closeAll(expandableRow)
+          aVar() = !aVar.now
+        })),
+        LabelCell(userStatus, Seq(), optionStyle = statusStyle),
+      )), aSubRow)
+
+      lazy val groupCell: GroupCell = GroupCell(
+        div(rowFlex, width := "100%")(
+          name.build(padding := 10),
+          email.build(padding := 10),
+          password.build(padding := 10),
+          role.build(padding := 10),
+          span(
+            Rx {
+              if (rowEdit()) glyphSpan(glyph_save +++ buttonStyle +++ toClass("actionIcon"), () => {
+                rowEdit.update(!rowEdit.now)
+                save(expandableRow, name, email, password, role, userStatus)
+                })
+              else glyphSpan(glyph_edit2 +++ buttonStyle +++ toClass("actionIcon"), () => {
+                //button("Edit", btn_default, onclick := { () =>
+                rowEdit.update(!rowEdit.now)
+                groupCell.switch
+              })
+            }
+          )
+        ), name, email, password, role)
+
+      expandableRow
+    }
+
+
+    lazy val rows = Var(Seq(
+      buildExpandable("Bobi", "bobi@me.com", "mypass", admin, running),
+      buildExpandable("Barbara", "barb@gmail.com", "toto", user, off)
     ))
 
     val headerStyle: ModifierSeq = Seq(
@@ -67,18 +146,7 @@ object TableDemo extends Demo {
     val editablePanel = div(
       Rx {
         div(styles.display.flex, flexDirection.row, styles.justifyContent.center)(
-
-          EdiTable(Seq("Name", "Email", "Password"), rows()).render(width := "80%"),
-          EdiTable(
-            Seq("", ""),
-            rows().map { r =>
-              EditableRow(Seq(
-                TriggerCell(button("Edit", btn_default, onclick := { () => r.switchEdit })(marginLeft := 20, marginBottom := 2.925, marginTop := 2.925)),
-                TriggerCell(button("Delete", btn_danger, onclick := { () => rows() = rows.now.filterNot(_ == r) })(marginLeft := 10, marginBottom := 2.925, marginTop := 2.925))
-              ))
-            },
-            BSTableStyle(headerStyle = headerStyle)
-          ).render(width := "20%")
+          EdiTable(Seq("Name", "Status"), rows()).render(width := "90%")
         )
       }
     )

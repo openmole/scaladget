@@ -91,3 +91,8 @@ h3 {
     width: 30px;
     position: absolute;
 }
+
+.actionIcon:hover {
+    opacity: 1;
+    transform: scale(1.3);
+}

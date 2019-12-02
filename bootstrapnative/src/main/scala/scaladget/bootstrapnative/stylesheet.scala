@@ -50,6 +50,8 @@ package stylesheet {
 
     //GHYPHICONS
     lazy val glyph_edit: Glyphicon = toGlyphicon("glyphicon-pencil")
+    lazy val glyph_edit2: Glyphicon = toGlyphicon("glyphicon-edit")
+    lazy val glyph_save: Glyphicon = toGlyphicon("glyphicon-save")
     lazy val glyph_trash: Glyphicon = toGlyphicon("glyphicon-trash")
     lazy val glyph_plus: Glyphicon = toGlyphicon("glyphicon-plus")
     lazy val glyph_plus_sign: Glyphicon = toGlyphicon("glyphicon-plus-sign")

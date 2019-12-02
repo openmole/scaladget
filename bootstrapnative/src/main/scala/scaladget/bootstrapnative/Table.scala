@@ -1,7 +1,7 @@
 package scaladget.bootstrapnative
 
 import org.scalajs.dom.raw._
-import scalatags.JsDom.{TypedTag, tags}
+import scalatags.JsDom.{TypedTag, styles, tags}
 import scalatags.JsDom.all._
 import scaladget.tools.{ModifierSeq, emptyMod}
 import scaladget.tools.Utils._
@@ -62,9 +62,23 @@ object Table {
   case class SubRow(element: Rx[TypedTag[HTMLElement]], trigger: Rx[Boolean] = Rx(false)) {
     val expander = div(Rx {
       trigger.expand(element())
-    }
-    )
+    })
   }
+
+  case class StaticSubRow(element: TypedTag[HTMLElement], trigger: Var[Boolean] = Var(false)) {
+    val expander = div(Rx {
+      trigger.expand(element)
+    })
+  }
+
+  object StaticSubRow {
+    def empty() = StaticSubRow(div, Var(false))
+
+  }
+  object SubRow {
+    def empty() = SubRow(Var(div), Rx(true))
+  }
+
 
   implicit def rowToReactiveRow(r: Row): ReactiveRow = reactiveRow(r.values.zipWithIndex.map { v => VarCell(v._1, v._2) }, r.rowStyle)
 
@@ -200,73 +214,3 @@ case class Table(reactiveRows: Rx.Dynamic[Seq[ReactiveRow]],
   }
 
 }
-
-  trait EditableCell {
-    val editMode: Var[Boolean] = Var(false)
-
-    def build: TypedTag[HTMLElement]
-  }
-
-  case class TextCell(value: String) extends EditableCell {
-    def build = {
-      div(
-        Rx {
-          if (editMode()) inputTag(value)
-          else div(value)
-        }
-      )
-    }
-  }
-
-
-  case class PasswordCell(value: String) extends EditableCell {
-    def build = {
-      div(
-        Rx {
-          if (editMode()) inputTag(value)(`type` := "password")
-          else div(value.map{c=> raw("&#9679")})
-        }
-      )
-    }
-  }
-  //  case class LabelCell(options: Seq[String]) extends EditableCell
-  case class TriggerCell(trigger: TypedTag[HTMLElement]) extends EditableCell {
-    def build = trigger
-  }
-
-case class EditableRow(cells: Seq[EditableCell]) {
-  def switchEdit = {
-    cells.foreach {c=>
-      c.editMode() = !c.editMode.now
-    }
-  }
-}
-
-object EdiTable {
-  implicit def seqCellsToRow(s: Seq[EditableCell]): EditableRow = EditableRow(s)
-}
-
-case class EdiTable(headers: Seq[String],
-                      cells: Seq[EditableRow],
-                      bsTableStyle: BSTableStyle = BSTableStyle(bordered_table, emptyMod)
-                     ) {
-
-    lazy val tableBody = tags.tbody.render
-
-    cells.foreach { row =>
-      tableBody.appendChild(
-        tags.tr(row.cells.map { c =>
-          tags.td(c.build)
-        }))
-    }
-
-    lazy val render = {
-      tags.table(bsTableStyle.tableStyle)(
-        tags.thead(bsTableStyle.headerStyle)(
-          tags.tr(headers.map {
-            th(_)
-          })),
-        tableBody
-      )
-    }
-  }
