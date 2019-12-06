@@ -62,7 +62,7 @@ object TableDemo extends Demo {
 
 
     val rowFlex = Seq(styles.display.flex, flexDirection.row, justifyContent.spaceAround, alignItems.center)
-    val columnFlex = Seq(styles.display.flex, flexDirection.column, styles.justifyContent.center)
+    val columnFlex = Seq(styles.display.flex, flexDirection.column, styles.justifyContent.flexStart)
 
     def save(expandableRow: ExpandableRow, name: TextCell, email: TextCell, password: PasswordCell, role: LabelCell, status: Status) = {
       rows() = rows.now.updated(rows.now.indexOf(expandableRow), buildExpandable(name.get, email.get, password.get, role.get, status, true))
@@ -91,7 +91,7 @@ object TableDemo extends Demo {
       )
 
       lazy val aSubRow: StaticSubRow = StaticSubRow({
-        div(height := 120, rowFlex)(
+        div(height := 200, rowFlex)(
           groupCell.build(margin := 25),
         )
       }, aVar)
@@ -110,7 +110,7 @@ object TableDemo extends Demo {
       )), aSubRow)
 
       lazy val groupCell: GroupCell = GroupCell(
-        div(rowFlex, width := "100%")(
+        div(columnFlex, width := "100%")(
           name.build(padding := 10),
           email.build(padding := 10),
           password.build(padding := 10),

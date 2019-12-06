@@ -27,8 +27,8 @@ case class TextCell(value: String, title: Option[String] = None) extends Editabl
 
   def build = {
     val t = title.getOrElse("")
-    div(EdiTable.columnFlex, styles.alignContent.flexStart)(
-      div(fontWeight.bold, marginRight := 10)(t),
+    div(EdiTable.rowFlex, styles.alignContent.flexStart)(
+      div(fontWeight.bold, marginRight := 10, width := 90)(t),
       Rx {
         if (editMode()) div(editor)
         else div(value)
@@ -47,12 +47,11 @@ case class PasswordCell(value: String, title: Option[String] = None) extends Edi
   def build = {
     val t = title.getOrElse("")
     div(EdiTable.rowFlex, styles.alignContent.flexStart)(
-      div(fontWeight.bold, marginRight := 10)(t)(
+      div(fontWeight.bold, marginRight := 10, width := 90)(t),
         Rx {
           if (editMode()) div(editor)
           else div(value.map { c => raw("&#9679") })
         }
-      )
     )
   }
 
@@ -73,13 +72,12 @@ case class LabelCell(current: String,
   def build = {
     val t = title.getOrElse("")
     div(EdiTable.rowFlex, styles.alignContent.flexStart)(
-      div(fontWeight.bold, marginRight := 10)(t)(
+      div(fontWeight.bold, marginRight := 10, width := 90)(t),
         Rx {
           if (editMode() && !options.isEmpty) editor.selector
           else if (filter(current)) label(current.toString, optionStyle(current))(styles.display.flex, styles.justifyContent.center, styles.alignContent.center, padding := 5, margin := 1).render
           else div().render
         }
-      )
     )
   }
 
@@ -128,9 +126,9 @@ case class ExpandableRow(editableRow: EditableRow, subRow: StaticSubRow) {
 object EdiTable {
   implicit def seqCellsToRow(s: Seq[EditableCell[_]]): EditableRow = EditableRow(s)
 
-  val rowFlex = Seq(styles.display.flex, flexDirection.row, styles.justifyContent.center)
+  val rowFlex = Seq(styles.display.flex, flexDirection.row)
 
-  val columnFlex = Seq(styles.display.flex, flexDirection.column)
+  val columnFlex = Seq(styles.display.flex, flexDirection.column, styles.justifyContent.center)
 }
 
 case class EdiTable(headers: Seq[String],
