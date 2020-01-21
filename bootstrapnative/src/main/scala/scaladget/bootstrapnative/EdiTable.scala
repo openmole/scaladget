@@ -12,7 +12,7 @@ import scaladget.bootstrapnative.Table.{BSTableStyle, StaticSubRow, SubRow}
 
 
 trait EditableCell[T] {
-  val editMode: Var[Boolean] = Var(false)
+  val editMode: Var[Boolean]
 
   def switch = editMode.update(!editMode.now)
 
@@ -22,7 +22,9 @@ trait EditableCell[T] {
 }
 
 
-case class TextCell(value: String, title: Option[String] = None) extends EditableCell[String] {
+case class TextCell(value: String, title: Option[String] = None, editing: Boolean = false) extends EditableCell[String] {
+  val editMode = Var(editing)
+
   val editor = inputTag(value).render
 
   def build = {
@@ -40,8 +42,10 @@ case class TextCell(value: String, title: Option[String] = None) extends Editabl
 }
 
 
-case class PasswordCell(value: String, title: Option[String] = None) extends EditableCell[String] {
+case class PasswordCell(value: String, title: Option[String] = None, editing: Boolean = false) extends EditableCell[String] {
 
+  val editMode = Var(editing)
+  
   val editor = inputTag(value)(`type` := "password").render
 
   def build = {
@@ -63,9 +67,12 @@ case class LabelCell(current: String,
                      options: Seq[String],
                      filter: String => Boolean = (f: String) => true,
                      optionStyle: String => ModifierSeq = (s: String) => label_default,
-                     title: Option[String] = None) extends EditableCell[String] {
+                     title: Option[String] = None,
+                     editing: Boolean = false) extends EditableCell[String] {
 
   import scaladget.bootstrapnative.Selector._
+
+  val editMode = Var(editing)
 
   val editor = options.options(naming = (o => o.toString))
 
@@ -85,7 +92,9 @@ case class LabelCell(current: String,
 }
 
 
-case class TriggerCell(trigger: TypedTag[HTMLElement]) extends EditableCell[Unit] {
+case class TriggerCell(trigger: TypedTag[HTMLElement], editing: Boolean = false) extends EditableCell[Unit] {
+  val editMode = Var(editing)
+
   def build = trigger(Stylesheet.pointer)
 
   def get = {}
@@ -93,6 +102,8 @@ case class TriggerCell(trigger: TypedTag[HTMLElement]) extends EditableCell[Unit
 
 
 case class GroupCell(build: TypedTag[HTMLElement], editableCells: EditableCell[_]*) extends EditableCell[Unit] {
+
+  val editMode = Var(false)
 
   editMode.triggerLater {
     editableCells.foreach { ec =>

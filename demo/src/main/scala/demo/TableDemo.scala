@@ -65,24 +65,26 @@ object TableDemo extends Demo {
     val columnFlex = Seq(styles.display.flex, flexDirection.column, styles.justifyContent.flexStart)
 
     def save(expandableRow: ExpandableRow, name: TextCell, email: TextCell, password: PasswordCell, role: LabelCell, status: Status) = {
-      rows() = rows.now.updated(rows.now.indexOf(expandableRow), buildExpandable(name.get, email.get, password.get, role.get, status, true))
+      rows() = rows.now.updated(rows.now.indexOf(expandableRow), buildExpandable(name.get, email.get, password.get, role.get, status))
     }
 
     def closeAll(except: ExpandableRow) = rows.now.filterNot{_ == except}.foreach{_.subRow.trigger() = false}
 
-    def buildExpandable(userName: String, userEmail: String, userPassword: String, userRole: Role, userStatus: Status, expanded: Boolean = false): ExpandableRow = {
+    def buildExpandable(userName: String, userEmail: String, userPassword: String, userRole: Role, userStatus: Status, edited: Boolean = false, expanded: Boolean = false): ExpandableRow = {
       val aVar = Var(expanded)
 
+
+      println("BUILD EXP " + edited)
       def roleStyle(s: Role) =
         if (s == admin) label_success
         else label_default
 
-      val name = TextCell(userName, Some("Name"))
-      val email = TextCell(userEmail, Some("Email"))
-      val password = PasswordCell(userPassword, Some("Password"))
-      val role = LabelCell(userRole, roles, optionStyle = roleStyle, title = Some("Role"))
+      val name = TextCell(userName, Some("Name"), edited)
+      val email = TextCell(userEmail, Some("Email"), edited)
+      val password = PasswordCell(userPassword, Some("Password"), edited)
+      val role = LabelCell(userRole, roles, optionStyle = roleStyle, title = Some("Role"), editing = edited)
 
-      val rowEdit = Var(false)
+      val rowEdit = Var(edited)
 
       val buttonStyle: ModifierSeq = Seq(
         fontSize := 22,
@@ -91,7 +93,7 @@ object TableDemo extends Demo {
       )
 
       lazy val aSubRow: StaticSubRow = StaticSubRow({
-        div(height := 200, rowFlex)(
+        div(height := 250, rowFlex)(
           groupCell.build(margin := 25),
         )
       }, aVar)
@@ -135,7 +137,7 @@ object TableDemo extends Demo {
 
 
     lazy val rows = Var(Seq(
-      buildExpandable("Bobi", "bobi@me.com", "mypass", admin, running),
+      buildExpandable("Bobi", "bobi@me.com", "mypass", admin, running, true),
       buildExpandable("Barbara", "barb@gmail.com", "toto", user, off)
     ))
 
