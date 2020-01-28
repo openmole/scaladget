@@ -14,6 +14,10 @@ import scaladget.bootstrapnative.Table.{BSTableStyle, StaticSubRow, SubRow}
 trait EditableCell[T] {
   val editMode: Var[Boolean]
 
+  def editable: Boolean
+
+  def editionAllowed = editMode.map{_ && editable}
+
   def switch = editMode.update(!editMode.now)
 
   def build: TypedTag[HTMLElement]
@@ -22,7 +26,7 @@ trait EditableCell[T] {
 }
 
 
-case class TextCell(value: String, title: Option[String] = None, editing: Boolean = false) extends EditableCell[String] {
+case class TextCell(value: String, title: Option[String] = None, editing: Boolean = false, editable: Boolean = true) extends EditableCell[String] {
   val editMode = Var(editing)
 
   val editor = inputTag(value).render
@@ -32,7 +36,7 @@ case class TextCell(value: String, title: Option[String] = None, editing: Boolea
     div(EdiTable.rowFlex, styles.alignContent.flexStart)(
       div(fontWeight.bold, marginRight := 10, width := 90)(t),
       Rx {
-        if (editMode()) div(editor)
+        if (editionAllowed()) div(editor)
         else div(value)
       }
     )
@@ -42,7 +46,7 @@ case class TextCell(value: String, title: Option[String] = None, editing: Boolea
 }
 
 
-case class PasswordCell(value: String, title: Option[String] = None, editing: Boolean = false) extends EditableCell[String] {
+case class PasswordCell(value: String, title: Option[String] = None, editing: Boolean = false, editable: Boolean = true) extends EditableCell[String] {
 
   val editMode = Var(editing)
   
@@ -53,7 +57,7 @@ case class PasswordCell(value: String, title: Option[String] = None, editing: Bo
     div(EdiTable.rowFlex, styles.alignContent.flexStart)(
       div(fontWeight.bold, marginRight := 10, width := 90)(t),
         Rx {
-          if (editMode()) div(editor)
+          if (editionAllowed()) div(editor)
           else div(value.map { c => raw("&#9679") })
         }
     )
@@ -68,7 +72,8 @@ case class LabelCell(current: String,
                      filter: String => Boolean = (f: String) => true,
                      optionStyle: String => ModifierSeq = (s: String) => label_default,
                      title: Option[String] = None,
-                     editing: Boolean = false) extends EditableCell[String] {
+                     editing: Boolean = false,
+                     editable: Boolean = true) extends EditableCell[String] {
 
   import scaladget.bootstrapnative.Selector._
 
@@ -81,7 +86,7 @@ case class LabelCell(current: String,
     div(EdiTable.rowFlex, styles.alignContent.flexStart)(
       div(fontWeight.bold, marginRight := 10, width := 90)(t),
         Rx {
-          if (editMode() && !options.isEmpty) editor.selector
+          if (editionAllowed() && !options.isEmpty) editor.selector
           else if (filter(current)) label(current.toString, optionStyle(current))(styles.display.flex, styles.justifyContent.center, styles.alignContent.center, padding := 5, margin := 1).render
           else div().render
         }
@@ -92,7 +97,7 @@ case class LabelCell(current: String,
 }
 
 
-case class TriggerCell(trigger: TypedTag[HTMLElement], editing: Boolean = false) extends EditableCell[Unit] {
+case class TriggerCell(trigger: TypedTag[HTMLElement], editing: Boolean = false, editable: Boolean = true) extends EditableCell[Unit] {
   val editMode = Var(editing)
 
   def build = trigger(Stylesheet.pointer)
@@ -104,6 +109,8 @@ case class TriggerCell(trigger: TypedTag[HTMLElement], editing: Boolean = false)
 case class GroupCell(build: TypedTag[HTMLElement], editableCells: EditableCell[_]*) extends EditableCell[Unit] {
 
   val editMode = Var(false)
+
+  val editable = true
 
   editMode.triggerLater {
     editableCells.foreach { ec =>

@@ -80,7 +80,7 @@ object TableDemo extends Demo {
         else label_default
 
       val name = TextCell(userName, Some("Name"), edited)
-      val email = TextCell(userEmail, Some("Email"), edited)
+      val email = TextCell(userEmail, Some("Email"), edited, editable = false)
       val password = PasswordCell(userPassword, Some("Password"), edited)
       val role = LabelCell(userRole, roles, optionStyle = roleStyle, title = Some("Role"), editing = edited)
 
