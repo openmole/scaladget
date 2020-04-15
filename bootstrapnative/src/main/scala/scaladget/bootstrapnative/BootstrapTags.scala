@@ -30,7 +30,7 @@ import scaladget.bootstrapnative
 import scaladget.bootstrapnative.Alert.ExtraButton
 import scaladget.bootstrapnative.SelectableButtons._
 import bsnsheet._
-import net.scalapro.sortable.{EventS, SortableProps}
+import net.scalapro.sortable._
 import scaladget.bootstrapnative.Table.ReactiveRow
 import scaladget.tools._
 
@@ -130,7 +130,7 @@ trait BootstrapTags {
   )
 
   //Toggle buttons
-  def toggle(default: Boolean = false, valueOn: String = "ON", valueOff: String = "OFF", onToggled: ()=> {} = ()=> Unit) = ToggleButton(default, valueOn, valueOff, onToggled)
+  def toggle(default: Boolean = false, valueOn: String = "ON", valueOff: String = "OFF", onToggled: () => {} = () => ()) = ToggleButton(default, valueOn, valueOff, onToggled)
 
   //Label decorators to set the label size
   implicit class TypedTagLabel(lab: TypedTag[HTMLLabelElement]) {
@@ -421,7 +421,7 @@ trait BootstrapTags {
           data("original-title") := text
         )
       else element
-    }.render
+      }.render
 
     elementRender.onmouseover = (e: Event) => {
       tooltip
@@ -635,10 +635,11 @@ trait BootstrapTags {
         trigger(onclick := { () =>
           clicked() = !clicked.now
         }),
-      clicked.expand(inner.render)
+        clicked.expand(inner.render)
       )
     }
   }
+
   implicit class TagCollapserWithReactive(r: Rx[Boolean]) {
     def expand[T <: HTMLElement](inner: T) = {
 
@@ -675,17 +676,17 @@ trait BootstrapTags {
     def tabs(initialTabs: Seq[Tab] = Seq()) = TabHolder(initialTabs, false, 0, None, (tab: Tab) => {})
 
 
-    def defaultSortOptions = (ts: Var[Seq[Tab]], setActive: Int => Unit) => new SortableProps {
-      override val onEnd = scala.scalajs.js.defined {
-        (event: EventS) ⇒
-          val oldI = event.oldIndex.asInstanceOf[Int]
-          val newI = event.newIndex.asInstanceOf[Int]
-          ts() = ts.now.updated(oldI, ts.now(newI)).updated(newI, ts.now(oldI))
-          setActive(newI)
-      }
-    }
+    def defaultSortOptions: (Var[Seq[Tab]],Int => Unit) => SortableOptions = (ts: Var[Seq[Tab]], setActive: Int => Unit) =>
+      SortableOptions.onEnd(
+          (event: EventS) ⇒ {
+            val oldI = event.oldIndex.asInstanceOf[Int]
+            val newI = event.newIndex.asInstanceOf[Int]
+            ts() = ts.now.updated(oldI, ts.now(newI)).updated(newI, ts.now(oldI))
+            setActive(newI)
+          }
+      )
 
-    case class TabHolder(tabs: Seq[Tab], isClosable: Boolean, initIndex: Int, sortableOptions: Option[(Var[Seq[Tab]], Int => Unit) => SortableProps], onActivation: Tab => Unit) {
+    case class TabHolder(tabs: Seq[Tab], isClosable: Boolean, initIndex: Int, sortableOptions: Option[(Var[Seq[Tab]], Int => Unit) => SortableOptions], onActivation: Tab => Unit) {
       def add(title: String, content: BS, onclickExtra: () => Unit = () => {}, onAddedTab: Tab => Unit = Tab => {}): TabHolder =
         add(Tab(title, content, onclickExtra), onAddedTab)
 
@@ -697,7 +698,7 @@ trait BootstrapTags {
 
       def initialIndex(index: Int) = copy(initIndex = index)
 
-      def withSortableOptions(options: (Var[Seq[Tab]], Int => Unit) => SortableProps) = copy(sortableOptions = Some(options))
+      def withSortableOptions(options: (Var[Seq[Tab]], Int => Unit) => SortableOptions) = copy(sortableOptions = Some(options))
 
       def onActivation(onActivation: Tab => Unit = Tab => {}) = copy(onActivation = onActivation)
 
@@ -709,7 +710,7 @@ trait BootstrapTags {
 
   }
 
-  case class Tabs(tabs: Var[Seq[Tab]], isClosable: Boolean, initActive: Option[Tab], sortableOptions: (Var[Seq[Tab]], Int => Unit) => SortableProps, onActivation: Tab => Unit = Tab => {}, onCloseExtra: Tab => Unit = Tab => {}, onRemoved: Tab => Unit = Tab => {}) {
+  case class Tabs(tabs: Var[Seq[Tab]], isClosable: Boolean, initActive: Option[Tab], sortableOptions: (Var[Seq[Tab]], Int => Unit) => SortableOptions, onActivation: Tab => Unit = Tab => {}, onCloseExtra: Tab => Unit = Tab => {}, onRemoved: Tab => Unit = Tab => {}) {
 
     implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
     val active: Var[Option[Tab]] = Var(initActive)

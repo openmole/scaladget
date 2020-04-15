@@ -1,8 +1,5 @@
 import sbt._
 import Keys._
-
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
-
 import execnpm.ExecNpmPlugin.autoImport._
 import execnpm.NpmDeps._
 
@@ -14,14 +11,17 @@ val bootstrapSwitchVersion = "3.3.4"
 val bootstrapVersion = "3.4.1"
 val bootstrapSliderVersion = "10.4.0"
 val highlightVersion = "9.12.0"
-val querkiVersion = "0.9"
-val lunrVersion = "2.1.6"
-val rxVersion = "0.4.0"
-val scalatagsVersion = "0.7.0"
-val scalaJSdomVersion = "0.9.7"
-val sortableVersion = "1.7.0"
-val sourceCodeVersion = "0.1.7"
+val lunrVersion ="2.1.6"
+
+//2.13
+val jsextVersion = "0.10"
+val rxVersion = "0.4.2"
+val scalatagsVersion = "0.8.7"
+val scalaJSdomVersion = "1.0.0"
+val sortableVersion = "1.10.2"
+val sourceCodeVersion = "0.2.1"
 val scalaJsMarkedVersion = "1.0.2"
+val scalaJSortableVersion = "0.3"
 
 organization in ThisBuild := "fr.iscpif"
 
@@ -47,6 +47,7 @@ pomExtra in ThisBuild := {
   </developers>
 }
 
+resolvers += Resolver.sonatypeRepo("releases")
 
 
 //useYarn in ThisBuild := true
@@ -54,7 +55,8 @@ pomExtra in ThisBuild := {
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
 lazy val defaultSettings = Seq(
-  crossScalaVersions := Seq("2.12.8" , "2.13.0"),
+  scalaVersion := "2.13.1",
+  //crossScalaVersions := Seq("2.12.8" , "2.13.1"),
   organization := "fr.iscpif.scaladget",
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   releaseVersionBump := sbtrelease.Version.Bump.Minor,
@@ -86,32 +88,32 @@ lazy val defaultSettings = Seq(
 lazy val scalatags = libraryDependencies += "com.lihaoyi" %%% "scalatags" % scalatagsVersion
 lazy val scalaJsDom = libraryDependencies += "org.scala-js" %%% "scalajs-dom" % scalaJSdomVersion
 lazy val rx = libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion
-lazy val querki = libraryDependencies += "org.querki" %%% "querki-jsext" % querkiVersion
+lazy val jsext = libraryDependencies += "org.querki" %%% "querki-jsext" % jsextVersion
 
 lazy val ace = project.in(file("ace")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
   scalaJsDom,
-  querki,
+  jsext,
   npmDeps in Compile += Dep("ace-builds", aceVersion, List("ace.js"))
 )
 
 lazy val aceDiff = project.in(file("acediff")) enablePlugins (ExecNpmPlugin) dependsOn (ace) settings (defaultSettings) settings(
   scalaJsDom,
-  querki,
+  jsext,
   npmDeps in Compile += Dep("ace-diff", aceDiffVersion, List("ace-diff.min.js", "ace-diff.min.css"), true)
 )
 
 lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
   scalaJsDom,
   scalatags,
-  querki,
+  jsext,
   npmDeps in Compile += Dep("bootstrap-slider", bootstrapSliderVersion, List("bootstrap-slider.min.js", "bootstrap-slider.min.css"))
 )
 
 lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
   scalaJsDom,
   scalatags,
-  querki,
-  libraryDependencies += "net.scalapro" %%% "sortable-js-facade" % "0.2.1",
+  jsext,
+  libraryDependencies += "net.scalapro" %%% "sortable-js-facade" % "0.3",
   npmDeps in Compile += Dep("bootstrap.native", bootstrapNativeVersion, List("bootstrap-native.min.js")),
   npmDeps in Compile += Dep("bootstrap-switch", bootstrapSwitchVersion, List("bootstrap-switch.min.css")),
   npmDeps in Compile += Dep("bootstrap", bootstrapVersion, List("bootstrap.min.css")),
@@ -136,10 +138,11 @@ lazy val tools = project.in(file("tools")) enablePlugins (ScalaJSPlugin) setting
 lazy val runDemo = taskKey[Unit]("runDemo")
 
 lazy val demo = project.in(file("demo")) enablePlugins (ExecNpmPlugin) settings(
+  scalaVersion := "2.13.1",
   libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
-  libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
-  libraryDependencies += "com.github.karasiq" %%% "scalajs-marked" % scalaJsMarkedVersion,
-  npmDeps in Compile += Dep("ace-builds",  aceVersion, List("mode-scala.js", "theme-github.js", "ext-language_tools.js"), true),
+//  libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
+  //libraryDependencies += "com.github.karasiq" %%% "scalajs-marked" % scalaJsMarkedVersion,
+  //npmDeps in Compile += Dep("ace-builds",  aceVersion, List("mode-scala.js", "theme-github.js", "ext-language_tools.js"), true),
   runDemo := {
 
     val demoTarget = target.value

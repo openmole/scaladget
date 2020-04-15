@@ -5,10 +5,10 @@ import scalatags.JsDom.all._
 import scaladget.tools._
 
 object ToggleButton {
-  def apply(default: Boolean, valueOn: String = "ON", valueOff: String = "OFF", onToggled: ()=> {} =()=> Unit): ToggleButton = new ToggleButton(default, valueOn, valueOff, onToggled)
+  def apply(default: Boolean, valueOn: String = "ON", valueOff: String = "OFF", onToggled: ()=> {} =()=> ()): ToggleButton = new ToggleButton(default, valueOn, valueOff, onToggled)
 }
 
-class ToggleButton(default: Boolean, valueOn: String = "ON", valueOff: String = "OFF", onToggled: ()=> {} =()=> Unit) {
+class ToggleButton(default: Boolean, valueOn: String = "ON", valueOff: String = "OFF", onToggled: ()=> {} =()=> ()) {
 
   implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
   val position = Var(default)

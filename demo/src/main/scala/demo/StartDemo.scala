@@ -1,7 +1,7 @@
 package demo
 
 
-import com.karasiq.highlightjs.HighlightJS
+//import com.karasiq.highlightjs.HighlightJS
 
 import scaladget.bootstrapnative.bsn._
 import scaladget.tools._
@@ -82,7 +82,7 @@ object StartDemo {
         }).build.render).render
 
     dom.document.body.appendChild(content)
-    HighlightJS.initHighlightingOnLoad()
+   // HighlightJS.initHighlightingOnLoad()
 
   }
 
@@ -160,7 +160,7 @@ object StartDemo {
       }
     )
     dom.document.body.appendChild(content)
-    HighlightJS.initHighlightingOnLoad()
+   // HighlightJS.initHighlightingOnLoad()
 
   }
 

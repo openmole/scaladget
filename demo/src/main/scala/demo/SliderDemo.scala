@@ -17,7 +17,7 @@ package demo
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.karasiq.highlightjs.HighlightJS
+//import com.karasiq.highlightjs.HighlightJS
 import org.scalajs.dom.Element
 
 import scala.scalajs.js
@@ -49,7 +49,7 @@ object SliderDemo extends Demo {
       sliderValue() = slider.getValue.toString
     })
 
-    HighlightJS.initHighlightingOnLoad()
+   // HighlightJS.initHighlightingOnLoad()
 
     myDiv
   }

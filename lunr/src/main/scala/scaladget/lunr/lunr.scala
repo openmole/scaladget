@@ -278,7 +278,8 @@ object StopWordFilter extends js.Object {
 }
 
 
+@JSGlobalScope
 @js.native
-object Importedjs extends js.GlobalScope {
+object Importedjs extends js.Object {
   def lunr(config: js.Function): Index = js.native
 }
