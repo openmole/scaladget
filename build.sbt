@@ -2,6 +2,7 @@ import sbt._
 import Keys._
 import execnpm.ExecNpmPlugin.autoImport._
 import execnpm.NpmDeps._
+import xerial.sbt.Sonatype.autoImport.sonatypePublishToBundle
 
 
 val aceVersion = "1.4.3"
@@ -23,66 +24,56 @@ val sourceCodeVersion = "0.2.1"
 val scalaJsMarkedVersion = "1.0.2"
 val scalaJSortableVersion = "0.3"
 
-organization in ThisBuild := "fr.iscpif"
+
+val organisation = "org.openmole"
+
+organization in ThisBuild := organisation
+
+scalaVersion in ThisBuild := "2.13.1"
 
 name := "scaladget"
 
-
-
 pomIncludeRepository in ThisBuild := { _ => false }
 
-licenses in ThisBuild := Seq("Affero GPLv3" -> url("http://www.gnu.org/licenses/"))
+resolvers += Resolver.sonatypeRepo("releases")
 
-homepage in ThisBuild := Some(url("https://github.com/mathieuleclaire/scaladget"))
-
-scmInfo in ThisBuild := Some(ScmInfo(url("https://github.com/mathieuleclaire/scaladget.git"), "scm:git:git@github.com:mathieuleclaire/scaladget.git"))
-
-pomExtra in ThisBuild := {
+licenses := Seq("Affero GPLv3" -> url("http://www.gnu.org/licenses/"))
+homepage := Some(url("https://github.com/openmole/scala-js-plotlyjs"))
+scmInfo := Some(ScmInfo(url("https://github.com/openmole/scaladget.git"), "git@github.com:openmole/scaladget.git"))
+pomExtra := (
   <developers>
     <developer>
       <id>mathieu.leclaire</id>
       <name>Mathieu Leclaire</name>
-      <url>https://github.com/mathieuleclaire/</url>
     </developer>
   </developers>
-}
+  )
 
-resolvers += Resolver.sonatypeRepo("releases")
+releasePublishArtifactsAction := PgpKeys.publishSigned.value
+releaseVersionBump := sbtrelease.Version.Bump.Minor
+releaseTagComment := s"Releasing ${(version in ThisBuild).value}"
+releaseCommitMessage := s"Bump version to ${(version in ThisBuild).value}"
+sonatypeProfileName := organisation
+publishConfiguration := publishConfiguration.value.withOverwrite(true)
 
-
-//useYarn in ThisBuild := true
+publishTo := sonatypePublishToBundle.value
+publishMavenStyle := true
+autoCompilerPlugins := true
 
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
-lazy val defaultSettings = Seq(
-  scalaVersion := "2.13.1",
-  //crossScalaVersions := Seq("2.12.8" , "2.13.1"),
-  organization := "fr.iscpif.scaladget",
-  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-  releaseVersionBump := sbtrelease.Version.Bump.Minor,
-  releaseTagComment := s"Releasing ${(version in ThisBuild).value}",
-  releaseCommitMessage := s"Bump version to ${(version in ThisBuild).value}",
-  publishConfiguration in ThisBuild := publishConfiguration.value.withOverwrite(true),
-  releaseProcess := Seq[ReleaseStep](
-    checkSnapshotDependencies,
-    inquireVersions,
-    runClean,
-    runTest,
-    setReleaseVersion,
-    tagRelease,
-    releaseStepCommand("publishSigned"),
-    setNextVersion,
-    commitNextVersion,
-    releaseStepCommand("sonatypeReleaseAll"),
-    pushChanges
-  ),
-  publishTo in ThisBuild := {
-    val nexus = "https://oss.sonatype.org/"
-    if (version.value.trim.endsWith("SNAPSHOT"))
-      Some("snapshots" at nexus + "content/repositories/snapshots")
-    else
-      Some("releases" at nexus + "service/local/staging/deploy/maven2")
-  }
+releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  //setReleaseVersion,
+  tagRelease,
+  releaseStepCommand("publishSigned"),
+  releaseStepCommand("sonatypeBundleRelease"),
+  setNextVersion,
+  commitNextVersion,
+  pushChanges
 )
 
 lazy val scalatags = libraryDependencies += "com.lihaoyi" %%% "scalatags" % scalatagsVersion
@@ -90,26 +81,26 @@ lazy val scalaJsDom = libraryDependencies += "org.scala-js" %%% "scalajs-dom" % 
 lazy val rx = libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion
 lazy val jsext = libraryDependencies += "org.querki" %%% "querki-jsext" % jsextVersion
 
-lazy val ace = project.in(file("ace")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
+lazy val ace = project.in(file("ace")) enablePlugins (ExecNpmPlugin) settings(
   scalaJsDom,
   jsext,
   npmDeps in Compile += Dep("ace-builds", aceVersion, List("ace.js"))
 )
 
-lazy val aceDiff = project.in(file("acediff")) enablePlugins (ExecNpmPlugin) dependsOn (ace) settings (defaultSettings) settings(
+lazy val aceDiff = project.in(file("acediff")) enablePlugins (ExecNpmPlugin) dependsOn (ace) settings(
   scalaJsDom,
   jsext,
   npmDeps in Compile += Dep("ace-diff", aceDiffVersion, List("ace-diff.min.js", "ace-diff.min.css"), true)
 )
 
-lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
+lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (ExecNpmPlugin) settings(
   scalaJsDom,
   scalatags,
   jsext,
   npmDeps in Compile += Dep("bootstrap-slider", bootstrapSliderVersion, List("bootstrap-slider.min.js", "bootstrap-slider.min.css"))
 )
 
-lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings(
+lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (ExecNpmPlugin) settings(
   scalaJsDom,
   scalatags,
   jsext,
@@ -120,17 +111,17 @@ lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (Ex
   npmDeps in Compile += Dep("sortablejs", sortableVersion, List("Sortable.min.js")),
 ) dependsOn (tools)
 
-lazy val lunr = project.in(file("lunr")) enablePlugins (ExecNpmPlugin) settings (defaultSettings) settings (
+lazy val lunr = project.in(file("lunr")) enablePlugins (ExecNpmPlugin) settings (
   npmDeps in Compile += Dep("lunr", "2.1.5", List("lunr.js"))
   )
 
-lazy val svg = project.in(file("svg")) enablePlugins (ScalaJSPlugin) settings (defaultSettings) settings(
+lazy val svg = project.in(file("svg")) enablePlugins (ScalaJSPlugin) settings(
   scalatags,
   scalaJsDom
 ) dependsOn (tools)
 
 
-lazy val tools = project.in(file("tools")) enablePlugins (ScalaJSPlugin) settings (defaultSettings) settings(
+lazy val tools = project.in(file("tools")) enablePlugins (ScalaJSPlugin) settings(
   scalatags,
   scalaJsDom,
   rx
@@ -140,9 +131,10 @@ lazy val runDemo = taskKey[Unit]("runDemo")
 lazy val demo = project.in(file("demo")) enablePlugins (ExecNpmPlugin) settings(
   scalaVersion := "2.13.1",
   libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
-//  libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
+  libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
+  //libraryDependencies ++= Seq("com.dbrsn.scalajs.react.components" %%% "react-syntax-highlighter" % "0.3.1"),
   //libraryDependencies += "com.github.karasiq" %%% "scalajs-marked" % scalaJsMarkedVersion,
-  //npmDeps in Compile += Dep("ace-builds",  aceVersion, List("mode-scala.js", "theme-github.js", "ext-language_tools.js"), true),
+  npmDeps in Compile += Dep("ace-builds",  aceVersion, List("mode-scala.js", "theme-github.js", "ext-language_tools.js"), true),
   runDemo := {
 
     val demoTarget = target.value

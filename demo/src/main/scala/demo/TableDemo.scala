@@ -74,7 +74,6 @@ object TableDemo extends Demo {
       val aVar = Var(expanded)
 
 
-      println("BUILD EXP " + edited)
       def roleStyle(s: Role) =
         if (s == admin) label_success
         else label_default
