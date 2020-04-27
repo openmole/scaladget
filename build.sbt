@@ -144,6 +144,7 @@ lazy val runDemo = taskKey[Unit]("runDemo")
 
 lazy val demo = project.in(file("demo")) enablePlugins (ExecNpmPlugin) settings(
   scalaVersion := "2.13.1",
+  packagedArtifacts := Map.empty,
   libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
   libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
   //libraryDependencies ++= Seq("com.dbrsn.scalajs.react.components" %%% "react-syntax-highlighter" % "0.3.1"),
