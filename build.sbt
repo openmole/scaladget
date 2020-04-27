@@ -67,10 +67,13 @@ sonatypeProfileName := organisation
 
 publishConfiguration := publishConfiguration.value.withOverwrite(true)
 
+publishTo := sonatypePublishToBundle.value
+
+publishMavenStyle := true
+
+autoCompilerPlugins := true
+
 val releaseSettings = Seq(
-publishTo := sonatypePublishToBundle.value,
-  publishMavenStyle := true,
-  autoCompilerPlugins := true,
 
   releaseProcess := Seq[ReleaseStep](
     checkSnapshotDependencies,
