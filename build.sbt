@@ -89,6 +89,8 @@ val releaseSettings = Seq(
   )
 )
 
+lazy val publishDir = settingKey[File]("Publishing directory")
+
 lazy val scalatags = libraryDependencies += "com.lihaoyi" %%% "scalatags" % scalatagsVersion
 lazy val scalaJsDom = libraryDependencies += "org.scala-js" %%% "scalajs-dom" % scalaJSdomVersion
 lazy val rx = libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion
