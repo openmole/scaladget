@@ -146,6 +146,7 @@ lazy val demo = project.in(file("demo")) enablePlugins (ExecNpmPlugin) settings(
   publishArtifact := false,
   publish := {},
   publishLocal := {},
+  test := println("Tests disabled"),
   libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
   libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
   //libraryDependencies ++= Seq("com.dbrsn.scalajs.react.components" %%% "react-syntax-highlighter" % "0.3.1"),
