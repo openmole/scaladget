@@ -17,7 +17,7 @@ val lunrVersion = "2.1.6"
 //2.13
 val jsextVersion = "0.10"
 val rxVersion = "0.4.2"
-val scalatagsVersion = "0.8.7"
+val scalatagsVersion = "0.9.1"
 val scalaJSdomVersion = "1.0.0"
 val sortableVersion = "1.10.2"
 val sourceCodeVersion = "0.2.1"
@@ -25,7 +25,7 @@ val scalaJsMarkedVersion = "1.0.2"
 val scalaJSortableVersion = "0.3"
 
 
-val organisation = "org.openmole"
+val organisation = "org.openmole.scaladget"
 
 
 name := "scaladget"
