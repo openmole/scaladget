@@ -36,13 +36,13 @@ pomIncludeRepository in ThisBuild := { _ => false }
 
 resolvers += Resolver.sonatypeRepo("releases")
 
-licenses := Seq("Affero GPLv3" -> url("http://www.gnu.org/licenses/"))
+licenses in ThisBuild := Seq("Affero GPLv3" -> url("http://www.gnu.org/licenses/"))
 
-homepage := Some(url("https://github.com/openmole/scala-js-plotlyjs"))
+homepage in ThisBuild  := Some(url("https://github.com/openmole/scala-js-plotlyjs"))
 
-scmInfo := Some(ScmInfo(url("https://github.com/openmole/scaladget.git"), "git@github.com:openmole/scaladget.git"))
+scmInfo in ThisBuild  := Some(ScmInfo(url("https://github.com/openmole/scaladget.git"), "git@github.com:openmole/scaladget.git"))
 
-pomExtra := (
+pomExtra in ThisBuild  := (
   <developers>
     <developer>
       <id>mathieu.leclaire</id>
@@ -51,7 +51,7 @@ pomExtra := (
   </developers>
   )
 
-releasePublishArtifactsAction := PgpKeys.publishSigned.value
+releasePublishArtifactsAction in ThisBuild  := PgpKeys.publishSigned.value
 
 releaseVersionBump := sbtrelease.Version.Bump.Minor
 
@@ -61,13 +61,10 @@ releaseCommitMessage := s"Bump version to ${(version in ThisBuild).value}"
 
 sonatypeProfileName := "org.openmole"
 
-publishConfiguration := publishConfiguration.value.withOverwrite(true)
+
+publishConfiguration in ThisBuild:= publishConfiguration.value.withOverwrite(true)
 
 publishTo in ThisBuild := sonatypePublishToBundle.value
-
-publishMavenStyle := true
-
-autoCompilerPlugins := true
 
 val releaseSettings = Seq(
 
