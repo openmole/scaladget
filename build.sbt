@@ -63,7 +63,7 @@ sonatypeProfileName := "org.openmole"
 
 publishConfiguration := publishConfiguration.value.withOverwrite(true)
 
-publishTo := sonatypePublishToBundle.value
+publishTo in ThisBuild := sonatypePublishToBundle.value
 
 publishMavenStyle := true
 
