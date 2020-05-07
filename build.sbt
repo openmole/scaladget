@@ -25,7 +25,7 @@ val scalaJsMarkedVersion = "1.0.2"
 val scalaJSortableVersion = "0.3"
 
 
-val organization in ThisBuild = "org.openmole.scaladget"
+organization in ThisBuild := "org.openmole.scaladget"
 name := "scaladget"
 
 
