@@ -25,15 +25,11 @@ val scalaJsMarkedVersion = "1.0.2"
 val scalaJSortableVersion = "0.3"
 
 
-val organisation = "org.openmole.scaladget"
-
-
+val organization in ThisBuild = "org.openmole.scaladget"
 name := "scaladget"
 
 
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
-
-organization in ThisBuild := organisation
 
 scalaVersion in ThisBuild := "2.13.1"
 pomIncludeRepository in ThisBuild := { _ => false }
@@ -63,7 +59,7 @@ releaseTagComment := s"Releasing ${(version in ThisBuild).value}"
 
 releaseCommitMessage := s"Bump version to ${(version in ThisBuild).value}"
 
-sonatypeProfileName := organisation
+sonatypeProfileName := "org.openmole"
 
 publishConfiguration := publishConfiguration.value.withOverwrite(true)
 
