@@ -74,7 +74,6 @@ val releaseSettings = Seq(
     runClean,
     //setReleaseVersion,
     tagRelease,
-    releaseStepCommandAndRemaining("publish"),
     releaseStepCommand("publishSigned"),
     releaseStepCommand("sonatypeBundleRelease"),
     setNextVersion,
@@ -82,8 +81,6 @@ val releaseSettings = Seq(
     pushChanges
   )
 )
-
-lazy val publishDir = settingKey[File]("Publishing directory")
 
 lazy val scalatags = libraryDependencies += "com.lihaoyi" %%% "scalatags" % scalatagsVersion
 lazy val scalaJsDom = libraryDependencies += "org.scala-js" %%% "scalajs-dom" % scalaJSdomVersion
