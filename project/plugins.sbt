@@ -1,4 +1,4 @@
-resolvers += "Sonatype OSS Releases" at "https://oss.sonatype.org/content/repositories/releases"
+resolvers += Resolver.sonatypeRepo("public")
 
 addSbtPlugin("com.jsuereth" % "sbt-pgp" % "2.0.1")
 
