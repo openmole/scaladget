@@ -2,8 +2,6 @@ import sbt._
 import Keys._
 import execnpm.ExecNpmPlugin.autoImport._
 import execnpm.NpmDeps._
-import xerial.sbt.Sonatype.autoImport.sonatypePublishToBundle
-
 
 val aceVersion = "1.4.3"
 val aceDiffVersion = "2.3.0"
@@ -38,11 +36,11 @@ resolvers += Resolver.sonatypeRepo("releases")
 
 licenses in ThisBuild := Seq("Affero GPLv3" -> url("http://www.gnu.org/licenses/"))
 
-homepage in ThisBuild  := Some(url("https://github.com/openmole/scala-js-plotlyjs"))
+homepage in ThisBuild := Some(url("https://github.com/openmole/scala-js-plotlyjs"))
 
-scmInfo in ThisBuild  := Some(ScmInfo(url("https://github.com/openmole/scaladget.git"), "git@github.com:openmole/scaladget.git"))
+scmInfo in ThisBuild := Some(ScmInfo(url("https://github.com/openmole/scaladget.git"), "git@github.com:openmole/scaladget.git"))
 
-pomExtra in ThisBuild  := (
+pomExtra in ThisBuild := (
   <developers>
     <developer>
       <id>mathieu.leclaire</id>
@@ -51,7 +49,7 @@ pomExtra in ThisBuild  := (
   </developers>
   )
 
-releasePublishArtifactsAction in ThisBuild  := PgpKeys.publishSigned.value
+releasePublishArtifactsAction in ThisBuild := PgpKeys.publishSigned.value
 
 releaseVersionBump := sbtrelease.Version.Bump.Minor
 
@@ -62,24 +60,25 @@ releaseCommitMessage := s"Bump version to ${(version in ThisBuild).value}"
 sonatypeProfileName := "org.openmole"
 
 
-publishConfiguration in ThisBuild:= publishConfiguration.value.withOverwrite(true)
+publishConfiguration in ThisBuild := publishConfiguration.value.withOverwrite(true)
 
 publishTo in ThisBuild := sonatypePublishToBundle.value
 
-val releaseSettings = Seq(
+publishMavenStyle in ThisBuild := true
 
-  releaseProcess := Seq[ReleaseStep](
-    checkSnapshotDependencies,
-    inquireVersions,
-    runClean,
-    setReleaseVersion,
-    tagRelease,
-    releaseStepCommand("publishSigned"),
-    releaseStepCommand("sonatypeBundleRelease"),
-    setNextVersion,
-    commitNextVersion,
-    pushChanges
-  )
+
+releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  setReleaseVersion,
+  tagRelease,
+  releaseStepCommand("publishSigned"),
+  releaseStepCommand("sonatypeBundleRelease"),
+  setNextVersion,
+  commitNextVersion,
+  pushChanges
+)
 )
 
 lazy val scalatags = libraryDependencies += "com.lihaoyi" %%% "scalatags" % scalatagsVersion
@@ -87,26 +86,26 @@ lazy val scalaJsDom = libraryDependencies += "org.scala-js" %%% "scalajs-dom" % 
 lazy val rx = libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion
 lazy val jsext = libraryDependencies += "org.querki" %%% "querki-jsext" % jsextVersion
 
-lazy val ace = project.in(file("ace")) enablePlugins (ExecNpmPlugin) settings(releaseSettings) settings(
+lazy val ace = project.in(file("ace")) enablePlugins (ExecNpmPlugin) settings(
   scalaJsDom,
   jsext,
   npmDeps in Compile += Dep("ace-builds", aceVersion, List("ace.js"))
 )
 
-lazy val aceDiff = project.in(file("acediff")) enablePlugins (ExecNpmPlugin) dependsOn (ace) settings(releaseSettings) settings(
+lazy val aceDiff = project.in(file("acediff")) enablePlugins (ExecNpmPlugin) dependsOn (ace) settings(
   scalaJsDom,
   jsext,
   npmDeps in Compile += Dep("ace-diff", aceDiffVersion, List("ace-diff.min.js", "ace-diff.min.css"), true)
 )
 
-lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (ExecNpmPlugin) settings(releaseSettings) settings(
+lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (ExecNpmPlugin) settings(
   scalaJsDom,
   scalatags,
   jsext,
   npmDeps in Compile += Dep("bootstrap-slider", bootstrapSliderVersion, List("bootstrap-slider.min.js", "bootstrap-slider.min.css"))
 )
 
-lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (ExecNpmPlugin) settings(releaseSettings) settings(
+lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (ExecNpmPlugin) settings(
   scalaJsDom,
   scalatags,
   jsext,
@@ -117,17 +116,17 @@ lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (Ex
   npmDeps in Compile += Dep("sortablejs", sortableVersion, List("Sortable.min.js")),
 ) dependsOn (tools)
 
-lazy val lunr = project.in(file("lunr")) enablePlugins (ExecNpmPlugin) settings (releaseSettings) settings(
+lazy val lunr = project.in(file("lunr")) enablePlugins (ExecNpmPlugin) settings (
   npmDeps in Compile += Dep("lunr", "2.1.5", List("lunr.js"))
   )
 
-lazy val svg = project.in(file("svg")) enablePlugins (ScalaJSPlugin) settings(releaseSettings) settings(
+lazy val svg = project.in(file("svg")) enablePlugins (ScalaJSPlugin) settings(
   scalatags,
   scalaJsDom
 ) dependsOn (tools)
 
 
-lazy val tools = project.in(file("tools")) enablePlugins (ScalaJSPlugin) settings(releaseSettings) settings(
+lazy val tools = project.in(file("tools")) enablePlugins (ScalaJSPlugin) settings(
   scalatags,
   scalaJsDom,
   rx
