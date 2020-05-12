@@ -72,7 +72,7 @@ val releaseSettings = Seq(
     checkSnapshotDependencies,
     inquireVersions,
     runClean,
-    //setReleaseVersion,
+    setReleaseVersion,
     tagRelease,
     releaseStepCommand("publishSigned"),
     releaseStepCommand("sonatypeBundleRelease"),
