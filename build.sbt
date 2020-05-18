@@ -20,7 +20,7 @@ val scalaJSdomVersion = "1.0.0"
 val sortableVersion = "1.10.2"
 val sourceCodeVersion = "0.2.1"
 val scalaJsMarkedVersion = "1.0.2"
-val scalaJSortableVersion = "0.3"
+val scalaJSortableVersion = "0.5"
 
 
 organization in ThisBuild := "org.openmole.scaladget"
@@ -29,7 +29,7 @@ name := "scaladget"
 
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
-scalaVersion in ThisBuild := "2.13.1"
+scalaVersion in ThisBuild := "2.13.2"
 pomIncludeRepository in ThisBuild := { _ => false }
 
 resolvers += Resolver.sonatypeRepo("releases")
@@ -108,7 +108,7 @@ lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (Ex
   scalaJsDom,
   scalatags,
   jsext,
-  libraryDependencies += "net.scalapro" %%% "sortable-js-facade" % "0.3",
+  libraryDependencies += "org.openmole" %%% "sortable-js-facade" % scalaJSortableVersion,
   npmDeps in Compile += Dep("bootstrap.native", bootstrapNativeVersion, List("bootstrap-native.min.js")),
   npmDeps in Compile += Dep("bootstrap-switch", bootstrapSwitchVersion, List("bootstrap-switch.min.css")),
   npmDeps in Compile += Dep("bootstrap", bootstrapVersion, List("bootstrap.min.css")),
@@ -133,7 +133,7 @@ lazy val tools = project.in(file("tools")) enablePlugins (ScalaJSPlugin) setting
 lazy val runDemo = taskKey[Unit]("runDemo")
 
 lazy val demo = project.in(file("demo")) enablePlugins (ExecNpmPlugin) settings(
-  scalaVersion := "2.13.1",
+  scalaVersion := "2.13.2",
   publishArtifact := false,
   publish := {},
   publishLocal := {},
