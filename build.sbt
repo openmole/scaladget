@@ -69,6 +69,8 @@ publishTo in ThisBuild := sonatypePublishToBundle.value
 
 publishMavenStyle in ThisBuild := true
 
+releaseCrossBuild in ThisBuild := true
+
 
 releaseProcess := Seq[ReleaseStep](
   checkSnapshotDependencies,
