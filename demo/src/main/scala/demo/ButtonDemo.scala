@@ -49,12 +49,12 @@ object ButtonDemo {
       selectableButton("Male", onclick = radioAction),
       selectableButton("Female", true, onclick = radioAction)
     )
-
-    lazy val active: Var[Seq[SelectableButton]] = Var(checkBoxes.active)
-
-    def checkAction = () => active() = checkBoxes.active
-
-    def radioAction = () => active() = theRadios.active
+//
+//    lazy val active: Var[Seq[SelectableButton]] = Var(checkBoxes.active)
+//
+    def checkAction = () => {}//active() = checkBoxes.active
+//
+    def radioAction = () => {}//active() = theRadios.active
 
     lazy val toggleButton: ToggleButton = toggle(true, "Yes", "No", ()=> {println("Position " + toggleButton.position.now)})
 
@@ -82,13 +82,13 @@ object ButtonDemo {
       checkBoxes.render,
       h4("Radio buttons", paddingTop := 30),
       theRadios.render,
-      Rx {
-        div(paddingTop := 15, s"Active: ${
-          active().map {
-            _.text
-          }.toSeq
-        }")
-      },
+//      Rx {
+//        div(paddingTop := 15, s"Active: ${
+//          active().map {
+//            _.text
+//          }.toSeq
+//        }")
+//      },
       h4("Toggle buttons", paddingTop := 30),
       toggleButton.render
     ).render

@@ -20,7 +20,7 @@ val scalaJSdomVersion = "1.0.0"
 val sortableVersion = "1.10.2"
 val sourceCodeVersion = "0.2.1"
 val scalaJsMarkedVersion = "1.0.2"
-val scalaJSortableVersion = "0.5"
+val scalaJSortableVersion = "0.6"
 
 
 organization in ThisBuild := "org.openmole.scaladget"
@@ -30,6 +30,9 @@ name := "scaladget"
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
 scalaVersion in ThisBuild := "2.13.2"
+
+crossScalaVersions in ThisBuild := Seq("2.12.11", "2.13.2")
+
 pomIncludeRepository in ThisBuild := { _ => false }
 
 resolvers += Resolver.sonatypeRepo("releases")
@@ -133,7 +136,6 @@ lazy val tools = project.in(file("tools")) enablePlugins (ScalaJSPlugin) setting
 lazy val runDemo = taskKey[Unit]("runDemo")
 
 lazy val demo = project.in(file("demo")) enablePlugins (ExecNpmPlugin) settings(
-  scalaVersion := "2.13.2",
   publishArtifact := false,
   publish := {},
   publishLocal := {},
