@@ -20,7 +20,7 @@ val scalaJSdomVersion = "1.0.0"
 val sortableVersion = "1.10.2"
 val sourceCodeVersion = "0.2.1"
 val scalaJsMarkedVersion = "1.0.2"
-val scalaJSortableVersion = "0.6"
+val scalaJSortableVersion = "0.7.2"
 
 
 organization in ThisBuild := "org.openmole.scaladget"
@@ -78,7 +78,7 @@ releaseProcess := Seq[ReleaseStep](
   runClean,
   setReleaseVersion,
   tagRelease,
-  releaseStepCommand("publishSigned"),
+  releaseStepCommandAndRemaining("+publishSigned"),
   releaseStepCommand("sonatypeBundleRelease"),
   setNextVersion,
   commitNextVersion,
