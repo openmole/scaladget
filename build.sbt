@@ -9,7 +9,7 @@ val bootstrapNativeVersion = "2.0.26"
 val bootstrapSwitchVersion = "3.3.4"
 val bootstrapVersion = "3.4.1"
 val bootstrapSliderVersion = "10.4.0"
-val highlightVersion = "9.12.0"
+val highlightVersion = "9.2.0"
 val lunrVersion = "2.1.6"
 
 //2.13
@@ -120,6 +120,13 @@ lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (Ex
   npmDeps in Compile += Dep("sortablejs", sortableVersion, List("Sortable.min.js")),
 ) dependsOn (tools)
 
+
+lazy val highlightjs = project.in(file("highlightjs")) enablePlugins (ExecNpmPlugin) settings (
+  jsext,
+  scalaJsDom,
+  npmDeps in Compile += Dep("highlight.js", highlightVersion, List("highlight.js"))
+  )
+
 lazy val lunr = project.in(file("lunr")) enablePlugins (ExecNpmPlugin) settings (
   npmDeps in Compile += Dep("lunr", "2.1.5", List("lunr.js"))
   )
@@ -145,7 +152,7 @@ lazy val demo = project.in(file("demo")) enablePlugins (ExecNpmPlugin) settings(
   libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
   libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
   //libraryDependencies ++= Seq("com.dbrsn.scalajs.react.components" %%% "react-syntax-highlighter" % "0.3.1"),
-  //libraryDependencies += "com.github.karasiq" %%% "scalajs-marked" % scalaJsMarkedVersion,
+  npmDeps in Compile += Dep("highlight.js", highlightVersion, List("github-gist.css"), true),
   npmDeps in Compile += Dep("ace-builds", aceVersion, List("mode-scala.js", "theme-github.js", "ext-language_tools.js"), true),
   runDemo := {
 
@@ -157,4 +164,4 @@ lazy val demo = project.in(file("demo")) enablePlugins (ExecNpmPlugin) settings(
     IO.copyDirectory(cssFile.value, demoTarget / "css")
     IO.copyDirectory(demoResource, demoTarget)
   }
-) dependsOn(bootstrapnative, bootstrapslider, lunr, tools, svg, ace, aceDiff)
+) dependsOn(bootstrapnative, bootstrapslider, lunr, tools, svg, ace, highlightjs, aceDiff)

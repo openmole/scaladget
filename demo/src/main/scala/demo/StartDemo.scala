@@ -1,7 +1,7 @@
 package demo
 
 
-//import com.karasiq.highlightjs.HighlightJS
+import scaladget.highlightjs.HighlightJS
 
 import scaladget.bootstrapnative.bsn._
 import scaladget.tools._
@@ -31,6 +31,8 @@ object StartDemo {
 
   @JSExportTopLevel("bootstrap")
   def bootstrap(): Unit = {
+
+    HighlightJS.initHighlightingOnLoad
 
     def imports =
       """
@@ -160,7 +162,7 @@ object StartDemo {
       }
     )
     dom.document.body.appendChild(content)
-   // HighlightJS.initHighlightingOnLoad()
+    HighlightJS.initHighlightingOnLoad()
 
   }
 
