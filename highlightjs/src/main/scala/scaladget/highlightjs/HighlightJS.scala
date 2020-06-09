@@ -51,17 +51,17 @@ trait HighlightStatic extends js.Object {
   def initHighlightingOnLoad(): Unit = js.native
 
   /**
-    * Post-processing of the highlighted markup. Currently consists of replacing indentation TAB characters and using <br> tags instead of new-line characters. Options are set globally with configure.
-    * Accepts a string with the highlighted markup.
-    */
-  val fixMarkup: js.UndefOr[String] = js.native
-
-  /**
     * Applies highlighting to a DOM node containing code.
     * This function is the one to use to apply highlighting dynamically after page load or within initialization code of third-party Javascript frameworks.
     * The function uses language detection by default but you can specify the language in the class attribute of the DOM node. See the class reference for all available language names and aliases.
     */
-  val highlightBlock: js.UndefOr[Element] = js.native
+  def highlightBlock(el: Element) = js.native
+
+  /**
+    * Post-processing of the highlighted markup. Currently consists of replacing indentation TAB characters and using <br> tags instead of new-line characters. Options are set globally with configure.
+    * Accepts a string with the highlighted markup.
+    */
+  val fixMarkup: js.UndefOr[String] = js.native
 
   /**
     * Configures global options:
@@ -109,8 +109,6 @@ object HighlightStatic extends HighlightStaticBuilder(noOpts)
 class HighlightStaticBuilder(val dict: OptMap) extends JSOptionBuilder[HighlightStatic, HighlightStaticBuilder](new HighlightStaticBuilder(_)) {
 
   def fixMarkup(v: String) = jsOpt("fixMarkup", v)
-
-  def highlightBlock(v: Element) = jsOpt("highlightBlock", v)
 
   def configure(v: js.Object) = jsOpt("configure", v)
 

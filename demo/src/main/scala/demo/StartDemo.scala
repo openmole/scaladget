@@ -84,7 +84,6 @@ object StartDemo {
         }).build.render).render
 
     dom.document.body.appendChild(content)
-   // HighlightJS.initHighlightingOnLoad()
 
   }
 
@@ -162,7 +161,6 @@ object StartDemo {
       }
     )
     dom.document.body.appendChild(content)
-    HighlightJS.initHighlightingOnLoad()
 
   }
 
