@@ -19,21 +19,17 @@ package demo
 
 import scaladget.ace._
 import org.scalajs.dom.raw._
-import scaladget.bootstrapnative.{Popup, bsn}
 import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
-import bsn._
-import scaladget.tools._
 import org.scalajs.dom
-import scaladget.bootstrapnative.Popup.{Manual, PopupPosition}
-import rx._
+//import scaladget.bootstrapnative.Popup.{Manual, PopupPosition}
 
 import scalajs.js
 
-object AceDemo extends Demo {
+object AceDemo /*extends Demo*/ {
 
 
-  val sc = sourcecode.Text {
+ // val sc = sourcecode.Text {
     
     val editorHeight = 200
     val lineHeight = 13
@@ -41,13 +37,17 @@ object AceDemo extends Demo {
     val editorDiv = div(id := "editor", height := editorHeight, paddingRight := 20).render
     val visibleLines =  editorHeight / lineHeight
 
+    println("00")
     ace.require("ace/ext/language_tools")
 
+    println("001")
     val editor = ace.edit(editorDiv)
+    println("002")
     val session = editor.getSession()
-
+////
     editor.container.style.lineHeight = s"${lineHeight}px"
     editor.renderer.updateFontSize
+    println("003")
 
     session.setValue("val axx = 7\nval b = 8\nval c = a*b\n\nprintln(c)")
     session.setMode("ace/mode/scala")
@@ -58,66 +58,66 @@ object AceDemo extends Demo {
       "enableLiveAutocompletion" -> true
     ))
 
-    val sT = Var(0.0)
+//    val sT = Var(0.0)
+//
+//    def updateScrollTop = sT.update(editor.renderer.getScrollTop)
 
-    def updateScrollTop = sT.update(editor.renderer.getScrollTop)
-
-    session.on("change", (x) => {
-      updateScrollTop
-    })
-
-    session.on("changeScrollTop", x => {
-      updateScrollTop
-    })
+//    session.on("change", (x) => {
+//      updateScrollTop
+//    })
+//
+//    session.on("changeScrollTop", x => {
+//      updateScrollTop
+//    })
 
     val errors = Seq(1, 2, 3, 4, 5, 9, 10, 11, 12, 13, 14, 15, 16, 21, 29, 35, 43, 54)
 
-    def buildManualPopover(line: Int, y: Double, title: String, position: PopupPosition) = {
-      lazy val pop1 = div(line)(`class` := "errorBackground", top := y).popover(
-        title,
-        position,
-        Manual
-      )
-      lazy val pop1Render = pop1.render
+//    def buildManualPopover(line: Int, y: Double, title: String, position: PopupPosition) = {
+//      lazy val pop1 = div(line)(`class` := "errorBackground", top := y).popover(
+//        title,
+//        position,
+//        Manual
+//      )
+//      lazy val pop1Render = pop1.render
+//
+//      pop1Render.onclick = { (e: Event) =>
+//        Popover.hide
+//        Popover.toggle(pop1)
+//        e.stopPropagation
+//      }
+//      pop1Render
+//    }
 
-      pop1Render.onclick = { (e: Event) =>
-        Popover.hide
-        Popover.toggle(pop1)
-        e.stopPropagation
-      }
-      pop1Render
-    }
-
-    val errorDiv = div(`class` := "errorForeground")(
-      Rx {
-        val scrollAsLines = sT() / lineHeight
-        val max = visibleLines + scrollAsLines
-        div(
-          for {
-            i <- errors.filter { e =>
-              e > scrollAsLines && e < max
-            }
-          } yield {
-            buildManualPopover(i, (i - scrollAsLines - 1) * lineHeight, s"YYY $i", Popup.Left)
-          }
-        )
-      }
-    )
-
-    editor.focus()
-    div(
-      errorDiv,
+//    val errorDiv = div(`class` := "errorForeground")(
+//      Rx {
+//        val scrollAsLines = sT() / lineHeight
+//        val max = visibleLines + scrollAsLines
+//        div(
+//          for {
+//            i <- errors.filter { e =>
+//              e > scrollAsLines && e < max
+//            }
+//          } yield {
+//            buildManualPopover(i, (i - scrollAsLines - 1) * lineHeight, s"YYY $i", Popup.Left)
+//          }
+//        )
+//      }
+//    )
+println("IDETIOR DIV " + editorDiv)
+    //editor.focus()
+    val element = div(
+      //errorDiv,
       editorDiv
     ).render
-  }
+  //
 
-  val elementDemo = new ElementDemo {
-    def title: String = "Ace"
-
-    def code: String = sc.source
-
-    def element: Element = sc.value
-
-    override def codeWidth: Int = 6
-  }
+//  val elementDemo = new ElementDemo {
+//    def title: String = "Ace"
+//
+//    def code: String = "sc.source"
+//
+//    def element: Element = element
+//
+//    override def codeWidth: Int = 6
+//  }
 }

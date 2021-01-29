@@ -96,13 +96,13 @@ trait TextMode extends js.Object {
   def transformAction(state: js.Any, action: js.Any, editor: js.Any, session: js.Any, param: js.Any): js.Dynamic = js.native
 }
 
-@js.native
-@JSGlobal
-//@JSImport("brace", Namespace)
-object ace extends Ace
+//@js.native
+//object ace extends Ace
 
 @js.native
-trait Ace extends js.Object {
+//@JSImport("brace", Namespace)
+@JSImport("ace-builds", JSImport.Namespace)
+object ace extends js.Object {
   def require(moduleName: String): js.Dynamic = js.native
 
   def edit(el: String): Editor = js.native

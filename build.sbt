@@ -1,7 +1,7 @@
 import sbt._
 import Keys._
-import execnpm.ExecNpmPlugin.autoImport._
-import execnpm.NpmDeps._
+//import execnpm.ExecNpmPlugin.autoImport._
+//import execnpm.NpmDeps._
 
 val aceVersion = "1.4.3"
 val aceDiffVersion = "2.3.0"
@@ -14,7 +14,8 @@ val lunrVersion = "2.1.6"
 
 //2.13
 val jsextVersion = "0.10"
-val rxVersion = "0.4.3"
+//val rxVersion = "0.4.3"
+val laminarVersion = "0.11.0"
 val scalatagsVersion = "0.9.1"
 val scalaJSdomVersion = "1.0.0"
 val sortableVersion = "1.10.2"
@@ -87,81 +88,94 @@ releaseProcess := Seq[ReleaseStep](
 
 lazy val scalatags = libraryDependencies += "com.lihaoyi" %%% "scalatags" % scalatagsVersion
 lazy val scalaJsDom = libraryDependencies += "org.scala-js" %%% "scalajs-dom" % scalaJSdomVersion
-lazy val rx = libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion
+//lazy val rx = libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion
+lazy val laminar = libraryDependencies += "com.raquo" %%% "laminar" % laminarVersion
 lazy val jsext = libraryDependencies += "org.querki" %%% "querki-jsext" % jsextVersion
 
-lazy val ace = project.in(file("ace")) enablePlugins (ExecNpmPlugin) settings(
+lazy val ace = project.in(file("ace")) enablePlugins (ScalaJSBundlerPlugin) settings(
   scalaJsDom,
   jsext,
-  npmDeps in Compile += Dep("ace-builds", aceVersion, List("ace.js"))
+  npmDependencies in Compile += "ace-builds" -> aceVersion
 )
-
-lazy val aceDiff = project.in(file("acediff")) enablePlugins (ExecNpmPlugin) dependsOn (ace) settings(
-  scalaJsDom,
-  jsext,
-  npmDeps in Compile += Dep("ace-diff", aceDiffVersion, List("ace-diff.min.js", "ace-diff.min.css"), true)
-)
-
-lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (ExecNpmPlugin) settings(
-  scalaJsDom,
-  scalatags,
-  jsext,
-  npmDeps in Compile += Dep("bootstrap-slider", bootstrapSliderVersion, List("bootstrap-slider.min.js", "bootstrap-slider.min.css"))
-)
-
-lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (ExecNpmPlugin) settings(
-  scalaJsDom,
-  scalatags,
-  jsext,
-  libraryDependencies += "org.openmole" %%% "sortable-js-facade" % scalaJSortableVersion,
-  npmDeps in Compile += Dep("bootstrap.native", bootstrapNativeVersion, List("bootstrap-native.min.js")),
-  npmDeps in Compile += Dep("bootstrap-switch", bootstrapSwitchVersion, List("bootstrap-switch.min.css")),
-  npmDeps in Compile += Dep("bootstrap", bootstrapVersion, List("bootstrap.min.css")),
-  npmDeps in Compile += Dep("sortablejs", sortableVersion, List("Sortable.min.js")),
-) dependsOn (tools)
-
-
-lazy val highlightjs = project.in(file("highlightjs")) enablePlugins (ExecNpmPlugin) settings (
-  jsext,
-  scalaJsDom,
-  npmDeps in Compile += Dep("highlight.js", highlightVersion, List("highlight.js"))
-  )
-
-lazy val lunr = project.in(file("lunr")) enablePlugins (ExecNpmPlugin) settings (
-  npmDeps in Compile += Dep("lunr", "2.1.5", List("lunr.js"))
-  )
-
-lazy val svg = project.in(file("svg")) enablePlugins (ScalaJSPlugin) settings(
-  scalatags,
-  scalaJsDom
-) dependsOn (tools)
-
-
-lazy val tools = project.in(file("tools")) enablePlugins (ScalaJSPlugin) settings(
-  scalatags,
-  scalaJsDom,
-  rx
-)
+//
+//lazy val aceDiff = project.in(file("acediff")) enablePlugins (ScalaJSBundlerPlugin) dependsOn (ace) settings(
+//  scalaJsDom,
+//  jsext,
+//  npmDeps in Compile += Dep("ace-diff", aceDiffVersion, List("ace-diff.min.js", "ace-diff.min.css"), true)
+//)
+//
+//lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (ScalaJSBundlerPlugin) settings(
+//  scalaJsDom,
+//  scalatags,
+//  jsext,
+//  npmDeps in Compile += Dep("bootstrap-slider", bootstrapSliderVersion, List("bootstrap-slider.min.js", "bootstrap-slider.min.css"))
+//)
+//
+//lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (ScalaJSBundlerPlugin) settings(
+//  scalaJsDom,
+//  scalatags,
+//  jsext,
+//  libraryDependencies += "org.openmole" %%% "sortable-js-facade" % scalaJSortableVersion,
+//  npmDeps in Compile += Dep("bootstrap.native", bootstrapNativeVersion, List("bootstrap-native.min.js")),
+//  npmDeps in Compile += Dep("bootstrap-switch", bootstrapSwitchVersion, List("bootstrap-switch.min.css")),
+//  npmDeps in Compile += Dep("bootstrap", bootstrapVersion, List("bootstrap.min.css")),
+//  npmDeps in Compile += Dep("sortablejs", sortableVersion, List("Sortable.min.js")),
+//) dependsOn (tools)
+//
+//
+//lazy val highlightjs = project.in(file("highlightjs")) enablePlugins (ScalaJSBundlerPlugin) settings(
+//  jsext,
+//  scalaJsDom,
+//  npmDeps in Compile += Dep("highlight.js", highlightVersion, List("highlight.js"))
+//)
+//
+//lazy val lunr = project.in(file("lunr")) enablePlugins (ScalaJSBundlerPlugin) settings (
+//  npmDeps in Compile += Dep("lunr", "2.1.5", List("lunr.js"))
+//  )
+//
+//lazy val svg = project.in(file("svg")) enablePlugins (ScalaJSPlugin) settings(
+//  scalatags,
+//  scalaJsDom
+//) dependsOn (tools)
+//
+//
+//lazy val tools = project.in(file("tools")) enablePlugins (ScalaJSPlugin) settings(
+//  scalatags,
+//  scalaJsDom,
+//  laminar
+//)
 lazy val runDemo = taskKey[Unit]("runDemo")
 
-lazy val demo = project.in(file("demo")) enablePlugins (ExecNpmPlugin) settings(
+lazy val demo = project.in(file("demo")) enablePlugins (ScalaJSBundlerPlugin) settings(
   publishArtifact := false,
   publish := {},
   publishLocal := {},
   test := println("Tests disabled"),
-  libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion,
-  libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
+  laminar,
+ // libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
+  scalaJSUseMainModuleInitializer := true,
+  scalatags,
+  scalaJsDom,
   //libraryDependencies ++= Seq("com.dbrsn.scalajs.react.components" %%% "react-syntax-highlighter" % "0.3.1"),
-  npmDeps in Compile += Dep("highlight.js", highlightVersion, List("github-gist.css"), true),
-  npmDeps in Compile += Dep("ace-builds", aceVersion, List("mode-scala.js", "theme-github.js", "ext-language_tools.js"), true),
+ // npmDeps in Compile += Dep("highlight.js", highlightVersion, List("github-gist.css"), true),
+ // npmDeps in Compile += Dep("ace-builds", aceVersion, List("mode-scala.js", "theme-github.js", "ext-language_tools.js"), true),
   runDemo := {
 
-    val demoTarget = target.value
+//    val demoTarget = target.value
+//    val demoResource = (resourceDirectory in Compile).value
+//
+//    IO.copyFile((fullOptJS in Compile).value.data, demoTarget / "js/demo.js")
+// //   IO.copyFile(dependencyFile.value, demoTarget / "js/deps.js")
+// //   IO.copyDirectory(cssFile.value, demoTarget / "css")
+//    IO.copyDirectory(demoResource, demoTarget)
+
+    val jsBuild = (fullOptJS / webpack in Compile).value.head.data
+
+    val demoTarget = (target in Compile).value
     val demoResource = (resourceDirectory in Compile).value
 
-    IO.copyFile((fullOptJS in Compile).value.data, demoTarget / "js/demo.js")
-    IO.copyFile(dependencyFile.value, demoTarget / "js/deps.js")
-    IO.copyDirectory(cssFile.value, demoTarget / "css")
+    IO.copyFile(jsBuild, target.value / "js/demo.js")
     IO.copyDirectory(demoResource, demoTarget)
+
   }
-) dependsOn(bootstrapnative, bootstrapslider, lunr, tools, svg, ace, highlightjs, aceDiff)
+) dependsOn(ace)
