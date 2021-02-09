@@ -3,6 +3,7 @@ import Keys._
 //import execnpm.ExecNpmPlugin.autoImport._
 //import execnpm.NpmDeps._
 
+
 val aceVersion = "1.4.3"
 val aceDiffVersion = "2.3.0"
 val bootstrapNativeVersion = "2.0.26"
@@ -16,8 +17,8 @@ val lunrVersion = "2.1.6"
 val jsextVersion = "0.10"
 //val rxVersion = "0.4.3"
 val laminarVersion = "0.11.0"
-val scalatagsVersion = "0.9.1"
-val scalaJSdomVersion = "1.0.0"
+val scalatagsVersion = "0.9.3"
+val scalaJSdomVersion = "1.1.0"
 val sortableVersion = "1.10.2"
 val sourceCodeVersion = "0.2.1"
 val scalaJsMarkedVersion = "1.0.2"
@@ -30,9 +31,9 @@ name := "scaladget"
 
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
-scalaVersion in ThisBuild := "2.13.2"
+scalaVersion in ThisBuild := "2.13.4"
 
-crossScalaVersions in ThisBuild := Seq("2.12.11", "2.13.2")
+crossScalaVersions in ThisBuild := Seq("2.12.11", "2.13.4")
 
 pomIncludeRepository in ThisBuild := { _ => false }
 
@@ -96,6 +97,9 @@ lazy val ace = project.in(file("ace")) enablePlugins (ScalaJSBundlerPlugin) sett
   scalaJsDom,
   jsext,
   npmDependencies in Compile += "ace-builds" -> aceVersion
+  //webpackConfigFile := Some((resourceDirectory in Compile).value / "js/ace-config.js")
+  // npmInstallJSResources
+
 )
 //
 //lazy val aceDiff = project.in(file("acediff")) enablePlugins (ScalaJSBundlerPlugin) dependsOn (ace) settings(
@@ -146,36 +150,43 @@ lazy val ace = project.in(file("ace")) enablePlugins (ScalaJSBundlerPlugin) sett
 //)
 lazy val runDemo = taskKey[Unit]("runDemo")
 
-lazy val demo = project.in(file("demo")) enablePlugins (ScalaJSBundlerPlugin) settings(
+lazy val demo = project.in(file("demo")) enablePlugins (WebScalaJSBundlerPlugin, ScalaJSBundlerPlugin) settings(
   publishArtifact := false,
   publish := {},
   publishLocal := {},
   test := println("Tests disabled"),
   laminar,
- // libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
+  //libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
   scalaJSUseMainModuleInitializer := true,
+  requireJsDomEnv in Test := true,
   scalatags,
-  scalaJsDom,
+  // scalaJsDom,
   //libraryDependencies ++= Seq("com.dbrsn.scalajs.react.components" %%% "react-syntax-highlighter" % "0.3.1"),
- // npmDeps in Compile += Dep("highlight.js", highlightVersion, List("github-gist.css"), true),
- // npmDeps in Compile += Dep("ace-builds", aceVersion, List("mode-scala.js", "theme-github.js", "ext-language_tools.js"), true),
+  // npmDeps in Compile += Dep("highlight.js", highlightVersion, List("github-gist.css"), true),
+  // npmDeps in Compile += Dep("ace-builds", aceVersion, List("mode-scala.js", "theme-github.js", "ext-language_tools.js"), true),
+//   npmAssets ++= NpmAssets.ofProject(ace) { nodeModules =>
+//     println("######## node modules " + nodeModules)
+//     (nodeModules / "ace-builds/src-min-noconflict/mode-scala.js").allPaths // sbt 1.0.0+
+//  }.value,
+  //useYarn := true,
   runDemo := {
 
-//    val demoTarget = target.value
-//    val demoResource = (resourceDirectory in Compile).value
-//
-//    IO.copyFile((fullOptJS in Compile).value.data, demoTarget / "js/demo.js")
-// //   IO.copyFile(dependencyFile.value, demoTarget / "js/deps.js")
-// //   IO.copyDirectory(cssFile.value, demoTarget / "css")
-//    IO.copyDirectory(demoResource, demoTarget)
+    println("----- ASS " + (npmAssets in Compile).value )
+    //    val demoTarget = target.value
+    val demoResource = (resourceDirectory in Compile).value
+    //
+    //    IO.copyFile((fullOptJS in Compile).value.data, demoTarget / "js/demo.js")
+    // //   IO.copyFile(dependencyFile.value, demoTarget / "js/deps.js")
+    // //   IO.copyDirectory(cssFile.value, demoTarget / "css")
+    //    IO.copyDirectory(demoResource, demoTarget)
+
+    // val demoTarget = (target in Compile).value
 
     val jsBuild = (fullOptJS / webpack in Compile).value.head.data
 
-    val demoTarget = (target in Compile).value
-    val demoResource = (resourceDirectory in Compile).value
 
     IO.copyFile(jsBuild, target.value / "js/demo.js")
-    IO.copyDirectory(demoResource, demoTarget)
+    IO.copyDirectory(demoResource, target.value)
 
   }
-) dependsOn(ace)
+) dependsOn (ace)

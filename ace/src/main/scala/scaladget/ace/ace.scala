@@ -96,11 +96,27 @@ trait TextMode extends js.Object {
   def transformAction(state: js.Any, action: js.Any, editor: js.Any, session: js.Any, param: js.Any): js.Dynamic = js.native
 }
 
-//@js.native
-//object ace extends Ace
+@js.native
+@JSImport("ace-builds/src-min-noconflict/mode-python.js", JSImport.Namespace)
+object pythonmode extends js.Object
 
 @js.native
-//@JSImport("brace", Namespace)
+@JSImport("ace-builds/src-min-noconflict/mode-r.js", JSImport.Namespace)
+object rmode extends js.Object
+
+@js.native
+@JSImport("ace-builds/src-min-noconflict/mode-scala.js", JSImport.Namespace)
+object scalamode extends js.Object
+
+@js.native
+@JSImport("ace-builds/src-min-noconflict/theme-github.js", JSImport.Namespace)
+object githubtheme extends js.Object
+
+@js.native
+@JSImport("ace-builds/src-min-noconflict/ext-language_tools", JSImport.Namespace)
+object extLanguageTools extends js.Object
+
+@js.native
 @JSImport("ace-builds", JSImport.Namespace)
 object ace extends js.Object {
   def require(moduleName: String): js.Dynamic = js.native

@@ -26,32 +26,31 @@ import org.scalajs.dom
 
 import scalajs.js
 
-object AceDemo /*extends Demo*/ {
+object AceDemo /*extends Demo */{
 
 
  // val sc = sourcecode.Text {
-    
+
     val editorHeight = 200
     val lineHeight = 13
 
     val editorDiv = div(id := "editor", height := editorHeight, paddingRight := 20).render
     val visibleLines =  editorHeight / lineHeight
 
-    println("00")
-    ace.require("ace/ext/language_tools")
-
-    println("001")
     val editor = ace.edit(editorDiv)
-    println("002")
     val session = editor.getSession()
-////
-    editor.container.style.lineHeight = s"${lineHeight}px"
-    editor.renderer.updateFontSize
-    println("003")
 
-    session.setValue("val axx = 7\nval b = 8\nval c = a*b\n\nprintln(c)")
+    scalamode
+    githubtheme
+    extLanguageTools
+
     session.setMode("ace/mode/scala")
     editor.setTheme("ace/theme/github")
+
+    editor.container.style.lineHeight = s"${lineHeight}px"
+    editor.renderer.updateFontSize
+
+    session.setValue("def fib(n):\rval axx = 7\nval b = 8\nval c = a*b\n\nprintln(c)")
     editor.setOptions(js.Dynamic.literal(
       "enableBasicAutocompletion" -> true,
       "enableSnippets" -> true,
@@ -107,6 +106,7 @@ println("IDETIOR DIV " + editorDiv)
     //editor.focus()
     val element = div(
       //errorDiv,
+        div("Youhou !", fontWeight.bold),
       editorDiv
     ).render
   //
