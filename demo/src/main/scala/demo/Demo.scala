@@ -1,6 +1,6 @@
 package demo
 
-import org.scalajs.dom._
+import com.raquo.laminar.api.L._
 
 /*
  * Copyright (C) 19/08/16 // mathieu.leclaire@openmole.org
@@ -33,7 +33,7 @@ trait ElementDemo{
     if (code.startsWith("{")) code.tail.dropRight(1)
     else code
   }
-  def element: Element
+  def element: HtmlElement
 
   def codeWidth: Int = 8
 }

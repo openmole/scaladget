@@ -18,233 +18,225 @@ package scaladget.bootstrapnative
  */
 
 
-import scalatags.JsDom.{styles => sty}
-import scalatags.JsDom.all._
-import scaladget.tools._
+import com.raquo.laminar.api.L._
 
 package stylesheet {
+
+  import com.raquo.laminar.nodes.{ReactiveElement, ReactiveHtmlElement}
 
   //package object bootstrap extends BootstrapPackage
 
   trait BootstrapPackage {
 
-    type Glyphicon = ModifierSeq
-    type Navbar = ModifierSeq
-    type LabelStyle = ModifierSeq
-    type ButtonStyle = ModifierSeq
-    type AlertStyle = ModifierSeq
-    type NavStyle = ModifierSeq
-    type TableStyle = ModifierSeq
+    private def toGlyphicon(s: String) = cls(s"glyphicon $s")
 
-    private def toGlyphicon(s: String) = toClass(s"glyphicon $s")
+    private def toLabel(s: String) = cls(s"label $s")
 
-    private def toLabel(s: String) = toClass(s"label $s")
+    private def toButton(s: String) = cls(s"btn $s")
 
-    private def toButton(s: String) = toClass(s"btn $s")
+    private def toAlert(s: String) = cls(s"alert $s")
 
-    private def toAlert(s: String) = toClass(s"alert $s")
+    private def toNav(s: String) = cls(s"nav $s")
 
-    private def toNav(s: String) = toClass(s"nav $s")
-
-    private def toTable(s: String) = toClass(s"table $s")
+    private def toTable(s: String) = cls(s"table $s")
 
     //GHYPHICONS
-    lazy val glyph_edit: Glyphicon = toGlyphicon("glyphicon-pencil")
-    lazy val glyph_edit2: Glyphicon = toGlyphicon("glyphicon-edit")
-    lazy val glyph_save: Glyphicon = toGlyphicon("glyphicon-save")
-    lazy val glyph_trash: Glyphicon = toGlyphicon("glyphicon-trash")
-    lazy val glyph_plus: Glyphicon = toGlyphicon("glyphicon-plus")
-    lazy val glyph_plus_sign: Glyphicon = toGlyphicon("glyphicon-plus-sign")
-    lazy val glyph_minus_sign: Glyphicon = toGlyphicon("glyphicon-minus-sign")
-    lazy val glyph_minus: Glyphicon = toGlyphicon("glyphicon-minus")
-    lazy val glyph_ok: Glyphicon = toGlyphicon("glyphicon-ok")
-    lazy val glyph_question: Glyphicon = toGlyphicon("glyphicon-question-sign")
-    lazy val glyph_file: Glyphicon = toGlyphicon("glyphicon-file")
-    lazy val glyph_folder_close: Glyphicon = toGlyphicon("glyphicon-folder-close")
-    lazy val glyph_home: Glyphicon = toGlyphicon("glyphicon-home")
-    lazy val glyph_upload: Glyphicon = toGlyphicon("glyphicon-cloud-upload")
-    lazy val glyph_download: Glyphicon = toGlyphicon("glyphicon-cloud-download")
-    lazy val glyph_download_alt: Glyphicon = toGlyphicon("glyphicon-download-alt")
-    lazy val glyph_settings: Glyphicon = toGlyphicon("glyphicon-cog")
-    lazy val glyph_off: Glyphicon = toGlyphicon("glyphicon-off")
-    lazy val glyph_flash: Glyphicon = toGlyphicon("glyphicon-flash")
-    lazy val glyph_flag: Glyphicon = toGlyphicon("glyphicon-flag")
-    lazy val glyph_remove: Glyphicon = toGlyphicon("glyphicon-remove-sign")
-    lazy val glyph_road: Glyphicon = toGlyphicon("glyphicon-road")
-    lazy val glyph_fire: Glyphicon = toGlyphicon("glyphicon-fire")
-    lazy val glyph_list: Glyphicon = toGlyphicon("glyphicon-list")
-    lazy val glyph_stats: Glyphicon = toGlyphicon("glyphicon-stats")
-    lazy val glyph_refresh: Glyphicon = toGlyphicon("glyphicon-refresh")
-    lazy val glyph_repeat: Glyphicon = toGlyphicon("glyphicon-repeat")
-    lazy val glyph_lock: Glyphicon = toGlyphicon("glyphicon-lock")
-    lazy val glyph_archive: Glyphicon = toGlyphicon("glyphicon-compressed")
-    lazy val glyph_market: Glyphicon = toGlyphicon("glyphicon-shopping-cart")
-    lazy val glyph_info: Glyphicon = toGlyphicon("glyphicon-info-sign")
-    lazy val glyph_plug: Glyphicon = toGlyphicon("icon-plug")
-    lazy val glyph_exclamation: Glyphicon = toGlyphicon("glyphicon-exclamation-sign")
-    lazy val glyph_comment: Glyphicon = toGlyphicon("glyphicon-comment")
-    lazy val glyph_upload_alt: Glyphicon = toGlyphicon("glyphicon-upload")
-    lazy val glyph_arrow_right: Glyphicon = toGlyphicon("glyphicon-arrow-right")
-    lazy val glyph_arrow_left: Glyphicon = toGlyphicon("glyphicon-arrow-left")
-    lazy val glyph_arrow_right_and_left: Glyphicon = toGlyphicon("glyphicon-resize-horizontal")
-    lazy val glyph_filter: Glyphicon = toGlyphicon("glyphicon-filter")
-    lazy val glyph_copy: Glyphicon = toGlyphicon("glyphicon-copy")
-    lazy val glyph_paste: Glyphicon = toGlyphicon("glyphicon-paste")
-    lazy val glyph_time: Glyphicon = toGlyphicon("glyphicon-time")
-    lazy val glyph_alph_sorting: Glyphicon = toGlyphicon("glyphicon-sort-by-alphabet")
-    lazy val glyph_sort_by_attributes: Glyphicon = toGlyphicon("glyphicon-sort-by-attributes")
-    lazy val glyph_sort_by_attributes_alt: Glyphicon = toGlyphicon("glyphicon-sort-by-attributes-alt")
-    lazy val glyph_triangle_bottom: Glyphicon = toGlyphicon("glyphicon-triangle-bottom")
-    lazy val glyph_triangle_top: Glyphicon = toGlyphicon("glyphicon-triangle-top")
-    lazy val glyph_chevron_left: Glyphicon = toGlyphicon("glyphicon glyphicon-chevron-left")
-    lazy val glyph_chevron_right: Glyphicon = toGlyphicon("glyphicon glyphicon-chevron-right")
-    lazy val glyph_menu_hamburger: Glyphicon = toGlyphicon("glyphicon glyphicon-menu-hamburger")
-    lazy val caret: ModifierSeq = toClass("caret")
+    lazy val glyph_edit = toGlyphicon("glyphicon-pencil")
+    lazy val glyph_edit2 = toGlyphicon("glyphicon-edit")
+    lazy val glyph_save = toGlyphicon("glyphicon-save")
+    lazy val glyph_trash = toGlyphicon("glyphicon-trash")
+    lazy val glyph_plus = toGlyphicon("glyphicon-plus")
+    lazy val glyph_plus_sign = toGlyphicon("glyphicon-plus-sign")
+    lazy val glyph_minus_sign = toGlyphicon("glyphicon-minus-sign")
+    lazy val glyph_minus = toGlyphicon("glyphicon-minus")
+    lazy val glyph_ok = toGlyphicon("glyphicon-ok")
+    lazy val glyph_question = toGlyphicon("glyphicon-question-sign")
+    lazy val glyph_file = toGlyphicon("glyphicon-file")
+    lazy val glyph_folder_close = toGlyphicon("glyphicon-folder-close")
+    lazy val glyph_home = toGlyphicon("glyphicon-home")
+    lazy val glyph_upload = toGlyphicon("glyphicon-cloud-upload")
+    lazy val glyph_download = toGlyphicon("glyphicon-cloud-download")
+    lazy val glyph_download_alt = toGlyphicon("glyphicon-download-alt")
+    lazy val glyph_settings = toGlyphicon("glyphicon-cog")
+    lazy val glyph_off = toGlyphicon("glyphicon-off")
+    lazy val glyph_flash = toGlyphicon("glyphicon-flash")
+    lazy val glyph_flag = toGlyphicon("glyphicon-flag")
+    lazy val glyph_remove = toGlyphicon("glyphicon-remove-sign")
+    lazy val glyph_road = toGlyphicon("glyphicon-road")
+    lazy val glyph_fire = toGlyphicon("glyphicon-fire")
+    lazy val glyph_list = toGlyphicon("glyphicon-list")
+    lazy val glyph_stats = toGlyphicon("glyphicon-stats")
+    lazy val glyph_refresh = toGlyphicon("glyphicon-refresh")
+    lazy val glyph_repeat = toGlyphicon("glyphicon-repeat")
+    lazy val glyph_lock = toGlyphicon("glyphicon-lock")
+    lazy val glyph_archive = toGlyphicon("glyphicon-compressed")
+    lazy val glyph_market = toGlyphicon("glyphicon-shopping-cart")
+    lazy val glyph_info = toGlyphicon("glyphicon-info-sign")
+    lazy val glyph_plug = toGlyphicon("icon-plug")
+    lazy val glyph_exclamation = toGlyphicon("glyphicon-exclamation-sign")
+    lazy val glyph_comment = toGlyphicon("glyphicon-comment")
+    lazy val glyph_upload_alt = toGlyphicon("glyphicon-upload")
+    lazy val glyph_arrow_right = toGlyphicon("glyphicon-arrow-right")
+    lazy val glyph_arrow_left = toGlyphicon("glyphicon-arrow-left")
+    lazy val glyph_arrow_right_and_left = toGlyphicon("glyphicon-resize -horizontal")
+    lazy val glyph_filter = toGlyphicon("glyphicon-filter")
+    lazy val glyph_copy = toGlyphicon("glyphicon-copy")
+    lazy val glyph_paste = toGlyphicon("glyphicon-paste")
+    lazy val glyph_time = toGlyphicon("glyphicon-time")
+    lazy val glyph_alph_sorting = toGlyphicon("glyphicon-sort-by-alphabet")
+    lazy val glyph_sort_by_attributes = toGlyphicon("glyphicon-sort-by-attributes")
+    lazy val glyph_sort_by_attributes_alt = toGlyphicon("glyphicon-sort-by-attributes-alt")
+    lazy val glyph_triangle_bottom = toGlyphicon("glyphicon-triangle-bottom")
+    lazy val glyph_triangle_top = toGlyphicon("glyphicon-triangle-top")
+    lazy val glyph_chevron_left = toGlyphicon("glyphicon glyphicon-chevron-left")
+    lazy val glyph_chevron_right = toGlyphicon("glyphicon glyphicon-chevron-right")
+    lazy val glyph_menu_hamburger = toGlyphicon("glyphicon glyphicon-menu-hamburger")
+    lazy val caret = cls("caret")
 
     //NAVBARS
-    lazy val nav: Navbar = toClass("nav")
-    lazy val navbar: Navbar = toClass("navbar")
-    lazy val navbar_nav: Navbar = toClass("navbar-nav")
-    lazy val navTabs: Navbar = toClass("nav-tabs")
-    lazy val navbar_default: Navbar = toClass("navbar-default")
-    lazy val navbar_inverse: Navbar = toClass("navbar-inverse")
-    lazy val navbar_staticTop: Navbar = toClass("navbar-static-top")
-    lazy val navbar_fixedTop: Navbar = toClass("navbar-fixed-top")
-    lazy val navbar_pills: Navbar = toClass("nav-pills")
-    lazy val navbar_form: Navbar = toClass("navbar-form")
-    lazy val navbar_right: Navbar = toClass("navbar-right")
-    lazy val navbar_left: Navbar = toClass("navbar-left")
-    lazy val navbar_header: Navbar = toClass("navbar-header")
-    lazy val navbar_brand: Navbar = toClass("navbar-brand")
-    lazy val navbar_btn: Navbar = toClass("navbar-btn")
-    lazy val navbar_collapse: Navbar = toClass("navbar-collapse")
+    lazy val nav  = cls("nav")
+    lazy val navbar  = cls("navbar")
+    lazy val navbar_nav  = cls("navbar-nav")
+    lazy val navTabs  = cls("nav-tabs")
+    lazy val navbar_default  = cls("navbar-default")
+    lazy val navbar_inverse  = cls("navbar-inverse")
+    lazy val navbar_staticTop  = cls("navbar-static-top")
+    lazy val navbar_fixedTop  = cls("navbar-fixed-top")
+    lazy val navbar_pills  = cls("nav-pills")
+    lazy val navbar_form  = cls("navbar-form")
+    lazy val navbar_right  = cls("navbar-right")
+    lazy val navbar_left  = cls("navbar-left")
+    lazy val navbar_header  = cls("navbar-header")
+    lazy val navbar_brand  = cls("navbar-brand")
+    lazy val navbar_btn  = cls("navbar-btn")
+    lazy val navbar_collapse  = cls("navbar-collapse")
 
     //LABELS
-    lazy val label_default: LabelStyle = toLabel("label-default")
-    lazy val label_primary: LabelStyle = toLabel("label-primary")
-    lazy val label_success: LabelStyle = toLabel("label-success")
-    lazy val label_info: LabelStyle = toLabel("label-info")
-    lazy val label_warning: LabelStyle = toLabel("label-warning")
-    lazy val label_danger: LabelStyle = toLabel("label-danger")
-    lazy val black_label: LabelStyle = toLabel("black-label")
+    lazy val label_default  = toLabel("label-default")
+    lazy val label_primary  = toLabel("label-primary")
+    lazy val label_success  = toLabel("label-success")
+    lazy val label_info  = toLabel("label-info")
+    lazy val label_warning  = toLabel("label-warning")
+    lazy val label_danger  = toLabel("label-danger")
+    lazy val black_label  = toLabel("black-label")
 
-    lazy val controlLabel: ModifierSeq = toClass("control-label")
+    lazy val controlLabel = cls("control-label")
 
 
     //BUTTONS
-    lazy val btn: ButtonStyle = toClass("btn")
-    lazy val btn_default: ButtonStyle = toButton("btn-default")
-    lazy val btn_primary: ButtonStyle = toButton("btn-primary")
-    lazy val btn_success: ButtonStyle = toButton("btn-success")
-    lazy val btn_info: ButtonStyle = toButton("btn-info")
-    lazy val btn_warning: ButtonStyle = toButton("btn-warning")
-    lazy val btn_danger: ButtonStyle = toButton("btn-danger")
-    lazy val btn_large: ButtonStyle = toButton("btn-lg")
-    lazy val btn_medium: ButtonStyle = toButton("btn-md")
-    lazy val btn_small: ButtonStyle = toButton("btn-sm")
-    lazy val btn_test: ButtonStyle = toButton("myButton")
-    lazy val btn_right: ButtonStyle = toButton("pull-right")
+    lazy val btn = cls("btn")
+    lazy val btn_default = toButton("btn-default")
+    lazy val btn_primary = toButton("btn-primary")
+    lazy val btn_success = toButton("btn-success")
+    lazy val btn_info = toButton("btn-info")
+    lazy val btn_warning = toButton("btn-warning")
+    lazy val btn_danger = toButton("btn-danger")
+    lazy val btn_large = toButton("btn-lg")
+    lazy val btn_medium = toButton("btn-md")
+    lazy val btn_small = toButton("btn-sm")
+    lazy val btn_test = toButton("myButton")
+    lazy val btn_right = toButton("pull-right")
 
-    lazy val btnGroup = toClass("btn-group")
-    lazy val btnToolbar: ModifierSeq = toClass("btn-toolbar")
+    lazy val btnGroup = cls("btn-group")
+    lazy val btnToolbar = cls("btn-toolbar")
 
 
     //ALERTS
-    lazy val alert_success: AlertStyle = toAlert("alert-success")
-    lazy val alert_info: AlertStyle = toAlert("alert-info")
-    lazy val alert_warning: AlertStyle = toAlert("alert-warning")
-    lazy val alert_danger: AlertStyle = toAlert("alert-danger")
+    lazy val alert_success = toAlert("alert-success")
+    lazy val alert_info = toAlert("alert-info")
+    lazy val alert_warning = toAlert("alert-warning")
+    lazy val alert_danger = toAlert("alert-danger")
 
     //MODALS
-    lazy val modal: ModifierSeq = toClass("modal")
-    lazy val fade: ModifierSeq = toClass("fade")
-    lazy val modalDialog: ModifierSeq = toClass("modal-dialog")
-    lazy val modalContent: ModifierSeq = toClass("modal-content")
-    lazy val modalHeader: ModifierSeq = toClass("modal-header")
-    lazy val modalInfo: ModifierSeq = toClass("modal-info")
-    lazy val modalBody: ModifierSeq = toClass("modal-body")
-    lazy val modalFooter: ModifierSeq = toClass("modal-footer")
+    lazy val modal = cls("modal")
+    lazy val fade = cls("fade")
+    lazy val modalDialog = cls("modal-dialog")
+    lazy val modalContent = cls("modal-content")
+    lazy val modalHeader = cls("modal-header")
+    lazy val modalInfo = cls("modal-info")
+    lazy val modalBody = cls("modal-body")
+    lazy val modalFooter = cls("modal-footer")
 
     //NAVS
-    lazy val tabsClass: NavStyle = toNav("nav-tabs")
-    lazy val justified_tabs: NavStyle = toNav("nav-tabs nav-justified")
-    lazy val pills: NavStyle = toNav("nav-pills")
-    lazy val stacked_pills: NavStyle = toNav("nav-pills nav-stacked")
-    lazy val justified_pills: NavStyle = toNav("nav-pills nav-justified")
-    lazy val inline_list: NavStyle = toNav("list-inline")
-    lazy val nav_bar: NavStyle = toNav("navbar-nav")
-    lazy val regular_nav: NavStyle = toNav("nav-list")
-    lazy val panel_nav: NavStyle = toNav("panel panel-primary")
-    lazy val presentation_role: ModifierSeq = role := "presentation"
-    lazy val tab_panel_role: ModifierSeq = role := "tabpanel"
-    lazy val tab_list_role: ModifierSeq = role := "tablist"
-    lazy val tab_role: ModifierSeq = role := "tab"
-    lazy val tab_content: ModifierSeq = toClass("tab-content")
-    lazy val tab_pane: ModifierSeq = toClass("tab-pane")
-    lazy val nav_item: ModifierSeq = toClass("nav-item")
-    lazy val nav_link: ModifierSeq = toClass("nav-link")
+    lazy val tabsClass = toNav("nav-tabs")
+    lazy val justified_tabs = toNav("nav-tabs nav-justified")
+    lazy val pills = toNav("nav-pills")
+    lazy val stacked_pills = toNav("nav-pills nav-stacked")
+    lazy val justified_pills = toNav("nav-pills nav-justified")
+    lazy val inline_list = toNav("list-inline")
+    lazy val nav_bar = toNav("navbar-nav")
+    lazy val regular_nav = toNav("nav-list")
+    lazy val panel_nav = toNav("panel panel-primary")
+    lazy val presentation_role = role := "presentation"
+    lazy val tab_panel_role = role := "tabpanel"
+    lazy val tab_list_role = role := "tablist"
+    lazy val tab_role = role := "tab"
+    lazy val tab_content = cls("tab-content")
+    lazy val tab_pane = cls("tab-pane")
+    lazy val nav_item = cls("nav-item")
+    lazy val nav_link = cls("nav-link")
 
     //TABLES
-    lazy val header_no_color: ModifierSeq = emptyMod
-    lazy val default_header: ModifierSeq = toClass("thead-default")
-    lazy val default_inverse: ModifierSeq = toClass("thead-inverse")
-    lazy val default_table: TableStyle = toTable("")
-    lazy val inverse_table: TableStyle = toTable("table-inverse")
-    lazy val striped_table: TableStyle = toTable("table-striped")
-    lazy val bordered_table: TableStyle = toTable("table-bordered")
-    lazy val hover_table: TableStyle = toTable("table-hover")
+    lazy val header_no_color = emptyMod
+    lazy val default_header = cls("thead-default")
+    lazy val default_inverse = cls("thead-inverse")
+    lazy val default_table = toTable("")
+    lazy val inverse_table = toTable("table-inverse")
+    lazy val striped_table = toTable("table-striped")
+    lazy val bordered_table = toTable("table-bordered")
+    lazy val hover_table = toTable("table-hover")
 
     //GRIDS
-    def colMD(nbCol: Int): ModifierSeq = toClass(s"col-md-$nbCol")
+    def colMD(nbCol: Int) = cls(s"col-md-$nbCol")
 
-    def colMDOffset(offsetSize: Int): ModifierSeq = toClass(s"col-md-offset-$offsetSize")
+    def colMDOffset(offsetSize: Int) = cls(s"col-md-offset-$offsetSize")
 
-    lazy val row: ModifierSeq = toClass("row")
+    lazy val row = cls("row")
 
 
     //PANELS
-    lazy val panelClass: ModifierSeq = toClass("panel")
-    lazy val panelDefault: ModifierSeq = toClass("panel-default")
-    lazy val panelHeading: ModifierSeq = toClass("panel-heading")
-    lazy val panelTitle: ModifierSeq = toClass("panel-title")
-    lazy val panelBody: ModifierSeq = toClass("panel-body")
+    lazy val panelClass = cls("panel")
+    lazy val panelDefault = cls("panel-default")
+    lazy val panelHeading = cls("panel-heading")
+    lazy val panelTitle = cls("panel-title")
+    lazy val panelBody = cls("panel-body")
 
 
     //TABLES
-    lazy val tableClass: ModifierSeq = toClass("table")
-    lazy val bordered: ModifierSeq = toClass("table-bordered")
-    lazy val striped: ModifierSeq = toClass("table-striped")
-    lazy val active: ModifierSeq = toClass("active")
-    lazy val success: ModifierSeq = toClass("success")
-    lazy val danger: ModifierSeq = toClass("danger")
-    lazy val warning: ModifierSeq = toClass("warning")
-    lazy val info: ModifierSeq = toClass("info")
+    lazy val tableClass = cls("table")
+    lazy val bordered = cls("table-bordered")
+    lazy val striped = cls("table-striped")
+    lazy val active = cls("active")
+    lazy val success = cls("success")
+    lazy val danger = cls("danger")
+    lazy val warning = cls("warning")
+    lazy val info = cls("info")
 
 
     //INPUTS
-    lazy val inputGroup: ModifierSeq = toClass("input-group")
-    lazy val inputGroupButtonClass: ModifierSeq = toClass("input-group-btn")
-    lazy val inputGroupAddonClass: ModifierSeq = toClass("input-group-addon")
+    lazy val inputGroup = cls("input-group")
+    lazy val inputGroupButtonClass = cls("input-group-btn")
+    lazy val inputGroupAddonClass = cls("input-group-addon")
 
     //FORMS
-    lazy val formControl: ModifierSeq = toClass("form-control")
-    lazy val formGroup: ModifierSeq = toClass("form-group")
-    lazy val formInline: ModifierSeq = toClass("form-inline")
-    lazy val formHorizontal: ModifierSeq = toClass("form-horizontal")
-    lazy val formVertical: ModifierSeq = toClass("form-vertical")
+    lazy val formControl = cls("form-control")
+    lazy val formGroup = cls("form-group")
+    lazy val formInline = cls("form-inline")
+    lazy val formHorizontal = cls("form-horizontal")
+    lazy val formVertical = cls("form-vertical")
 
 
     //OTHERS
-    lazy val dropdown: ModifierSeq = toClass("dropdown")
-    lazy val dropdownMenu: ModifierSeq = toClass("dropdown-menu")
-    lazy val dropdownToggle: ModifierSeq = toClass("dropdown-toggle")
-    lazy val progress: ModifierSeq = toClass("progress")
-    lazy val progressBar: ModifierSeq = toClass("progress-bar")
-    lazy val container: ModifierSeq = toClass("container")
-    lazy val jumbotron: ModifierSeq = toClass("jumbotron")
-    lazy val themeShowcase: ModifierSeq = toClass("theme-showcase")
-    lazy val controlGroup: ModifierSeq = toClass("control-group")
-    lazy val controls: ModifierSeq = toClass("controls")
+    lazy val dropdown = cls("dropdown")
+    lazy val dropdownMenu = cls("dropdown-menu")
+    lazy val dropdownToggle = cls("dropdown-toggle")
+    lazy val progress = cls("progress")
+    lazy val progressBar = cls("progress-bar")
+    lazy val container = cls("container")
+    lazy val jumbotron = cls("jumbotron")
+    lazy val themeShowcase = cls("theme-showcase")
+    lazy val controlGroup = cls("control-group")
+    lazy val controls = cls("controls")
   }
 
 }
@@ -256,26 +248,26 @@ package stylesheet2 {
   trait Bootstrap2Package {
 
     //Exclusive Button Group
-    lazy val stringInGroup: ModifierSeq = Seq(
-      sty.height := "30px",
-      sty.paddingTop := "3px",
-      sty.paddingLeft := "6px",
-      sty.paddingRight := "6px"
+    lazy val stringInGroup = Seq(
+      height := "30px",
+      paddingTop := "3px",
+      paddingLeft := "6px",
+      paddingRight := "6px"
     )
 
-    lazy val twoGlyphButton: ModifierSeq = Seq(
-      sty.top := "1px",
-      sty.height := "30px"
+    lazy val twoGlyphButton = Seq(
+      top := "1px",
+      height := "30px"
     )
 
-    lazy val stringButton: ModifierSeq = Seq(
-      sty.top := "4px",
-      sty.height := "30px"
+    lazy val stringButton = Seq(
+      top := "4px",
+      height := "30px"
     )
 
-    lazy val collapseTransition: ModifierSeq = Seq(
+    lazy val collapseTransition = Seq(
       transition := "height .3s",
-      height := 0,
+      height := "0",
       overflow := "hidden"
     )
 

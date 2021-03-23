@@ -17,16 +17,15 @@ package scaladget.bootstrapnative
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import scalatags.JsDom.tags
-import scalatags.JsDom.all._
 import scaladget.bootstrapnative.bsn._
-import scaladget.tools._
-import rx._
+import com.raquo.laminar.api.L._
 
-case class SelectableButton(text: String, defaultActive: Boolean, modifierSeq: ModifierSeq, onclick: () => Unit) {
+
+
+case class SelectableButton(text: String, defaultActive: Boolean, modifier: Modifier[HtmlElement], setters: HESetters) {
   val active = Var(defaultActive)
 }
-
+//
 object SelectableButtons {
 
   trait SelectionButtonType {
@@ -37,45 +36,44 @@ object SelectableButtons {
   object RadioSelection extends SelectionButtonType {
     def cssStyle = "radio"
     def onselection=  (sb: SelectableButton, all: Seq[SelectableButton])=> {
-      all.foreach{_.active() = false}
-      sb.active() = true
+      all.foreach { _.active.set(false)}
+      sb.active.set(true)
     }
   }
 
   object CheckBoxSelection extends SelectionButtonType {
     def cssStyle = "checkbox"
     def onselection=  (sb: SelectableButton, all: Seq[SelectableButton])=> {
-      sb.active() = !sb.active.now
+      sb.active.set(!sb.active.now)
     }
   }
 
-  implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
-
-  def bar(modifierSeq: ModifierSeq, buttons: Seq[SelectableButton], buttonType: SelectionButtonType): Modifier =
-    buttonGroup(modifierSeq)(data("toggle") := "buttons")(
+  def bar(buttons: Seq[SelectableButton], buttonType: SelectionButtonType, setters: Setter[HtmlElement]*): HtmlElement =
+    buttonGroup.amend(
+      dataAttr("toggle") := "buttons",
+      setters,
       for {
         button <- buttons
       } yield {
-        Rx {
-          tags.label(btn +++ button.modifierSeq +++ rxIf(button.active, toClass("active"), emptyMod))(
-            tags.input(`type` := buttonType.cssStyle, autocomplete := "off",
-              if (button.active()) checked := "checked" else emptyMod,
-              onclick := { () =>
+          label(btn, button.setters,  cls <-- button.active.signal.map{a=> if(a) "active" else ""},
+            input(`type` := buttonType.cssStyle, autoComplete := "off",
+              checked <-- button.active.signal,
+             // if (button.active()) checked := "checked" else emptyMod,
+              onClick --> { _ =>
                 buttonType.onselection(button, buttons)
-                button.onclick()
+               // button.modifier
               }),
             button.text
           )
-        }
       }
     )
 }
 
 
 import SelectableButtons._
-class SelectableButtons(modifierSeq: ModifierSeq, buttonType: SelectionButtonType, buttons: Seq[SelectableButton]) {
+class SelectableButtons(heSetters: HESetters, buttonType: SelectionButtonType, buttons: Seq[SelectableButton]) {
 
-  val render = SelectableButtons.bar(modifierSeq, buttons, buttonType)
+  val render = SelectableButtons.bar(buttons, buttonType, heSetters)
 
 
   def active = buttons.filter {

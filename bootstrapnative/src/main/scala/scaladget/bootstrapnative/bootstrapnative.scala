@@ -18,7 +18,7 @@ package scaladget.bootstrapnative
  */
 
 
-import org.scalajs.dom.Element
+import com.raquo.laminar.api.L._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation._
@@ -28,25 +28,25 @@ package object bsnsheet extends stylesheet.BootstrapPackage with stylesheet2.Boo
 
 package object bsn extends stylesheet.BootstrapPackage with stylesheet2.Bootstrap2Package with BootstrapTags
 
-@JSGlobal
-@js.native
-class Modal(element: Element) extends js.Object {
+//@js.native
+//@JSImport("bootstrap.native", JSImport.Namespace)
+//class Modal(element: Element) extends js.Object {
+//
+//  def show(): Unit = js.native
+//
+//  def hide(): Unit = js.native
+//}
 
-  def show(): Unit = js.native
-
-  def hide(): Unit = js.native
-}
-
-@JSGlobal
-@js.native
-class Popover(element: Element, options: js.Dynamic = lit()) extends js.Object {
-
-  def show(): Unit = js.native
-
-  def hide(): Unit = js.native
-
-  def toggle(): Unit = js.native
-}
+//@JSGlobal
+//@js.native
+//class Popover(element: Element, options: js.Dynamic = lit()) extends js.Object {
+//
+//  def show(): Unit = js.native
+//
+//  def hide(): Unit = js.native
+//
+//  def toggle(): Unit = js.native
+//}
 
 @JSGlobal
 @js.native
@@ -61,13 +61,13 @@ class Tooltip(element: Element, options: js.Dynamic = lit()) extends js.Object {
   def close(): Unit = js.native
 }
 
-@JSGlobal
-@js.native
-class Collapse(element: Element, options: js.Dynamic = lit()) extends js.Object {
-
-  def show(): Unit = js.native
-
-  def hide(): Unit = js.native
-
-  def toggle(): Unit = js.native
-}
+//@JSGlobal
+//@js.native
+//class Collapse(element: Element, options: js.Dynamic = lit()) extends js.Object {
+//
+//  def show(): Unit = js.native
+//
+//  def hide(): Unit = js.native
+//
+//  def toggle(): Unit = js.native
+//}

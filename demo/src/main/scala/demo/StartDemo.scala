@@ -3,12 +3,10 @@ package demo
 
 //import scaladget.highlightjs.HighlightJS
 
-//import scaladget.bootstrapnative.bsn._
-//import scaladget.tools._
-
-import scalatags.JsDom.all._
+import scaladget.bootstrapnative.bsn._
+import com.raquo.laminar.api.L._
+import org.scalajs
 import org.scalajs.dom
-import org.scalajs.dom.raw.Event
 
 import scala.scalajs.js.annotation._
 
@@ -40,58 +38,69 @@ object App {
       import scalatags.JsDom.all._
       """.stripMargin
 
+    println("APP 0")
+    // val element = AceDemo.elementDemo
+    // println("Element " + element)
+    val content =
+    div(
+      div(marginLeft := "15",
+        marginTop := "25",
+        h3("Build"),
+        div(row,
+          div(colMD(12), "Details on construction on ", a(href := "https://github.com/openmole/scaladget", target := "_blank", "the Scaladet Github page"))
+        ),
+        h3("Imports"),
+        div(row,
+          div(colMD(8), pre(code(cls("scala"), imports))),
+          div(colMD(4), padding := "20", "This imports have to be done before using the following examples. Specific imports will be also sometimes specified.")
+        )
+      ),
+      //  FormDemo.elementDemo.element
+      Tabs.tabs(
+        for {
+          //          demo <- Seq(
+          //            //            AceDiffDemo.elementDemo,
+          //            //            SliderDemo.elementDemo,
 
-    val element = AceDemo.element.render
-    println("Element " + element)
-    // val content = div(
-    //      div(div(marginLeft := 15, marginTop := 25)(
-    //        h3("Build"),
-    //        div(row)(
-    //          div(colMD(12))("Details on construction on ", a(href := "https://github.com/openmole/scaladget", target := "_blank")("the Scaladet Github page"))
-    //        ),
-    //        h3("Imports"),
-    //        div(row)(
-    //          div(colMD(8))(pre(code(toClass("scala"))(imports))),
-    //          div(colMD(4), padding := 20)("This imports have to be done before using the following examples. Specific imports will be also sometimes specified.")
-    //        )
-    //      ),
-    //        Tabs.tabs(for {
-    //          demo <- Seq(
-    //            AceDemo.elementDemo,
-    //            //            AceDiffDemo.elementDemo,
-    //            //            SliderDemo.elementDemo,
-    //            //            ButtonDemo.elementDemo,
-    //            //            LabelDemo.elementDemo,
-    //            //            FormDemo.elementDemo,
-    //            //            SelectDemo.elementDemo,
-    //            //            ModalDialogDemo.elementDemo,
-    //            //            TabDemo.elementDemo,
-    //            //            TableDemo.elementDemo,
-    //            //            NavBarDemo.elementDemo,
-    //            //            TooltipDemo.elementDemo,
-    //            //            PopoverDemo.elementDemo,
-    //            //            CollapseDemo.elementDemo,
-    //            //            AlertDemo.elementDemo,
-    //            //            PlayGroundDemo.elementDemo
-    //          )
-    //        } yield {
-    //          Tab(demo.title,
-    //            div(marginLeft := 15, marginTop := 25)(
-    //              h3(demo.title),
-    //              div(row)(
-    //                //  div(colMD(demo.codeWidth))(pre(code(toClass("scala"))(demo.cleanCode))),
-    //                div(colMD(12 - demo.codeWidth))(demo.element)
-    //              )
-    //            ))
-    //        }).build.render).render
-    //).render
+          demo <- Seq(
+            AceDemo.elementDemo,
+            LabelDemo.elementDemo,
+            ButtonDemo.elementDemo,
+            ModalDialogDemo.elementDemo,
+            CollapseDemo.elementDemo,
+            FormDemo.elementDemo,
+            //  SelectDemo.elementDemo
+            TabDemo.elementDemo
+          )
 
+          //            //            TableDemo.elementDemo,
+          //            //            NavBarDemo.elementDemo,
+          //            //            TooltipDemo.elementDemo,
+          //            //            PopoverDemo.elementDemo,
+          //            //            AlertDemo.elementDemo,
+          //            //            PlayGroundDemo.elementDemo
+          //          )
+        } yield {
+          //          println("TITLE " + demo.title)
+          //          demo.element
+          Tab(demo.title,
+            div(marginLeft := "15", marginTop := "25",
+              h3(demo.title),
+              ////              div(row)(
+              ////                div(colMD(demo.codeWidth))(pre(code(toClass("scala"))(demo.cleanCode))),
+              div(colMD(12 - demo.codeWidth), demo.element)
+            )
+          )
+          ////            ))
+        }).build.render
+    )
     println("Before apend")
     println("DOC " + dom.document)
     println("body " + dom.document.body)
-    scalajs.js.timers.setTimeout(2) {
-      dom.document.body.appendChild(element)
-    }
+
+    documentEvents.onDomContentLoaded.foreach { _ =>
+      render(scalajs.dom.document.body, content)
+    }(unsafeWindowOwner)
   }
 
   //    @JSExportTopLevel("flowchart")

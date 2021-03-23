@@ -18,107 +18,93 @@ package scaladget.bootstrapnative
  */
 
 import scaladget.bootstrapnative.bsn._
-import scaladget.tools._
-import rx._
+import scaladget.tools.Utils._
+import com.raquo.laminar.api.L._
 import org.scalajs.dom.raw._
-import scalatags.JsDom.all._
-import scalatags.JsDom.{TypedTag}
 
 object Selector {
 
-  implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
-
   def options[T](contents: Seq[T],
                  defaultIndex: Int = 0,
-                 key: ModifierSeq = emptyMod,
+                 key: HESetters = emptySetters,
                  naming: T => String,
                  onclose: () => Unit = () => {},
-                 onclickExtra: () ⇒ Unit = () ⇒ {},
-                 decorations: Map[T, ModifierSeq] = Map(),
+                 onclickExtra: Modifier[HtmlElement] =  emptyMod,
+                 decorations: Map[T, HESetters] = Map(),
                  fixedTitle: Option[String] = None) = new Options(contents, defaultIndex, key, naming, onclose, onclickExtra, decorations, fixedTitle)
 
-  def dropdown[T <: HTMLElement](content: TypedTag[T],
+  def dropdown[T <: HTMLElement](content: HtmlElement,
                                  buttonText: String,
-                                 buttonIcon: ModifierSeq,
-                                 buttonModifierSeq: ModifierSeq,
-                                 allModifierSeq: ModifierSeq,
-                                 dropdownModifierSeq: ModifierSeq,
+                                 buttonIcon: HESetters,
+                                 buttonSetters: HESetters,
+                                 allSetters: HESetters,
+                                 dropdownSetters: HESetters,
                                  onclose: () => Unit) = {
-    lazy val trigger: TypedTag[_ <: HTMLElement] =
-      bsn.buttonIcon(buttonText, buttonModifierSeq +++ dropdownToggle, buttonIcon)(
-        span(caret, marginLeft := 4)
-      )
+    lazy val trigger = bsn.buttonIcon(buttonText, buttonSetters :+ dropdownToggle, buttonIcon).amend(span(caret, marginLeft := "4"))
 
     new Dropdown(
       content,
       trigger,
-      allModifierSeq,
-      dropdownModifierSeq,
+      allSetters,
+      dropdownSetters,
       onclose)
   }
 
-  def dropdown[T <: HTMLElement](content: TypedTag[T],
-                                 trigger: TypedTag[_],
-                                 allModifierSeq: ModifierSeq,
-                                 dropdownModifierSeq: ModifierSeq,
+  def dropdown[T <: HTMLElement](content: HtmlElement,
+                                 trigger: HtmlElement,
+                                 allHESetters: HESetters,
+                                 dropdownSetters: HESetters,
                                  onclose: () => Unit): Dropdown[T] = new Dropdown(
     content,
     trigger,
-    allModifierSeq,
-    dropdownModifierSeq,
+    allHESetters,
+    dropdownSetters,
     onclose
   )
 
 
-  class Dropdown[T <: HTMLElement](content: TypedTag[T],
-                                   trigger: TypedTag[_],
-                                   allModifierSeq: ModifierSeq,
-                                   dropdownModifierSeq: ModifierSeq,
+  class Dropdown[T <: HTMLElement](content: HtmlElement,
+                                   trigger: HtmlElement,
+                                   allHESetters: HESetters,
+                                   dropdownSetters: HESetters,
                                    onclose: () => Unit) {
 
     val open = Var(false)
 
-    def toggle = open() = !open.now
-
-    val contentRender = content.render
-
-    lazy val render = div(allModifierSeq)(
-      Rx {
-        buttonGroup(ms(open(), "open", ""))(
-          trigger(data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := open(), tabindex := 0)(onclick := { () =>
-            toggle
-          }),
-          div(dropdownMenu +++ dropdownModifierSeq +++ (padding := 10))(contentRender)
-        )
-      }
-    ).render
+    lazy val render = div(
+      allHESetters,
+      buttonGroup.amend(
+        cls <-- open.signal.map { s => if (s) "open" else "" },
+        trigger.amend(dataAttr("toggle") := "dropdown", aria.hasPopup := true, role := "button", aria.expanded <-- open.signal, tabIndex := 0,
+          onClick.mapTo(!open.now) --> open),
+        div(dropdownMenu, dropdownSetters, padding := "10", content)
+      )
+    )
 
 
-    contentRender.addEventListener("mousedown", (e: Event) => {
-      e.stopPropagation
-    })
+    //        contentRender.addEventListener("mousedown", (e: Event) => {
+    //      e.stopPropagation
+    //    })
 
 
-    render.onClickOutside(() => {
+    render.ref.onClickOutside(() => {
       close
     })
 
     def close[T <: HTMLElement]: Unit = {
       onclose()
-      open() = false
+      open.set(false)
     }
   }
 
   class Options[T](private val _contents: Seq[T],
                    defaultIndex: Int = 0,
-                   key: ModifierSeq = emptyMod,
+                   key: HESetters = emptySetters,
                    naming: T => String,
                    onclose: () => Unit,
-                   onclickExtra: () ⇒ Unit,
-                   decorations: Map[T, ModifierSeq],
+                   onclickExtra: Modifier[HtmlElement] =  emptyMod,
+                   decorations: Map[T, HESetters],
                    fixedTitle: Option[String]) {
-
-    implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
 
     implicit def tToString(t: T): String = naming(t)
 
@@ -134,17 +120,17 @@ object Selector {
     })
 
     def setContents(cts: Seq[T], onset: () ⇒ Unit = () ⇒ {}) = {
-      contents() = cts
-      content() = cts.headOption
+      contents.set(cts)
+      content.set(cts.headOption)
       onset()
     }
 
     def emptyContents = {
-      contents() = Seq()
-      content() = None
+      contents.set(Seq())
+      content.set(None)
     }
 
-    def set(t: T) = content() = Some(t)
+    def set(t: T) = content.set(Some(t))
 
     def get: Option[T] = content.now
 
@@ -152,52 +138,57 @@ object Selector {
 
     def isContentsEmpty = contents.now.isEmpty
 
-    def close = opened() = false
+    def close = opened.set(false)
 
-    selector.onClickOutside(() => close)
+    selector.ref.onClickOutside(() => close)
 
-    lazy val selector = div(
-      Rx {
-        buttonGroup(
-          toClass(
-            if (opened()) "open"
+    lazy val selector = {
+      div(
+        buttonGroup.amend(
+          cls <-- opened.signal.map { s =>
+            if (s) "open"
             else ""
-          ))(
-          buttonIcon(fixedTitle.getOrElse(content().map {
-            naming
-          }.getOrElse("") + " "), key +++ dropdownToggle,
-            content().map { ct =>
-              decorations.getOrElse(ct, emptyMod)
-            }.getOrElse(emptyMod), () => {
-              opened() = !opened.now
-              onclickExtra()
-            })(
-            data("toggle") := "dropdown", aria.haspopup := true, role := "button", aria.expanded := {
-              if (opened()) true else false
-            }, tabindex := 0)(
-            span(caret, marginLeft := 4)),
-          ul(dropdownMenu, role := "menu")(
-            for {
-              c <- contents.now
-            } yield {
-              val line = li(
-                a(href := "#")(
-                  span(
-                    span(decorations.getOrElse(c, emptyMod).toSeq),
-                    span(s" ${naming(c)}")
-                  ))
-              ).render
-              line.addEventListener("mousedown", (e: Event) => {
-                e.stopPropagation
-                content() = Some(c)
-                opened() = !opened.now
-                onclose()
-              })
-              line
-            }
-          )
+          },
+          child <-- content.signal.map { c =>
+            buttonIcon(fixedTitle.getOrElse(c.map {
+              naming
+            }.getOrElse("") + " "), key :+ dropdownToggle,
+              c.map { ct =>
+                decorations.getOrElse(ct, emptySetters)
+              }.getOrElse(emptySetters), {
+                opened.set(!opened.now)
+                onclickExtra
+              }
+            ).amend(
+              dataAttr("toggle") := "dropdown", aria.hasPopup := true, role := "button", aria.expanded <-- opened.signal, tabIndex := 0,
+              span(caret, marginLeft := "4")
+            )
+          }
+        ),
+        ul(dropdownMenu, role := "menu",
+          for {
+            c <- contents.now
+          } yield {
+            val line = li(
+              a(href := "#",
+                span(
+                  span(decorations.getOrElse(c, emptySetters).toSeq),
+                  span(s" ${naming(c)}")
+                ))
+            )
+            line.amend(onMouseDown.stopPropagation --> { _ =>
+             // e.stopPropagation
+              content.set(Some(c))
+              //opened.set(!opened.now)
+              opened.update(!_)
+              onclose()
+            })
+            line
+          }
         )
-      }).render
+      )
+    }
+
   }
 
 }

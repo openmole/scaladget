@@ -96,3 +96,8 @@ h3 {
     opacity: 1;
     transform: scale(1.3);
 }
+
+:root {
+  --mdc-theme-primary: #286090;
+  --mdc-theme-secondary: #e6e6e6;
+}
