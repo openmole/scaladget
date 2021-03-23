@@ -34,7 +34,7 @@ object TabDemo extends Demo {
 
     lazy val trigger = button("Add tab", onClick --> { _ => theTabs.tabs.update(t=> t:+Tab("An other", div("XXX"))) }, btn_danger, marginBottom := "20")
 
-    lazy val theTabs = Tabs.tabs().
+    lazy val theTabs = Tabs.tabs(isClosable = true).
       add("My first", div1, ()=> println("My first clicked")).
       add("My second", inputTag("Hey !")).build
 

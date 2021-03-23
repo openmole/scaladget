@@ -705,7 +705,7 @@ trait BootstrapTags {
   case class Tab(title: String, content: HtmlElement, onclickExtra: () => Unit = () => {}, tabID: TabID = uuID.short("t"), refID: String = uuID.short("r"))
 
   object Tabs {
-    def tabs(initialTabs: Seq[Tab] = Seq()) = TabHolder(initialTabs, false, 0, (tab: Tab) => {})
+    def tabs(initialTabs: Seq[Tab] = Seq(), isClosable: Boolean = false) = TabHolder(initialTabs, isClosable, 0, (tab: Tab) => {})
 
 
     def defaultSortOptions: (Var[Seq[Tab]], Int => Unit) => SortableOptions = (ts: Var[Seq[Tab]], setActive: Int => Unit) =>
@@ -744,12 +744,8 @@ trait BootstrapTags {
 
   case class Tabs(initialTabs: Seq[Tab], isClosable: Boolean, onActivation: Tab => Unit = Tab => {}, onCloseExtra: Tab => Unit = Tab => {}, onRemoved: TabID => Unit = Tab => {}) {
 
-    //active in Tab
-    // val active: Var[Option[Tab]] = Var(initActive)
     val tabs = Var(initialTabs)
-    val activeTab = Var(initialTabs.headOption.map {
-      _.tabID
-    })
+    val activeTab = Var(initialTabs.headOption.map(_.tabID))
 
 
     def tab(tabID: TabID) = tabs.now.filter {
@@ -760,12 +756,15 @@ trait BootstrapTags {
       tabs.update(t => t :+ tab)
     }
 
+    def isActive(id: TabID) = Some(id) == activeTab.now
+
     def remove(tabID: TabID) = {
       tabs.update { cur =>
         cur.filterNot {
           _.tabID == tabID
         }
       }
+      if (isActive(tabID)) activeTab.set(tabs.now.headOption.map{_.tabID})
       onRemoved(tabID)
     }
 
@@ -774,10 +773,10 @@ trait BootstrapTags {
     lazy val tabClose: HESetters = Seq(
       relativePosition,
       fontSize := "20",
-      color := "#222",
-      right := "-10"
+      color := "white",
+      right := "-10",
+      opacity := "0.8"
     )
-
 
     case class TabRender(tabHeader: Li, tabContent: Div)
 
@@ -798,72 +797,28 @@ trait BootstrapTags {
             activeTab.set(Some(tabID))
             initialTab.onclickExtra()
           },
-          if (isClosable) button(cls := "close", tabClose, `type` := "button", "#215",
+          if (isClosable) button(cls := "close", tabClose, `type` := "button", "×",
             onClick --> { e =>
               remove(initialTab.tabID)
-              e.stopPropagation()
-            }) else span(child.text <-- tabStream.map {
+            }) else span(),
+          child.text <-- tabStream.map {
             _.title
-          })
+          }
         )
       )
 
       val tabDiv =
-          div(idAttr <-- tabStream.map { t => t.refID },
-            bsn.tab_pane, bsn.fade,
-            cls.toggle("active in") <-- activeSignal,
-            child <-- tabStream.map { t => t.content }
+        div(idAttr <-- tabStream.map { t => t.refID },
+          bsn.tab_pane, bsn.fade,
+          cls.toggle("active in") <-- activeSignal,
+          child <-- tabStream.map { t => t.content }
         )
 
-
-      //
-      //    lazy val render = div(
-      //      Rx {
-      //        val tabList = ul(pills, tab_list_role)({
-      //          val actClass = activeClass(active())
-      //          tabs().map { t =>
-      //            li(presentation_role +++ ms(actClass(t)._1))(
-      //              a(id := t.tabID,
-      //                tab_role,
-      //                pointer,
-      //                data("toggle") := "tab",
-      //                data("height") := true,
-      //                aria.controls := t.refID,
-      //                onClick := { () =>
-      //
-      //                  setActive(t)
-      //                } //t.onclickExtra
-      //              )(if (isClosable) button(ms("close") +++ tabClose, `type` := "button", onClick := { (e: Event) ⇒ remove(t); e.stopPropagation() })(raw("&#215")) else span, t.title)
-      //            )
-      //          }
-      //        }).render
-      //
-      //        val tabDiv = div(
-      //          div(tab_content +++ (paddingTop := 10).toMS)({
-      //            val actClass = activeClass(active())
-      //            tabs().map { t =>
-      //              div(id := t.refID, tab_pane +++ fade +++ ms(actClass(t)._2)
-      //              )(t.content)
-      //            }
-      //          }
-      //          )
-      //        )
       //FIXME
       //  Sortable(header, sortableOptions(tabs, setActive))
 
-
-      //      div(
-      //        ul(bsn.pills, bsn.tab_list_role, header),
-      //        tabDiv
-      //      )
-
       TabRender(header, tabDiv)
     }
-
-    //    initActive.foreach {
-    //      setActive
-    //    }
-
 
     def render = {
       //val tabDis = tabs.signal  //split(_.tabID) { (tabID, tab, stream) => renderTab(tabID, tab, stream) }
