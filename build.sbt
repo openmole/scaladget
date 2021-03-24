@@ -10,7 +10,7 @@ val bootstrapNativeVersion = "2.0.26"
 val bootstrapSwitchVersion = "3.3.4"
 val bootstrapVersion = "3.4.1"
 val bootstrapSliderVersion = "10.4.0"
-val highlightVersion = "9.2.0"
+val highlightVersion = "10.4.1"
 val lunrVersion = "2.1.6"
 
 //2.13
@@ -131,11 +131,11 @@ lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (Sc
 ) dependsOn (tools)
 //
 //
-//lazy val highlightjs = project.in(file("highlightjs")) enablePlugins (ScalaJSBundlerPlugin) settings(
-//  jsext,
-//  scalaJsDom,
-//  npmDeps in Compile += Dep("highlight.js", highlightVersion, List("highlight.js"))
-//)
+lazy val highlightjs = project.in(file("highlightjs")) enablePlugins (ScalaJSBundlerPlugin) settings(
+  jsext,
+  scalaJsDom,
+  npmDependencies in Compile += "highlight.js"-> highlightVersion
+)
 //
 //lazy val lunr = project.in(file("lunr")) enablePlugins (ScalaJSBundlerPlugin) settings (
 //  npmDeps in Compile += Dep("lunr", "2.1.5", List("lunr.js"))
@@ -189,4 +189,4 @@ lazy val demo = project.in(file("demo")) enablePlugins (ScalaJSBundlerPlugin) se
     IO.copyDirectory(demoResource, target.value)
 
   }
-) dependsOn(ace, bootstrapnative, tools)
+) dependsOn(ace, bootstrapnative, tools, highlightjs)

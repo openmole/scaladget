@@ -10,10 +10,16 @@ import scala.scalajs.js.annotation._
 /**
   * @see [[https://highlightjs.org/usage/]]
   */
+
+
+
 @js.native
-@JSGlobal("hljs")
+@JSImport("highlight.js", JSImport.Namespace)
 object HighlightJS extends HighlightStatic
 
+@js.native
+@JSImport("highlight.js/lib/languages/scala.js", JSImport.Namespace)
+object scalamode extends js.Object
 
 @js.native
 trait HighlightStatic extends js.Object {

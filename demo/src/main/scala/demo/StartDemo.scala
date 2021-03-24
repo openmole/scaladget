@@ -1,8 +1,7 @@
 package demo
 
 
-//import scaladget.highlightjs.HighlightJS
-
+import scaladget.highlightjs.HighlightJS
 import scaladget.bootstrapnative.bsn._
 import com.raquo.laminar.api.L._
 import org.scalajs
@@ -29,7 +28,10 @@ import scala.scalajs.js.annotation._
 object App {
 
   def main(args: Array[String]): Unit = {
-    //   HighlightJS.initHighlightingOnLoad
+
+
+    scaladget.highlightjs.scalamode
+    HighlightJS.initHighlightingOnLoad()
 
     def imports =
       """
@@ -86,17 +88,13 @@ object App {
           Tab(demo.title,
             div(marginLeft := "15", marginTop := "25",
               h3(demo.title),
-              ////              div(row)(
-              ////                div(colMD(demo.codeWidth))(pre(code(toClass("scala"))(demo.cleanCode))),
+              div(row, colMD(demo.codeWidth), pre(code(cls := "scala", demo.cleanCode))),
               div(colMD(12 - demo.codeWidth), demo.element)
             )
           )
           ////            ))
         }).build.render
     )
-    println("Before apend")
-    println("DOC " + dom.document)
-    println("body " + dom.document.body)
 
     documentEvents.onDomContentLoaded.foreach { _ =>
       render(scalajs.dom.document.body, content)
