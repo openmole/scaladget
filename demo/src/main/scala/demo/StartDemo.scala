@@ -40,61 +40,63 @@ object App {
       import scalatags.JsDom.all._
       """.stripMargin
 
-    println("APP 0")
     // val element = AceDemo.elementDemo
     // println("Element " + element)
-    val content =
-    div(
-      div(marginLeft := "15",
-        marginTop := "25",
+    lazy val content = {
+      div(containerFluid, marginLeft := "15", marginTop := "25",
         h3("Build"),
         div(row,
-          div(colMD(12), "Details on construction on ", a(href := "https://github.com/openmole/scaladget", target := "_blank", "the Scaladet Github page"))
+          div(colSM, "Details on construction on ", a(href := "https://github.com/openmole/scaladget", target := "_blank", "the Scaladet Github page"))
         ),
         h3("Imports"),
         div(row,
-          div(colMD(8), pre(code(cls("scala"), imports))),
-          div(colMD(4), padding := "20", "This imports have to be done before using the following examples. Specific imports will be also sometimes specified.")
-        )
-      ),
-      //  FormDemo.elementDemo.element
-      Tabs.tabs(
-        for {
-          //          demo <- Seq(
-          //            //            AceDiffDemo.elementDemo,
-          //            //            SliderDemo.elementDemo,
+          div(colSM, pre(code(cls("scala"), imports))),
+          div(colSM, padding := "20", "This imports have to be done before using the following examples. Specific imports will be also sometimes specified.")
+        ),
+        //  FormDemo.elementDemo.element
+        Tabs.tabs(
+          for {
+            //          demo <- Seq(
+            //            //            AceDiffDemo.elementDemo,
+            //            //            SliderDemo.elementDemo,
 
-          demo <- Seq(
-            AceDemo.elementDemo,
-            LabelDemo.elementDemo,
-            ButtonDemo.elementDemo,
-            ModalDialogDemo.elementDemo,
-            CollapseDemo.elementDemo,
-            FormDemo.elementDemo,
-            //  SelectDemo.elementDemo
-            TabDemo.elementDemo
-          )
-
-          //            //            TableDemo.elementDemo,
-          //            //            NavBarDemo.elementDemo,
-          //            //            TooltipDemo.elementDemo,
-          //            //            PopoverDemo.elementDemo,
-          //            //            AlertDemo.elementDemo,
-          //            //            PlayGroundDemo.elementDemo
-          //          )
-        } yield {
-          //          println("TITLE " + demo.title)
-          //          demo.element
-          Tab(demo.title,
-            div(marginLeft := "15", marginTop := "25",
-              h3(demo.title),
-              div(row, colMD(demo.codeWidth), pre(code(cls := "scala", demo.cleanCode))),
-              div(colMD(12 - demo.codeWidth), demo.element)
+            demo <- Seq(
+              AceDemo.elementDemo,
+              LabelDemo.elementDemo,
+              ButtonDemo.elementDemo,
+              ModalDialogDemo.elementDemo,
+              CollapseDemo.elementDemo,
+              FormDemo.elementDemo,
+              //  SelectDemo.elementDemo
+              PopoverDemo.elementDemo,
+              TabDemo.elementDemo
             )
-          )
-          ////            ))
-        }).build.render
-    )
+
+            //            //            TableDemo.elementDemo,
+            //            //            NavBarDemo.elementDemo,
+            //            //            TooltipDemo.elementDemo,
+            //            //            AlertDemo.elementDemo,
+            //            //            PlayGroundDemo.elementDemo
+            //          )
+          } yield {
+            //          println("TITLE " + demo.title)
+            //          demo.element
+            Tab(demo.title,
+              div(
+                h3(demo.title),
+                div(containerFluid,
+                  div(row, marginLeft := "15", marginTop := "25",
+                    div(colBS(demo.codeWidth), pre(code(cls := "scala", demo.cleanCode))),
+                    div(colBS(12 - demo.codeWidth), demo.element)
+                  )
+                )
+              )
+            )
+            ////            ))
+          }).build.render
+      )
+
+    }
 
     documentEvents.onDomContentLoaded.foreach { _ =>
       render(scalajs.dom.document.body, content)

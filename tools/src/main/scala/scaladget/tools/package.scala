@@ -1,4 +1,4 @@
-package scaladget
+//package scaladget
 
 //import rx.Ctx
 //import scalatags.JsDom.all.s

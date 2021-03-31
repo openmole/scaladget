@@ -28,7 +28,7 @@ object CollapseDemo extends Demo {
     val onoff = Var(true)
 
     lazy val aDiv: HtmlElement = div(
-      buttonIcon("Trigger !", btn_primary, marginBottom := "10").expandOnclick(
+      button(" Trigger !", btn_primary, marginBottom := "10", glyph_settings).expandOnclick(
           panel(child.text <-- onoff.signal.map(oo=> "My text in detail " + oo)).amend(width := "400", height := "200")
         ),
       button("Set Var", btn_danger, onClick -->  {_ => onoff.update(!_) }),

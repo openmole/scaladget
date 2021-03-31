@@ -44,7 +44,7 @@
 //    )
 //
 //    val fourItem = navItem(
-//      div(glyph_fire +++ (color := "#337ab7"), lineHeight := "35px").render, () ⇒
+//      div(glyph_heart +++ (color := "#337ab7"), lineHeight := "35px").render, () ⇒
 //        println("Four open")
 //    )
 //

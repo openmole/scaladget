@@ -25,22 +25,23 @@ import com.raquo.laminar.api.L._
 object PopoverDemo extends Demo {
   val sc = sourcecode.Text {
 
-  //  import scaladget.bootstrapnative.Popup._
+    import scaladget.bootstrapnative.Popup._
 
-//    val buttonStyle: HESetters = Seq(
-//      btn_default,
-//      marginRight := 5
-//    )
-//
-//    //SIMPLE POPOVERS
-//    val simplePopovers = div(
-//      h2("Simple popovers"),
-//      div(paddingTop := "20","Simple popovers containing text, or simple content with no events to be fired and with basic trigger modes (click, hover)."),
-//      button("Left", buttonStyle).popover(vForm(width := 100)(label("Nice content", label_danger).render, span("A important message").render), Left, title = Some("Check this !")).render,
-//      button("Title", buttonStyle).popover("Popover on hover with Title", Top, title = Some("Pop title")).render,
-//      button("Dismissable", buttonStyle).popover("Dismissible Popover on hover with Title", Top, HoverPopup, Some("Pop title"), true).render,
-//      inputTag("")(width := 320, marginTop := 10, placeholder := "Bottom (click)").popover("Tooltip on click on bottom", Bottom, ClickPopup).render
-//    )
+    val buttonStyle: HESetters = Seq(
+      btn_secondary,
+      marginRight := "5"
+    )
+
+    //SIMPLE POPOVERS
+    lazy val simplePopovers = div(
+      h2("Simple popovers"),
+      div(paddingTop := "20","Simple popovers containing text, or simple content with no events to be fired and with basic trigger modes (click, hover)."),
+    //  button("Left", buttonStyle).popover(vForm(width := 100)(label("Nice content", label_danger).render, span("A important message").render), Left, title = Some("Check this !")).render,
+      button("Title", buttonStyle).popover("Popover on hover with Title", Top, ClickPopup, title = Some("Pop title")).element,
+      button("Title 2", buttonStyle).popover("Popover on hover with Title", Top, ClickPopup, title = Some("Pop title")).element,
+      button("Dismissable", buttonStyle).popover("Dismissible Popover on hover with Title", Top, HoverPopup, Some("Pop title"), true).element,
+      inputTag("").amend(width := "320", marginTop := "10", placeholder := "Bottom (click)").popover("Tooltip on click on bottom", Bottom, ClickPopup).element
+    )
 
 
 //    //MANUAL POPOVERS
@@ -113,8 +114,7 @@ object PopoverDemo extends Demo {
 //        if (!e.target.asInstanceOf[HTMLElement].className.contains("popover-content"))
 //          Popover.hide
 //    }
-   // div(simplePopovers/*, manualPopovers*/)
-    div("apneasit")
+   div(simplePopovers/*, manualPopovers*/)
   }
 
   val elementDemo = new ElementDemo {

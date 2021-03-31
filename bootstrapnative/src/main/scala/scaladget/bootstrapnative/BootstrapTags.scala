@@ -28,8 +28,13 @@ package scaladget.bootstrapnative
 import net.scalapro.sortable.{EventS, Sortable, SortableOptions}
 import scaladget.bootstrapnative.SelectableButtons._
 import com.github.uosis.laminar.webcomponents.material._
+import com.raquo.domtypes.generic.Modifier
 import com.raquo.laminar.nodes.ReactiveElement.isActive
+import com.raquo.laminar.nodes.ReactiveHtmlElement
+import org.scalajs.dom
+import org.scalajs.dom.raw.HTMLButtonElement
 import scaladget.bootstrapnative
+import scaladget.bootstrapnative.Popup.{Bottom, ClickPopup, HoverPopup, Manual, PopupPosition, PopupType}
 import scaladget.tools.Utils._
 //import bsn._
 import scaladget.tools.Stylesheet
@@ -79,29 +84,7 @@ trait BootstrapTags {
   // CHECKBOX
   def checkbox = input(`type` := "checkbox")
 
-
-  def checkboxes(checkBoxes: SelectableButton*): SelectableButtons =
-    new SelectableButtons(emptySetters, CheckBoxSelection, checkBoxes)
-
-  def radios(heSetters: HESetters = emptySetters)(radioButtons: SelectableButton*): SelectableButtons = {
-
-    val allActive = radioButtons.filter {
-      _.active.now
-    }.size
-
-    val buttons = {
-      if (radioButtons.size > 0) {
-        if (allActive != 1) radioButtons.head.copy(defaultActive = true) +: radioButtons.tail.map {
-          _.copy(defaultActive = false)
-        }
-        else radioButtons
-      } else radioButtons
-    }
-
-    new SelectableButtons(heSetters, RadioSelection, buttons)
-  }
-
-  def selectableButton(text: String, defaultActive: Boolean = false, modifier: Modifier[HtmlElement] = emptyMod, buttonStyle: HESetter = bsn.btn_default) =
+  def selectable(text: String, defaultActive: Boolean = false, modifier: Modifier[HtmlElement] = emptyMod, buttonStyle: HESetter = bsn.btn_secondary_outline) =
     SelectableButton(text, defaultActive, modifier, buttonStyle)
 
   trait Displayable {
@@ -110,19 +93,7 @@ trait BootstrapTags {
 
   // BUTTONS
 
-  // displaying a text with a button style and a glyphicon
-  // def buttonIcon(text: String = "", buttonStyle: HESetters = bsn.btn_default, glyphicon: HESetters = Seq(), todo: () ⇒ Unit = () => {}) = {
-  def buttonIcon(text: String = "", buttonStyle: HESetters = bsn.btn_default, glyphicon: HESetters = Seq(), todo: Modifier[HtmlElement] = emptyMod) = {
-    val iconStyle = if (text.isEmpty) Seq(paddingTop := "3", paddingBottom := "3") else Seq(marginLeft := "5")
-    button(bsn.btn, buttonStyle, `type` := "button", todo,
-      span(
-        span(glyphicon, iconStyle),
-        span(s" $text")
-      )
-    )
-  }
-
-  def linkButton(content: String, link: String, buttonStyle: HESetters = bsn.btn_default, openInOtherTab: Boolean = true) =
+  def linkButton(content: String, link: String, buttonStyle: HESetters = bsn.btn_secondary, openInOtherTab: Boolean = true) =
     a(buttonStyle, href := link, role := "button", target := {
       if (openInOtherTab) "_blank" else ""
     }, content)
@@ -138,22 +109,99 @@ trait BootstrapTags {
       span(aria.hidden := true, "&#215")
     )
 
-  //Toggle buttons
-  //def toggle(default: Boolean = false, valueOn: String = "ON", valueOff: String = "OFF", onToggled: () => Unit = () => ()) = ToggleButton(default, valueOn, valueOff, onToggled)
+
+  //TOGGLE BUTTON
+  case class ToggleState(text: String, cls: String)
+
+  case class ToggleButtonState(state: ToggleState, activeState: Boolean, unactiveState: ToggleState, onToggled: () => Unit, modifiers: HESetters) {
+
+    val toggled = Var(activeState)
+
+    lazy val element = button(`type` := "button",
+      cls <-- toggled.signal.map(t =>
+        if (t) state.cls
+        else unactiveState.cls
+      ),
+      child.text <-- toggled.signal.map { t => if (t) state.text else unactiveState.text },
+      onClick --> { _ =>
+        toggled.update(!_)
+        onToggled()
+      },
+    ).amend(modifiers: _*)
+
+  }
+
+  def toggle(activeState: ToggleState, default: Boolean, unactiveState: ToggleState, onToggled: () => Unit, modifiers: HESetters = emptySetters) =
+    ToggleButtonState(activeState, default, unactiveState, onToggled, modifiers).element
+
+
+  case class RadioButtons(states: Seq[ToggleState], activeStates: Seq[ToggleState], unactiveStateClass: String, onToggled: ToggleState => Unit, modifiers: HESetters = emptySetters) {
+
+    lazy val active = Var(activeStates)
+
+    lazy val element = div(bsnsheet.btnGroup,
+      for (rb <- states) yield {
+        val rbStateCls = active.signal.map(_.filter( _ == rb).headOption.map(_.cls).getOrElse(unactiveStateClass))
+
+        button(
+          rb.text,
+          cls <-- rbStateCls,
+          onClick --> { _ =>
+            active.update { ac =>
+              val id = ac.indexOf(rb)
+              if (id == -1) ac.appended(rb)
+              else ac.patch(id, Nil, 1)
+            }
+            onToggled(rb)
+          }
+        )
+      }
+    )
+  }
+
+
+  def radio(buttons: Seq[ToggleState], activeStates: Seq[ToggleState], unactiveStateClass: String, onToggled: ToggleState => Unit, radioButtonsModifiers: HESetters = emptySetters) =
+    RadioButtons(buttons, activeStates, unactiveStateClass, onToggled, radioButtonsModifiers).element
+
+
+  // RADIO
+  case class ExclusiveRadioButtons(buttons: Seq[ToggleState], unactiveStateClass: String, defaultToggle: ToggleState, onToggled: ToggleState => Unit, radioButtonsModifiers: HESetters) {
+
+    val active = Var(defaultToggle)
+
+    lazy val element = div(bsnsheet.btnGroup, bsnsheet.btnGroupToggle, dataAttr("toggle") := "buttons",
+      for ((rb, index) <- buttons.zipWithIndex) yield {
+        val isActive = active.signal.map(_ == rb)
+        label(
+          cls <-- isActive.map { a => if (a) rb.cls else unactiveStateClass },
+          cls.toggle("focus active") <-- isActive,
+          input(`type` := "radio", name := "options", idAttr := s"option${index + 1}", checked <-- isActive),
+          rb.text,
+          onClick --> { _ =>
+            active.set(rb)
+            onToggled(rb)
+          }
+        )
+      }
+    )
+  }
+
+  def exclusiveRadio(buttons: Seq[ToggleState], unactiveStateClass: String, defaultToggle: ToggleState, onToggled: ToggleState => Unit, radioButtonsModifiers: HESetters = emptySetters) =
+    ExclusiveRadioButtons(buttons, unactiveStateClass, defaultToggle, onToggled, radioButtonsModifiers).element
 
   //Label decorators to set the label size
-  implicit class TypedTagLabel(lab: Label) {
-    def size1(modifierSeq: HESetters = emptySetters) = h1(modifierSeq, lab)
+  implicit class TypedTagLabel(badge: Span) {
+    def size1(modifierSeq: HESetters = emptySetters) = h1(modifierSeq, badge)
 
-    def size2(modifierSeq: HESetters = emptySetters) = h2(modifierSeq, lab)
+    def size2(modifierSeq: HESetters = emptySetters) = h2(modifierSeq, badge)
 
-    def size3(modifierSeq: HESetters = emptySetters) = h3(modifierSeq, lab)
+    def size3(modifierSeq: HESetters = emptySetters) = h3(modifierSeq, badge)
 
-    def size4(modifierSeq: HESetters = emptySetters) = h4(modifierSeq, lab)
+    def size4(modifierSeq: HESetters = emptySetters) = h4(modifierSeq, badge)
 
-    def size5(modifierSeq: HESetters = emptySetters) = h5(modifierSeq, lab)
+    def size5(modifierSeq: HESetters = emptySetters) = h5(modifierSeq, badge)
 
-    def size6(modifierSeq: HESetters = emptySetters) = h6(modifierSeq, lab)
+    def size6(modifierSeq: HESetters = emptySetters) = h6(modifierSeq, badge)
   }
 
 
@@ -356,72 +404,68 @@ trait BootstrapTags {
   //  case class NavPill(name: String, badge: Option[Int], todo: () => Unit)
   //
   //
-  //  type TypedContent = String
+  type TypedContent = String
+
   //
-  //  object Popover {
-  //    val current: Var[Option[Popover]] = Var(None)
+  //  object PopoverBuilder {
+  //    val current: Var[Option[PopoverBuilder]] = Var(None)
   //
-  //    def show(popover: Popover): Unit = {
-  //      current() = Some(popover)
+  //    def show(popover: PopoverBuilder): Unit = {
+  //      current.set(Some(popover))
   //      popover.show
   //    }
   //
   //    def hide: Unit = {
   //      current.now.foreach { c =>
-  //        c.hide
+  //        //  c.hide
   //      }
-  //      current() = None
+  //      current.set(None)
   //    }
   //
-  //    def toggle(popover: Popover): Unit = {
+  //    def toggle(popover: PopoverBuilder): Unit = {
   //      current.now match {
   //        case None => show(popover)
   //        case _ => hide
   //      }
   //    }
   //  }
+
   //
   //  // POUPUS, TOOLTIPS
-  //  case class Popover(element: TypedTag[org.scalajs.dom.raw.HTMLElement],
-  //                     innerElement: TypedContent,
-  //                     position: PopupPosition = Bottom,
-  //                     trigger: PopupType = HoverPopup,
-  //                     title: Option[TypedContent] = None,
-  //                     dismissible: Boolean = false) {
-  //
-  //    lazy val render = element(
-  //      data("toggle") := "popover",
-  //      data("content") := innerElement,
-  //      data("placement") := position.value,
-  //      data("trigger") := {
-  //        trigger match {
-  //          case ClickPopup => "focus"
-  //          case Manual => "manual"
-  //          case _ => "hover"
-  //        }
-  //      },
-  //      title match {
-  //        case Some(t: TypedContent) => data("title") := t
-  //        case _ =>
-  //      },
-  //      data("dismissible") := {
-  //        dismissible match {
-  //          case true => "true"
-  //          case _ => "false"
-  //        }
-  //      }
-  //    ).render
-  //
-  //    lazy val popover: bootstrapnative.Popover =
-  //      new bootstrapnative.Popover(render)
-  //
-  //    def show = popover.show
-  //
-  //    def hide = popover.hide
-  //
-  //    def toggle = popover.toggle
-  //
-  //  }
+  case class PopoverBuilder(element: HtmlElement,
+                            innerElement: TypedContent,
+                            position: PopupPosition = Bottom,
+                            trigger: PopupType = HoverPopup,
+                            title: Option[TypedContent] = None,
+                            dismissible: Boolean = false) {
+    lazy val render = element.amend(
+
+      dataAttr("toggle") := "popover",
+      dataAttr("content") := innerElement,
+      dataAttr("placement") := position.value,
+      dataAttr("trigger") := {
+        trigger match {
+          case ClickPopup => "focus"
+          case Manual => "manual"
+          case _ => "hover"
+        }
+      },
+      title.map(dataAttr("title") := _).getOrElse(emptyMod),
+      dataAttr("dismissible") := dismissible.toString
+    )
+
+    lazy val popover = new BSN.Popover(render.ref /*, scalajs.js.Dynamic.literal("title" -> "euinesaurtie")*/)
+
+    println("popover defined " + popover)
+
+    def show = popover.show
+
+    def hide = popover.hide
+
+    def toggle = popover.toggle
+
+  }
+
   //
   //  object Tooltip {
   //    def cleanAll = {
@@ -462,23 +506,28 @@ trait BootstrapTags {
   //
   //  implicit def TypedTagToTypedContent(tc: TypedTag[_]): TypedContent = tc.toString
   //
-  //  implicit class PopableTypedTag(element: TypedTag[org.scalajs.dom.raw.HTMLElement]) {
-  //
-  //    def tooltip(text: String,
-  //                position: PopupPosition = Bottom,
-  //                condition: () => Boolean = () => true) = {
-  //      new Tooltip(element, text, position, condition).render
-  //    }
-  //  //
-  //      def popover(text: TypedContent,
-  //                  position: PopupPosition = Bottom,
-  //                  trigger: PopupType = HoverPopup,
-  //                  title: Option[TypedContent] = None,
-  //                  dismissible: Boolean = false
-  //                 ) = {
-  //        new Popover(element, text, position, trigger, title, dismissible)
-  //      }
-  //    }
+  implicit class PopableTypedTag(element: HtmlElement) {
+    //
+    //    def tooltip(text: String,
+    //                position: PopupPosition = Bottom,
+    //                condition: () => Boolean = () => true) = {
+    //      new Tooltip(element, text, position, condition).render
+    //    }
+    //  //
+    def popover(text: TypedContent,
+                position: PopupPosition = Bottom,
+                trigger: PopupType = HoverPopup,
+                title: Option[TypedContent] = None,
+                dismissible: Boolean = false
+               ) = {
+      println("implicit popover")
+      // lazy val builder =
+      PopoverBuilder(element, text, position, trigger, title, dismissible)
+      //  println("BUILVER " + builder)
+      //  builder.element
+    }
+  }
+
   //
   //
   //  //DROPDOWN
@@ -764,7 +813,9 @@ trait BootstrapTags {
           _.tabID == tabID
         }
       }
-      if (isActive(tabID)) activeTab.set(tabs.now.headOption.map{_.tabID})
+      if (isActive(tabID)) activeTab.set(tabs.now.headOption.map {
+        _.tabID
+      })
       onRemoved(tabID)
     }
 
@@ -773,9 +824,10 @@ trait BootstrapTags {
     lazy val tabClose: HESetters = Seq(
       relativePosition,
       fontSize := "20",
-      color := "white",
+      color := "black",
       right := "-10",
-      opacity := "0.8"
+      opacity := "0.3",
+      width := "20"
     )
 
     case class TabRender(tabHeader: Li, tabContent: Div)
@@ -785,33 +837,42 @@ trait BootstrapTags {
       val activeSignal = tabStream.combineWith(activeTab.signal).map { case (t, tID) => Some(t.tabID) == tID }
 
       val header = li(
-        bsn.presentation_role,
-        cls.toggle("active") <-- activeSignal,
-        a(idAttr := tabID,
-          bsn.tab_role,
-          pointer,
-          dataAttr("toggle") := "tab",
-          dataAttr("height") := "true",
-          aria.controls <-- tabStream.map { t => t.refID },
-          onClick --> { _ =>
-            activeTab.set(Some(tabID))
-            initialTab.onclickExtra()
+        // bsn.presentation_role,
+        cls := bsn.nav_item,
+        a(
+          cls <-- activeSignal.map { isActive =>
+            if (isActive) s"${bsn.nav_link}" else s"${bsn.nav_link} active"
           },
-          if (isClosable) button(cls := "close", tabClose, `type` := "button", "×",
-            onClick --> { e =>
-              remove(initialTab.tabID)
-            }) else span(),
-          child.text <-- tabStream.map {
-            _.title
-          }
+          // cls.toggle("active") <-- activeSignal,
+          a(idAttr := tabID,
+            bsn.tab_role,
+            pointer,
+            dataAttr("toggle") := "tab",
+            dataAttr("height") := "true",
+            aria.controls <-- tabStream.map { t => t.refID },
+            onClick --> { _ =>
+              activeTab.set(Some(tabID))
+              initialTab.onclickExtra()
+            },
+            if (isClosable) button(cls := "close", tabClose, `type` := "button", "×",
+              onClick --> { e =>
+                remove(initialTab.tabID)
+              }) else span(),
+            child.text <-- tabStream.map {
+              _.title
+            }
+          )
         )
       )
 
       val tabDiv =
-        div(idAttr <-- tabStream.map { t => t.refID },
-          bsn.tab_pane, bsn.fade,
-          cls.toggle("active in") <-- activeSignal,
-          child <-- tabStream.map { t => t.content }
+      // div(idAttr <-- tabStream.map { t => t.refID },
+        div(bsn.tab_content,
+          div(bsn.tab_panel_role,
+            bsn.tab_pane, bsn.fade,
+            cls.toggle("active show") <-- activeSignal,
+            child <-- tabStream.map { t => t.content }
+          )
         )
 
       //FIXME
@@ -824,7 +885,7 @@ trait BootstrapTags {
       //val tabDis = tabs.signal  //split(_.tabID) { (tabID, tab, stream) => renderTab(tabID, tab, stream) }
       div(child <-- tabs.signal.split(_.tabID)(renderTab).map { tr =>
         div(
-          ul(bsn.pills, bsn.tab_list_role, tr.map(_.tabHeader)),
+          ul(bsn.nav, bsn.navTabs, bsn.tab_list_role, tr.map(_.tabHeader)),
           div(bsn.tab_content, paddingTop := "10", tr.map(_.tabContent))
         )
       })

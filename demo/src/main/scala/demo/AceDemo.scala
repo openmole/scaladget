@@ -99,7 +99,6 @@ object AceDemo extends Demo {
     //        )
     //      }
     //    )
-    println("IDETIOR DIV " + editorDiv)
     //editor.focus()
     div(
       //errorDiv,

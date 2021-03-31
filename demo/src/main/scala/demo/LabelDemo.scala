@@ -27,19 +27,19 @@ object LabelDemo {
   val sc = sourcecode.Text {
 
     val hovered = Var("None")
-    val labelStyle: HESetters = Seq(
+    val spanStyle: HESetters = Seq(
       marginTop := "20"
     )
 
     def overAction(tag: String) = onMouseOver --> { _ => hovered.set(tag) }
 
-    div(row,
-      label("Default", label_default, overAction("default")).size4(labelStyle),
-      label("Primary", label_primary, overAction("primary")).size4(labelStyle),
-      label("Info", label_info, overAction("info")).size4(labelStyle),
-      label("Success", label_success, overAction("success")).size4(labelStyle),
-      label("Warning", label_warning, overAction("warning")).size5(labelStyle),
-      label("Danger", label_danger, overAction("danger")).size6(labelStyle),
+    div(
+      span("Light", badge_light, overAction("light")).size4(spanStyle),
+      span("Primary", badge_primary, overAction("primary")).size4(spanStyle),
+      span("Info", badge_info, overAction("info")).size4(spanStyle),
+      span("Success", badge_success, overAction("success")).size4(spanStyle),
+      span("Warning", badge_warning, overAction("warning")).size5(spanStyle),
+      span("Danger", badge_danger, overAction("danger")).size6(spanStyle),
       div(paddingTop := "15", child.text <-- hovered.signal.map { s => s"Hovered: $s" })
 
     )

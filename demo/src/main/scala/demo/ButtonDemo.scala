@@ -33,57 +33,45 @@ object ButtonDemo {
     )
 
 
-    val active: Var[Seq[SelectableButton]] = Var(Seq())
     def clickAction(tag: String) = onClick --> { _ => clicked.set(tag) }
-    def checkAction = onClick --> { _ => active.set(checkBoxes.active) }
-    def radioAction = onClick --> { _=> active.set(theRadios.active) }
 
-    lazy val checkBoxes: SelectableButtons = checkboxes(
-      selectableButton("Piano", false, checkAction, btn_danger),
-      selectableButton("Guitar", false, checkAction),
-      selectableButton("Bass", true, checkAction)
-    )
+    val activeTS = ToggleState("Male", btn_primary_string)
+    val unActiveTS = ToggleState("Male", btn_secondary_string)
+    val pizza = ToggleState("Pizza", btn_primary_string)
+    val couscous = ToggleState("Couscous", btn_primary_string)
 
-    lazy val theRadios: SelectableButtons = radios()(
-      selectableButton("Male", false, radioAction),
-      selectableButton("Female", true, radioAction)
-    )
-
-//    lazy val toggleButton: ToggleButton = toggle(true, "Yes", "No", () => {
-//      println("Position " + toggleButton.position.now)
-//    })
+    lazy val exRadio = exclusiveRadio(Seq(activeTS, ToggleState("Female", btn_primary_string), ToggleState("Other", btn_primary_string)), btn_secondary_string, activeTS, (ts: ToggleState)=> println("Toggled " + ts.text))
+    lazy val unique = toggle(activeTS, true, unActiveTS, ()=> {println("toggled")})
+    lazy val theRadio = radio(Seq(pizza, couscous, ToggleState("Falafel", btn_primary_string)), Seq(pizza, couscous), btn_secondary_string, (ts: ToggleState)=> println("Toggled " + ts.text))
 
     div(
       h4("Buttons"),
-      button("Default", clickAction("default"), buttonStyle, btn_default),
-      button("Primary", clickAction("primary"), buttonStyle, btn_primary),
+      button("Primary", clickAction("primary"), span(glyph_edit, paddingLeft := "10"), buttonStyle, btn_primary),
+      button("Default", clickAction("default"), buttonStyle, btn_secondary),
       button("Info", clickAction("info"), buttonStyle, btn_info),
+      button("Default", clickAction("default"), buttonStyle, btn_default_outline),
+      button("Primary", clickAction("primary"), buttonStyle, btn_primary_outline),
+      button("Info", clickAction("info"), buttonStyle, btn_info_outline),
       button("Success", clickAction("success"), buttonStyle, btn_success),
       button("Warning", clickAction("warning"), buttonStyle, btn_warning),
       button("Danger", clickAction("danger"), buttonStyle, btn_danger),
-      buttonIcon("Default", buttonStyle, btn_default :+ glyph_fire, clickAction("fire")),
-      buttonIcon("", buttonStyle, Seq(btn_danger, glyph_download), clickAction("download")),
+
+      button(" Like", clickAction("danger"), buttonStyle, fontSize := "16", btn_danger, glyph_heart, clickAction("heart")),
+      button("", clickAction("danger"), buttonStyle, fontSize := "20", btn_secondary, glyph_download, clickAction("download")),
       linkButton("GitHub", "https://github.com/openmole/scaladget", Seq(buttonStyle, btn_primary)),
       div(paddingTop := "15", child.text <-- clicked.signal.map { s => s"Clicked: ${s}" }),
       h4("Badges", paddingTop := "30"),
-      button("Badge", clickAction("badge"), buttonStyle, btn_primary, badge("7", backgroundColor := "pink")),
-      div("Badge", clickAction("badge"), badge("7", Seq(backgroundColor := "yellow", color := "#ccc"))),
+      button("Badge", clickAction("badge"), buttonStyle, btn_primary, badge("7", backgroundColor := "#31508c")),
+      div("Badge", clickAction("badge"), badge("7", Seq(backgroundColor := "#31508c", color := "white"))),
       h4("Icon buttons", paddingTop := "30"),
-      glyphSpan(Seq(glyph_refresh, buttonStyle), clickAction("refresh")),
-      glyphSpan(Seq(glyph_flash, buttonStyle), clickAction("flash")),
-      h4("Check boxes", paddingTop := "30"),
-      checkBoxes.render,
-      h4("Radio buttons", paddingTop := "30"),
-      theRadios.render,
-      //      Rx {
-      //        div(paddingTop := 15, s"Active: ${
-      //          active().map {
-      //            _.text
-      //          }.toSeq
-      //        }")
-      //      },
+      glyphSpan(Seq(glyph_refresh, buttonStyle, fontSize := "20"), clickAction("refresh")),
+      glyphSpan(Seq(glyph_lightning, buttonStyle,  fontSize := "20"), clickAction("flash")),
+      h4("Radio", paddingTop := "30"),
+      unique,
+      h4("Exclusive radio buttons", paddingTop := "30"),
+      exRadio,
       h4("Toggle buttons", paddingTop := "30"),
-    //  toggleButton.render
+      theRadio
     )
   }
 
