@@ -19,7 +19,6 @@ package demo
 
 import scaladget.ace._
 import com.raquo.laminar.api.L._
-import com.github.uosis.laminar.webcomponents.material._
 
 import scalajs.js
 

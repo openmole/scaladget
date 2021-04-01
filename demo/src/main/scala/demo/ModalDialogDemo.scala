@@ -1,7 +1,7 @@
 package demo
 
+import scaladget.bootstrapnative
 import scaladget.bootstrapnative.bsn
-import scaladget.{bootstrapnative, tools}
 import scaladget.tools.Stylesheet
 
 /*
@@ -22,52 +22,40 @@ import scaladget.tools.Stylesheet
  */
 
 import com.raquo.laminar.api.L._
-import com.github.uosis.laminar.webcomponents.material._
 
 object ModalDialogDemo extends Demo {
 
   val sc = sourcecode.Text {
 
-    println("00")
-
-
-
-//    lazy val dialog: Dialog.El = Dialog(
-//      _.heading := "Header",
-//      _.slots.default(div("My body")),
-//      _.slots.primaryAction(dialogCloseTrigger),
-//      _.slots.secondaryAction(dialogCloseTrigger),
-//      _.onClosed --> { _ => println("Closed")},
-//      _.onOpened --> { _=>  println("Opened")}
-//    )
-
-    lazy val dialog: Dialog.El = bsn.dialog("Header", div("body"), dialogCloseTrigger, dialogCloseTrigger, ()=> println("Opened"), ()=> println("closed"))
-
-    def dialogCloseTrigger = Button(
-      _.label := "Close",
-      _ => onClick --> { _ =>
-        dialog.ref.close()
-      },
-      _.raised := true,
+      lazy val dialog: bsn.ModalDialog = bsn.modalDialog (
+      div("Header"),
+      div("body"),
+      div(bsn.btnGroup, dialogCloseTrigger, button("OK", bsn.btn_success)),
+      () => println("Opened"),
+      () => println("closed")
     )
 
-    def openAction = onClick --> { _ => dialog.ref.show()}
-
-    val dialogTrigger = Button(
-      _.label := "Modal !",
-      _ => openAction
+    def dialogCloseTrigger = button(
+      "Close",
+      bsn.btn_secondary,
+      onClick --> { _ =>
+        dialog.hide
+      }
     )
 
-    println("001")
-    // Append header, body, footer elements
-    // Build the dialog and the modal dialog
-    val oo = span(
-      dialog,
+    def openAction = onClick --> { _ => dialog.show }
+
+    val dialogTrigger = button(
+      bsn.btn_primary,
+      "Modal !",
+      openAction
+    )
+
+    span(
+      dialog.render,
       dialogTrigger,
       span(bsn.glyph_settings, paddingLeft := "5", Stylesheet.pointer, openAction)
     )
-    println("002")
-    oo
   }
 
 

@@ -91,9 +91,9 @@ releaseProcess := Seq[ReleaseStep](
 
 lazy val scalatags = libraryDependencies += "com.lihaoyi" %%% "scalatags" % scalatagsVersion
 lazy val scalaJsDom = libraryDependencies += "org.scala-js" %%% "scalajs-dom" % scalaJSdomVersion
-lazy val rx = libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion
+//lazy val rx = libraryDependencies += "com.lihaoyi" %%% "scalarx" % rxVersion
 lazy val laminar = libraryDependencies += "com.raquo" %%% "laminar" % laminarVersion
-lazy val laminarWebComponentMaterial = libraryDependencies += "com.github.uosis" %%% "laminar-web-components-material" % "0.1.0"
+//lazy val laminarWebComponentMaterial = libraryDependencies += "com.github.uosis" %%% "laminar-web-components-material" % "0.1.0"
 lazy val jsext = libraryDependencies += "org.querki" %%% "querki-jsext" % jsextVersion
 
 lazy val ace = project.in(file("ace")) enablePlugins (ScalaJSBundlerPlugin) settings(
@@ -120,10 +120,11 @@ lazy val ace = project.in(file("ace")) enablePlugins (ScalaJSBundlerPlugin) sett
 //
 lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (ScalaJSBundlerPlugin) settings(
   scalaJsDom,
-  scalatags,
-  jsext,
-  laminarWebComponentMaterial,
+ // scalatags,
+  //jsext,
+  //laminarWebComponentMaterial,
   libraryDependencies += "org.openmole" %%% "sortable-js-facade" % scalaJSortableVersion,
+  laminar,
   npmDependencies in Compile += "bootstrap.native" -> bootstrapNativeVersion,
   // npmDependencies in Compile += "bootstrap" -> bootstrapVersion
   // npmDependencies in Compile += "bootstrap-switch" -> bootstrapSwitchVersion,
@@ -152,8 +153,7 @@ lazy val highlightjs = project.in(file("highlightjs")) enablePlugins (ScalaJSBun
 lazy val tools = project.in(file("tools")) enablePlugins (ScalaJSPlugin) settings(
   scalatags,
   scalaJsDom,
-  laminar,
-  rx
+  laminar
 )
 lazy val runDemo = taskKey[Unit]("runDemo")
 
@@ -164,7 +164,7 @@ lazy val demo = project.in(file("demo")) enablePlugins (ScalaJSBundlerPlugin) se
   test := println("Tests disabled"),
   laminar,
   //libraryDependencies += "com.lihaoyi" %%% "sourcecode" % sourceCodeVersion,
-  laminarWebComponentMaterial,
+//  laminarWebComponentMaterial,
   scalaJSUseMainModuleInitializer := true,
   requireJsDomEnv in Test := true,
   // scalaJsDom,

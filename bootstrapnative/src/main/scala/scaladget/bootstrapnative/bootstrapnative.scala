@@ -56,6 +56,15 @@ object BSN {
     def hide(): Unit = js.native
     def toggle(): Unit = js.native
   }
+
+  @js.native
+  @JSImport("bootstrap.native/src/components/modal-native.js", JSImport.Default)
+  class Modal(element: org.scalajs.dom.Element, options: js.Dynamic = lit()) extends js.Object {
+    def show(): Unit = js.native
+    def hide(): Unit = js.native
+    def toggle(): Unit = js.native
+  }
+
 }
 
 //trait Popover extends js.Object {

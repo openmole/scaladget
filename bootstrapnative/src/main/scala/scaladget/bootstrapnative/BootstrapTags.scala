@@ -17,36 +17,12 @@ package scaladget.bootstrapnative
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//import com.raquo.laminar.nodes.ReactiveHtmlElement
-//import rx._
-//import Popup._
-
-//import scala.scalajs.js
-//import scaladget.bootstrapnative
-//import scaladget.bootstrapnative.Alert.ExtraButton
-
 import net.scalapro.sortable.{EventS, Sortable, SortableOptions}
-import scaladget.bootstrapnative.SelectableButtons._
-import com.github.uosis.laminar.webcomponents.material._
 import com.raquo.domtypes.generic.Modifier
-import com.raquo.laminar.nodes.ReactiveElement.isActive
-import com.raquo.laminar.nodes.ReactiveHtmlElement
-import org.scalajs.dom
-import org.scalajs.dom.raw.HTMLButtonElement
-import scaladget.bootstrapnative
 import scaladget.bootstrapnative.Popup.{Bottom, ClickPopup, HoverPopup, Manual, PopupPosition, PopupType}
 import scaladget.tools.Utils._
-//import bsn._
-import scaladget.tools.Stylesheet
-//import net.scalapro.sortable._
-//import scaladget.bootstrapnative.Table.ReactiveRow
-//import scaladget.tools._
-//import org.scalajs.dom
-//import scala.scalajs.js
 import com.raquo.laminar.api.L._
 import scaladget.tools.Stylesheet._
-//import com.raquo.laminar.builders.HtmlTag
-//import org.scalajs.dom.raw.HTMLInputElement
 
 object BootstrapTags extends BootstrapTags
 
@@ -83,9 +59,6 @@ trait BootstrapTags {
 
   // CHECKBOX
   def checkbox = input(`type` := "checkbox")
-
-  def selectable(text: String, defaultActive: Boolean = false, modifier: Modifier[HtmlElement] = emptyMod, buttonStyle: HESetter = bsn.btn_secondary_outline) =
-    SelectableButton(text, defaultActive, modifier, buttonStyle)
 
   trait Displayable {
     def name: String
@@ -141,7 +114,7 @@ trait BootstrapTags {
 
     lazy val element = div(bsnsheet.btnGroup,
       for (rb <- states) yield {
-        val rbStateCls = active.signal.map(_.filter( _ == rb).headOption.map(_.cls).getOrElse(unactiveStateClass))
+        val rbStateCls = active.signal.map(_.filter(_ == rb).headOption.map(_.cls).getOrElse(unactiveStateClass))
 
         button(
           rb.text,
@@ -221,83 +194,93 @@ trait BootstrapTags {
   def buttonToolBar = div(bsn.btnToolbar, role := "toolbar")
 
   //MODAL
-  type ModalID = String
+  //  type ModalID = String
+  //
+  //
+  //  object ModalDialog {
+  //
+  //
+  //    def apply(modifierSeq: ModifierSeq = emptyMod,
+  //              onopen: () => Unit = () => {},
+  //              onclose: () => Unit = () => {}) = new ModalDialog(modifierSeq, onopen, onclose)
+  //
+  //    val headerDialogShell = div(modalHeader +++ modalInfo)
+  //
+  //    val bodyDialogShell = div(modalBody)
+  //
+  //    val footerDialogShell = div(modalFooter)
+  //
+  //    def closeButton(modalDialog: Dialog.El, setters: Seq[Setter[HtmlElement]], content: String) =
+  //      button(setters, content,
+  //        onClick --> { _ => modalDialog.ref.close() }
+  //        //  inContext {node=> node.events(onClick) --> modalDialog.hide }
+  //        //        onClick. {
+  //        //        modalDialog.hide
+  //        //      }
+  //      )
+  //  }
+
+  //MWC
+  //  def dialog(header: String,
+  //             body: HtmlElement,
+  //             primaryActionElement: HtmlElement,
+  //             secondaryActionElement: HtmlElement,
+  //             onopen: () => Unit,
+  //             onclose: () => Unit,
+  //             //setters: HESetters = emptySetters
+  //            ): Dialog.El =
+  //    Dialog(
+  //      _.heading := header,
+  //      _.slots.default(body),
+  //      _.slots.primaryAction(primaryActionElement),
+  //      _.slots.secondaryAction(secondaryActionElement),
+  //      _.onClosed --> { _ => onopen() },
+  //      _.onOpened --> { _ => onclose() }
+  //    )
 
 
-  object ModalDialog {
+  case class ModalDialog(modalHeader: HtmlElement,
+                         modalBody: HtmlElement,
+                         modalFooter: HtmlElement,
+                         modifiers: HESetters,
+                         onopen: () => Unit,
+                         onclose: () => Unit) {
 
-
-    //    def apply(modifierSeq: ModifierSeq = emptyMod,
-    //              onopen: () => Unit = () => {},
-    //              onclose: () => Unit = () => {}) = new ModalDialog(modifierSeq, onopen, onclose)
-
-    //    val headerDialogShell = div(modalHeader +++ modalInfo)
-    //
-    //    val bodyDialogShell = div(modalBody)
-    //
-    //    val footerDialogShell = div(modalFooter)
-
-    def closeButton(modalDialog: Dialog.El, setters: Seq[Setter[HtmlElement]], content: String) =
-      button(setters, content,
-        onClick --> { _ => modalDialog.ref.close() }
-        //  inContext {node=> node.events(onClick) --> modalDialog.hide }
-        //        onClick. {
-        //        modalDialog.hide
-        //      }
+    lazy val render = {
+      val d = div(
+        bsnsheet.modal, bsn.fade, role := "dialog", aria.hidden := true, aria.labelledBy := uuID.short("m"),
+        div(bsnsheet.modalDialog, modifiers,
+          div(bsn.modalContent,
+            div(bsnsheet.modalHeader, modalHeader),
+            div(bsnsheet.modalBody, modalBody),
+            div(bsnsheet.modalFooter, modalFooter)
+          )
+        )
       )
+
+      org.scalajs.dom.document.body.appendChild(d.ref)
+      d
+    }
+
+
+    lazy val modal = new BSN.Modal(render.ref /*, scalajs.js.Dynamic.literal("title" -> "euinesaurtie")*/)
+
+    def show = {
+      modal.show
+      onopen()
+    }
+
+    def hide = {
+      modal.hide
+      onclose()
+    }
+
+    def toggle = modal.toggle
+
   }
 
-  def dialog(header: String,
-             body: HtmlElement,
-             primaryActionElement: HtmlElement,
-             secondaryActionElement: HtmlElement,
-             onopen: () => Unit,
-             onclose: () => Unit,
-             //setters: HESetters = emptySetters
-            ): Dialog.El =
-    Dialog(
-      _.heading := header,
-      _.slots.default(body),
-      _.slots.primaryAction(primaryActionElement),
-      _.slots.secondaryAction(secondaryActionElement),
-      _.onClosed --> { _ => onopen() },
-      _.onOpened --> { _ => onclose() }
-    )
-
-
-  //    lazy val dialog = {
-  //      val d = div(
-  //        bsn.modal, bsn.fade, "modal fade", tabIndex := -1, role := "dialog", aria.hidden := true,
-  //        div(
-  //          bsn.modalDialog, setters,
-  //          div(
-  //            bsn.modalContent,
-  //            div(bsn.modalHeader, bsn.modalInfo, header),
-  //            div(bsn.modalBody, body),
-  //            div(bsn.modalFooter, footer)
-  //          )
-  //        )
-  //      )
-  //
-  //      println("in dialog")
-  //      documentEvents.onDomContentLoaded.foreach { _ =>
-  //        render(org.scalajs.dom.document.body, d)
-  //      }(unsafeWindowOwner)
-  //      d
-  //    }
-
-  //    lazy val modalMapping = new Modal(dialog)
-
-  //    def show = {
-  //      modalMapping.show
-  //      onopen()
-  //    }
-  //
-  //    def hide = {
-  //      modalMapping.hide
-  //      onclose()
-  //    }
-
+  def modalDialog(modalHeader: HtmlElement, modalBody: HtmlElement, modalFooter: HtmlElement, onopen: () => Unit, onclose: () => Unit, modifiers: HESetters = emptySetters) =
+    ModalDialog(modalHeader, modalBody, modalFooter, modifiers, onopen, onclose)
 
   //   def isVisible = dialog.ref.className.contains(" in")
 
