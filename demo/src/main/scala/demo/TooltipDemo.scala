@@ -1,10 +1,7 @@
 package demo
 
-import scaladget.bootstrapnative.bsn._
-import com.raquo.laminar.api.L._
-
 /*
- * Copyright (C) 30/08/16 // mathieu.leclaire@openmole.org
+ * Copyright (C) 23/08/16 // mathieu.leclaire@openmole.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,24 +17,24 @@ import com.raquo.laminar.api.L._
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-object CollapseDemo extends Demo {
+import scaladget.bootstrapnative.bsn._
+import com.raquo.laminar.api.L._
 
-
+object TooltipDemo extends Demo {
   val sc = sourcecode.Text {
 
-    val onoff = Var(true)
+    import scaladget.bootstrapnative.Popup._
 
     div(
-      button(" Trigger !", btn_primary, marginBottom := "10", glyph_settings).expandOnclick(
-        div(child.text <-- onoff.signal.map(oo => "My text in detail " + oo)).amend(width := "400", height := "200")
-      ),
-      button("Set Var", btn_danger, onClick --> { _ => onoff.update(!_) }),
-      onoff.expand(div("Yes", backgroundColor := "orange", height := "150"))
+      button("Left", btn_secondary, marginRight := "5").tooltip("Tooltip on left", Left),
+      label("Right", badge_primary, marginRight := "5").tooltip("Tooltip on right", Right),
+      label("Top", badge_success, marginRight := "5").tooltip("Tooltip on top", Top),
+      button("Bottom", btn_info_outline).tooltip("Tooltip on bottom", Bottom)
     )
   }
 
   val elementDemo = new ElementDemo {
-    def title: String = "Collapse"
+    def title: String = "Tooltip"
 
     def code: String = sc.source
 

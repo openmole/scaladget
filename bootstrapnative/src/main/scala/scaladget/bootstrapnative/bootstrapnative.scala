@@ -49,11 +49,14 @@ package object bsn extends stylesheet.BootstrapPackage with stylesheet2.Bootstra
 
 
 object BSN {
+
   @js.native
   @JSImport("bootstrap.native/src/components/popover-native.js", JSImport.Default)
   class Popover(element: org.scalajs.dom.Element, options: js.Dynamic = lit()) extends js.Object {
     def show(): Unit = js.native
+
     def hide(): Unit = js.native
+
     def toggle(): Unit = js.native
   }
 
@@ -61,32 +64,27 @@ object BSN {
   @JSImport("bootstrap.native/src/components/modal-native.js", JSImport.Default)
   class Modal(element: org.scalajs.dom.Element, options: js.Dynamic = lit()) extends js.Object {
     def show(): Unit = js.native
+
     def hide(): Unit = js.native
+
     def toggle(): Unit = js.native
   }
 
+
+  @js.native
+  @JSImport("bootstrap.native/src/components/tooltip-native.js", JSImport.Default)
+  class Tooltip(element: org.scalajs.dom.Element, options: js.Dynamic = lit()) extends js.Object {
+
+    def show: Unit = js.native
+
+    def hide(): Unit = js.native
+
+    def toggle(): Unit = js.native
+
+    def close(): Unit = js.native
+  }
+
 }
-
-//trait Popover extends js.Object {
-//  def show(): Unit
-//
-//  def hide(): Unit
-//
-//  def toggle(): Unit
-//}
-
-//@JSGlobal
-//@js.native
-//class Tooltip(element: Element, options: js.Dynamic = lit()) extends js.Object {
-//
-//  def show: Unit = js.native
-//
-//  def hide(): Unit = js.native
-//
-//  def toggle(): Unit = js.native
-//
-//  def close(): Unit = js.native
-//}
 
 //@JSGlobal
 //@js.native

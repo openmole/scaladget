@@ -17,7 +17,6 @@ package demo
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//import scaladget.bootstrapnative.ToggleButton
 import scaladget.bootstrapnative.bsn._
 import com.raquo.laminar.api.L._
 

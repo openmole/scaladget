@@ -69,12 +69,12 @@ object App {
               FormDemo.elementDemo,
               //  SelectDemo.elementDemo
               PopoverDemo.elementDemo,
-              TabDemo.elementDemo
+              TabDemo.elementDemo,
+              TooltipDemo.elementDemo,
             )
 
             //            //            TableDemo.elementDemo,
             //            //            NavBarDemo.elementDemo,
-            //            //            TooltipDemo.elementDemo,
             //            //            AlertDemo.elementDemo,
             //            //            PlayGroundDemo.elementDemo
             //          )

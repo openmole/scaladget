@@ -194,51 +194,6 @@ trait BootstrapTags {
   def buttonToolBar = div(bsn.btnToolbar, role := "toolbar")
 
   //MODAL
-  //  type ModalID = String
-  //
-  //
-  //  object ModalDialog {
-  //
-  //
-  //    def apply(modifierSeq: ModifierSeq = emptyMod,
-  //              onopen: () => Unit = () => {},
-  //              onclose: () => Unit = () => {}) = new ModalDialog(modifierSeq, onopen, onclose)
-  //
-  //    val headerDialogShell = div(modalHeader +++ modalInfo)
-  //
-  //    val bodyDialogShell = div(modalBody)
-  //
-  //    val footerDialogShell = div(modalFooter)
-  //
-  //    def closeButton(modalDialog: Dialog.El, setters: Seq[Setter[HtmlElement]], content: String) =
-  //      button(setters, content,
-  //        onClick --> { _ => modalDialog.ref.close() }
-  //        //  inContext {node=> node.events(onClick) --> modalDialog.hide }
-  //        //        onClick. {
-  //        //        modalDialog.hide
-  //        //      }
-  //      )
-  //  }
-
-  //MWC
-  //  def dialog(header: String,
-  //             body: HtmlElement,
-  //             primaryActionElement: HtmlElement,
-  //             secondaryActionElement: HtmlElement,
-  //             onopen: () => Unit,
-  //             onclose: () => Unit,
-  //             //setters: HESetters = emptySetters
-  //            ): Dialog.El =
-  //    Dialog(
-  //      _.heading := header,
-  //      _.slots.default(body),
-  //      _.slots.primaryAction(primaryActionElement),
-  //      _.slots.secondaryAction(secondaryActionElement),
-  //      _.onClosed --> { _ => onopen() },
-  //      _.onOpened --> { _ => onclose() }
-  //    )
-
-
   case class ModalDialog(modalHeader: HtmlElement,
                          modalBody: HtmlElement,
                          modalFooter: HtmlElement,
@@ -263,7 +218,7 @@ trait BootstrapTags {
     }
 
 
-    lazy val modal = new BSN.Modal(render.ref /*, scalajs.js.Dynamic.literal("title" -> "euinesaurtie")*/)
+    lazy val modal = new BSN.Modal(render.ref)
 
     def show = {
       modal.show
@@ -389,32 +344,7 @@ trait BootstrapTags {
   //
   type TypedContent = String
 
-  //
-  //  object PopoverBuilder {
-  //    val current: Var[Option[PopoverBuilder]] = Var(None)
-  //
-  //    def show(popover: PopoverBuilder): Unit = {
-  //      current.set(Some(popover))
-  //      popover.show
-  //    }
-  //
-  //    def hide: Unit = {
-  //      current.now.foreach { c =>
-  //        //  c.hide
-  //      }
-  //      current.set(None)
-  //    }
-  //
-  //    def toggle(popover: PopoverBuilder): Unit = {
-  //      current.now match {
-  //        case None => show(popover)
-  //        case _ => hide
-  //      }
-  //    }
-  //  }
-
-  //
-  //  // POUPUS, TOOLTIPS
+  //POPOVER
   case class PopoverBuilder(element: HtmlElement,
                             innerElement: TypedContent,
                             position: PopupPosition = Bottom,
@@ -449,66 +379,57 @@ trait BootstrapTags {
 
   }
 
-  //
-  //  object Tooltip {
-  //    def cleanAll = {
-  //      val list = org.scalajs.dom.document.getElementsByClassName("tooltip")
-  //      for (nodeIndex ← 0 to (list.length - 1)) {
-  //        val element = list(nodeIndex)
-  //        if (!js.isUndefined(element)) element.parentNode.removeChild(element)
+  //TOOLTIP
+  //    object Tooltip {
+  //      def cleanAll = {
+  //        val list = org.scalajs.dom.document.getElementsByClassName("tooltip")
+  //        for (nodeIndex ← 0 to (list.length - 1)) {
+  //          val element = list(nodeIndex)
+  //          if (!js.isUndefined(element)) element.parentNode.removeChild(element)
+  //        }
   //      }
   //    }
-  //  }
-  //
-  //  class Tooltip(element: TypedTag[org.scalajs.dom.raw.HTMLElement],
-  //                text: String,
-  //                position: PopupPosition = Bottom,
-  //                condition: () => Boolean = () => true) {
-  //
-  //    val elementRender = {
-  //      if (condition())
-  //        element(
-  //          data("placement") := position.value,
-  //          data("toggle") := "tooltip",
-  //          data("original-title") := text
-  //        )
-  //      else element
-  //    }.render
-  //
-  //    elementRender.onmouseover = (e: Event) => {
-  //      tooltip
-  //    }
-  //
-  //    lazy val tooltip = new bootstrapnative.Tooltip(elementRender)
-  //
-  //    def render = elementRender
-  //
-  //    def hide = tooltip.hide
-  //  }
-  //
+
+  class TooltipBuilder(element: HtmlElement,
+                       text: String,
+                       position: PopupPosition = Bottom,
+                       condition: () => Boolean = () => true) {
+
+    lazy val render: HtmlElement = {
+      if (condition())
+        element.amend(
+          dataAttr("placement") := position.value,
+          dataAttr("toggle") := "tooltip",
+          dataAttr("original-title") := text,
+          onMouseOver --> { _ => tooltip }
+        )
+      else element
+    }
+
+    lazy val tooltip = new BSN.Tooltip(render.ref)
+
+    def hide = tooltip.hide
+  }
+
   //
   //  implicit def TypedTagToTypedContent(tc: TypedTag[_]): TypedContent = tc.toString
   //
   implicit class PopableTypedTag(element: HtmlElement) {
-    //
-    //    def tooltip(text: String,
-    //                position: PopupPosition = Bottom,
-    //                condition: () => Boolean = () => true) = {
-    //      new Tooltip(element, text, position, condition).render
-    //    }
-    //  //
+
+    def tooltip(text: String,
+                position: PopupPosition = Bottom,
+                condition: () => Boolean = () => true) = {
+      new TooltipBuilder(element, text, position, condition).render
+    }
+
     def popover(text: TypedContent,
                 position: PopupPosition = Bottom,
                 trigger: PopupType = HoverPopup,
                 title: Option[TypedContent] = None,
                 dismissible: Boolean = false
-               ) = {
-      println("implicit popover")
-      // lazy val builder =
+               ) =
       PopoverBuilder(element, text, position, trigger, title, dismissible)
-      //  println("BUILVER " + builder)
-      //  builder.element
-    }
+
   }
 
   //
@@ -648,14 +569,6 @@ trait BootstrapTags {
   //  def group(e1: TypedTag[HTMLElement], e2: TypedTag[HTMLElement]) = ElementGroup(e1, e2)
   //
   //
-  //  // PANELS
-  def panel(bodyContent: Modifier[HtmlElement] = div(), heading: Option[String] = None) =
-    div(bsn.panelClass, bsn.panelDefault,
-      heading.map {
-        h => div(bsn.panelHeading, h)
-      }.getOrElse(div()),
-      div(bsn.panelBody, bodyContent)
-    )
 
   //
   //
