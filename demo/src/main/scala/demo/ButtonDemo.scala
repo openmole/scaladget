@@ -24,7 +24,6 @@ import com.raquo.laminar.api.L._
 object ButtonDemo {
   val sc = sourcecode.Text {
 
-    import scaladget.bootstrapnative.{SelectableButton, SelectableButtons}
     val clicked = Var("None")
 
     val buttonStyle = Seq(
@@ -35,13 +34,15 @@ object ButtonDemo {
 
     def clickAction(tag: String) = onClick --> { _ => clicked.set(tag) }
 
-    val activeTS = ToggleState("Male", btn_primary_string)
-    val unActiveTS = ToggleState("Male", btn_secondary_string)
+    val yes = ToggleState("Yes", btn_primary_string)
+    val no = ToggleState("No", btn_secondary_string)
+    val male = ToggleState("Male", btn_primary_string)
+    val female = ToggleState("Female", btn_primary_string)
     val pizza = ToggleState("Pizza", btn_primary_string)
     val couscous = ToggleState("Couscous", btn_primary_string)
 
-    lazy val exRadio = exclusiveRadio(Seq(activeTS, ToggleState("Female", btn_primary_string), ToggleState("Other", btn_primary_string)), btn_secondary_string, activeTS, (ts: ToggleState)=> println("Toggled " + ts.text))
-    lazy val unique = toggle(activeTS, true, unActiveTS, ()=> {println("toggled")})
+    lazy val exRadio = exclusiveRadio(Seq(male,female, ToggleState("Other", btn_primary_string)), btn_secondary_string, male, (ts: ToggleState)=> println("Toggled " + ts.text))
+    lazy val unique = toggle(yes, true, no, ()=> {println("toggled")})
     lazy val theRadio = radio(Seq(pizza, couscous, ToggleState("Falafel", btn_primary_string)), Seq(pizza, couscous), btn_secondary_string, (ts: ToggleState)=> println("Toggled " + ts.text))
 
     div(

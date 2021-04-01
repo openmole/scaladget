@@ -133,9 +133,9 @@ package stylesheet {
     //BUTTONS
     lazy val btn = cls("btn")
     lazy val btn_secondary_string = "btn btn-secondary"
-    lazy val btn_secondary = toButton("btn_secondary")
+    lazy val btn_secondary = toButton("btn-secondary")
     lazy val btn_primary_string = "btn btn-primary"
-    lazy val btn_primary = toButton("btn_primary")
+    lazy val btn_primary = toButton("btn-primary")
     lazy val btn_success = toButton("btn-success")
     lazy val btn_info = toButton("btn-info")
     lazy val btn_warning = toButton("btn-warning")
