@@ -429,39 +429,21 @@ trait BootstrapTags {
                 dismissible: Boolean = false
                ) =
       PopoverBuilder(element, text, position, trigger, title, dismissible)
+  }
+
+  //  //DROPDOWN
+  implicit class SelectableSeqWithStyle[T](s: Seq[T]) {
+    def options(defaultIndex: Int = 0,
+                key: HESetters = emptySetters,
+                naming: T => String,
+                onclose: () => Unit = () => {},
+                onclickExtra: () ⇒ Unit = () ⇒ {},
+                decorations: Map[T, HESetters] = Map(),
+                fixedTitle: Option[String] = None) =
+      Selector.options(s, defaultIndex, key, naming, onclose, onclickExtra, decorations, fixedTitle)
 
   }
 
-  //
-  //
-  //  //DROPDOWN
-  //  implicit class SelectableSeqWithStyle[T](s: Seq[T]) {
-  //    def options(defaultIndex: Int = 0,
-  //                key: ModifierSeq = emptyMod,
-  //                naming: T => String,
-  //                onclose: () => Unit = () => {},
-  //                onclickExtra: () ⇒ Unit = () ⇒ {},
-  //                decorations: Map[T, ModifierSeq] = Map(),
-  //                fixedTitle: Option[String] = None) = Selector.options(s, defaultIndex, key, naming, onclose, onclickExtra, decorations, fixedTitle)
-  //
-  //  }
-  //
-  //  implicit class SelectableTypedTag[T <: HTMLElement](tt: TypedTag[T]) {
-  //
-  //
-  //    def dropdown(buttonText: String = "",
-  //                 buttonModifierSeq: ModifierSeq = emptyMod,
-  //                 buttonIcon: ModifierSeq = emptyMod,
-  //                 allModifierSeq: ModifierSeq = emptyMod,
-  //                 dropdownModifierSeq: ModifierSeq = emptyMod,
-  //                 onclose: () => Unit = () => {}) = Selector.dropdown(tt, buttonText, buttonIcon, buttonModifierSeq, allModifierSeq, dropdownModifierSeq, onclose)
-  //
-  //    def dropdownWithTrigger(trigger: TypedTag[_ <: HTMLElement],
-  //                            allModifierSeq: ModifierSeq = emptyMod,
-  //                            dropdownModifierSeq: ModifierSeq = emptyMod,
-  //                            onclose: () => Unit = () => {}) = Selector.dropdown(tt, trigger, allModifierSeq, dropdownModifierSeq, onclose)
-  //
-  //  }
   //
   //
   //  // JUMBOTRON

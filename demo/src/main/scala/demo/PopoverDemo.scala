@@ -37,10 +37,10 @@ object PopoverDemo extends Demo {
       h2("Simple popovers"),
       div(paddingTop := "20","Simple popovers containing text, or simple content with no events to be fired and with basic trigger modes (click, hover)."),
     //  button("Left", buttonStyle).popover(vForm(width := 100)(label("Nice content", label_danger).render, span("A important message").render), Left, title = Some("Check this !")).render,
-      button("Title", buttonStyle).popover("Popover on hover with Title", Top, ClickPopup, title = Some("Pop title")).element,
-      button("Title 2", buttonStyle).popover("Popover on hover with Title", Top, ClickPopup, title = Some("Pop title")).element,
-      button("Dismissable", buttonStyle).popover("Dismissible Popover on hover with Title", Top, HoverPopup, Some("Pop title"), true).element,
-      inputTag("").amend(width := "320", marginTop := "10", placeholder := "Bottom (click)").popover("Tooltip on click on bottom", Bottom, ClickPopup).element
+      button("Title", buttonStyle).popover("Popover on hover with Title", Top, ClickPopup, title = Some("Pop title")).render,
+      button("Title 2", buttonStyle).popover("Popover on hover with Title", Top, ClickPopup, title = Some("Pop title")).render,
+      button("Dismissable", buttonStyle).popover("An other popover", Top, HoverPopup, Some("Pop title"), true).render,
+      inputTag("").amend(width := "320", marginTop := "10", placeholder := "Bottom (click)").popover("Tooltip on click on bottom", Bottom, ClickPopup).render
     )
 
 

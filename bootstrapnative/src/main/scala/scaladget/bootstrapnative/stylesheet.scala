@@ -43,9 +43,9 @@ package stylesheet {
 
     private def toTable(s: String) = cls(s"table $s")
 
-//    implicit class ExtendBSButton(bsButton: BSButton) {
-//      def outlined = bsButton.   .key.name.replaceFirst("btn-","btn-outline")
-//    }
+    //    implicit class ExtendBSButton(bsButton: BSButton) {
+    //      def outlined = bsButton.   .key.name.replaceFirst("btn-","btn-outline")
+    //    }
 
     //GHYPHICONS
     lazy val glyph_edit = toGlyphicon("bi-pencil-fill")
@@ -98,34 +98,33 @@ package stylesheet {
     lazy val glyph_chevron_left = toGlyphicon("bi-chevron-left")
     lazy val glyph_chevron_right = toGlyphicon("bi-chevron-right")
     lazy val glyph_menu_hamburger = toGlyphicon("bi-menu-hamburger")
-    lazy val caret = cls("caret")
 
     //NAVBARS
-    lazy val nav  = cls("nav")
-    lazy val navbar  = cls("navbar")
-    lazy val navbar_nav  = cls("navbar-nav")
-    lazy val navTabs  = cls("nav-tabs")
-    lazy val navbar_default  = cls("navbar-default")
-    lazy val navbar_inverse  = cls("navbar-inverse")
-    lazy val navbar_staticTop  = cls("navbar-static-top")
-    lazy val navbar_fixedTop  = cls("navbar-fixed-top")
-    lazy val navbar_pills  = cls("nav-pills")
-    lazy val navbar_form  = cls("navbar-form")
-    lazy val navbar_right  = cls("navbar-right")
-    lazy val navbar_left  = cls("navbar-left")
-    lazy val navbar_header  = cls("navbar-header")
-    lazy val navbar_brand  = cls("navbar-brand")
-    lazy val navbar_btn  = cls("navbar-btn")
-    lazy val navbar_collapse  = cls("navbar-collapse")
+    lazy val nav = cls("nav")
+    lazy val navbar = cls("navbar")
+    lazy val navbar_nav = cls("navbar-nav")
+    lazy val navTabs = cls("nav-tabs")
+    lazy val navbar_default = cls("navbar-default")
+    lazy val navbar_inverse = cls("navbar-inverse")
+    lazy val navbar_staticTop = cls("navbar-static-top")
+    lazy val navbar_fixedTop = cls("navbar-fixed-top")
+    lazy val navbar_pills = cls("nav-pills")
+    lazy val navbar_form = cls("navbar-form")
+    lazy val navbar_right = cls("navbar-right")
+    lazy val navbar_left = cls("navbar-left")
+    lazy val navbar_header = cls("navbar-header")
+    lazy val navbar_brand = cls("navbar-brand")
+    lazy val navbar_btn = cls("navbar-btn")
+    lazy val navbar_collapse = cls("navbar-collapse")
 
     //LABELS
-    lazy val badge_light  = toBadge("badge-light")
-    lazy val badge_primary  = toBadge("badge-primary")
-    lazy val badge_success  = toBadge("badge-success")
-    lazy val badge_info  = toBadge("badge-info")
-    lazy val badge_warning  = toBadge("badge-warning")
-    lazy val badge_danger  = toBadge("badge-danger")
-    lazy val black_badge  = toBadge("black-badge")
+    lazy val badge_light = toBadge("badge-light")
+    lazy val badge_primary = toBadge("badge-primary")
+    lazy val badge_success = toBadge("badge-success")
+    lazy val badge_info = toBadge("badge-info")
+    lazy val badge_warning = toBadge("badge-warning")
+    lazy val badge_danger = toBadge("badge-danger")
+    lazy val black_badge = toBadge("black-badge")
 
     lazy val controlLabel = cls("control-label")
 
@@ -290,6 +289,17 @@ package stylesheet2 {
       transition := "height .3s",
       height := "0",
       overflow := "hidden"
+    )
+
+    lazy val caret = Seq(
+      display.inlineBlock,
+      width := "0",
+      height := "0",
+      marginLeft := "5",
+      verticalAlign.middle,
+      borderTop := "4px dashed",
+      borderRight := "4px solid transparent ",
+      borderLeft := "4px solid transparent"
     )
 
   }

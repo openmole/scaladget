@@ -67,7 +67,7 @@ object App {
               ModalDialogDemo.elementDemo,
               CollapseDemo.elementDemo,
               FormDemo.elementDemo,
-              //  SelectDemo.elementDemo
+              SelectDemo.elementDemo,
               PopoverDemo.elementDemo,
               TabDemo.elementDemo,
               TooltipDemo.elementDemo,
