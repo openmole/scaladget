@@ -5,7 +5,6 @@ import scaladget.highlightjs.HighlightJS
 import scaladget.bootstrapnative.bsn._
 import com.raquo.laminar.api.L._
 import org.scalajs
-import org.scalajs.dom
 
 import scala.scalajs.js.annotation._
 
@@ -71,11 +70,11 @@ object App {
               PopoverDemo.elementDemo,
               TabDemo.elementDemo,
               TooltipDemo.elementDemo,
+              NavBarDemo.elementDemo
             )
 
             //            //            TableDemo.elementDemo,
-            //            //            NavBarDemo.elementDemo,
-            //            //            AlertDemo.elementDemo,
+                        //            //            AlertDemo.elementDemo,
             //            //            PlayGroundDemo.elementDemo
             //          )
           } yield {
@@ -86,8 +85,8 @@ object App {
                 h3(demo.title),
                 div(containerFluid,
                   div(row, marginLeft := "15", marginTop := "25",
-                    div(colBS(demo.codeWidth), pre(code(cls := "scala", demo.cleanCode))),
-                    div(colBS(12 - demo.codeWidth), demo.element)
+                 //   div(colBS(demo.codeWidth), pre(code(cls := "scala", demo.cleanCode))),
+                    div(colBS(12 /*- demo.codeWidth*/), demo.element)
                   )
                 )
               )

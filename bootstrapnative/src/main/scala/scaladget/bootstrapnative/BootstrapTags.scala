@@ -23,6 +23,7 @@ import scaladget.bootstrapnative.Popup.{Bottom, ClickPopup, HoverPopup, Manual, 
 import scaladget.tools.Utils._
 import com.raquo.laminar.api.L._
 import scaladget.tools.Stylesheet._
+import bsn.spacing._
 
 object BootstrapTags extends BootstrapTags
 
@@ -242,109 +243,108 @@ trait BootstrapTags {
   //
   //
   //  // NAVS
-  //  case class NavItem[T <: HTMLElement](contentDiv: T,
-  //                                       val todo: () ⇒ Unit = () ⇒ {},
-  //                                       extraRenderPair: Seq[Modifier] = Seq(),
-  //                                       activeDefault: Boolean = false,
-  //                                       toRight: Boolean = false) {
-  //
-  //    implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
-  //
-  //    val active: Var[Boolean] = Var(activeDefault)
-  //
-  //    val render = li(
-  //      tags.a(href := "#",
-  //        lineHeight := "35px",
-  //        onClick := { () =>
-  //          todo()
-  //          false
-  //        })(
-  //        contentDiv,
-  //        Rx {
-  //          if (active()) span(toClass("sr-only"))("(current)")
-  //          else span()
-  //        }),
-  //      `class` := Rx {
-  //        if (active()) "active" else ""
-  //      }
-  //    )(extraRenderPair: _*)
-  //
-  //    def right = copy(toRight = true)
-  //  }
-  //
-  //  def navItem[T <: HTMLElement](content: T,
-  //                                todo: () => Unit = () => {},
-  //                                extraRenderPair: Seq[Modifier] = Seq(),
-  //                                activeDefault: Boolean = false) = {
-  //    new NavItem(content, todo, extraRenderPair, activeDefault)
-  //  }
-  //
-  //  def stringNavItem(content: String, todo: () ⇒ Unit = () ⇒ {}, activeDefault: Boolean = false): NavItem[HTMLElement] =
-  //    navItem(span(content).render, todo, activeDefault = activeDefault)
-  //
-  //  def navBar(classPair: ModifierSeq, contents: NavItem[_ <: HTMLElement]*) = new NavBar(classPair, None, contents)
-  //
-  //  case class NavBarBrand(src: String, modifierSeq: ModifierSeq, todo: () => Unit, alt: String)
-  //
-  //  case class NavBar(classPair: ModifierSeq, brand: Option[NavBarBrand], contents: Seq[NavItem[_ <: HTMLElement]]) {
-  //
-  //    val navId = uuID.short("n")
-  //
-  //    def render: TypedTag[HTMLElement] = {
-  //
-  //      val sortedContents = contents.partition {
-  //        _.toRight
-  //      }
-  //
-  //      def buildUL(cts: Seq[NavItem[_ <: HTMLElement]], modifier: ModifierSeq = emptyMod) =
-  //        ul(nav +++ navbar_nav +++ modifier)(
-  //          cts.map { c ⇒
-  //            c.render(scalatags.JsDom.attrs.onClick := { () ⇒
-  //              contents.foreach {
-  //                _.active() = false
-  //              }
-  //              c.active() = true
-  //            })
-  //          }: _*)
-  //
-  //      val content = div(toClass("navbar-collapse collapse"), aria.expanded := false, id := navId)(
-  //        buildUL(sortedContents._2),
-  //        buildUL(sortedContents._1, navbar_right)
-  //      )
-  //
-  //      JsDom.tags2.nav(navbar +++ navbar_default +++ classPair)(
-  //        div(toClass("container-fluid"))(
-  //          for {
-  //            b <- brand
-  //          } yield {
-  //            div(navbar_header)(
-  //              button(`type` := "button", `class` := "navbar-toggle", data("toggle") := "collapse", data("target") := s"#$navId")(
-  //                span(toClass("icon-bar")),
-  //                span(toClass("icon-bar")),
-  //                span(toClass("icon-bar"))
-  //              ),
-  //              a(navbar_brand, href := "#", padding := 0)(
-  //                img(b.modifierSeq +++ pointer, alt := b.alt, src := b.src, onClick := {
-  //                  () => b.todo()
-  //                })
-  //              )
-  //            )
-  //          }, content
-  //        )
-  //      )
-  //    }
-  //
-  //    def withBrand(src: String, modifierSeq: ModifierSeq = emptyMod, todo: () => Unit = () => {}, alt: String = "") = copy(brand = Some(NavBarBrand(src, modifierSeq, todo, alt)))
-  //
-  //  }
-  //
-  //  // Nav pills
-  //  case class NavPill(name: String, badge: Option[Int], todo: () => Unit)
-  //
-  //
-  type TypedContent = String
+  case class NavItem(contentDiv: HtmlElement,
+                     val todo: () ⇒ Unit = () ⇒ {},
+                     extraRenderPair: HESetters = emptySetters,
+                     activeDefault: Boolean = false,
+                     toRight: Boolean = false) {
+
+    val active: Var[Boolean] = Var(activeDefault)
+
+    val render = li(
+      cls := bsn.nav_item,
+
+      a(href := "#",
+        cls := bsn.nav_link,
+        child <-- active.signal.map { _ => span(cls := "sr-only", "(current)") },
+        cls.toggle() <-- active.signal,
+        lineHeight := "35px",
+        onClick --> { _ =>
+          todo()
+        },
+        contentDiv,
+        cls.toggle("active") <-- active.signal,
+        extraRenderPair
+      )
+    )
+
+    def right = copy(toRight = true)
+  }
+
+  def navItem(content: HtmlElement,
+              todo: () => Unit = () => {},
+              extraRenderPair: HESetters = emptySetters,
+              activeDefault: Boolean = false,
+              alignRight: Boolean = false) =
+    NavItem(content: HtmlElement, todo, extraRenderPair, activeDefault, alignRight)
+
+
+  def stringNavItem(content: String, todo: () ⇒ Unit = () ⇒ {}, activeDefault: Boolean = false): NavItem =
+    navItem(span(content), todo, activeDefault = activeDefault)
+
+  def navBar(classPair: HESetters, contents: NavItem*) = new NavBar(classPair, None, contents)
+
+  case class NavBarBrand(src: String, modifierSeq: HESetters, todo: () => Unit, alt: String)
+
+  case class NavBar(classPair: HESetters, brand: Option[NavBarBrand], contents: Seq[NavItem]) {
+
+    val navId = uuID.short("n")
+
+    def render: HtmlElement = {
+
+      val sortedContents = contents.partition {
+        _.toRight
+      }
+
+      def buildUL(cts: Seq[NavItem], modifier: HESetters = emptySetters) =
+        ul(bsn.navbar_nav, modifier,
+          cts.map { c ⇒
+            c.render.amend(onClick --> { _ ⇒
+              contents.foreach {
+                _.active.set(false)
+              }
+              c.active.set(true)
+            })
+          }
+        )
+
+      val content = div(cls := "collapse navbar-collapse", idAttr := navId,
+        buildUL(sortedContents._2, bsmargin.r.auto),
+        buildUL(sortedContents._1, bsmargin.l.auto)
+      )
+
+      nav(bsn.navbar, bsn.navbar_expand_lg, classPair,
+          for {
+            b <- brand
+          } yield {
+            div(
+              a(bsn.navbar_brand, href := "#", padding := "0",
+                img(b.modifierSeq, cursor.pointer, alt := b.alt, src := b.src, onClick --> {
+                  _ => b.todo()
+                })
+              ),
+              button(cls := "navbar-toggler",
+                `type` := "button",
+                dataAttr("toggle") := "collapse", dataAttr("target") := s"#$navId",
+                aria.controls := navId, aria.expanded := false, aria.label := "Toggle navigation",
+                span(cls := "navbar-toggler-icon")
+              )
+            )
+          }, content
+      )
+    }
+
+    def withBrand(src: String, modifierSeq: HESetters = emptySetters, todo: () => Unit = () => {}, alt: String = "") = copy(brand = Some(NavBarBrand(src, modifierSeq, todo, alt)))
+
+  }
+
+  // Nav pills
+  case class NavPill(name: String, badge: Option[Int], todo: () => Unit)
+
 
   //POPOVER
+  type TypedContent = String
+
   case class PopoverBuilder(element: HtmlElement,
                             innerElement: TypedContent,
                             position: PopupPosition = Bottom,
