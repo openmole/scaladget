@@ -47,6 +47,56 @@ package stylesheet {
     //      def outlined = bsButton.   .key.name.replaceFirst("btn-","btn-outline")
     //    }
 
+    object spacing {
+      type BSSpacing = String
+
+      implicit class ABSMargin(bsSpacing: BSSpacing) {
+        private def pattern(suffix: String) = cls := s"$bsSpacing-$suffix"
+
+        def zero = pattern("0")
+        def one = pattern("1")
+        def two = pattern("2")
+        def three = pattern("3")
+        def four = pattern("4")
+        def five = pattern("5")
+
+        def auto = pattern("auto")
+      }
+
+      //SPACING
+      object bsmargin {
+        // right, left, top, bottom, left and right (x), top and bottom (y)
+        def r: BSSpacing = "mr"
+
+        def l: BSSpacing = "ml"
+
+        def t: BSSpacing = "mt"
+
+        def b: BSSpacing = "mb"
+
+        def x: BSSpacing = "mx"
+
+        def y: BSSpacing = "my"
+      }
+
+      object bspadding {
+        // right, left, top, bottom, left and right (x), top and bottom (y)
+        def r: BSSpacing = "pr"
+
+        def l: BSSpacing = "pl"
+
+        def t: BSSpacing = "pt"
+
+        def b: BSSpacing = "pb"
+
+        def x: BSSpacing = "px"
+
+        def y: BSSpacing = "py"
+      }
+    }
+
+
+
     //GHYPHICONS
     lazy val glyph_edit = toGlyphicon("bi-pencil-fill")
     lazy val glyph_edit2 = toGlyphicon("bi-edit")
@@ -103,10 +153,12 @@ package stylesheet {
     lazy val nav = cls("nav")
     lazy val navbar = cls("navbar")
     lazy val navbar_nav = cls("navbar-nav")
+    lazy val navbar_expand_lg = cls("navbar-expand-lg")
+    lazy val navbar_light = cls("navbar-light")
+    lazy val bg_light = cls("bg-light")
     lazy val navTabs = cls("nav-tabs")
     lazy val navbar_default = cls("navbar-default")
     lazy val navbar_inverse = cls("navbar-inverse")
-    lazy val navbar_staticTop = cls("navbar-static-top")
     lazy val navbar_fixedTop = cls("navbar-fixed-top")
     lazy val navbar_pills = cls("nav-pills")
     lazy val navbar_form = cls("navbar-form")
@@ -115,7 +167,7 @@ package stylesheet {
     lazy val navbar_header = cls("navbar-header")
     lazy val navbar_brand = cls("navbar-brand")
     lazy val navbar_btn = cls("navbar-btn")
-    lazy val navbar_collapse = cls("navbar-collapse")
+    lazy val navbar_collapse = cls("collapse navbar-collapse")
 
     //LABELS
     lazy val badge_light = toBadge("badge-light")
