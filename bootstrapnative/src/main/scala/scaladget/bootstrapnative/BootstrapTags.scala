@@ -24,6 +24,8 @@ import scaladget.tools.Utils._
 import com.raquo.laminar.api.L._
 import scaladget.tools.Stylesheet._
 import bsn.spacing._
+import com.raquo.airstream.features.FlattenStrategy
+import com.raquo.laminar.api.Laminar
 
 object BootstrapTags extends BootstrapTags
 
@@ -314,23 +316,23 @@ trait BootstrapTags {
       )
 
       nav(bsn.navbar, bsn.navbar_expand_lg, classPair,
-          for {
-            b <- brand
-          } yield {
-            div(
-              a(bsn.navbar_brand, href := "#", padding := "0",
-                img(b.modifierSeq, cursor.pointer, alt := b.alt, src := b.src, onClick --> {
-                  _ => b.todo()
-                })
-              ),
-              button(cls := "navbar-toggler",
-                `type` := "button",
-                dataAttr("toggle") := "collapse", dataAttr("target") := s"#$navId",
-                aria.controls := navId, aria.expanded := false, aria.label := "Toggle navigation",
-                span(cls := "navbar-toggler-icon")
-              )
+        for {
+          b <- brand
+        } yield {
+          div(
+            a(bsn.navbar_brand, href := "#", padding := "0",
+              img(b.modifierSeq, cursor.pointer, alt := b.alt, src := b.src, onClick --> {
+                _ => b.todo()
+              })
+            ),
+            button(cls := "navbar-toggler",
+              `type` := "button",
+              dataAttr("toggle") := "collapse", dataAttr("target") := s"#$navId",
+              aria.controls := navId, aria.expanded := false, aria.label := "Toggle navigation",
+              span(cls := "navbar-toggler-icon")
             )
-          }, content
+          )
+        }, content
       )
     }
 
@@ -899,4 +901,75 @@ trait BootstrapTags {
     form(bsn.formInline, heSetters, insideForm(formTags))
   }
 
+  //TOAST
+  type ToastPosition = HESetters
+
+  case class ToastHeader(text: String, comment: String = "", backgroundColor: String = "#fff")
+
+  case class Toast(header: ToastHeader, bodyText: String, toastPosition: ToastPosition = bsn.bottomRightPosition, delay: Option[Int] = None) {
+
+    val active = Var(false)
+
+    def stack(toast: Toast) =
+      div(toastPosition,
+        toastRender,
+        toast.toastRender
+      )
+
+    def toastRender = div(
+      bsnsheet.toastCls, role := "alert", aria.live := "assertive", aria.atomic := true,
+            cls <-- active.signal.map { a =>
+              if (a) "show" else "hide"
+            },
+      div(bsn.toastHeader, backgroundColor := header.backgroundColor,
+        strong(bsmargin.r.auto, header.text),
+        small(header.comment),
+        button(`type` := "button", bsmargin.l.two, bsmargin.b.one, cls := "close", dataAttr("dismiss") := "toast", aria.label := "Close",
+          span(aria.hidden := true, "×"),
+          onClick --> (_ => hide)
+        )
+      ),
+      div(bsn.toastBody, bodyText)
+    )
+
+    def show = {
+      active.set(true)
+      delay.foreach{d=>
+        scalajs.js.timers.setTimeout(d)(hide)
+      }
+    }
+
+    def hide = active.set(false)
+  }
+
+  def toast(toastHeader: ToastHeader, bodyText: String, toastPosition: ToastPosition = bsn.bottomRightPosition, delay: Option[Int] = None) =
+    Toast(toastHeader, bodyText, toastPosition, delay)
+
+  case class ToastStack(toastPosition: ToastPosition, initialToasts: Seq[Toast]) {
+
+    val toasts = Var(initialToasts)
+
+    def stack(toast: Toast) =
+      if (!toasts.now.exists(_ == toast))
+        toasts.update(ts => ts :+ toast)
+
+    def show = toasts.now.foreach(_.show)
+
+    val render = {
+      div(
+        toastPosition,
+        children <-- toasts.signal.map { t =>
+          t.map {
+            _.toastRender
+          }
+        }
+      )
+    }
+  }
+
+  def toastStack(toastPosition: ToastPosition, toasts: Toast*) = ToastStack(toastPosition: ToastPosition, toasts)
 }
+
+
+
+

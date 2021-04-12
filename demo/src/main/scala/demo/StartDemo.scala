@@ -70,7 +70,8 @@ object App {
               PopoverDemo.elementDemo,
               TabDemo.elementDemo,
               TooltipDemo.elementDemo,
-              NavBarDemo.elementDemo
+              NavBarDemo.elementDemo,
+              ToastDemo.elementDemo
             )
 
             //            //            TableDemo.elementDemo,

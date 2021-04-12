@@ -309,6 +309,15 @@ package stylesheet {
     lazy val themeShowcase = cls("theme-showcase")
     lazy val controlGroup = cls("control-group")
     lazy val controls = cls("controls")
+
+
+    //TOASTS
+    lazy val toastCls = cls := "toast"
+    lazy val toastHeader = cls := "toast-header"
+    lazy val toastBody = cls := "toast-body"
+
+    lazy val bottomRightPosition = Seq(cls := "position-fixed bottom-0 right-0 p-3", zIndex := "5", right := "0", bottom := "0")
+
   }
 
 }
