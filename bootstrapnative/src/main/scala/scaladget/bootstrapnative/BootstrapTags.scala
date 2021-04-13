@@ -685,7 +685,6 @@ trait BootstrapTags {
     }
 
     def render = {
-      //val tabDis = tabs.signal  //split(_.tabID) { (tabID, tab, stream) => renderTab(tabID, tab, stream) }
       div(child <-- tabs.signal.split(_.tabID)(renderTab).map { tr =>
         div(
           ul(bsn.nav, bsn.navTabs, bsn.tab_list_role, tr.map(_.tabHeader)),
@@ -903,71 +902,78 @@ trait BootstrapTags {
 
   //TOAST
   type ToastPosition = HESetters
+  type ToastID = String
 
   case class ToastHeader(text: String, comment: String = "", backgroundColor: String = "#fff")
 
-  case class Toast(header: ToastHeader, bodyText: String, toastPosition: ToastPosition = bsn.bottomRightPosition, delay: Option[Int] = None) {
-
-    val active = Var(false)
-
-    def stack(toast: Toast) =
-      div(toastPosition,
-        toastRender,
-        toast.toastRender
-      )
-
-    def toastRender = div(
-      bsnsheet.toastCls, role := "alert", aria.live := "assertive", aria.atomic := true,
-            cls <-- active.signal.map { a =>
-              if (a) "show" else "hide"
-            },
-      div(bsn.toastHeader, backgroundColor := header.backgroundColor,
-        strong(bsmargin.r.auto, header.text),
-        small(header.comment),
-        button(`type` := "button", bsmargin.l.two, bsmargin.b.one, cls := "close", dataAttr("dismiss") := "toast", aria.label := "Close",
-          span(aria.hidden := true, "×"),
-          onClick --> (_ => hide)
-        )
-      ),
-      div(bsn.toastBody, bodyText)
-    )
-
-    def show = {
-      active.set(true)
-      delay.foreach{d=>
-        scalajs.js.timers.setTimeout(d)(hide)
-      }
-    }
-
-    def hide = active.set(false)
-  }
+  case class Toast(header: ToastHeader, bodyText: String, toastPosition: ToastPosition = bsn.bottomRightPosition, delay: Option[Int] = None, toastID: ToastID = uuID.short("t"))
 
   def toast(toastHeader: ToastHeader, bodyText: String, toastPosition: ToastPosition = bsn.bottomRightPosition, delay: Option[Int] = None) =
     Toast(toastHeader, bodyText, toastPosition, delay)
 
-  case class ToastStack(toastPosition: ToastPosition, initialToasts: Seq[Toast]) {
+  case class ToastStack(toastPosition: ToastPosition, unstackOnClose: Boolean, initialToasts: Seq[Toast]) {
 
     val toasts = Var(initialToasts)
+    val activeToasts = Var(Seq[Toast]())
+
+    def toast(toastID: ToastID) = toasts.now.filter(_.toastID == toastID)
 
     def stack(toast: Toast) =
       if (!toasts.now.exists(_ == toast))
         toasts.update(ts => ts :+ toast)
 
-    def show = toasts.now.foreach(_.show)
+    def unstack(toast: Toast) = toasts.update(ts => ts.filterNot(_ == toast))
+
+    def show(toast: Toast) =
+      if (!activeToasts.now.exists(_ == toast)) {
+        activeToasts.update(ts => ts :+ toast)
+        toast.delay.foreach { d =>
+          scalajs.js.timers.setTimeout(d)(hide(toast))
+        }
+      }
+
+    def stackAndShow(toast: Toast) = {
+      stack(toast)
+      show(toast)
+    }
+
+    def hide(toast: Toast) = activeToasts.update(at => at.filterNot(_ == toast))
+
+
+    def toastRender(toastID: ToastID, initialToast: Toast, toastStream: Signal[Toast]): Div = {
+
+      val isActive = activeToasts.signal.map { ts => ts.contains(initialToast) }
+
+      div(
+        bsnsheet.toastCls, role := "alert", aria.live := "assertive", aria.atomic := true, dataAttr("animation") := "true",
+        cls <-- isActive.signal.map { a =>
+          if (a) "fade show" else "fade hide"
+        },
+        div(bsn.toastHeader, backgroundColor := initialToast.header.backgroundColor,
+          strong(bsmargin.r.auto, initialToast.header.text),
+          small(initialToast.header.comment),
+          button(`type` := "button", bsmargin.l.two, bsmargin.b.one, cls := "close", dataAttr("dismiss") := "toast", aria.label := "Close",
+            span(aria.hidden := true, "×"),
+            onClick --> { e =>
+              hide(initialToast)
+              if(unstackOnClose)
+                unstack(initialToast)
+            }
+          )
+        ),
+        div(bsn.toastBody, initialToast.bodyText)
+      )
+    }
 
     val render = {
       div(
         toastPosition,
-        children <-- toasts.signal.map { t =>
-          t.map {
-            _.toastRender
-          }
-        }
+        children <-- toasts.signal.split(_.toastID)(toastRender)
       )
     }
   }
 
-  def toastStack(toastPosition: ToastPosition, toasts: Toast*) = ToastStack(toastPosition: ToastPosition, toasts)
+  def toastStack(toastPosition: ToastPosition, unstackOnClose: Boolean, toasts: Toast*) = ToastStack(toastPosition: ToastPosition, unstackOnClose, toasts)
 }
 
 

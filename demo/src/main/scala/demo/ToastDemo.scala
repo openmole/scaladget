@@ -28,18 +28,13 @@ object ToastDemo {
 
     val myToast = toast(ToastHeader("My header", backgroundColor = "#ffc107"), "My important message", delay = Some(2000))
     val mySecondToast = toast(ToastHeader("My second header", backgroundColor = "#dc3545"), "My important message")
-    val myThirdToast =  toast(ToastHeader("My third header", backgroundColor = "#17a2b8"), "My important message")
-    val toaster = toastStack(bottomRightPosition)
-
-    def stackAndShow (t: Toast) = {
-      toaster.stack(t)
-      t.show
-    }
+    val myThirdToast = toast(ToastHeader("My third header", backgroundColor = "#17a2b8"), "My important message")
+    val toaster = toastStack(bottomRightPosition, unstackOnClose = true)
 
     div(
-      button(btn_warning_outline, "Toast with delay", onClick --> { _ => stackAndShow(myToast) }),
-      button(btn_danger_outline, marginLeft := "15", "Toast again !", onClick --> { _ => stackAndShow(mySecondToast) }),
-      button(btn_info_outline, marginLeft := "15", "Toast again !", onClick --> { _ => stackAndShow(myThirdToast) }),
+      button(btn_warning_outline, "Toast with delay", onClick --> { _ => toaster.stackAndShow(myToast) }),
+      button(btn_danger_outline, marginLeft := "15", "Toast again !", onClick --> { _ => toaster.stackAndShow(mySecondToast) }),
+      button(btn_info_outline, marginLeft := "15", "Toast again !", onClick --> { _ => toaster.stackAndShow(myThirdToast) }),
       toaster.render
     )
   }
