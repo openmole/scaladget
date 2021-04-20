@@ -26,6 +26,7 @@ import scaladget.tools.Stylesheet._
 import bsn.spacing._
 import com.raquo.airstream.features.FlattenStrategy
 import com.raquo.laminar.api.Laminar
+import scaladget.bootstrapnative.Table.Row
 
 object BootstrapTags extends BootstrapTags
 
@@ -516,7 +517,7 @@ trait BootstrapTags {
             clicked.update(!_)
           }
         ),
-        clicked.expand(inner)
+        clicked.signal.expand(inner)
       )
     }
   }
@@ -536,7 +537,7 @@ trait BootstrapTags {
   //    }
   //  }
   //
-  implicit class TTagCollapserWithReactive(r: Var[Boolean]) {
+  implicit class TTagCollapserWithReactive(r: Signal[Boolean]) {
 
     def expand(inner: HtmlElement) = {
       div(overflow.hidden,
@@ -696,10 +697,9 @@ trait BootstrapTags {
 
   //
   //  //TABLE
-  //  def dataTable = new DataTable
-  //
-  //  def table(rows: Rx.Dynamic[Seq[ReactiveRow]]) = new Table(rows)
-  //
+
+    def dataTable(rows: Seq[Row] = Seq()) = TableBuilder(rows)
+
   //  // EXCLUSIVE BUTTON GROUPS
   //  def exclusiveButtonGroup(style: ModifierSeq, defaultStyle: ModifierSeq = btn_default, selectionStyle: ModifierSeq = btn_default)(buttons: ExclusiveButton*) = new ExclusiveGroup(style, defaultStyle, selectionStyle, buttons)
   //

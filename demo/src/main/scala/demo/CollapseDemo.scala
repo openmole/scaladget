@@ -32,7 +32,7 @@ object CollapseDemo extends Demo {
         div(child.text <-- onoff.signal.map(oo => "My text in detail " + oo)).amend(width := "400", height := "200")
       ),
       button("Set Var", btn_danger, onClick --> { _ => onoff.update(!_) }),
-      onoff.expand(div("Yes", backgroundColor := "orange", height := "150"))
+      onoff.signal.expand(div("Yes", backgroundColor := "orange", height := "150"))
     )
   }
 
