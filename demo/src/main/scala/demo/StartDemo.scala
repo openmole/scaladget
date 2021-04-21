@@ -75,18 +75,14 @@ object App {
               TableDemo.elementDemo,
             )
                         //            //            AlertDemo.elementDemo,
-            //            //            PlayGroundDemo.elementDemo
-            //          )
           } yield {
-            //          println("TITLE " + demo.title)
-            //          demo.element
             Tab(demo.title,
               div(
                 h3(demo.title),
                 div(containerFluid,
                   div(row, marginLeft := "15", marginTop := "25",
                     div(colBS(demo.codeWidth), pre(code(cls := "scala", demo.cleanCode))),
-                    div(colBS(12 /*- demo.codeWidth*/), demo.element)
+                    div(colBS(12 - demo.codeWidth), demo.element)
                   )
                 )
               )
