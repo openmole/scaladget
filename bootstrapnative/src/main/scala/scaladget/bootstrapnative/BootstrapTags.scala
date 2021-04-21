@@ -26,6 +26,7 @@ import scaladget.tools.Stylesheet._
 import bsn.spacing._
 import com.raquo.airstream.features.FlattenStrategy
 import com.raquo.laminar.api.Laminar
+import scaladget.bootstrapnative
 import scaladget.bootstrapnative.Table.Row
 
 object BootstrapTags extends BootstrapTags
@@ -260,7 +261,7 @@ trait BootstrapTags {
       a(href := "#",
         cls := bsn.nav_link,
         child <-- active.signal.map { _ => span(cls := "sr-only", "(current)") },
-        cls.toggle() <-- active.signal,
+        cls.toggle("active") <-- active.signal,
         lineHeight := "35px",
         onClick --> { _ =>
           todo()
@@ -558,7 +559,7 @@ trait BootstrapTags {
   case class Tab(title: String, content: HtmlElement, onclickExtra: () => Unit = () => {}, tabID: TabID = uuID.short("t"), refID: String = uuID.short("r"))
 
   object Tabs {
-    def tabs(initialTabs: Seq[Tab] = Seq(), isClosable: Boolean = false) = TabHolder(initialTabs, isClosable, 0, (tab: Tab) => {})
+    def tabs(initialTabs: Seq[Tab] = Seq(), isClosable: Boolean = false, tabStyle: HESetters = bsnsheet.navTabs) = TabHolder(initialTabs, isClosable, 0, (tab: Tab) => {}, tabStyle)
 
 
     def defaultSortOptions: (Var[Seq[Tab]], Int => Unit) => SortableOptions = (ts: Var[Seq[Tab]], setActive: Int => Unit) =>
@@ -572,7 +573,7 @@ trait BootstrapTags {
         }
       )
 
-    case class TabHolder(tabs: Seq[Tab], isClosable: Boolean, initIndex: Int /*, sortableOptions: Option[(Var[Seq[Tab]], Int => Unit) => SortableOptions]*/ , onActivation: Tab => Unit) {
+    case class TabHolder(tabs: Seq[Tab], isClosable: Boolean, initIndex: Int /*, sortableOptions: Option[(Var[Seq[Tab]], Int => Unit) => SortableOptions]*/ , onActivation: Tab => Unit, tabStyle: HESetters) {
       def add(title: String, content: HtmlElement, onclickExtra: () => Unit = () => {}, onAddedTab: Tab => Unit = Tab => {}): TabHolder =
         add(Tab(title, content, onclickExtra = onclickExtra), onAddedTab)
 
@@ -589,13 +590,13 @@ trait BootstrapTags {
       def onActivation(onActivation: Tab => Unit = Tab => {}) = copy(onActivation = onActivation)
 
       def build = {
-        Tabs(tabs, isClosable, onActivation)
+        Tabs(tabs, isClosable, onActivation, tabStyle = tabStyle)
       }
     }
 
   }
 
-  case class Tabs(initialTabs: Seq[Tab], isClosable: Boolean, onActivation: Tab => Unit = Tab => {}, onCloseExtra: Tab => Unit = Tab => {}, onRemoved: TabID => Unit = Tab => {}) {
+  case class Tabs(initialTabs: Seq[Tab], isClosable: Boolean, onActivation: Tab => Unit = Tab => {}, onCloseExtra: Tab => Unit = Tab => {}, onRemoved: TabID => Unit = Tab => {}, tabStyle: HESetters) {
 
     val tabs = Var(initialTabs)
     val activeTab = Var(initialTabs.headOption.map(_.tabID))
@@ -644,9 +645,8 @@ trait BootstrapTags {
         // bsn.presentation_role,
         cls := bsn.nav_item,
         a(
-          cls <-- activeSignal.map { isActive =>
-            if (isActive) s"${bsn.nav_link}" else s"${bsn.nav_link} active"
-          },
+          cls := bsn.nav_link,
+          cls.toggle("active") <-- activeSignal.signal,
           // cls.toggle("active") <-- activeSignal,
           a(idAttr := tabID,
             bsn.tab_role,
@@ -688,7 +688,7 @@ trait BootstrapTags {
     def render = {
       div(child <-- tabs.signal.split(_.tabID)(renderTab).map { tr =>
         div(
-          ul(bsn.nav, bsn.navTabs, bsn.tab_list_role, tr.map(_.tabHeader)),
+          ul(bsn.nav, tabStyle, tr.map(_.tabHeader)),
           div(bsn.tab_content, paddingTop := "10", tr.map(_.tabContent))
         )
       })

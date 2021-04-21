@@ -74,7 +74,6 @@ object App {
               ToastDemo.elementDemo,
               TableDemo.elementDemo,
             )
-                        //            //            AlertDemo.elementDemo,
           } yield {
             Tab(demo.title,
               div(
@@ -87,8 +86,8 @@ object App {
                 )
               )
             )
-            ////            ))
-          }).build.render
+          },
+          tabStyle = navbar_pills).build.render
       )
 
     }
