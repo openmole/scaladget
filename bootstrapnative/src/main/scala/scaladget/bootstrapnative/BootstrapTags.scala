@@ -698,7 +698,9 @@ trait BootstrapTags {
   //
   //  //TABLE
 
-    def dataTable(rows: Seq[Row] = Seq()) = TableBuilder(rows)
+  def elementTable(rows: Seq[Row] = Seq()) = ElementTableBuilder(rows)
+
+  def dataTable(rows: Seq[Seq[String]] = Seq()) = DataTableBuilder(rows)
 
   //  // EXCLUSIVE BUTTON GROUPS
   //  def exclusiveButtonGroup(style: ModifierSeq, defaultStyle: ModifierSeq = btn_default, selectionStyle: ModifierSeq = btn_default)(buttons: ExclusiveButton*) = new ExclusiveGroup(style, defaultStyle, selectionStyle, buttons)
@@ -956,7 +958,7 @@ trait BootstrapTags {
             span(aria.hidden := true, "×"),
             onClick --> { e =>
               hide(initialToast)
-              if(unstackOnClose)
+              if (unstackOnClose)
                 unstack(initialToast)
             }
           )

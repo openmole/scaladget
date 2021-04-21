@@ -7,16 +7,17 @@ import scaladget.tools.Utils._
 object Table {
 
   type RowID = String
+val SELECTION_COLOR = "#52adf233"
 
   case class BSTableStyle(tableStyle: HESetters = emptySetters,
                           headerStyle: HESetters = emptySetters,
                           rowStyle: HESetters = emptySetters,
-                          selectionColor: String = "#e1e1e1")
+                          selectionColor: String = SELECTION_COLOR)
 
   case class Header(values: Seq[String])
 
   trait Row {
-    def rowID: RowID = uuID.short("row")
+    val rowID: RowID = uuID.short("row")
 
     def tds: Seq[HtmlElement]
   }
@@ -38,93 +39,54 @@ object Table {
       )
   }
 
-  //  implicit class TableToSub(t: Table) {
-  //    def expandTo(element: HtmlElement, trigger: Signal[Boolean]) = {
-  //      val lastRow = t.initialRows.last
-  //      println("Last row " + lastRow)
-  //      lastRow match {
-  //        case br: BasicRow=>
-  //          println("init: " + t.initialRows)
-  //          val aa = t.initialRows.appended(ExpandableRow(br, SubRow(element, trigger)))
-  //          println("AA  + " + aa)
-  //          val oo = t.copy(initialRows = aa)
-  //          println("initII: " + t.initialRows)
-  //          oo
-  //        case _=> t
-  //      }
-  //    }
-  //  }
+  case class DataRow(values: Seq[String]) extends Row {
+    def tds: Seq[HtmlElement] = values.map {v=>
+      td(span(v))
+    }
+  }
 
-  //case class Cell(value: HtmlElement, cellIndex: Int)
-
-  //  def reactiveRow(cells: Seq[Cell], rowStyle: HESetters = emptySetter) =
-  //    ReactiveRow(uuID.short("rr"), cells, rowStyle)
-  //
-  //  case class ReactiveRow(uuid: ID, cells: Seq[Cell] = Seq(), rowStyle: HESetters = emptySetter) {
-  //
-  //    lazy val tr = tr(idAttr := uuid)(cells.map { c =>
-  //      td(c.value)
-  //    }
-  //      //      ,
-  //      //      backgroundColor := Rx {
-  //      //        if (Some(row) == selected()) tableStyle.selectionColor else ""
-  //      //      }
-  //    )(rowStyle)
-  //    //    (onclick := { () =>
-  //    //      table.selected() = Some(this)
-  //    //    }
-  //    //    )
-  //
-  //
-  //    def varCells = (uuid, collectVar(cells))
-  //  }
-
-  //  def subID(id: TableID) = s"${id}sub"
-  //
-  //  type RowType = (String, Int) => HtmlElement
-  //
-  //  case class SubRow(element: HtmlElement, trigger: Rx[Boolean] = Rx(false)) {
-  //    val expander = div(Rx {
-  //      trigger.expand(element())
-  //    })
-  //  }
-  //
-  //  case class StaticSubRow(element: HtmlElement, trigger: Var[Boolean] = Var(false)) {
-  //    val expander = div(Rx {
-  //      trigger.expand(element)
-  //    })
-  //  }
-  //
-  //  object StaticSubRow {
-  //    def empty() = StaticSubRow(div, Var(false))
-  //
-  //  }
-  //
-  //  object SubRow {
-  //    def empty() = SubRow(Var(div), Rx(true))
-  //  }
-
-
-  //  implicit def rowToReactiveRow(r: Row): ReactiveRow = reactiveRow(r.values.zipWithIndex.map { v => VarCell(v._1, v._2) }, r.rowStyle)
-
+  def headerRender(headers: Option[Table.Header] = None,
+                   headerStyle: HESetters = emptySetters) =
+    thead(headerStyle,
+      tr(
+        headers.map {
+          h =>
+            h.values.map {
+              th(_)
+            }
+        }))
 }
 
 import Table._
 
-case class TableBuilder(initialRows: Seq[Row],
-                        headers: Option[Table.Header] = None,
-                        bsTableStyle: BSTableStyle = Table.BSTableStyle(default_table)) {
+case class DataTableBuilder(initialRows: Seq[Seq[String]],
+                            headers: Option[Table.Header] = None,
+                            bsTableStyle: BSTableStyle = Table.BSTableStyle(bordered_table)) {
 
   def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
 
-  def addRow(row: Row) = copy(initialRows = initialRows :+ row)
+  def addRow(values: String*) = copy(initialRows = initialRows :+ values)
 
-  def addRow(values: String*) = copy(initialRows = initialRows :+ BasicRow(values.map {
-    span(_)
-  }))
+  def style(tableStyle: HESetter = default_table, headerStyle: HESetters = emptySetters, rowStyle: HESetters = emptySetters, selectionColor: String = SELECTION_COLOR) = {
+    copy(bsTableStyle = BSTableStyle(tableStyle, headerStyle, rowStyle, selectionColor))
+  }
 
-  implicit class RowToSub(br: BasicRow) {
-    def expandTo(element: HtmlElement, signal: Signal[Boolean]) = ExpandedRow(element, signal)
+  lazy val render = DataTable(initialRows.map( DataRow(_) ), headers, bsTableStyle)
+}
+
+
+case class ElementTableBuilder(initialRows: Seq[Row],
+                               headers: Option[Table.Header] = None,
+                               bsTableStyle: BSTableStyle = Table.BSTableStyle(bordered_table)) {
+
+  def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
+
+  def addRow(row: BasicRow): ElementTableBuilder = copy(initialRows = initialRows :+ row)
+
+  def addRow(values: HtmlElement*): ElementTableBuilder = addRow(BasicRow(values))
+
+  def style(tableStyle: HESetter = default_table, headerStyle: HESetters = emptySetters, rowStyle: HESetters = emptySetters, selectionColor: String = "#e1e1e1") = {
+    copy(bsTableStyle = BSTableStyle(tableStyle, headerStyle, rowStyle, selectionColor))
   }
 
   def expandTo(element: HtmlElement, signal: Signal[Boolean]) = {
@@ -136,24 +98,17 @@ case class TableBuilder(initialRows: Seq[Row],
     }
   }
 
-  lazy val render = Table(initialRows, headers, bsTableStyle).render
+  lazy val render = ElementTable(initialRows, headers, bsTableStyle)
 }
 
-case class Table(initialRows: Seq[Row],
-                 headers: Option[Table.Header] = None,
-                 bsTableStyle: BSTableStyle = Table.BSTableStyle(default_table)) {
+case class ElementTable(initialRows: Seq[Row],
+                        headers: Option[Table.Header] = None,
+                        bsTableStyle: BSTableStyle = Table.BSTableStyle(default_table)) {
 
 
   val rows = Var(initialRows)
   val selected: Var[Option[RowID]] = Var(None)
   val expanded: Var[Seq[RowID]] = Var(Seq())
-  // var previousState: Seq[(ID, Seq[VarCell])] = Seq()
-  // val inDOM: Var[Seq[ID]] = Var(Seq())
-
-
-  def style(tableStyle: HESetter = default_table, headerStyle: HESetters = emptySetters) = {
-    copy(bsTableStyle = BSTableStyle(tableStyle, headerStyle))
-  }
 
 
   def updateExpanded(rowID: RowID) = expanded.update { e =>
@@ -179,111 +134,45 @@ case class Table(initialRows: Seq[Row],
     }
   }
 
-  val render = {
+  val render =
     table(bsTableStyle.tableStyle,
-      thead(bsTableStyle.headerStyle,
-        tr(
-          headers.map {
-            h =>
-              h.values.map {
-                th(_)
-              }
-          })),
+      headerRender(headers, bsTableStyle.headerStyle),
       tbody(
         children <-- rows.signal.split(_.rowID)(rowRender)
       )
     )
-  }
-  //      ,
-  //      backgroundColor := Rx {
-  //        if (Some(row) == selected()) tableStyle.selectionColor else ""
-  //      }
-  //    (onclick := { () =>
-  //      table.selected() = Some(this)
-  //    }
-  //    )
-  //  private def addRowInDom(r: Row) = {
-  //    tableBody.appendChild(r.tr)
-  //    inDOM() = inDOM.now :+ r.uuid
-  //
-  //    subRow.foreach { sr =>
-  //      inDOM() = inDOM.now :+ subID(r.uuid)
-  //      tableBody.appendChild(buildSubRow(r, sr))
-  //    }
-  //  }
 
-  //  private def updateValues(element: HtmlElement, values: Seq[(HtmlElement, Int)]) = {
-  //    for (
-  //      (el, ind) <- values
-  //    ) yield {
-  //      val old = element.childNodes(ind)
-  //      element.replaceChild(td(el), old)
-  //    }
-  //  }
+}
 
 
-  //  rows.trigger {
-  //    val inBody = inDOM.now
-  //    val rowsAndSubs = rows.now.map {
-  //      r =>
-  //        Seq(r.uuid, subID(r.uuid))
-  //    }.flatten
-  //    val varCells = rows.now.map {
-  //      _.varCells
-  //    }
-  //
-  //    (rowsAndSubs.length - inBody.length) match {
-  //      case x if x > 0 =>
-  //        // CASE ADD
-  //        rows.now.foreach {
-  //          rr =>
-  //            if (!inDOM.now.contains(rr.uuid)) {
-  //              addRowInDom(rr)
-  //            }
-  //        }
-  //      case x if x < 0 =>
-  //        // CASE DELETE
-  //        inBody.foreach {
-  //          id =>
-  //            if (!rowsAndSubs.contains(id)) {
-  //              findIndex(id).foreach {
-  //                inDOM() = inDOM.now.filterNot(_ == id)
-  //
-  //                tableBody.deleteRow
-  //              }
-  //            }
-  //        }
-  //      case _ =>
-  //        // CASE UPDATE
-  //        val di = varCells diff previousState
-  //        di.foreach {
-  //          m =>
-  //            findIndex(m._1).map {
-  //              i =>
-  //                updateValues(tableBody.rows(i).asInstanceOf[HTMLTableRowElement], m._2.map {
-  //                  v => (v.value, v.cellIndex)
-  //                })
-  //            }
-  //        }
-  //    }
-  //    previousState = varCells
-  //  }
+case class DataTable(initialRows: Seq[DataRow],
+                     headers: Option[Table.Header] = None,
+                     bsTableStyle: BSTableStyle = Table.BSTableStyle(default_table)) {
 
-  // def findIndex(reactiveRow: Row): Option[Int] = findIndex(reactiveRow.uuid)
+  type Filter = String
+  val rows = Var(initialRows)
+  val filterString: Var[Filter] = Var("")
+  val selected: Var[Option[RowID]] = Var(None)
 
-  //  def findIndex(id: ID): Option[Int] = {
-  //    val lenght = tableBody.rows.length
-  //
-  //    def findIndex0(currentIndex: Int, found: Boolean): Option[Int] = {
-  //      if (found) Some(currentIndex - 1)
-  //      else if (currentIndex == lenght) None
-  //      else {
-  //        findIndex0(currentIndex + 1, tableBody.rows(currentIndex).id == id)
-  //      }
-  //    }
-  //
-  //    if (lenght == 0) None
-  //    else findIndex0(0, false)
-  //  }
+  def rowFilter = (r: DataRow, filter: Filter)=>  r.values.mkString("|").toUpperCase.contains(filter)
+
+  def setFilter(s: Filter) = filterString.set(s.toUpperCase)
+
+  def rowRender(rowID: RowID, initialRow: Row, rowStream: Signal[Row]): HtmlElement =
+    tr(bsTableStyle.rowStyle,
+      backgroundColor <-- selected.signal.map {
+        s =>
+          if (Some(initialRow.rowID) == s) bsTableStyle.selectionColor else ""
+      },
+      onClick --> (_ => selected.set(Some(initialRow.rowID))),
+      children <-- rowStream.map(r => r.tds)
+    )
+
+  def render = table(bsTableStyle.tableStyle,
+    headerRender(headers, bsTableStyle.headerStyle),
+    tbody(
+        children <-- rows.signal.combineWith(filterString.signal).map{ case (dr,f) => dr filter {d=> rowFilter(d,f)}}.split(_.rowID)(rowRender)
+    )
+  )
 
 }
