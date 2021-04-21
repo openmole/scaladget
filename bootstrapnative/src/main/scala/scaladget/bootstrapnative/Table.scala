@@ -11,6 +11,8 @@ object Table {
   type RowID = String
   val SELECTION_COLOR = "#52adf233"
 
+  val centerCell = Seq(verticalAlign.middle, textAlign.center)
+
   case class BSTableStyle(tableStyle: HESetters = emptySetters,
                           headerStyle: HESetters = emptySetters,
                           rowStyle: HESetters = emptySetters,
@@ -26,7 +28,7 @@ object Table {
 
   case class BasicRow(elements: Seq[HtmlElement]) extends Row {
     def tds = elements.map {
-      td(_)
+      td(_, centerCell)
     }
   }
 
@@ -43,7 +45,7 @@ object Table {
 
   case class DataRow(values: Seq[String]) extends Row {
     def tds: Seq[HtmlElement] = values.map { v =>
-      td(span(v))
+      td(span(v), centerCell)
     }
   }
 
@@ -55,7 +57,7 @@ object Table {
         headers.map {
           h =>
             h.values.zipWithIndex.map {case (v,id)=>
-              th(v, sortingDiv.map{f=> f(id)}.getOrElse(emptyNode))
+              th(centerCell, v, sortingDiv.map{f=> f(id)}.getOrElse(emptyNode))
             }
         }))
 }
