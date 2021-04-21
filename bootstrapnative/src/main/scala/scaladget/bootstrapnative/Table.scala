@@ -4,10 +4,12 @@ import scaladget.bootstrapnative.bsn._
 import com.raquo.laminar.api.L._
 import scaladget.tools.Utils._
 
+import scala.util.Try
+
 object Table {
 
   type RowID = String
-val SELECTION_COLOR = "#52adf233"
+  val SELECTION_COLOR = "#52adf233"
 
   case class BSTableStyle(tableStyle: HESetters = emptySetters,
                           headerStyle: HESetters = emptySetters,
@@ -40,28 +42,69 @@ val SELECTION_COLOR = "#52adf233"
   }
 
   case class DataRow(values: Seq[String]) extends Row {
-    def tds: Seq[HtmlElement] = values.map {v=>
+    def tds: Seq[HtmlElement] = values.map { v =>
       td(span(v))
     }
   }
 
   def headerRender(headers: Option[Table.Header] = None,
-                   headerStyle: HESetters = emptySetters) =
+                   headerStyle: HESetters = emptySetters,
+                   sortingDiv: Option[Int=> Span] = None) =
     thead(headerStyle,
       tr(
         headers.map {
           h =>
-            h.values.map {
-              th(_)
+            h.values.zipWithIndex.map {case (v,id)=>
+              th(v, sortingDiv.map{f=> f(id)}.getOrElse(emptyNode))
             }
         }))
 }
 
+object Sorting {
+  trait Sorting
+
+  object NoSorting extends Sorting
+
+  object PhantomSorting extends Sorting
+
+  object AscSorting extends Sorting
+
+  object DescSorting extends Sorting
+
+  case class SortingStatus(col: Int, sorting: Sorting)
+
+  val defaultSortingStatus = SortingStatus(0, AscSorting)
+
+  case class Column(values: Seq[String])
+
+  def sortInt(seq: Seq[String]) = Try(
+    seq.map(_.toInt).zipWithIndex.sortBy(_._1).map(_._2)
+  ).toOption
+
+  def sortDouble(seq: Seq[String]) = Try(
+    seq.map(_.toDouble).zipWithIndex.sortBy(_._1).map(_._2)
+  ).toOption
+
+  def sortString(seq: Seq[String]): Seq[Int] = seq.zipWithIndex.sortBy(_._1).map(_._2)
+
+  def sort(s: Column): Seq[Int] = {
+    sortInt(s.values) match {
+      case Some(i: Seq[_]) => i
+      case None => sortDouble(s.values) match {
+        case Some(d: Seq[_]) => d
+        case None => sortString(s.values)
+      }
+    }
+  }
+}
+
 import Table._
+import Sorting._
 
 case class DataTableBuilder(initialRows: Seq[Seq[String]],
                             headers: Option[Table.Header] = None,
-                            bsTableStyle: BSTableStyle = Table.BSTableStyle(bordered_table)) {
+                            bsTableStyle: BSTableStyle = Table.BSTableStyle(bordered_table),
+                            sorting: Boolean = false) {
 
   def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
 
@@ -71,7 +114,9 @@ case class DataTableBuilder(initialRows: Seq[Seq[String]],
     copy(bsTableStyle = BSTableStyle(tableStyle, headerStyle, rowStyle, selectionColor))
   }
 
-  lazy val render = DataTable(initialRows.map( DataRow(_) ), headers, bsTableStyle)
+  def sortable = copy(sorting = true)
+
+  lazy val render = DataTable(initialRows.map(DataRow(_)), headers, bsTableStyle, sorting)
 }
 
 
@@ -147,17 +192,78 @@ case class ElementTable(initialRows: Seq[Row],
 
 case class DataTable(initialRows: Seq[DataRow],
                      headers: Option[Table.Header] = None,
-                     bsTableStyle: BSTableStyle = Table.BSTableStyle(default_table)) {
+                     bsTableStyle: BSTableStyle = Table.BSTableStyle(default_table),
+                     sorting: Boolean = false) {
 
   type Filter = String
   val rows = Var(initialRows)
   val filterString: Var[Filter] = Var("")
   val selected: Var[Option[RowID]] = Var(None)
 
-  def rowFilter = (r: DataRow, filter: Filter)=>  r.values.mkString("|").toUpperCase.contains(filter)
+
+  //SORTING
+  val nbColumns = initialRows.headOption.map(_.values.length).getOrElse(0)
+
+  val sortingStatus: Var[SortingStatus] = Var(defaultSortingStatus)
+
+  def column(index: Int, rows: Seq[DataRow]): Column = Column(rows.map {
+    _.values(index)
+  })
+
+  def columnSort(filteredRows: Seq[DataRow], sortingStatus: SortingStatus) = {
+    val col = column(sortingStatus.col, filteredRows)
+    val indexes: Seq[Int] = {
+      val sorted = Sorting.sort(col)
+      sortingStatus.sorting match {
+        case DescSorting => sorted.reverse
+        case _ => sorted
+      }
+    }
+
+    for (
+      i <- indexes
+    ) yield filteredRows(i)
+  }
+
+  def sortingGlyph(sortingStatus: SortingStatus) =
+    sortingStatus.sorting match {
+      case PhantomSorting => glyph_sort_down_alt
+      case AscSorting => glyph_sort_down_alt
+      case DescSorting => glyph_sort_down
+      case _ => ""
+    }
+
+  def sortingGlyphOpacity(n: Int, selectedColumun: Int): Double = {
+    if(n == selectedColumun) 1
+    else 0.4
+  }
+
+  val sortingDiv = (n: Int) =>
+    // val ss = sortingStatuses()
+    span(cursor.pointer, float.right, fontSize := "23",
+      opacity <-- sortingStatus.signal.map{ss=> sortingGlyphOpacity(n, ss.col)} ,
+      cls <-- sortingStatus.signal.map(ss=> sortingGlyph(ss)),
+      onClick --> { _ =>
+        if (sorting) {
+          sortingStatus.update(ss =>
+            SortingStatus(n,
+              ss.sorting match {
+                case DescSorting | PhantomSorting => AscSorting
+                case AscSorting => DescSorting
+                case _ => PhantomSorting
+              })
+          )
+        }
+      }
+    )
+
+  //FILTERING
+  def rowFilter = (r: DataRow, filter: Filter) => r.values.mkString("|").toUpperCase.contains(filter)
 
   def setFilter(s: Filter) = filterString.set(s.toUpperCase)
 
+
+  //RENDERING
   def rowRender(rowID: RowID, initialRow: Row, rowStream: Signal[Row]): HtmlElement =
     tr(bsTableStyle.rowStyle,
       backgroundColor <-- selected.signal.map {
@@ -169,10 +275,15 @@ case class DataTable(initialRows: Seq[DataRow],
     )
 
   def render = table(bsTableStyle.tableStyle,
-    headerRender(headers, bsTableStyle.headerStyle),
+    headerRender(headers, bsTableStyle.headerStyle, Some(sortingDiv)),
     tbody(
-        children <-- rows.signal.combineWith(filterString.signal).map{ case (dr,f) => dr filter {d=> rowFilter(d,f)}}.split(_.rowID)(rowRender)
+      children <-- rows.signal.combineWith(filterString.signal).combineWith(sortingStatus.signal).map {
+        case ((dr, f), s) =>
+          val filteredRows = dr.filter { d => rowFilter(d, f) }
+          columnSort(filteredRows, s)
+      }.split(_.rowID)(rowRender)
     )
   )
 
 }
+

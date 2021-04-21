@@ -141,8 +141,8 @@ package stylesheet {
     lazy val glyph_paste = toGlyphicon("bi-paste")
     lazy val glyph_time = toGlyphicon("bi-time")
     lazy val glyph_alph_sorting = toGlyphicon("bi-sort-by-alphabet")
-    lazy val glyph_sort_by_attributes = toGlyphicon("bi-sort-by-attributes")
-    lazy val glyph_sort_by_attributes_alt = toGlyphicon("bi-sort-by-attributes-alt")
+    lazy val glyph_sort_down = "bi-sort-down"
+    lazy val glyph_sort_down_alt = "bi-sort-down-alt"
     lazy val glyph_triangle_bottom = toGlyphicon("bi-trianglbtn-outline-e-bottom")
     lazy val glyph_triangle_top = toGlyphicon("bi-triangle-top")
     lazy val glyph_chevron_left = toGlyphicon("bi-chevron-left")
