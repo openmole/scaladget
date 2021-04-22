@@ -24,21 +24,12 @@ import scaladget.tools.Utils._
 import com.raquo.laminar.api.L._
 import scaladget.tools.Stylesheet._
 import bsn.spacing._
-import com.raquo.airstream.features.FlattenStrategy
-import com.raquo.laminar.api.Laminar
-import scaladget.bootstrapnative
 import scaladget.bootstrapnative.Table.Row
 
 object BootstrapTags extends BootstrapTags
 
 trait BootstrapTags {
   bstags =>
-
-  // implicit def formTagToNode(tt: HtmlTag): org.scalajs.dom.Node = tt.render
-
-  //type BS = TypedTag[_ <: HTMLElement]
-
-  //  type Input = ConcreteHtmlTag[org.scalajs.dom.raw.HTMLInputElement]
 
   type HESetter = Setter[HtmlElement]
 
@@ -242,11 +233,8 @@ trait BootstrapTags {
   def modalDialog(modalHeader: HtmlElement, modalBody: HtmlElement, modalFooter: HtmlElement, onopen: () => Unit, onclose: () => Unit, modifiers: HESetters = emptySetters) =
     ModalDialog(modalHeader, modalBody, modalFooter, modifiers, onopen, onclose)
 
-  //   def isVisible = dialog.ref.className.contains(" in")
 
-  //
-  //
-  //  // NAVS
+  // NAVS
   case class NavItem(contentDiv: HtmlElement,
                      val todo: () ⇒ Unit = () ⇒ {},
                      extraRenderPair: HESetters = emptySetters,
@@ -342,10 +330,6 @@ trait BootstrapTags {
 
   }
 
-  // Nav pills
-  case class NavPill(name: String, badge: Option[Int], todo: () => Unit)
-
-
   //POPOVER
   type TypedContent = String
 
@@ -373,8 +357,6 @@ trait BootstrapTags {
 
     lazy val popover = new BSN.Popover(render.ref /*, scalajs.js.Dynamic.literal("title" -> "euinesaurtie")*/)
 
-    println("popover defined " + popover)
-
     def show = popover.show
 
     def hide = popover.hide
@@ -384,16 +366,6 @@ trait BootstrapTags {
   }
 
   //TOOLTIP
-  //    object Tooltip {
-  //      def cleanAll = {
-  //        val list = org.scalajs.dom.document.getElementsByClassName("tooltip")
-  //        for (nodeIndex ← 0 to (list.length - 1)) {
-  //          val element = list(nodeIndex)
-  //          if (!js.isUndefined(element)) element.parentNode.removeChild(element)
-  //        }
-  //      }
-  //    }
-
   class TooltipBuilder(element: HtmlElement,
                        text: String,
                        position: PopupPosition = Bottom,
@@ -415,9 +387,6 @@ trait BootstrapTags {
     def hide = tooltip.hide
   }
 
-  //
-  //  implicit def TypedTagToTypedContent(tc: TypedTag[_]): TypedContent = tc.toString
-  //
   implicit class PopableTypedTag(element: HtmlElement) {
 
     def tooltip(text: String,
@@ -448,65 +417,6 @@ trait BootstrapTags {
 
   }
 
-  //
-  //
-  //  // JUMBOTRON
-  //  def jumbotron(modifiers: ModifierSeq) =
-  //    div(container +++ themeShowcase)(role := "main")(
-  //      div(bsn.jumbotron)(
-  //        p(modifiers)
-  //      )
-  //    )
-
-  //  // LABELED FIELD
-  //  case class ElementGroup(e1: TypedTag[HTMLElement], e2: TypedTag[HTMLElement])
-  //
-  //  def inLineForm(elements: ElementGroup*) = {
-  //    val ID = uuID.short
-  //    form(formInline)(
-  //      for {
-  //        e <- elements
-  //      } yield {
-  //        div(formGroup)(
-  //          e.e1(`for` := ID, marginLeft := 5),
-  //          e.e2(formControl, marginLeft := 5, id := ID)
-  //        )
-  //      }
-  //    )
-  //  }
-  //
-  //  def group(e1: TypedTag[HTMLElement], e2: TypedTag[HTMLElement]) = ElementGroup(e1, e2)
-  //
-  //
-
-  //
-  //
-  //  // ALERTS
-  //  def successAlerts(title: String, content: Seq[String], triggerCondition: Rx.Dynamic[Boolean] = Rx(true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
-  //    new Alert(bsn.alert_success, title, content, triggerCondition, todocancel)(otherButtons: _*).render
-  //
-  //  def infoAlerts(title: String, content: Seq[String], triggerCondition: Rx.Dynamic[Boolean] = Rx(true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
-  //    new Alert(alert_info, title, content, triggerCondition, todocancel)(otherButtons: _*).render
-  //
-  //  def warningAlerts(title: String, content: Seq[String], triggerCondition: Rx.Dynamic[Boolean] = Rx(true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
-  //    new Alert(alert_warning, title, content, triggerCondition, todocancel)(otherButtons: _*).render
-  //
-  //  def dangerAlerts(title: String, content: Seq[String], triggerCondition: Rx.Dynamic[Boolean] = Rx(true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
-  //    new Alert(alert_danger, title, content, triggerCondition, todocancel)(otherButtons: _*).render
-  //
-  //  def successAlert(title: String, content: String, triggerCondition: Rx.Dynamic[Boolean] = Rx(true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
-  //    successAlerts(title, Seq(content), triggerCondition, todocancel)(otherButtons.toSeq: _*)
-  //
-  //  def infoAlert(title: String, content: String, triggerCondition: Rx.Dynamic[Boolean] = Rx(true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
-  //    infoAlerts(title, Seq(content), triggerCondition, todocancel)(otherButtons.toSeq: _*)
-  //
-  //  def warningAlert(title: String, content: String, triggerCondition: Rx.Dynamic[Boolean] = Rx(true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
-  //    warningAlerts(title, Seq(content), triggerCondition, todocancel)(otherButtons.toSeq: _*)
-  //
-  //  def dangerAlert(title: String, content: String, triggerCondition: Rx.Dynamic[Boolean] = Rx(true), todocancel: () ⇒ Unit = () => {})(otherButtons: ExtraButton*) =
-  //    dangerAlerts(title, Seq(content), triggerCondition, todocancel)(otherButtons.toSeq: _*)
-  //
-  //
   // COLLAPSERS
   implicit class TagCollapserOnClick[S <: HtmlElement](trigger: S) {
     def expandOnclick[T <: HtmlElement](inner: T) = {
@@ -523,21 +433,6 @@ trait BootstrapTags {
     }
   }
 
-  //
-  //  implicit class TagCollapserWithReactive(r: Rx[Boolean]) {
-  //    def expand[T <: HTMLElement](inner: T) = {
-  //
-  //      r.trigger {
-  //        if (r.now) wrapper.style.height = inner.style.height
-  //        else wrapper.style.height = "0px"
-  //      }
-  //
-  //      lazy val wrapper = div(overflow := "hidden", transition := "height 300ms")(inner).render
-  //
-  //      wrapper
-  //    }
-  //  }
-  //
   implicit class TTagCollapserWithReactive(r: Signal[Boolean]) {
 
     def expand(inner: HtmlElement) = {
@@ -703,8 +598,7 @@ trait BootstrapTags {
   def dataTable(rows: Seq[Seq[String]] = Seq()) = DataTableBuilder(rows)
 
   //  // EXCLUSIVE BUTTON GROUPS
-  //  def exclusiveButtonGroup(style: ModifierSeq, defaultStyle: ModifierSeq = btn_default, selectionStyle: ModifierSeq = btn_default)(buttons: ExclusiveButton*) = new ExclusiveGroup(style, defaultStyle, selectionStyle, buttons)
-  //
+
   //  def twoStatesGlyphButton(glyph1: ModifierSeq,
   //                           glyph2: ModifierSeq,
   //                           todo1: () ⇒ Unit,
@@ -855,17 +749,10 @@ trait BootstrapTags {
     def label: Label
   }
 
-  //
-  //  /*
-  //  implicit def modifierToFormTag(m: Modifier): FormTag = new FormTag {
-  //    val tag: T = m
-  //  }*/
   implicit def htmlElementToFormTag(t: HtmlElement): FormTag = new FormTag {
     val tag: HtmlElement = t
   }
 
-  //
-  //
   implicit class LabelForModifiers(m: HtmlElement) {
     def withLabel(title: String, labelStyle: HESetters = emptySetters): LabeledFormTag = new LabeledFormTag {
       val label: Label = com.raquo.laminar.api.L.label(title, labelStyle, paddingRight := "5")
@@ -874,7 +761,6 @@ trait BootstrapTags {
     }
   }
 
-  //
   private def insideForm(elements: Seq[FormTag]) =
     for {
       ft <- elements
