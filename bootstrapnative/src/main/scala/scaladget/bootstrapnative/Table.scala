@@ -280,7 +280,7 @@ case class DataTable(initialRows: Seq[DataRow],
     headerRender(headers, bsTableStyle.headerStyle, Some(sortingDiv)),
     tbody(
       children <-- rows.signal.combineWith(filterString.signal).combineWith(sortingStatus.signal).map {
-        case ((dr, f), s) =>
+        case (dr, f, s) =>
           val filteredRows = dr.filter { d => rowFilter(d, f) }
           columnSort(filteredRows, s)
       }.split(_.rowID)(rowRender)

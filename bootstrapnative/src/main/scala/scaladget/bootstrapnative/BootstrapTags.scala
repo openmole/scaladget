@@ -438,7 +438,7 @@ trait BootstrapTags {
     def expand(inner: HtmlElement) = {
       div(overflow.hidden,
         transition := "height 300ms",
-        height <-- r.signal.map { rr =>
+        height <-- r.map { rr =>
           if (rr) inner.ref.style.height
           else "0px"
         },
@@ -541,7 +541,7 @@ trait BootstrapTags {
         cls := bsn.nav_item,
         a(
           cls := bsn.nav_link,
-          cls.toggle("active") <-- activeSignal.signal,
+          cls.toggle("active") <-- activeSignal,
           // cls.toggle("active") <-- activeSignal,
           a(idAttr := tabID,
             bsn.tab_role,
@@ -834,7 +834,7 @@ trait BootstrapTags {
 
       div(
         bsnsheet.toastCls, role := "alert", aria.live := "assertive", aria.atomic := true, dataAttr("animation") := "true",
-        cls <-- isActive.signal.map { a =>
+        cls <-- isActive.map { a =>
           if (a) "fade show" else "fade hide"
         },
         div(bsn.toastHeader, backgroundColor := initialToast.header.backgroundColor,

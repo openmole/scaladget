@@ -1,8 +1,7 @@
 package scaladget.bootstrapnative
 
 import org.scalajs.dom.raw.HTMLElement
-
-import scalatags.JsDom.all._
+import com.raquo.laminar.api.L._
 
 trait JSDependency{
   def path: String
@@ -21,7 +20,7 @@ trait JSDependency{
         j <- js
       } yield {
         org.scalajs.dom.document.body.appendChild(
-          scalatags.JsDom.tags.script(`type` := "text/javascript", src := j.path).render
+          script(`type` := "text/javascript", src := j.path).ref
         )
       }
     }
