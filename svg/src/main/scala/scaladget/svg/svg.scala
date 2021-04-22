@@ -19,24 +19,23 @@ package scaladget.svg
 
 import org.scalajs.dom
 import org.scalajs.dom.raw.Node
-
-import scalatags.JsDom.TypedTag
-import scalatags.JsDom.all._
-import scalatags.JsDom._
+import com.raquo.laminar.api.L.svg
+import com.raquo.laminar.api.L._
+import com.raquo.laminar.api._
 import scaladget.tools._
 
 object path {
-  implicit def pathToTypedTagPath(p: Path): TypedTag[dom.svg.Path] = p.render
+ // implicit def pathToTypedTagPath(p: ): HtmlElement = p
 
-  implicit def pathToNode(p: Path): Node = p().render
+  implicit def pathToNode(path: Path): Node = path.render.ref
 
   def start(x: Int, y: Int): Path = Path("").m(x, y)
 
-//  def apply(st: String = "", ms: ModifierSeq = emptyMod, precisionPattern: String = "") = new Path {
-//    val svgString = st
-//    val modifierSeq = ms
-//    val precision = precisionPattern
-//  }
+  def apply(st: String = "", precisionPattern: String = "") = Path(
+    st,
+    precisionPattern
+  )
+
 
   type PathOperator = String
   val M: PathOperator = "M"
@@ -54,7 +53,9 @@ object path {
   // presicion: Ex: 1.5f)
   case class Path(svgString: String = "", precisionPattern: String = "") {
 
-    def render: TypedTag[dom.svg.Path] = svgTags.path(svgAttrs.d := svgString)
+    def render = svg.path(svg.d := svgString)
+      // path()(d := svgString)
+
 
     def expand(value: Double) = {
       if (precisionPattern.isEmpty) value

@@ -13,7 +13,7 @@ val bootstrapIcons = "1.4.0"
 //val bootstrapVersion = "3.4.1"
 val bootstrapSliderVersion = "10.4.0"
 val highlightVersion = "10.4.1"
-val lunrVersion = "2.1.6"
+val lunrVersion = "2.3.9"
 
 //2.13
 val jsextVersion = "0.10"
@@ -31,9 +31,9 @@ name := "scaladget"
 
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
-scalaVersion in ThisBuild := "2.13.4"
+scalaVersion in ThisBuild := "2.13.5"
 
-crossScalaVersions in ThisBuild := Seq("2.12.11", "2.13.4")
+crossScalaVersions in ThisBuild := Seq("2.12.11", "2.13.5")
 
 pomIncludeRepository in ThisBuild := { _ => false }
 
@@ -96,9 +96,6 @@ lazy val ace = project.in(file("ace")) enablePlugins (ScalaJSBundlerPlugin) sett
   scalaJsDom,
   jsext,
   npmDependencies in Compile += "ace-builds" -> aceVersion
-  //webpackConfigFile := Some((resourceDirectory in Compile).value / "js/ace-config.js")
-  // npmInstallJSResources
-
 )
 //
 //lazy val aceDiff = project.in(file("acediff")) enablePlugins (ScalaJSBundlerPlugin) dependsOn (ace) settings(
@@ -126,26 +123,27 @@ lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (Sc
 lazy val highlightjs = project.in(file("highlightjs")) enablePlugins (ScalaJSBundlerPlugin) settings(
   jsext,
   scalaJsDom,
-  npmDependencies in Compile += "highlight.js"-> highlightVersion
+  npmDependencies in Compile += "highlight.js" -> highlightVersion
 )
-//
+
 //lazy val lunr = project.in(file("lunr")) enablePlugins (ScalaJSBundlerPlugin) settings (
-//  npmDeps in Compile += Dep("lunr", "2.1.5", List("lunr.js"))
+//  npmDependencies in Compile += "lunr" -> "2.1.5"
 //  )
-//
-//lazy val svg = project.in(file("svg")) enablePlugins (ScalaJSPlugin) settings(
-//  scalatags,
-//  scalaJsDom
-//) dependsOn (tools)
-//
-//
-lazy val tools = project.in(file("tools")) enablePlugins (ScalaJSPlugin) settings(
+
+lazy val svg = project.in(file("svg")) enablePlugins (ScalaJSPlugin) settings(
+  laminar,
+  scalaJsDom
+) dependsOn (tools)
+
+
+lazy val tools = project.in(file("tools")) enablePlugins (ScalaJSBundlerPlugin) settings(
   scalaJsDom,
   laminar
 )
-lazy val runDemo = taskKey[Unit]("runDemo")
 
-lazy val demo = project.in(file("demo")) enablePlugins (ScalaJSBundlerPlugin) settings(
+lazy val runBootstrapDemo = taskKey[Unit]("runBootsrapDemo")
+
+lazy val bootstrapDemo = project.in(file("bootstrapDemo")) enablePlugins (ScalaJSBundlerPlugin) settings(
   publishArtifact := false,
   publish := {},
   publishLocal := {},
@@ -154,12 +152,33 @@ lazy val demo = project.in(file("demo")) enablePlugins (ScalaJSBundlerPlugin) se
   sourceCode,
   scalaJSUseMainModuleInitializer := true,
   requireJsDomEnv in Test := true,
-  runDemo := {
+  runBootstrapDemo := {
     val demoResource = (resourceDirectory in Compile).value
     val jsBuild = (fastOptJS / webpack in Compile).value.head.data
 
-    IO.copyFile(jsBuild, target.value / "js/demo.js")
+    IO.copyFile(jsBuild, target.value / "js/demobootstrapnative.js")
     IO.copyDirectory(demoResource, target.value)
 
   }
 ) dependsOn(ace, bootstrapnative, tools, highlightjs)
+
+
+lazy val runSVGDemo = taskKey[Unit]("runSVGDemo")
+
+lazy val svgDemo = project.in(file("svgDemo")) enablePlugins (ScalaJSBundlerPlugin) settings(
+  publishArtifact := false,
+  publish := {},
+  publishLocal := {},
+  test := println("Tests disabled"),
+  laminar,
+  sourceCode,
+  scalaJSUseMainModuleInitializer := true,
+  requireJsDomEnv in Test := true,
+  runSVGDemo := {
+    val demoResource = (resourceDirectory in Compile).value
+    val jsBuild = (fastOptJS / webpack in Compile).value.head.data
+
+    IO.copyFile(jsBuild, target.value / "js/demosvg.js")
+    IO.copyDirectory(demoResource, target.value)
+  }
+) dependsOn(svg, tools, bootstrapnative, highlightjs)
