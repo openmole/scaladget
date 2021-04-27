@@ -182,3 +182,24 @@ lazy val svgDemo = project.in(file("svgDemo")) enablePlugins (ScalaJSBundlerPlug
     IO.copyDirectory(demoResource, target.value)
   }
 ) dependsOn(svg, tools, bootstrapnative, highlightjs)
+
+
+lazy val runFlowchartDemo = taskKey[Unit]("runFlowchartDemo")
+
+lazy val flowchartDemo = project.in(file("flowchartDemo")) enablePlugins (ScalaJSBundlerPlugin) settings(
+  publishArtifact := false,
+  publish := {},
+  publishLocal := {},
+  test := println("Tests disabled"),
+  laminar,
+  sourceCode,
+  scalaJSUseMainModuleInitializer := true,
+  requireJsDomEnv in Test := true,
+  runFlowchartDemo := {
+    val demoResource = (resourceDirectory in Compile).value
+    val jsBuild = (fastOptJS / webpack in Compile).value.head.data
+
+    IO.copyFile(jsBuild, target.value / "js/flowchart.js")
+    IO.copyDirectory(demoResource, target.value)
+  }
+) dependsOn(svg, tools, bootstrapnative)
