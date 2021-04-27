@@ -17,7 +17,7 @@ package scaladget.bootstrapnative
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import net.scalapro.sortable.{EventS, Sortable, SortableOptions}
+//import net.scalapro.sortable.{EventS, Sortable, SortableOptions}
 import com.raquo.domtypes.generic.Modifier
 import scaladget.bootstrapnative.Popup.{Bottom, ClickPopup, HoverPopup, Manual, PopupPosition, PopupType}
 import scaladget.tools.Utils._
@@ -457,16 +457,16 @@ trait BootstrapTags {
     def tabs(initialTabs: Seq[Tab] = Seq(), isClosable: Boolean = false, tabStyle: HESetters = bsnsheet.navTabs) = TabHolder(initialTabs, isClosable, 0, (tab: Tab) => {}, tabStyle)
 
 
-    def defaultSortOptions: (Var[Seq[Tab]], Int => Unit) => SortableOptions = (ts: Var[Seq[Tab]], setActive: Int => Unit) =>
-      SortableOptions.onEnd(
-        (event: EventS) ⇒ {
-          val oldI = event.oldIndex.asInstanceOf[Int]
-          val newI = event.newIndex.asInstanceOf[Int]
-          ts.update(cur => cur.updated(oldI, cur(newI)).updated(newI, cur(oldI)))
-          // ts() = ts.now.updated(oldI, ts.now(newI)).updated(newI, ts.now(oldI))
-          setActive(newI)
-        }
-      )
+//    def defaultSortOptions: (Var[Seq[Tab]], Int => Unit) => SortableOptions = (ts: Var[Seq[Tab]], setActive: Int => Unit) =>
+//      SortableOptions.onEnd(
+//        (event: EventS) ⇒ {
+//          val oldI = event.oldIndex.asInstanceOf[Int]
+//          val newI = event.newIndex.asInstanceOf[Int]
+//          ts.update(cur => cur.updated(oldI, cur(newI)).updated(newI, cur(oldI)))
+//          // ts() = ts.now.updated(oldI, ts.now(newI)).updated(newI, ts.now(oldI))
+//          setActive(newI)
+//        }
+//      )
 
     case class TabHolder(tabs: Seq[Tab], isClosable: Boolean, initIndex: Int /*, sortableOptions: Option[(Var[Seq[Tab]], Int => Unit) => SortableOptions]*/ , onActivation: Tab => Unit, tabStyle: HESetters) {
       def add(title: String, content: HtmlElement, onclickExtra: () => Unit = () => {}, onAddedTab: Tab => Unit = Tab => {}): TabHolder =

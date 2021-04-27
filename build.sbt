@@ -113,7 +113,7 @@ lazy val ace = project.in(file("ace")) enablePlugins (ScalaJSBundlerPlugin) sett
 //
 lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (ScalaJSBundlerPlugin) settings(
   scalaJsDom,
-  libraryDependencies += "org.openmole" %%% "sortable-js-facade" % scalaJSortableVersion,
+ // libraryDependencies += "org.openmole" %%% "sortable-js-facade" % scalaJSortableVersion,
   laminar,
   npmDependencies in Compile += "bootstrap.native" -> bootstrapNativeVersion,
   //npmDependencies in Compile += "sortablejs" -> sortableVersion
