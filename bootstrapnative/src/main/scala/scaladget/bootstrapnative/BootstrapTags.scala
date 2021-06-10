@@ -50,11 +50,15 @@ trait BootstrapTags {
   //val input_group_lg = "input-group-lg"
 
   // for multiple files, add multiple := true attr
-  def fileInput = input(idAttr := "fileinput", `type` := "file")
-
+  def fileInput(todo: Input => Unit) =
+    input(
+      idAttr := "fileinput",
+      `type` := "file",
+      inContext(thisNode=> onChange --> {_ => todo(thisNode)} )
+    )
 
   // CHECKBOX
-  def checkbox = input(`type` := "checkbox")
+  def checkbox(isChecked: Boolean) = input(`type` := "checkbox", checked := isChecked)
 
   trait Displayable {
     def name: String
