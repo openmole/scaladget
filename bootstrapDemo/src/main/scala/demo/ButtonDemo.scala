@@ -67,7 +67,7 @@ object ButtonDemo {
       glyphSpan(Seq(glyph_refresh, buttonStyle, fontSize := "20"), clickAction("refresh")),
       glyphSpan(Seq(glyph_lightning, buttonStyle,  fontSize := "20"), clickAction("flash")),
       h4("Radio", paddingTop := "30"),
-      unique,
+      unique.element,
       h4("Exclusive radio buttons", paddingTop := "30"),
       exRadio,
       h4("Toggle buttons", paddingTop := "30"),

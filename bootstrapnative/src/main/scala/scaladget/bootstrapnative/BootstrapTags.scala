@@ -106,7 +106,7 @@ trait BootstrapTags {
   }
 
   def toggle(activeState: ToggleState, default: Boolean, unactiveState: ToggleState, onToggled: () => Unit, modifiers: HESetters = emptySetters) =
-    ToggleButtonState(activeState, default, unactiveState, onToggled, modifiers).element
+    ToggleButtonState(activeState, default, unactiveState, onToggled, modifiers)
 
 
   case class RadioButtons(states: Seq[ToggleState], activeStates: Seq[ToggleState], unactiveStateClass: String, onToggled: ToggleState => Unit, modifiers: HESetters = emptySetters) {
