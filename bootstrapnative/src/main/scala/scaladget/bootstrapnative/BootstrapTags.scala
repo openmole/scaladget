@@ -345,8 +345,6 @@ trait BootstrapTags {
                             trigger: PopupType = HoverPopup,
                             title: Option[String] = None,
                             dismissible: Boolean = false) {
-    println("TO STIRNG " + innerElement.ref.toString())
-    println("TO STIRNG " + innerElement.ref.innerHTML)
     lazy val render = element.amend(
       dataAttr("toggle") := "popover",
       dataAttr("html") := "true",
@@ -363,9 +361,6 @@ trait BootstrapTags {
       dataAttr("dismissible") := dismissible.toString,
       onClick --> (_=> popover.show),
     )
-
-    // Invoke BSN.popover method
-  //  popover
 
     lazy val popover: BSN.Popover = new BSN.Popover(render.ref /*, scalajs.js.Dynamic.literal("title" -> "euinesaurtie")*/)
 

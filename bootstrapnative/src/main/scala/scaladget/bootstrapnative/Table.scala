@@ -2,6 +2,7 @@ package scaladget.bootstrapnative
 
 import scaladget.bootstrapnative.bsn._
 import com.raquo.laminar.api.L._
+import scaladget.bootstrapnative.Table.Column
 import scaladget.tools.Utils._
 
 import scala.util.Try
@@ -43,11 +44,17 @@ object Table {
       )
   }
 
+  case class Column(values: Seq[String])
+
   case class DataRow(values: Seq[String]) extends Row {
     def tds: Seq[HtmlElement] = values.map { v =>
       td(span(v), centerCell)
     }
   }
+
+  def column(index: Int, rows: Seq[DataRow]): Column = Column(rows.map {
+    _.values(index)
+  })
 
   def headerRender(headers: Option[Table.Header] = None,
                    headerStyle: HESetters = emptySetters,
@@ -76,8 +83,6 @@ object Sorting {
   case class SortingStatus(col: Int, sorting: Sorting)
 
   val defaultSortingStatus = SortingStatus(0, AscSorting)
-
-  case class Column(values: Seq[String])
 
   def sortInt(seq: Seq[String]) = Try(
     seq.map(_.toInt).zipWithIndex.sortBy(_._1).map(_._2)
@@ -207,10 +212,6 @@ case class DataTable(initialRows: Seq[DataRow],
   val nbColumns = initialRows.headOption.map(_.values.length).getOrElse(0)
 
   val sortingStatus: Var[SortingStatus] = Var(defaultSortingStatus)
-
-  def column(index: Int, rows: Seq[DataRow]): Column = Column(rows.map {
-    _.values(index)
-  })
 
   def columnSort(filteredRows: Seq[DataRow], sortingStatus: SortingStatus) = {
     val col = column(sortingStatus.col, filteredRows)

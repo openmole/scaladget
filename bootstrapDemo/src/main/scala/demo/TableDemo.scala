@@ -79,6 +79,7 @@ object TableDemo extends Demo {
       .addRow("0.0", "0.103", "88.6")
       .addRow("309", "3.14", "2218")
       .style(inverse_table)
+      .sortable
       .render
 
 
