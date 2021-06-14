@@ -18,6 +18,7 @@ package scaladget.bootstrapnative
  */
 
 //import net.scalapro.sortable.{EventS, Sortable, SortableOptions}
+
 import com.raquo.domtypes.generic.Modifier
 import scaladget.bootstrapnative.Popup.{Bottom, ClickPopup, HoverPopup, Manual, PopupPosition, PopupType}
 import scaladget.tools.Utils._
@@ -25,6 +26,7 @@ import com.raquo.laminar.api.L._
 import scaladget.tools.Stylesheet._
 import bsn.spacing._
 import scaladget.bootstrapnative.Table.Row
+import scalajs.js.|
 
 object BootstrapTags extends BootstrapTags
 
@@ -54,7 +56,7 @@ trait BootstrapTags {
     input(
       idAttr := "fileinput",
       `type` := "file",
-      inContext(thisNode=> onChange --> {_ => todo(thisNode)} )
+      inContext(thisNode => onChange --> { _ => todo(thisNode) })
     )
 
   // CHECKBOX
@@ -335,18 +337,20 @@ trait BootstrapTags {
   }
 
   //POPOVER
-  type TypedContent = String
+  type TypedContent = String | HtmlElement
 
   case class PopoverBuilder(element: HtmlElement,
-                            innerElement: TypedContent,
+                            innerElement: HtmlElement,
                             position: PopupPosition = Bottom,
                             trigger: PopupType = HoverPopup,
-                            title: Option[TypedContent] = None,
+                            title: Option[String] = None,
                             dismissible: Boolean = false) {
+    println("TO STIRNG " + innerElement.ref.toString())
+    println("TO STIRNG " + innerElement.ref.innerHTML)
     lazy val render = element.amend(
-
       dataAttr("toggle") := "popover",
-      dataAttr("content") := innerElement,
+      dataAttr("html") := "true",
+      dataAttr("content") := innerElement.ref.innerHTML,
       dataAttr("placement") := position.value,
       dataAttr("trigger") := {
         trigger match {
@@ -356,10 +360,14 @@ trait BootstrapTags {
         }
       },
       title.map(dataAttr("title") := _).getOrElse(emptyMod),
-      dataAttr("dismissible") := dismissible.toString
+      dataAttr("dismissible") := dismissible.toString,
+      onClick --> (_=> popover.show),
     )
 
-    lazy val popover = new BSN.Popover(render.ref /*, scalajs.js.Dynamic.literal("title" -> "euinesaurtie")*/)
+    // Invoke BSN.popover method
+  //  popover
+
+    lazy val popover: BSN.Popover = new BSN.Popover(render.ref /*, scalajs.js.Dynamic.literal("title" -> "euinesaurtie")*/)
 
     def show = popover.show
 
@@ -399,13 +407,13 @@ trait BootstrapTags {
       new TooltipBuilder(element, text, position, condition).render
     }
 
-    def popover(text: TypedContent,
+    def popover(content: HtmlElement,
                 position: PopupPosition = Bottom,
                 trigger: PopupType = HoverPopup,
-                title: Option[TypedContent] = None,
+                title: Option[String] = None,
                 dismissible: Boolean = false
                ) =
-      PopoverBuilder(element, text, position, trigger, title, dismissible)
+      PopoverBuilder(element, content, position, trigger, title, dismissible)
   }
 
   //  //DROPDOWN
@@ -461,16 +469,16 @@ trait BootstrapTags {
     def tabs(initialTabs: Seq[Tab] = Seq(), isClosable: Boolean = false, tabStyle: HESetters = bsnsheet.navTabs) = TabHolder(initialTabs, isClosable, 0, (tab: Tab) => {}, tabStyle)
 
 
-//    def defaultSortOptions: (Var[Seq[Tab]], Int => Unit) => SortableOptions = (ts: Var[Seq[Tab]], setActive: Int => Unit) =>
-//      SortableOptions.onEnd(
-//        (event: EventS) ⇒ {
-//          val oldI = event.oldIndex.asInstanceOf[Int]
-//          val newI = event.newIndex.asInstanceOf[Int]
-//          ts.update(cur => cur.updated(oldI, cur(newI)).updated(newI, cur(oldI)))
-//          // ts() = ts.now.updated(oldI, ts.now(newI)).updated(newI, ts.now(oldI))
-//          setActive(newI)
-//        }
-//      )
+    //    def defaultSortOptions: (Var[Seq[Tab]], Int => Unit) => SortableOptions = (ts: Var[Seq[Tab]], setActive: Int => Unit) =>
+    //      SortableOptions.onEnd(
+    //        (event: EventS) ⇒ {
+    //          val oldI = event.oldIndex.asInstanceOf[Int]
+    //          val newI = event.newIndex.asInstanceOf[Int]
+    //          ts.update(cur => cur.updated(oldI, cur(newI)).updated(newI, cur(oldI)))
+    //          // ts() = ts.now.updated(oldI, ts.now(newI)).updated(newI, ts.now(oldI))
+    //          setActive(newI)
+    //        }
+    //      )
 
     case class TabHolder(tabs: Seq[Tab], isClosable: Boolean, initIndex: Int /*, sortableOptions: Option[(Var[Seq[Tab]], Int => Unit) => SortableOptions]*/ , onActivation: Tab => Unit, tabStyle: HESetters) {
       def add(title: String, content: HtmlElement, onclickExtra: () => Unit = () => {}, onAddedTab: Tab => Unit = Tab => {}): TabHolder =
