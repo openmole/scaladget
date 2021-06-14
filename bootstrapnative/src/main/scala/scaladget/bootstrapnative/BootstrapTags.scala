@@ -23,7 +23,6 @@ import com.raquo.domtypes.generic.Modifier
 import scaladget.bootstrapnative.Popup.{Bottom, ClickPopup, HoverPopup, Manual, PopupPosition, PopupType}
 import scaladget.tools.Utils._
 import com.raquo.laminar.api.L._
-import scaladget.tools.Stylesheet._
 import bsn.spacing._
 import scaladget.bootstrapnative.Table.Row
 import scalajs.js.|
@@ -75,7 +74,7 @@ trait BootstrapTags {
 
   // Clickable span containing a glyphicon and a text
   def glyphSpan(glyphicon: HESetters, modifier: Modifier[HtmlElement] = emptyMod, text: String = "") =
-    span(text, glyphicon, pointer, aria.hidden := true, modifier)
+    span(text, glyphicon, cursor.pointer, aria.hidden := true, modifier)
 
 
   // Close buttons
@@ -529,7 +528,7 @@ trait BootstrapTags {
     //def onclose(f: (Tab) => Unit) = copy(onCloseExtra = f)
 
     lazy val tabClose: HESetters = Seq(
-      relativePosition,
+      position := "relative",
       fontSize := "20",
       color := "black",
       right := "-10",
@@ -552,7 +551,7 @@ trait BootstrapTags {
           // cls.toggle("active") <-- activeSignal,
           a(idAttr := tabID,
             bsn.tab_role,
-            pointer,
+            cursor.pointer,
             dataAttr("toggle") := "tab",
             dataAttr("height") := "true",
             aria.controls <-- tabStream.map { t => t.refID },

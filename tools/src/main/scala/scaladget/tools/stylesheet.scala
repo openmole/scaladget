@@ -93,22 +93,7 @@ trait Stylesheet {
 
     // CONVINIENT GENERAL ALIASES
 
-    lazy val floatLeft = float := "left"
 
-    lazy val floatRight = Seq(float := "right")
-
-    lazy val transparent = Seq(opacity := 0)
-
-    lazy val opaque = Seq(opacity := 1)
-
-    lazy val pointer = cursor := "pointer"
-
-    lazy val relativePosition = position := "relative"
-
-    lazy val absolutePosition = position := "absolute"
-
-    lazy val fixedPosition = position := "fixed"
-
-    lazy val passwordType = `type` := "password"
+   // lazy val passwordType = `type` := "password"
 
 }

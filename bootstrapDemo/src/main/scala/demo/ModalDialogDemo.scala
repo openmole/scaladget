@@ -1,8 +1,6 @@
 package demo
 
-import scaladget.bootstrapnative
 import scaladget.bootstrapnative.bsn
-import scaladget.tools.Stylesheet
 
 /*
  * Copyright (C) 19/08/16 // mathieu.leclaire@openmole.org
@@ -54,7 +52,7 @@ object ModalDialogDemo extends Demo {
     span(
       dialog.render,
       dialogTrigger,
-      span(bsn.glyph_settings, paddingLeft := "5", Stylesheet.pointer, openAction)
+      span(bsn.glyph_settings, paddingLeft := "5", cursor.pointer, openAction)
     )
   }
 
