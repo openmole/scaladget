@@ -79,7 +79,8 @@ trait BootstrapTags {
 
   // Close buttons
   def closeButton(dataDismiss: String, todo: () => Unit = () => {}) =
-    button(onClick --> { _ => todo() }, cls("close"), aria.label := "Close", dataAttr("dismiss") := dataDismiss)(
+    button(
+      onClick --> { _ => todo() }, cls("close"), aria.label := "Close", dataAttr("dismiss") := dataDismiss,
       span(aria.hidden := true, "&#215")
     )
 
@@ -358,7 +359,7 @@ trait BootstrapTags {
       },
       title.map(dataAttr("title") := _).getOrElse(emptyMod),
       dataAttr("dismissible") := dismissible.toString,
-      onClick --> (_=> popover.show),
+      onClick --> (_ => popover.show),
     )
 
     lazy val popover: BSN.Popover = new BSN.Popover(render.ref /*, scalajs.js.Dynamic.literal("title" -> "euinesaurtie")*/)
