@@ -45,9 +45,9 @@ object FormDemo extends Demo {
     val passInput = inputTag("").amend(placeholder := "Password", `type` := "password", inputStyle)
     val cityInput = inputTag("").amend(placeholder := "City", inputStyle)
 
-    val genderDD = elements.options(1, btn_success, (m: MyElement) => m.name, decorations = Map(elements(0)-> glyph_settings)).selector
+    val genderDD = elements.options(1, btn_success, (m: MyElement) => m.name, decorations = Map(elements(0) -> glyph_settings)).selector
 
-    div(
+    div(display.flex,   flexDirection.column,
       vForm(width := "200",
         loginInput.withLabel("Login"),
         passInput.withLabel("Password")
@@ -56,6 +56,8 @@ object FormDemo extends Demo {
         cityInput.withLabel("City"),
         genderDD
       ),
+      stickBefore(loginInput, inputGroupText("@")),
+      stickAfter(passInput, button("OK", btn_primary)).amend(paddingTop := "20"),
       span(marginTop := "20", child.text <-- loginValue.signal.map { lv => s"Login : $lv" })
     )
 

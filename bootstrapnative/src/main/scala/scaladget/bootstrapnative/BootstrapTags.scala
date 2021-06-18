@@ -42,11 +42,43 @@ trait BootstrapTags {
 
   def inputTag(content: String = "") = input(bsn.formControl, value := content)
 
-  val inputGroupBS = div(bsnsheet.inputGroup)
+  //  implicit def inputGroupToDiv(inputGroup: InputGroup): HtmlElement =
+  //    inputGroupBS.amend(
+  //      inputGroupAppend(inputGroup.app)
+  //        //.amend(inputGroupPrepend(inputGroup.pre))
+  //        .amend(inputGroup.el)
+  //
+  //    )
+  //
+  //  case class InputGroup(pre: HtmlElement = div(), el: HtmlElement = div(), app: HtmlElement = div()) {
+  //    def prepend(preElement: HtmlElement)= copy(pre = preElement)
+  //
+  //    def element(el: HtmlElement) = copy(el = el)
+  //
+  //    def append(appElement: HtmlElement) = copy(appElement)
+  //  }
+  //
+  //  val inputGroup = InputGroup()
 
-  def inputGroupButton = span(cls("input-group-btn"))
+  def stickBefore(element: HtmlElement, withSticker: HtmlElement) =
+    div(
+      bsnsheet.inputGroupClass,
+      inputGroupPrepend(withSticker),
+      element
+    )
 
-  def inputGroupAddon = span(cls("input-group-addon"))
+  def stickAfter(element: HtmlElement, withSticker: HtmlElement) =
+    div(
+      bsnsheet.inputGroupClass,
+      element,
+      inputGroupAppend(withSticker),
+    )
+
+  def inputGroupPrepend(element: HtmlElement) = span(cls("input-group-prepend")).amend(element)
+
+  def inputGroupAppend(element: HtmlElement) = span(cls("input-group-append")).amend(element)
+
+  def inputGroupText(text: String) = span(cls("input-group-text"), text)
 
   //val input_group_lg = "input-group-lg"
 

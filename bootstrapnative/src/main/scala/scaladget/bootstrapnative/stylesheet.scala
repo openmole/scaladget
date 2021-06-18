@@ -285,7 +285,7 @@ package stylesheet {
 
 
     //INPUTS
-    lazy val inputGroup = cls("input-group")
+    lazy val inputGroupClass = cls("input-group")
     lazy val inputGroupButtonClass = cls("input-group-btn")
     lazy val inputGroupAddonClass = cls("input-group-addon")
 
