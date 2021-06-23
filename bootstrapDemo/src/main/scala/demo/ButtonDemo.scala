@@ -33,16 +33,16 @@ object ButtonDemo {
 
     def clickAction(tag: String) = onClick --> { _ => clicked.set(tag) }
 
-    val yes = ToggleState("Yes", btn_primary_string)
-    val no = ToggleState("No", btn_secondary_string)
-    val male = ToggleState("Male", btn_primary_string)
-    val female = ToggleState("Female", btn_primary_string)
-    val pizza = ToggleState("Pizza", btn_primary_string)
-    val couscous = ToggleState("Couscous", btn_primary_string)
+    val yes = ToggleState("Yes", btn_primary_string, ()=> println("YES"))
+    val no = ToggleState("No", btn_secondary_string, ()=> println("NO"))
+    val male = ToggleState("Male", btn_primary_string, ()=> println("MALE"))
+    val female = ToggleState("Female", btn_primary_string, ()=> println("FEMALE"))
+    val pizza = ToggleState("Pizza", btn_primary_string, ()=> println("PIZZA"))
+    val couscous = ToggleState("Couscous", btn_primary_string, ()=> println("COUSCOUS"))
 
-    lazy val exRadio = exclusiveRadio(Seq(male,female, ToggleState("Other", btn_primary_string)), btn_secondary_string, male, (ts: ToggleState)=> println("Toggled " + ts.text))
+    lazy val exRadio = exclusiveRadio(Seq(male,female, ToggleState("Other", btn_primary_string, ()=> println("OTHER"))), btn_secondary_string, male)
     lazy val unique = toggle(yes, true, no, ()=> {println("toggled")})
-    lazy val theRadio = radio(Seq(pizza, couscous, ToggleState("Falafel", btn_primary_string)), Seq(pizza, couscous), btn_secondary_string, (ts: ToggleState)=> println("Toggled " + ts.text))
+    lazy val theRadio = radio(Seq(pizza, couscous, ToggleState("Falafel", btn_primary_string, ()=> println("FALAFEL"))), Seq(pizza, couscous), btn_secondary_string)
 
     div(
       h4("Buttons"),

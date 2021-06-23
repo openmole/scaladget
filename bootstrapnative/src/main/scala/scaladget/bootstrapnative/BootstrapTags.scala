@@ -118,7 +118,7 @@ trait BootstrapTags {
 
 
   //TOGGLE BUTTON
-  case class ToggleState(text: String, cls: String)
+  case class ToggleState(text: String, cls: String, todo: ()=> Unit)
 
   case class ToggleButtonState(state: ToggleState, activeState: Boolean, unactiveState: ToggleState, onToggled: () => Unit, modifiers: HESetters) {
 
@@ -142,7 +142,7 @@ trait BootstrapTags {
     ToggleButtonState(activeState, default, unactiveState, onToggled, modifiers)
 
 
-  case class RadioButtons(states: Seq[ToggleState], activeStates: Seq[ToggleState], unactiveStateClass: String, onToggled: ToggleState => Unit, modifiers: HESetters = emptySetters) {
+  case class RadioButtons(states: Seq[ToggleState], activeStates: Seq[ToggleState], unactiveStateClass: String, modifiers: HESetters = emptySetters) {
 
     lazy val active = Var(activeStates)
 
@@ -159,7 +159,7 @@ trait BootstrapTags {
               if (id == -1) ac.appended(rb)
               else ac.patch(id, Nil, 1)
             }
-            onToggled(rb)
+            rb.todo()
           }
         )
       }
@@ -167,12 +167,12 @@ trait BootstrapTags {
   }
 
 
-  def radio(buttons: Seq[ToggleState], activeStates: Seq[ToggleState], unactiveStateClass: String, onToggled: ToggleState => Unit, radioButtonsModifiers: HESetters = emptySetters) =
-    RadioButtons(buttons, activeStates, unactiveStateClass, onToggled, radioButtonsModifiers).element
+  def radio(buttons: Seq[ToggleState], activeStates: Seq[ToggleState], unactiveStateClass: String, radioButtonsModifiers: HESetters = emptySetters) =
+    RadioButtons(buttons, activeStates, unactiveStateClass, radioButtonsModifiers).element
 
 
   // RADIO
-  case class ExclusiveRadioButtons(buttons: Seq[ToggleState], unactiveStateClass: String, defaultToggle: ToggleState, onToggled: ToggleState => Unit, radioButtonsModifiers: HESetters) {
+  case class ExclusiveRadioButtons(buttons: Seq[ToggleState], unactiveStateClass: String, defaultToggle: ToggleState, radioButtonsModifiers: HESetters) {
 
     val active = Var(defaultToggle)
 
@@ -186,15 +186,15 @@ trait BootstrapTags {
           rb.text,
           onClick --> { _ =>
             active.set(rb)
-            onToggled(rb)
+            rb.todo()
           }
         )
       }
     )
   }
 
-  def exclusiveRadio(buttons: Seq[ToggleState], unactiveStateClass: String, defaultToggle: ToggleState, onToggled: ToggleState => Unit, radioButtonsModifiers: HESetters = emptySetters) =
-    ExclusiveRadioButtons(buttons, unactiveStateClass, defaultToggle, onToggled, radioButtonsModifiers).element
+  def exclusiveRadio(buttons: Seq[ToggleState], unactiveStateClass: String, defaultToggle: ToggleState, radioButtonsModifiers: HESetters = emptySetters) =
+    ExclusiveRadioButtons(buttons, unactiveStateClass, defaultToggle, radioButtonsModifiers).element
 
   //Label decorators to set the label size
   implicit class TypedTagLabel(badge: Span) {
