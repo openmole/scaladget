@@ -49,7 +49,7 @@ object ButtonDemo {
       button("Primary", clickAction("primary"), span(glyph_edit, paddingLeft := "10"), buttonStyle, btn_primary),
       button("Default", clickAction("default"), buttonStyle, btn_secondary),
       button("Info", clickAction("info"), buttonStyle, btn_info),
-      button("Default", clickAction("default"), buttonStyle, btn_default_outline),
+      button("Default", clickAction("default"), buttonStyle, btn_secondary_outline),
       button("Primary", clickAction("primary"), buttonStyle, btn_primary_outline),
       button("Info", clickAction("info"), buttonStyle, btn_info_outline),
       button("Success", clickAction("success"), buttonStyle, btn_success),

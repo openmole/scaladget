@@ -184,15 +184,23 @@ package stylesheet {
     //BUTTONS
     lazy val btn = cls("btn")
     lazy val btn_secondary_string = "btn btn-secondary"
-    lazy val btn_secondary = toButton("btn-secondary")
-    lazy val btn_primary_string = "btn btn-primary"
-    lazy val btn_primary = toButton("btn-primary")
-    lazy val btn_success = toButton("btn-success")
-    lazy val btn_info = toButton("btn-info")
-    lazy val btn_warning = toButton("btn-warning")
-    lazy val btn_danger = toButton("btn-danger")
+    lazy val btn_secondary = toButton(s"btn $btn_secondary_string")
 
-    lazy val btn_default_outline = toButton("btn-outline-default")
+    lazy val btn_primary_string = "btn btn-primary"
+    lazy val btn_primary = toButton(s"btn $btn_primary_string")
+
+    lazy val btn_success_string = "btn-success"
+    lazy val btn_success = toButton(s"btn $btn_success_string")
+
+    lazy val btn_info_string = "btn-info"
+    lazy val btn_info = toButton(s"btn $btn_info_string")
+
+    lazy val btn_warning_string = "btn-warning"
+    lazy val btn_warning = toButton(s"btn $btn_warning_string")
+
+    lazy val btn_danger_string = "btn-danger"
+    lazy val btn_danger = toButton(s"btn $btn_danger_string")
+
     lazy val btn_primary_outline = toButton("btn-outline-primary")
     lazy val btn_secondary_outline = toButton("btn-outline-secondary")
     lazy val btn_success_outline = toButton("btn-outline-success")
