@@ -32,16 +32,37 @@ object TabDemo extends Demo {
       "eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, " +
       "sunt in culpa qui officia deserunt mollit anim id est laborum.", padding := "10")
 
-    lazy val trigger = button("Add tab", onClick --> { _ => theTabs.tabs.update(t=> t:+Tab("An other", div("XXX"))) }, btn_danger, marginBottom := "20")
+    case class AA(i: Int)
+
+    val rng = scala.util.Random
+
+    lazy val trigger = button("Add tab", onClick --> { _ => {
+      val aa = AA(rng.nextInt())
+      theTabs.add(Tab(aa, span("An other"), div(s"Random number: ${aa.i}")))
+    }
+    }, btn_danger, marginBottom := "20")
 
     lazy val theTabs = Tabs.tabs(isClosable = true).
-      add("My first", div1, ()=> println("My first clicked")).
-      add("My second", inputTag("Hey !")).build
+      add(Tab(AA(4), span("My first"), div1, onClicked = () => println("My first clicked"))).
+      add(Tab(AA(5), span("My second"), inputTag("Hey !"), onRemoved = () => println("5 is dead"))).build
+
+
+    val toaster = toastStack(bottomRightPosition, unstackOnClose = true)
+    val warningToast = toast(ToastHeader("Warning", backgroundColor = "#eee"), "Your tab is empty", delay = Some(2000))
+
+    lazy val tabsObserver = Observer[Seq[Tab[AA]]] {(aas: Seq[Tab[AA]]) =>
+      if (aas.isEmpty) toaster.stackAndShow(warningToast)
+    }
+
 
     div(
       trigger,
-      theTabs.render
+      theTabs.render,
+      theTabs.tabs--> tabsObserver,
+      toaster.render
     )
+
+
   }
 
 

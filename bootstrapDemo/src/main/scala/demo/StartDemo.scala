@@ -74,7 +74,7 @@ object App {
               TableDemo.elementDemo,
             )
           } yield {
-            Tab(demo.title,
+            Tab(demo, span(demo.title),
               div(
                 h3(demo.title),
                 div(containerFluid,

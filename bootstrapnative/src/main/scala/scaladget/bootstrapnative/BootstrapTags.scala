@@ -118,7 +118,7 @@ trait BootstrapTags {
 
 
   //TOGGLE BUTTON
-  case class ToggleState(text: String, cls: String, todo: ()=> Unit)
+  case class ToggleState(text: String, cls: String, todo: () => Unit)
 
   case class ToggleButtonState(state: ToggleState, activeState: Boolean, unactiveState: ToggleState, onToggled: () => Unit, modifiers: HESetters) {
 
@@ -490,10 +490,17 @@ trait BootstrapTags {
   // TABS
   type TabID = String
 
-  case class Tab(title: String, content: HtmlElement, onclickExtra: () => Unit = () => {}, tabID: TabID = uuID.short("t"), refID: String = uuID.short("r"))
+  case class Tab[T](t: T,
+                    title: HtmlElement,
+                    content: HtmlElement,
+                    onClicked: () => Unit = () => {},
+                    onAdded: ()=> Unit = ()=> {},
+                    onRemoved: ()=> Unit = ()=> {},
+                    tabID: TabID = uuID.short("t"),
+                    refID: String = uuID.short("r"))
 
   object Tabs {
-    def tabs(initialTabs: Seq[Tab] = Seq(), isClosable: Boolean = false, tabStyle: HESetters = bsnsheet.navTabs) = TabHolder(initialTabs, isClosable, 0, (tab: Tab) => {}, tabStyle)
+    def tabs[T](initialTabs: Seq[Tab[T]] = Seq(), isClosable: Boolean = false, tabStyle: HESetters = bsnsheet.navTabs) = TabHolder(initialTabs, isClosable, 0, (tab: Tab[T]) => {}, tabStyle)
 
 
     //    def defaultSortOptions: (Var[Seq[Tab]], Int => Unit) => SortableOptions = (ts: Var[Seq[Tab]], setActive: Int => Unit) =>
@@ -507,12 +514,11 @@ trait BootstrapTags {
     //        }
     //      )
 
-    case class TabHolder(tabs: Seq[Tab], isClosable: Boolean, initIndex: Int /*, sortableOptions: Option[(Var[Seq[Tab]], Int => Unit) => SortableOptions]*/ , onActivation: Tab => Unit, tabStyle: HESetters) {
-      def add(title: String, content: HtmlElement, onclickExtra: () => Unit = () => {}, onAddedTab: Tab => Unit = Tab => {}): TabHolder =
-        add(Tab(title, content, onclickExtra = onclickExtra), onAddedTab)
-
-      def add(tab: Tab, onAdded: Tab => Unit): TabHolder = {
-        copy(tabs = this.tabs :+ tab)
+    case class TabHolder[T](tabs: Seq[Tab[T]], isClosable: Boolean, initIndex: Int /*, sortableOptions: Option[(Var[Seq[Tab]], Int => Unit) => SortableOptions]*/ , onActivation: Tab[T] => Unit, tabStyle: HESetters) {
+      def add(tab:Tab[T]): TabHolder[T] = {
+        val ts = copy(tabs = this.tabs :+ tab)
+        tab.onAdded()
+        ts
       }
 
       def closable = copy(isClosable = true)
@@ -521,41 +527,44 @@ trait BootstrapTags {
 
       //  def withSortableOptions(options: (Var[Seq[Tab]], Int => Unit) => SortableOptions) = copy(sortableOptions = Some(options))
 
-      def onActivation(onActivation: Tab => Unit = Tab => {}) = copy(onActivation = onActivation)
+    //  def onActivation(onActivation: Tab[T] => Unit = Tab => {}) = copy(onActivation = onActivation)
 
       def build = {
-        Tabs(tabs, isClosable, onActivation, tabStyle = tabStyle)
+        Tabs(tabs, isClosable, tabStyle = tabStyle)
       }
     }
 
   }
 
-  case class Tabs(initialTabs: Seq[Tab], isClosable: Boolean, onActivation: Tab => Unit = Tab => {}, onCloseExtra: Tab => Unit = Tab => {}, onRemoved: TabID => Unit = Tab => {}, tabStyle: HESetters) {
+  case class Tabs[T](initialTabs: Seq[Tab[T]], isClosable: Boolean, tabStyle: HESetters) {
 
     val tabs = Var(initialTabs)
-    val activeTab = Var(initialTabs.headOption.map(_.tabID))
+    val activeTabID = Var(initialTabs.headOption.map(_.tabID))
 
+    def activeTab = activeTabID.now.map(tab(_))
 
     def tab(tabID: TabID) = tabs.now.filter {
       _.tabID == tabID
-    }
+    }.head
 
-    def add(tab: Tab) = {
+    def add(tab: Tab[T], activate: Boolean = true) = {
       tabs.update(t => t :+ tab)
+      if(activate) activeTabID.set(Some(tab.tabID))
     }
 
-    def isActive(id: TabID) = Some(id) == activeTab.now
+    def isActive(id: TabID) = Some(id) == activeTabID.now
 
     def remove(tabID: TabID) = {
+      tab(tabID).onRemoved()
+
       tabs.update { cur =>
         cur.filterNot {
           _.tabID == tabID
         }
       }
-      if (isActive(tabID)) activeTab.set(tabs.now.headOption.map {
+      if (isActive(tabID)) activeTabID.set(tabs.now.headOption.map {
         _.tabID
       })
-      onRemoved(tabID)
     }
 
     //def onclose(f: (Tab) => Unit) = copy(onCloseExtra = f)
@@ -571,9 +580,9 @@ trait BootstrapTags {
 
     case class TabRender(tabHeader: Li, tabContent: Div)
 
-    def renderTab(tabID: TabID, initialTab: Tab, tabStream: Signal[Tab]): TabRender = {
+    def renderTab(tabID: TabID, initialTab: Tab[T], tabStream: Signal[Tab[T]]): TabRender = {
 
-      val activeSignal = tabStream.combineWith(activeTab.signal).map { case (t, tID) => Some(t.tabID) == tID }
+      val activeSignal = tabStream.combineWith(activeTabID.signal).map { case (t, tID) => Some(t.tabID) == tID }
 
       val header = li(
         // bsn.presentation_role,
@@ -589,14 +598,14 @@ trait BootstrapTags {
             dataAttr("height") := "true",
             aria.controls <-- tabStream.map { t => t.refID },
             onClick --> { _ =>
-              activeTab.set(Some(tabID))
-              initialTab.onclickExtra()
+              activeTabID.set(Some(tabID))
+              initialTab.onClicked()
             },
             if (isClosable) button(cls := "close", tabClose, `type` := "button", "×",
               onClick --> { e =>
                 remove(initialTab.tabID)
               }) else span(),
-            child.text <-- tabStream.map {
+            child <-- tabStream.map {
               _.title
             }
           )
