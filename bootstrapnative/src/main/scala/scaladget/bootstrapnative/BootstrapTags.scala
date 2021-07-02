@@ -493,9 +493,10 @@ trait BootstrapTags {
   case class Tab[T](t: T,
                     title: HtmlElement,
                     content: HtmlElement,
+                    active: Boolean = false,
                     onClicked: () => Unit = () => {},
-                    onAdded: ()=> Unit = ()=> {},
-                    onRemoved: ()=> Unit = ()=> {},
+                    onAdded: () => Unit = () => {},
+                    onRemoved: () => Unit = () => {},
                     tabID: TabID = uuID.short("t"),
                     refID: String = uuID.short("r"))
 
@@ -515,7 +516,7 @@ trait BootstrapTags {
     //      )
 
     case class TabHolder[T](tabs: Seq[Tab[T]], isClosable: Boolean, initIndex: Int /*, sortableOptions: Option[(Var[Seq[Tab]], Int => Unit) => SortableOptions]*/ , onActivation: Tab[T] => Unit, tabStyle: HESetters) {
-      def add(tab:Tab[T]): TabHolder[T] = {
+      def add(tab: Tab[T]): TabHolder[T] = {
         val ts = copy(tabs = this.tabs :+ tab)
         tab.onAdded()
         ts
@@ -527,7 +528,7 @@ trait BootstrapTags {
 
       //  def withSortableOptions(options: (Var[Seq[Tab]], Int => Unit) => SortableOptions) = copy(sortableOptions = Some(options))
 
-    //  def onActivation(onActivation: Tab[T] => Unit = Tab => {}) = copy(onActivation = onActivation)
+      //  def onActivation(onActivation: Tab[T] => Unit = Tab => {}) = copy(onActivation = onActivation)
 
       def build = {
         Tabs(tabs, isClosable, tabStyle = tabStyle)
@@ -539,32 +540,51 @@ trait BootstrapTags {
   case class Tabs[T](initialTabs: Seq[Tab[T]], isClosable: Boolean, tabStyle: HESetters) {
 
     val tabs = Var(initialTabs)
-    val activeTabID = Var(initialTabs.headOption.map(_.tabID))
 
-    def activeTab = activeTabID.now.map(tab(_))
+    if (!initialTabs.map(_.active).exists(_ == true))
+      setFirstActive
+
+    def activeTab = tabs.now.filter(_.active).headOption
+
+    def setFirstActive = tabs.now().headOption.foreach { t =>
+      setActive(t.tabID)
+    }
+
+    def setActive(tabID: TabID) = {
+      tabs.update { ts =>
+        ts.map { t => t.copy(active = t.tabID == tabID) }
+      }
+    }
 
     def tab(tabID: TabID) = tabs.now.filter {
       _.tabID == tabID
-    }.head
+    }.headOption
 
     def add(tab: Tab[T], activate: Boolean = true) = {
       tabs.update(t => t :+ tab)
-      if(activate) activeTabID.set(Some(tab.tabID))
+      if (activate) setActive(tab.tabID)
     }
 
-    def isActive(id: TabID) = Some(id) == activeTabID.now
+    def isActive(id: TabID) = tab(id).map {
+      _.active
+    }.getOrElse(false)
 
     def remove(tabID: TabID) = {
-      tab(tabID).onRemoved()
+      tab(tabID).map {
+        _.onRemoved()
+      }
 
-      tabs.update { cur =>
-        cur.filterNot {
-          _.tabID == tabID
+      //Remove tab
+      tabs.update(t => t.filterNot(_.tabID == tabID))
+
+      //Fix active tab
+      if (tabs.now().length > 0 && tabs.now().map {
+        _.active
+      }.forall(_ == false)) {
+        tabs.update { e =>
+          e.head.copy(active = true) +: e.tail
         }
       }
-      if (isActive(tabID)) activeTabID.set(tabs.now.headOption.map {
-        _.tabID
-      })
     }
 
     //def onclose(f: (Tab) => Unit) = copy(onCloseExtra = f)
@@ -582,15 +602,14 @@ trait BootstrapTags {
 
     def renderTab(tabID: TabID, initialTab: Tab[T], tabStream: Signal[Tab[T]]): TabRender = {
 
-      val activeSignal = tabStream.combineWith(activeTabID.signal).map { case (t, tID) => Some(t.tabID) == tID }
 
       val header = li(
-        // bsn.presentation_role,
         cls := bsn.nav_item,
         a(
           cls := bsn.nav_link,
-          cls.toggle("active") <-- activeSignal,
-          // cls.toggle("active") <-- activeSignal,
+          cls.toggle("active") <-- tabStream.map { t =>
+            t.active
+          },
           a(idAttr := tabID,
             bsn.tab_role,
             cursor.pointer,
@@ -598,12 +617,13 @@ trait BootstrapTags {
             dataAttr("height") := "true",
             aria.controls <-- tabStream.map { t => t.refID },
             onClick --> { _ =>
-              activeTabID.set(Some(tabID))
+              setActive(tabID)
               initialTab.onClicked()
             },
             if (isClosable) button(cls := "close", tabClose, `type` := "button", "×",
               onClick --> { e =>
                 remove(initialTab.tabID)
+                e.stopPropagation()
               }) else span(),
             child <-- tabStream.map {
               _.title
@@ -617,7 +637,7 @@ trait BootstrapTags {
         div(bsn.tab_content,
           div(bsn.tab_panel_role,
             bsn.tab_pane, bsn.fade,
-            cls.toggle("active show") <-- activeSignal,
+            cls.toggle("active show") <-- tabStream.map(_.active),
             child <-- tabStream.map { t => t.content }
           )
         )
