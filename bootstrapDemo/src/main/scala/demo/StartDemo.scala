@@ -72,6 +72,7 @@ object App {
               NavBarDemo.elementDemo,
               ToastDemo.elementDemo,
               TableDemo.elementDemo,
+              TestDemo.elementDemo
             )
           } yield {
             Tab(demo, span(demo.title),
