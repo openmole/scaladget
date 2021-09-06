@@ -25,6 +25,7 @@ import com.raquo.laminar.api.L._
 import scaladget.tools.Stylesheet._
 import bsn.spacing._
 import scaladget.bootstrapnative.Table.Row
+import scala.language.implicitConversions
 
 object BootstrapTags extends BootstrapTags
 
@@ -35,7 +36,8 @@ trait BootstrapTags {
 
   type HESetters = Seq[HESetter]
 
-  implicit def HESetterToHeSetters(setter: HESetter): HESetters = Seq(setter)
+  //implicit def HESetterToHeSetters(setter: HESetter): HESetters = Seq(setter)
+  implicit val heSetterConversion: Conversion[HESetter, HESetters] = Seq(_)
 
   val emptySetters: HESetters = Seq[HESetter]()
 
@@ -217,16 +219,16 @@ trait BootstrapTags {
     lazy val modal = new BSN.Modal(render.ref)
 
     def show = {
-      modal.show
+      modal.show()
       onopen()
     }
 
     def hide = {
-      modal.hide
+      modal.hide()
       onclose()
     }
 
-    def toggle = modal.toggle
+    def toggle = modal.toggle()
 
   }
 
@@ -357,11 +359,11 @@ trait BootstrapTags {
 
     lazy val popover = new BSN.Popover(render.ref /*, scalajs.js.Dynamic.literal("title" -> "euinesaurtie")*/)
 
-    def show = popover.show
+    def show = popover.show()
 
-    def hide = popover.hide
+    def hide = popover.hide()
 
-    def toggle = popover.toggle
+    def toggle = popover.toggle()
 
   }
 
@@ -384,7 +386,7 @@ trait BootstrapTags {
 
     lazy val tooltip = new BSN.Tooltip(render.ref)
 
-    def hide = tooltip.hide
+    def hide = tooltip.hide()
   }
 
   implicit class PopableTypedTag(element: HtmlElement) {
@@ -463,7 +465,7 @@ trait BootstrapTags {
           val oldI = event.oldIndex.asInstanceOf[Int]
           val newI = event.newIndex.asInstanceOf[Int]
           ts.update(cur => cur.updated(oldI, cur(newI)).updated(newI, cur(oldI)))
-          // ts() = ts.now.updated(oldI, ts.now(newI)).updated(newI, ts.now(oldI))
+          // ts() = ts.now().updated(oldI, ts.now(newI)).updated(newI, ts.now(oldI))
           setActive(newI)
         }
       )
@@ -497,7 +499,7 @@ trait BootstrapTags {
     val activeTab = Var(initialTabs.headOption.map(_.tabID))
 
 
-    def tab(tabID: TabID) = tabs.now.filter {
+    def tab(tabID: TabID) = tabs.now().filter {
       _.tabID == tabID
     }
 
@@ -505,7 +507,7 @@ trait BootstrapTags {
       tabs.update(t => t :+ tab)
     }
 
-    def isActive(id: TabID) = Some(id) == activeTab.now
+    def isActive(id: TabID) = Some(id) == activeTab.now()
 
     def remove(tabID: TabID) = {
       tabs.update { cur =>
@@ -513,7 +515,7 @@ trait BootstrapTags {
           _.tabID == tabID
         }
       }
-      if (isActive(tabID)) activeTab.set(tabs.now.headOption.map {
+      if (isActive(tabID)) activeTab.set(tabs.now().headOption.map {
         _.tabID
       })
       onRemoved(tabID)
@@ -702,13 +704,13 @@ trait BootstrapTags {
   //    val selected = Var(buttons.head)
   //    val selectedAgain = Var(false)
   //
-  //    def buttonBackground(b: ExclusiveButton) = (if (b == selected.now) btn +++ selectionStyle else btn +++ defaultStyle)
+  //    def buttonBackground(b: ExclusiveButton) = (if (b == selected.now()) btn +++ selectionStyle else btn +++ defaultStyle)
   //
   //    def glyphButtonBackground(b: ExclusiveButton) = buttonBackground(b) +++ twoGlyphButton
   //
   //    def stringButtonBackground(b: ExclusiveButton) = buttonBackground(b) +++ stringButton
   //
-  //    def glyphForTwoStates(ts: TwoStates, mod: ModifierSeq) = (ts == selected.now, mod, emptyMod)
+  //    def glyphForTwoStates(ts: TwoStates, mod: ModifierSeq) = (ts == selected.now(), mod, emptyMod)
   //
   //    val div: Modifier = Rx {
   //      selected()
@@ -729,7 +731,7 @@ trait BootstrapTags {
   //    }
   //
   //    private def action(b: ExclusiveButton, a: () ⇒ Unit) = () ⇒ {
-  //      selectedAgain() = if (b == selected.now) !selectedAgain.now else false
+  //      selectedAgain() = if (b == selected.now()) !selectedAgain.now() else false
   //      selected() = b
   //      a()
   //    }
@@ -804,16 +806,16 @@ trait BootstrapTags {
     val toasts = Var(initialToasts)
     val activeToasts = Var(Seq[Toast]())
 
-    def toast(toastID: ToastID) = toasts.now.filter(_.toastID == toastID)
+    def toast(toastID: ToastID) = toasts.now().filter(_.toastID == toastID)
 
     def stack(toast: Toast) =
-      if (!toasts.now.exists(_ == toast))
+      if (!toasts.now().exists(_ == toast))
         toasts.update(ts => ts :+ toast)
 
     def unstack(toast: Toast) = toasts.update(ts => ts.filterNot(_ == toast))
 
     def show(toast: Toast) =
-      if (!activeToasts.now.exists(_ == toast)) {
+      if (!activeToasts.now().exists(_ == toast)) {
         activeToasts.update(ts => ts :+ toast)
         toast.delay.foreach { d =>
           scalajs.js.timers.setTimeout(d)(hide(toast))

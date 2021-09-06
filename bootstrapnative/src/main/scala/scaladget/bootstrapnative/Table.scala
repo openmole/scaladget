@@ -105,7 +105,7 @@ import Sorting._
 
 case class DataTableBuilder(initialRows: Seq[Seq[String]],
                             headers: Option[Table.Header] = None,
-                            bsTableStyle: BSTableStyle = Table.BSTableStyle(bordered_table),
+                            bsTableStyle: BSTableStyle = Table.BSTableStyle(Seq(bordered_table)),
                             sorting: Boolean = false) {
 
   def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
