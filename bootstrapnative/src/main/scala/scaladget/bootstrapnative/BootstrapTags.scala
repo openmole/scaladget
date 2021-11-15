@@ -648,11 +648,13 @@ trait BootstrapTags {
       TabRender(header, tabDiv)
     }
 
-    def render = {
-      div(child <-- tabs.signal.split(_.tabID)(renderTab).map { tr =>
-        div(
+    def render: Div = render("")
+
+    def render(contentClass: String): Div = {
+      div(children <-- tabs.signal.split(_.tabID)(renderTab).map { tr =>
+        Seq(
           ul(bsn.nav, tabStyle, tr.map(_.tabHeader)),
-          div(bsn.tab_content, paddingTop := "10", tr.map(_.tabContent))
+          div(bsn.tab_content, paddingTop := "10", tr.map(_.tabContent), cls := contentClass)
         )
       })
     }
