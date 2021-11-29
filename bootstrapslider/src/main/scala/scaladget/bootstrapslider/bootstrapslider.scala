@@ -26,9 +26,7 @@ trait SliderOptions extends js.Object {
   val handle: js.UndefOr[String] = js.native
   val reversed: js.UndefOr[Boolean] = js.native
   val enabled: js.UndefOr[Boolean] = js.native
-
-  def formatter(v: Double): String = js.native
-
+  val formatter: js.UndefOr[Double => String] = js.native
   val natural_arrow_keys: js.UndefOr[Boolean] = js.native
   val ticks: js.UndefOr[js.Array[Double]] = js.native
   val ticks_positions: js.UndefOr[js.Array[Double]] = js.native
@@ -75,6 +73,8 @@ class SliderOptionsBuilder(val dict: OptMap) extends JSOptionBuilder[SliderOptio
   def reversed(v: Boolean) = jsOpt("reversed", v)
 
   def enabled(v: Boolean) = jsOpt("enabled", v)
+  
+  def formatter(v: Double => String) = jsOpt("formatter", v)
 
   def natural_arrow_keys(v: Boolean) = jsOpt("natural_arrow_keys", v)
 
