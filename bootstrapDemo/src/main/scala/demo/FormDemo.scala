@@ -35,7 +35,7 @@ object FormDemo extends Demo {
       MyElement("Female")
     )
 
-    val loginInput = inputTag(loginValue.now).amend(
+    val loginInput = inputTag(loginValue.now()).amend(
       placeholder := "Login",
       width := "150",
       inContext { thisNode => onInput.map(_ => thisNode.ref.value) --> loginValue }

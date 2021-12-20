@@ -43,7 +43,7 @@ object AceDemo extends Demo {
     editor.setTheme("ace/theme/github")
 
     editor.container.style.lineHeight = s"${lineHeight}px"
-    editor.renderer.updateFontSize
+    editor.renderer.updateFontSize()
 
     session.setValue("def fib(n):\rval axx = 7\nval b = 8\nval c = a*b\n\nprintln(c)")
     editor.setOptions(js.Dynamic.literal(

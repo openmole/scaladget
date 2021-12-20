@@ -44,14 +44,14 @@ object SelectDemo {
         1,
         Seq(btn_success, width := "160"),
         (m: MyElement) => m.name,
-        onclose = () => selected.set(optionDropDown.content.now.get),
+        onclose = () => selected.set(optionDropDown.content.now().get),
         decorations = Map(first -> glyph_archive, second -> glyph_settings, third -> glyph_filter)
       )
 
     lazy val fixedTitleOptions: Options[MyElement] = elements.options(
       key = btn_danger,
       naming = (m: MyElement) => m.name,
-      onclose = () => println(fixedTitleOptions.content.now.get),
+      onclose = () => println(fixedTitleOptions.content.now().get),
       fixedTitle = Some("Actions")
     )
 

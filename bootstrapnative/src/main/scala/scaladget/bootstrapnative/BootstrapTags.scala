@@ -131,7 +131,7 @@ trait BootstrapTags {
         if (t) state.cls
         else unactiveState.cls
       ),
-      child <-- toggled.signal.map { t => div(if(t) state.text else unactiveState.text, span(bootstrapnative.bsn.glyph_right_caret) )},
+      child <-- toggled.signal.map { t => div(if (t) state.text else unactiveState.text, span(bootstrapnative.bsn.glyph_right_caret)) },
       onClick --> { _ =>
         toggled.update(!_)
         onToggled()
@@ -233,9 +233,9 @@ trait BootstrapTags {
   case class ModalDialog(modalHeader: HtmlElement,
                          modalBody: HtmlElement,
                          modalFooter: HtmlElement,
-                         modifiers: HESetters,
-                         onopen: () => Unit,
-                         onclose: () => Unit) {
+                         modifiers: HESetters = emptySetters,
+                         onopen: () => Unit = () => {},
+                         onclose: () => Unit = ()=> {}) {
 
     lazy val render = {
       val d = div(
@@ -257,21 +257,21 @@ trait BootstrapTags {
     lazy val modal = new BSN.Modal(render.ref)
 
     def show = {
-      modal.show
+      modal.show()
       onopen()
     }
 
     def hide = {
-      modal.hide
+      modal.hide()
       onclose()
     }
 
-    def toggle = modal.toggle
+    def toggle = modal.toggle()
 
   }
 
-  def modalDialog(modalHeader: HtmlElement, modalBody: HtmlElement, modalFooter: HtmlElement, onopen: () => Unit, onclose: () => Unit, modifiers: HESetters = emptySetters) =
-    ModalDialog(modalHeader, modalBody, modalFooter, modifiers, onopen, onclose)
+//  def modalDialog(modalHeader: HtmlElement, modalBody: HtmlElement, modalFooter: HtmlElement, onopen: () => Unit, onclose: () => Unit, modifiers: HESetters = emptySetters) =
+//    ModalDialog(modalHeader, modalBody, modalFooter, modifiers, onopen, onclose)
 
 
   // NAVS
@@ -393,16 +393,16 @@ trait BootstrapTags {
       },
       title.map(dataAttr("title") := _).getOrElse(emptyMod),
       dataAttr("dismissible") := dismissible.toString,
-      onClick --> (_ => popover.show),
+      onClick --> (_ => popover.show()),
     )
 
     lazy val popover: BSN.Popover = new BSN.Popover(render.ref /*, scalajs.js.Dynamic.literal("title" -> "euinesaurtie")*/)
 
-    def show = popover.show
+    def show = popover.show()
 
-    def hide = popover.hide
+    def hide = popover.hide()
 
-    def toggle = popover.toggle
+    def toggle = popover.toggle()
 
   }
 
@@ -425,7 +425,7 @@ trait BootstrapTags {
 
     lazy val tooltip = new BSN.Tooltip(render.ref)
 
-    def hide = tooltip.hide
+    def hide = tooltip.hide()
   }
 
   implicit class PopableTypedTag(element: HtmlElement) {
@@ -546,7 +546,7 @@ trait BootstrapTags {
     if (!initialTabs.map(_.active).exists(_ == true))
       setFirstActive
 
-    def activeTab = tabs.now.filter(_.active).headOption
+    def activeTab = tabs.now().filter(_.active).headOption
 
     def setFirstActive = tabs.now().headOption.foreach { t =>
       setActive(t.tabID)
@@ -558,7 +558,7 @@ trait BootstrapTags {
       }
     }
 
-    def tab(tabID: TabID) = tabs.now.filter {
+    def tab(tabID: TabID) = tabs.now().filter {
       _.tabID == tabID
     }.headOption
 
@@ -733,16 +733,16 @@ trait BootstrapTags {
     val toasts = Var(initialToasts)
     val activeToasts = Var(Seq[Toast]())
 
-    def toast(toastID: ToastID) = toasts.now.filter(_.toastID == toastID)
+    def toast(toastID: ToastID) = toasts.now().filter(_.toastID == toastID)
 
     def stack(toast: Toast) =
-      if (!toasts.now.exists(_ == toast))
+      if (!toasts.now().exists(_ == toast))
         toasts.update(ts => ts :+ toast)
 
     def unstack(toast: Toast) = toasts.update(ts => ts.filterNot(_ == toast))
 
     def show(toast: Toast) =
-      if (!activeToasts.now.exists(_ == toast)) {
+      if (!activeToasts.now().exists(_ == toast)) {
         activeToasts.update(ts => ts :+ toast)
         toast.delay.foreach { d =>
           scalajs.js.timers.setTimeout(d)(hide(toast))

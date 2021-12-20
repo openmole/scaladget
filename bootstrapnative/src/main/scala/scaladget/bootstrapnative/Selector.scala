@@ -69,11 +69,11 @@ object Selector {
 
     def set(t: T) = content.set(Some(t))
 
-    def get: Option[T] = content.now
+    def get: Option[T] = content.now()
 
     def getOrElse(t: T) = get.getOrElse(t)
 
-    def isContentsEmpty = contents.now.isEmpty
+    def isContentsEmpty = contents.now().isEmpty
 
     def close = opened.set(false)
 
@@ -90,7 +90,7 @@ object Selector {
           child.text <-- content.signal.map { c => fixedTitle.getOrElse(c.map(naming).getOrElse("")) },
           span(caret),
           onClick --> { _ =>
-            opened.set(!opened.now)
+            opened.set(!opened.now())
             onclickExtra()
           }
         ),
@@ -99,7 +99,7 @@ object Selector {
           cls.toggle("show") <-- opened.signal,
           aria.labelledBy(autoID),
           for {
-            c <- contents.now
+            c <- contents.now()
           } yield {
             a(
               cls := "dropdown-item",
@@ -117,7 +117,7 @@ object Selector {
       )
 
     selector.ref.addEventListener("mousedown", (e: Event) => {
-      e.stopPropagation
+      e.stopPropagation()
     })
 
     selector.ref.onClickOutside(() => {

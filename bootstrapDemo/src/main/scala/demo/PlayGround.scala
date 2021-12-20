@@ -50,7 +50,7 @@ object PlayGround {
 
     def gear(id: Int) = div(cls := "bi-gear-fill", cursor.pointer, onClick --> { _ =>
       onoff.set(
-        if (id == onoff.now) -1
+        if (id == onoff.now()) -1
         else id
       )
     })

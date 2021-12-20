@@ -1,6 +1,5 @@
 package demo
 
-import scaladget.bootstrapnative.bsn
 
 /*
  * Copyright (C) 19/08/16 // mathieu.leclaire@openmole.org
@@ -19,32 +18,33 @@ import scaladget.bootstrapnative.bsn
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import scaladget.bootstrapnative.bsn._
 import com.raquo.laminar.api.L._
 
 object ModalDialogDemo extends Demo {
 
   val sc = sourcecode.Text {
 
-      lazy val dialog: bsn.ModalDialog = bsn.modalDialog (
-      div("Header"),
-      div("body"),
-      div(bsn.btnGroup, dialogCloseTrigger, button("OK", bsn.btn_success)),
-      () => println("Opened"),
-      () => println("closed")
-    )
-
     def dialogCloseTrigger = button(
       "Close",
-      bsn.btn_secondary,
+      btn_secondary,
       onClick --> { _ =>
         dialog.hide
       }
     )
 
+    lazy val dialog: ModalDialog = ModalDialog(
+      div("Header"),
+      div("body"),
+      div(btnGroup, dialogCloseTrigger, button("OK", btn_success)),
+      onopen = () => println("Opened"),
+      onclose = () => println("closed")
+    )
+
     def openAction = onClick --> { _ => dialog.show }
 
     val dialogTrigger = button(
-      bsn.btn_primary,
+      btn_primary,
       "Modal !",
       openAction
     )
@@ -52,7 +52,7 @@ object ModalDialogDemo extends Demo {
     span(
       dialog.render,
       dialogTrigger,
-      span(bsn.glyph_settings, paddingLeft := "5", cursor.pointer, openAction)
+      span(glyph_settings, paddingLeft := "5", cursor.pointer, openAction)
     )
   }
 
