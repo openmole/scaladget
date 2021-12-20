@@ -54,10 +54,6 @@ object App {
         //  FormDemo.elementDemo.element
         Tabs.tabs(
           for {
-            //          demo <- Seq(
-            //            //            AceDiffDemo.elementDemo,
-            //            //            SliderDemo.elementDemo,
-
             demo <- Seq(
               AceDemo.elementDemo,
               LabelDemo.elementDemo,
@@ -72,7 +68,7 @@ object App {
               NavBarDemo.elementDemo,
               ToastDemo.elementDemo,
               TableDemo.elementDemo,
-              TestDemo.elementDemo
+              PlayGround.elementDemo,
             )
           } yield {
             Tab(demo, span(demo.title),

@@ -31,7 +31,6 @@ object AceDemo extends Demo {
     val lineHeight = "13"
 
     val editorDiv = div(idAttr := "editor", height := editorHeight, paddingRight := "20")
-    //val visibleLines = editorHeight / lineHeight
 
     val editor = ace.edit(editorDiv.ref)
     val session = editor.getSession()
@@ -49,62 +48,12 @@ object AceDemo extends Demo {
     session.setValue("def fib(n):\rval axx = 7\nval b = 8\nval c = a*b\n\nprintln(c)")
     editor.setOptions(js.Dynamic.literal(
       "enableBasicAutocompletion" -> true,
-      // "enableSnippets" -> true,
       "enableLiveAutocompletion" -> true
     ))
-
-    //    val sT = Var(0.0)
-    //
-    //    def updateScrollTop = sT.update(editor.renderer.getScrollTop)
-
-    //    session.on("change", (x) => {
-    //      updateScrollTop
-    //    })
-    //
-    //    session.on("changeScrollTop", x => {
-    //      updateScrollTop
-    //    })
-
-    val errors = Seq(1, 2, 3, 4, 5, 9, 10, 11, 12, 13, 14, 15, 16, 21, 29, 35, 43, 54)
-
-    //    def buildManualPopover(line: Int, y: Double, title: String, position: PopupPosition) = {
-    //      lazy val pop1 = div(line)(`class` := "errorBackground", top := y).popover(
-    //        title,
-    //        position,
-    //        Manual
-    //      )
-    //      lazy val pop1Render = pop1.render
-    //
-    //      pop1Render.onclick = { (e: Event) =>
-    //        Popover.hide
-    //        Popover.toggle(pop1)
-    //        e.stopPropagation
-    //      }
-    //      pop1Render
-    //    }
-
-    //    val errorDiv = div(`class` := "errorForeground")(
-    //      Rx {
-    //        val scrollAsLines = sT() / lineHeight
-    //        val max = visibleLines + scrollAsLines
-    //        div(
-    //          for {
-    //            i <- errors.filter { e =>
-    //              e > scrollAsLines && e < max
-    //            }
-    //          } yield {
-    //            buildManualPopover(i, (i - scrollAsLines - 1) * lineHeight, s"YYY $i", Popup.Left)
-    //          }
-    //        )
-    //      }
-    //    )
-    //editor.focus()
     div(
-      //errorDiv,
       div("Youhou !", fontWeight.bold),
       editorDiv
     )
-    //
   }
 
   val elementDemo = new ElementDemo {

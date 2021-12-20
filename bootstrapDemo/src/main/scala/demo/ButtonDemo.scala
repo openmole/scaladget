@@ -71,7 +71,9 @@ object ButtonDemo {
       h4("Exclusive radio buttons", paddingTop := "30"),
       exRadio,
       h4("Toggle buttons", paddingTop := "30"),
-      theRadio
+      theRadio,
+      h4("Check button"),
+      checkbox(true)
     )
   }
 

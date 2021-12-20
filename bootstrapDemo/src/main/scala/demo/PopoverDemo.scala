@@ -18,7 +18,6 @@ package demo
  */
 
 
-
 import scaladget.bootstrapnative.bsn._
 import com.raquo.laminar.api.L._
 
@@ -32,89 +31,29 @@ object PopoverDemo extends Demo {
       marginRight := "5"
     )
 
+    val open = Var(false)
+
     //SIMPLE POPOVERS
     lazy val simplePopovers = div(
       h2("Simple popovers"),
-      div(paddingTop := "20","Simple popovers containing text, or simple content with no events to be fired and with basic trigger modes (click, hover)."),
-    //  button("Left", buttonStyle).popover(vForm(width := 100)(label("Nice content", label_danger).render, span("A important message").render), Left, title = Some("Check this !")).render,
+      div(paddingTop := "20", "Simple popovers containing text, or simple content with no events to be fired and with basic trigger modes (click, hover)."),
+      //  button("Left", buttonStyle).popover(vForm(width := 100)(label("Nice content", label_danger).render, span("A important message").render), Left, title = Some("Check this !")).render,
       button("Title", buttonStyle).popover(div(button(btn_primary, "Hey"), div("Popover on hover with Title")), Top, ClickPopup, title = Some("Pop title")).render,
       button("Title 2", buttonStyle).popover(div("Popover on hover with Title", color := "red"), Top, ClickPopup, title = Some("Pop title")).render,
       button("Dismissable", buttonStyle).popover(div("An other popover"), Top, HoverPopup, Some("Pop title"), true).render,
-      inputTag("").amend(width := "320", marginTop := "10", placeholder := "Bottom (click)").popover(div("Tooltip on click on bottom"), Bottom, ClickPopup).render
+      inputTag("").amend(width := "320", marginTop := "10", placeholder := "Bottom (click)").popover(div("Tooltip on click on bottom"), Bottom, ClickPopup).render,
+      div(cls := "flex-row", justifyContent.right,
+        div(
+          cls <-- open.signal.map { o =>
+            if (o) "button-open" else "button-close"
+          },
+          inputTag("blablaba").amend(onSubmit --> { _ => open.update(!_) })
+        ),
+        button("Open", buttonStyle, onClick --> { _ => open.update(!_) })
+      )
     )
 
-
-//    //MANUAL POPOVERS
-//    val BUTTON1_ID = uuID.short("b")
-//    val BUTTON2_ID = uuID.short("b")
-//
-//    def actions(element: HTMLElement): Boolean = {
-//      element.id match {
-//        case BUTTON1_ID =>
-//
-//          println(s"button 1 with ID $BUTTON1_ID clicked")
-//          element.parentNode.replaceChild(span("YO"), element)
-//
-//          true
-//        case BUTTON2_ID =>
-//          println(s"button 2 with ID $BUTTON2_ID clicked")
-//          true
-//        case _ =>
-//          println("unknown")
-//          false
-//      }
-//    }
-//
-//    def buildManualPopover(trigger: TypedTag[HTMLButtonElement], title: String, position: PopupPosition) = {
-//
-//      val but1 = button("button1", btn_primary)(id := BUTTON1_ID, margin := 10)
-//      val but2 = button("button2", btn_primary)(id := BUTTON2_ID, margin := 10)
-//      lazy val pop1 = trigger.popover(
-//        div(
-//          span(
-//            but1,
-//            but2
-//          ).render
-//        ).toString,
-//        position,
-//        Manual
-//      )
-//      lazy val pop1Render = pop1.render
-//
-//      pop1Render.onclick = { (e: Event) =>
-//        if (Popover.current.now == pop1) Popover.hide
-//        else {
-//          Popover.current.now match {
-//            case Some(p)=> Popover.toggle(p)
-//            case _=>
-//          }
-//          Popover.toggle(pop1)
-//        }
-//        e.stopPropagation
-//      }
-//
-//      pop1Render
-//    }
-//
-//
-//    val manualPopovers = div(
-//      h2("Manual popovers"),
-//      div(paddingTop := 20)("Manual popovers, ie popovers built with custom interaction rules. " +
-//        "Here an exemple with a set of exclusive popovers, which keep alive when clicking on them."),
-//      div(paddingTop := 10)(
-//        (1 until 100).map { i =>
-//          buildManualPopover(
-//            button(s"Button ${i.toString}", buttonStyle), "Popover on click on bottom", Left)
-//        }
-//      )
-//    )
-//
-//    org.scalajs.dom.document.body.onclick = { (e: Event) =>
-//      if (!actions(e.target.asInstanceOf[HTMLElement]))
-//        if (!e.target.asInstanceOf[HTMLElement].className.contains("popover-content"))
-//          Popover.hide
-//    }
-   div(simplePopovers/*, manualPopovers*/)
+    simplePopovers
   }
 
   val elementDemo = new ElementDemo {

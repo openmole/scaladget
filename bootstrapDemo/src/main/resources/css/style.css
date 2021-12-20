@@ -101,3 +101,103 @@ h3 {
   --mdc-theme-primary: #286090;
   --mdc-theme-secondary: #e6e6e6;
 }
+
+.dir {
+    background-color : blue;
+    color : white;
+    height : 20px;
+    width : 20px;
+    border-radius : 4px;
+    display: flex;           /* establish flex container */
+    flex-direction: column;  /* make main axis vertical */
+    justify-content: center; /* center items vertically, in this case */
+    align-items: center;     /* center items horizontally, in this case */
+  }
+
+.plus {
+    text-align: center;
+    margin: 3px;
+    width:20px;
+}
+
+.col0{
+ flex: 0 0 30px;
+}
+
+.col1{
+flex: 1;
+text-overflow: ellipsis;
+overflow: hidden;
+}
+
+.col2{
+ flex: 0 0 50px;
+ font-size: 9px;
+ justify-content: flex-end;
+ display: flex;
+ margin-right: 10px;
+}
+
+.col3{
+ flex: 0 0 20px;
+}
+
+/*TEST*/
+.editor-content {
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+}
+
+#editor {
+   font-family: monospace;
+   top: 0;
+   right: 0;
+   bottom: 0;
+   left: 0;
+}
+
+.file-content {
+  margin: 10px;
+}
+
+.tab-section{
+  margin: 10px;
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  /* for Firefox */
+  min-height: 0;
+  width:100%;
+}
+
+.main-container {
+
+  /* give the outermost container a predefined size */
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+
+
+  width: 1000px;
+  height: 500px;
+}
+
+.flex-row{
+    display: flex;
+    flex-direction:row
+}
+
+.button-open {
+    transition: width 1s ease-in-out;
+    width: 100%;
+    }
+
+.button-close {
+   transition: width 1s ease-in-out;
+   width: 0%;
+}

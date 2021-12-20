@@ -125,11 +125,11 @@ package stylesheet {
     lazy val glyph_stats = toGlyphicon("bi-stats")
     lazy val glyph_refresh = toGlyphicon("bi-arrow-repeat")
     lazy val glyph_repeat = toGlyphicon("bi-repeat")
-    lazy val glyph_lock = toGlyphicon("bi-lock")
+    lazy val glyph_lock = toGlyphicon("bi-lock-fill")
     lazy val glyph_archive = toGlyphicon("bi-compressed")
     lazy val glyph_market = toGlyphicon("bi-shopping-cart")
     lazy val glyph_info = toGlyphicon("bi-info-sign")
-    lazy val glyph_plug = toGlyphicon("icon-plug")
+    lazy val glyph_plug = toGlyphicon("bi-plug-fill")
     lazy val glyph_exclamation = toGlyphicon("bi-exclamation-sign")
     lazy val glyph_comment = toGlyphicon("bi-comment")
     lazy val glyph_upload_alt = toGlyphicon("bi-upload")
@@ -143,11 +143,12 @@ package stylesheet {
     lazy val glyph_alph_sorting = toGlyphicon("bi-sort-by-alphabet")
     lazy val glyph_sort_down = "bi-sort-down"
     lazy val glyph_sort_down_alt = "bi-sort-down-alt"
-    lazy val glyph_triangle_bottom = toGlyphicon("bi-trianglbtn-outline-e-bottom")
-    lazy val glyph_triangle_top = toGlyphicon("bi-triangle-top")
+    lazy val glyph_triangle_down = toGlyphicon("bi-caret-down-fill")
+    lazy val glyph_triangle_up = toGlyphicon("bi-caret-up-fill")
     lazy val glyph_chevron_left = toGlyphicon("bi-chevron-left")
     lazy val glyph_chevron_right = toGlyphicon("bi-chevron-right")
     lazy val glyph_menu_hamburger = toGlyphicon("bi-menu-hamburger")
+    lazy val glyph_right_caret = toGlyphicon("bi-caret-right-fill")
 
     //NAVBARS
     lazy val nav = cls("nav")

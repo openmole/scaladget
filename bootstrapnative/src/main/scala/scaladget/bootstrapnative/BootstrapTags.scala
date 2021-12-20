@@ -24,7 +24,9 @@ import scaladget.bootstrapnative.Popup.{Bottom, ClickPopup, HoverPopup, Manual, 
 import scaladget.tools.Utils._
 import com.raquo.laminar.api.L._
 import bsn.spacing._
+import scaladget.bootstrapnative
 import scaladget.bootstrapnative.Table.Row
+
 import scalajs.js.|
 
 object BootstrapTags extends BootstrapTags
@@ -129,7 +131,7 @@ trait BootstrapTags {
         if (t) state.cls
         else unactiveState.cls
       ),
-      child.text <-- toggled.signal.map { t => if (t) state.text else unactiveState.text },
+      child <-- toggled.signal.map { t => div(if(t) state.text else unactiveState.text, span(bootstrapnative.bsn.glyph_right_caret) )},
       onClick --> { _ =>
         toggled.update(!_)
         onToggled()
@@ -667,150 +669,7 @@ trait BootstrapTags {
 
   def dataTable(rows: Seq[Seq[String]] = Seq()) = DataTableBuilder(rows)
 
-  //  // EXCLUSIVE BUTTON GROUPS
-
-  //  def twoStatesGlyphButton(glyph1: ModifierSeq,
-  //                           glyph2: ModifierSeq,
-  //                           todo1: () ⇒ Unit,
-  //                           todo2: () ⇒ Unit,
-  //                           preGlyph: ModifierSeq = Seq()
-  //                          ) = TwoStatesGlyphButton(glyph1, glyph2, todo1, todo2, preGlyph)
-  //
-  //  def twoStatesSpan(glyph1: ModifierSeq,
-  //                    glyph2: ModifierSeq,
-  //                    todo1: () ⇒ Unit,
-  //                    todo2: () ⇒ Unit,
-  //                    preString: String,
-  //                    buttonStyle: ModifierSeq = emptyMod
-  //                   ) = TwoStatesSpan(glyph1, glyph2, todo1, todo2, preString, buttonStyle)
-  //
-  //  sealed trait ExclusiveButton {
-  //    def action: () ⇒ Unit
-  //  }
-  //
-  //  trait ExclusiveGlyphButton extends ExclusiveButton {
-  //    def glyph: Glyphicon
-  //  }
-  //
-  //  trait ExclusiveStringButton extends ExclusiveButton {
-  //    def title: String
-  //  }
-  //
-  //  trait TwoStates extends ExclusiveButton
-  //
-  //  case class TwoStatesGlyphButton(glyph: ModifierSeq,
-  //                                  glyph2: ModifierSeq,
-  //                                  action: () ⇒ Unit,
-  //                                  action2: () ⇒ Unit,
-  //                                  preGlyph: ModifierSeq
-  //                                 ) extends TwoStates {
-  //    val cssglyph = glyph +++ (paddingLeft := 3).toMS
-  //
-  //    lazy val div = {
-  //      buttonIcon("", preGlyph, cssglyph, action)
-  //    }
-  //  }
-  //
-  //  case class TwoStatesSpan(glyph: ModifierSeq,
-  //                           glyph2: ModifierSeq,
-  //                           action: () ⇒ Unit,
-  //                           action2: () ⇒ Unit,
-  //                           preString: String,
-  //                           buttonStyle: ModifierSeq = emptyMod
-  //                          ) extends TwoStates {
-  //    val cssglyph = glyph +++ (paddingLeft := 3).toMS
-  //
-  //    lazy val cssbutton: ModifierSeq = Seq(
-  //      paddingTop := 8,
-  //      border := "none"
-  //    )
-  //
-  //    lazy val div = button(preString, onClick := action)(buttonStyle +++ cssbutton +++ pointer)(
-  //      span(cssglyph)
-  //    )
-  //
-  //  }
-  //
-  //  object ExclusiveButton {
-  //    def string(t: String, a: () ⇒ Unit) = new ExclusiveStringButton {
-  //      def title = t
-  //
-  //      def action = a
-  //    }
-  //
-  //    def glyph(g: Glyphicon, a: () ⇒ Unit) = new ExclusiveGlyphButton {
-  //      def glyph = g
-  //
-  //      def action = a
-  //    }
-  //
-  //    def twoGlyphButtonStates(
-  //                              glyph1: ModifierSeq,
-  //                              glyph2: ModifierSeq,
-  //                              todo1: () ⇒ Unit,
-  //                              todo2: () ⇒ Unit,
-  //                              preGlyph: ModifierSeq
-  //                            ) = twoStatesGlyphButton(glyph1, glyph2, todo1, todo2, preGlyph)
-  //
-  //    def twoGlyphSpan(
-  //                      glyph1: ModifierSeq,
-  //                      glyph2: ModifierSeq,
-  //                      todo1: () ⇒ Unit,
-  //                      todo2: () ⇒ Unit,
-  //                      preString: String,
-  //                      buttonStyle: ModifierSeq = emptyMod
-  //                    ) = twoStatesSpan(glyph1, glyph2, todo1, todo2, preString, buttonStyle)
-  //  }
-  //
-  //  class ExclusiveGroup(style: ModifierSeq,
-  //                       defaultStyle: ModifierSeq,
-  //                       selectionStyle: ModifierSeq,
-  //                       buttons: Seq[ExclusiveButton]) {
-  //
-  //    implicit val ctx: Ctx.Owner = Ctx.Owner.safe()
-  //
-  //    val selected = Var(buttons.head)
-  //    val selectedAgain = Var(false)
-  //
-  //    def buttonBackground(b: ExclusiveButton) = (if (b == selected.now) btn +++ selectionStyle else btn +++ defaultStyle)
-  //
-  //    def glyphButtonBackground(b: ExclusiveButton) = buttonBackground(b) +++ twoGlyphButton
-  //
-  //    def stringButtonBackground(b: ExclusiveButton) = buttonBackground(b) +++ stringButton
-  //
-  //    def glyphForTwoStates(ts: TwoStates, mod: ModifierSeq) = (ts == selected.now, mod, emptyMod)
-  //
-  //    val div: Modifier = Rx {
-  //      selected()
-  //      tags.div(style +++ btnGroup)(
-  //        for (b ← buttons) yield {
-  //          b match {
-  //            case s: ExclusiveStringButton ⇒ button(s.title, onClick := action(b, s.action))(stringButtonBackground(s) +++ stringInGroup)
-  //            case g: ExclusiveGlyphButton ⇒ buttonIcon("", glyphButtonBackground(g), g.glyph, action(b, g.action))
-  //            case ts: TwoStatesGlyphButton ⇒
-  //              if (selectedAgain()) twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph2), ts.glyph, action(ts, ts.action2), action(ts, ts.action), glyphButtonBackground(ts) +++ ts.preGlyph).div
-  //              else twoStatesGlyphButton(glyphForTwoStates(ts, ts.glyph), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), glyphButtonBackground(ts) +++ ts.preGlyph).div
-  //            case ts: TwoStatesSpan ⇒
-  //              if (selectedAgain()) twoStatesSpan(glyphForTwoStates(ts, ts.glyph2), ts.glyph, action(ts, ts.action2), action(ts, ts.action), ts.preString, glyphButtonBackground(ts)).div
-  //              else twoStatesSpan(glyphForTwoStates(ts, ts.glyph), ts.glyph2, action(ts, ts.action), action(ts, ts.action2), ts.preString, glyphButtonBackground(ts)).div
-  //          }
-  //        }
-  //      )
-  //    }
-  //
-  //    private def action(b: ExclusiveButton, a: () ⇒ Unit) = () ⇒ {
-  //      selectedAgain() = if (b == selected.now) !selectedAgain.now else false
-  //      selected() = b
-  //      a()
-  //    }
-  //
-  //
-  //    def reset = selected() = buttons.head
-  //  }
-  //
-  //
   //  // FORMS
-  //
   trait FormTag {
     def tag: HtmlElement
   }
