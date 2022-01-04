@@ -13,10 +13,10 @@ Scaladget provides a scala facades of some famous javascript libraries. It relie
 ## Usage ##
 Just add this to your dependencies:
 ```sh
-  libraryDependencies += "fr.iscpif.scaladget" %%% "bootstrapnative" % scaladgetVersion
-  libraryDependencies += "fr.iscpif.scaladget" %%% "ace" % scaladgetVersion
-  libraryDependencies += "fr.iscpif.scaladget" %%% "bootstrapslider" % scaladgetVersion
-  libraryDependencies += "fr.iscpif.scaladget" %%% "lunr" % scaladgetVersion
+  libraryDependencies += "org.openmole.scaladget" %%% "bootstrapnative" % scaladgetVersion
+  libraryDependencies += "org.openmole.scaladget" %%% "ace" % scaladgetVersion
+  libraryDependencies += "org.openmole.scaladget" %%% "bootstrapslider" % scaladgetVersion
+  libraryDependencies += "org.openmole.scaladget" %%% "lunr" % scaladgetVersion
 ```
 
 Current version : see release tags section
