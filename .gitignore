@@ -22,3 +22,5 @@ release/*
 *.bak
 examples-opt.js
 examples-preopt.js
+.bsp/
+.bsp/*

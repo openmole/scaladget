@@ -82,7 +82,7 @@ See a simple example [here](http://zebulon.iscpif.fr/~leclaire/scaladget/svg.htm
 
 ![svg](demo/src/main/resources/img/svgstar.png)
 
-An example using the scaladget SVG tool and reactive library [scala.rx](https://github.com/lihaoyi/scala.rx) can be found in this [demo](http://zebulon.iscpif.fr/~leclaire/scaladget/flowchart.html). 
+An example using the scaladget SVG tool and reactive library [Laminar](https://laminar.dev/) can be found in this [demo](http://zebulon.iscpif.fr/~leclaire/scaladget/flowchart.html). 
 It reproduces this [D3 flowchart](http://bl.ocks.org/cjrd/6863459).
 
 

@@ -185,9 +185,11 @@ package stylesheet {
     //BUTTONS
     lazy val btn = cls("btn")
     lazy val btn_secondary_string = "btn btn-secondary"
+    lazy val btn_outline_secondary_string = "btn btn-outline-secondary"
     lazy val btn_secondary = toButton(s"btn $btn_secondary_string")
 
     lazy val btn_primary_string = "btn btn-primary"
+    lazy val btn_outline_primary_string = "btn btn-outline-primary"
     lazy val btn_primary = toButton(s"btn $btn_primary_string")
 
     lazy val btn_success_string = "btn-success"

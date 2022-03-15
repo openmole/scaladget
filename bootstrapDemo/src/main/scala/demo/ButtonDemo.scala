@@ -35,6 +35,8 @@ object ButtonDemo {
 
     val yes = ToggleState("Yes", btn_primary_string, ()=> println("YES"))
     val no = ToggleState("No", btn_secondary_string, ()=> println("NO"))
+    val yesOutline = ToggleState("Yes", btn_outline_primary_string, ()=> println("YES"))
+    val noOutline = ToggleState("No", btn_outline_secondary_string, ()=> println("NO"))
     val male = ToggleState("Male", btn_primary_string, ()=> println("MALE"))
     val female = ToggleState("Female", btn_primary_string, ()=> println("FEMALE"))
     val pizza = ToggleState("Pizza", btn_primary_string, ()=> println("PIZZA"))
@@ -42,6 +44,7 @@ object ButtonDemo {
 
     lazy val exRadio = exclusiveRadio(Seq(male,female, ToggleState("Other", btn_primary_string, ()=> println("OTHER"))), btn_secondary_string, male)
     lazy val unique = toggle(yes, true, no, ()=> {println("toggled")})
+    lazy val uniqueSquared = toggle(yesOutline, true, noOutline, ()=> {println("toggled")}, withCaret = false)
     lazy val theRadio = radio(Seq(pizza, couscous, ToggleState("Falafel", btn_primary_string, ()=> println("FALAFEL"))), Seq(pizza, couscous), btn_secondary_string)
 
     div(
@@ -68,6 +71,7 @@ object ButtonDemo {
       glyphSpan(Seq(glyph_lightning, buttonStyle,  fontSize := "20"), clickAction("flash")),
       h4("Radio", paddingTop := "30"),
       unique.element,
+      uniqueSquared.element.amend(width := "50", height := "50", marginLeft := "20"),
       h4("Exclusive radio buttons", paddingTop := "30"),
       exRadio,
       h4("Toggle buttons", paddingTop := "30"),

@@ -122,7 +122,7 @@ trait BootstrapTags {
   //TOGGLE BUTTON
   case class ToggleState(text: String, cls: String, todo: () => Unit)
 
-  case class ToggleButtonState(state: ToggleState, activeState: Boolean, unactiveState: ToggleState, onToggled: () => Unit, modifiers: HESetters) {
+  case class ToggleButtonState(state: ToggleState, activeState: Boolean, unactiveState: ToggleState, onToggled: () => Unit, modifiers: HESetters, withCaret: Boolean) {
 
     val toggled = Var(activeState)
 
@@ -131,7 +131,8 @@ trait BootstrapTags {
         if (t) state.cls
         else unactiveState.cls
       ),
-      child <-- toggled.signal.map { t => div(if (t) state.text else unactiveState.text, span(bootstrapnative.bsn.glyph_right_caret)) },
+      child <-- toggled.signal.map { t => div(if (t) state.text else unactiveState.text,
+        if(withCaret) span(bootstrapnative.bsn.glyph_right_caret) else emptyMod) },
       onClick --> { _ =>
         toggled.update(!_)
         onToggled()
@@ -140,8 +141,8 @@ trait BootstrapTags {
 
   }
 
-  def toggle(activeState: ToggleState, default: Boolean, unactiveState: ToggleState, onToggled: () => Unit, modifiers: HESetters = emptySetters) =
-    ToggleButtonState(activeState, default, unactiveState, onToggled, modifiers)
+  def toggle(activeState: ToggleState, default: Boolean, unactiveState: ToggleState, onToggled: () => Unit, modifiers: HESetters = emptySetters, withCaret: Boolean = true) =
+    ToggleButtonState(activeState, default, unactiveState, onToggled, modifiers, withCaret)
 
 
   case class RadioButtons(states: Seq[ToggleState], activeStates: Seq[ToggleState], unactiveStateClass: String, modifiers: HESetters = emptySetters) {
