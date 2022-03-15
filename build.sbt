@@ -9,6 +9,7 @@ val aceDiffVersion = "2.3.0"
 val bootstrapNativeVersion = "3.0.14-f"
 val bootstrapIcons = "1.4.0"
 val bootstrapSliderVersion = "10.4.0"
+val nouiSliderVersion = "15.5.0"
 val highlightVersion = "10.4.1"
 val lunrVersion = "2.3.9"
 
@@ -101,12 +102,13 @@ lazy val ace = project.in(file("ace")) enablePlugins (ScalaJSBundlerPlugin) sett
 //  npmDeps in Compile += Dep("ace-diff", aceDiffVersion, List("ace-diff.min.js", "ace-diff.min.css"), true)
 //)
 //
-//lazy val bootstrapslider = project.in(file("bootstrapslider")) enablePlugins (ScalaJSBundlerPlugin) settings(
-//  scalaJsDom,
-//  scalatags,
-//  jsext,
-//  npmDeps in Compile += Dep("bootstrap-slider", bootstrapSliderVersion, List("bootstrap-slider.min.js", "bootstrap-slider.min.css"))
-//)
+lazy val nouislider = project.in(file("nouislider")) enablePlugins (ScalaJSBundlerPlugin) settings(
+  scalaJsDom,
+  jsext,
+  laminar,
+  Compile / npmDependencies += "nouislider"-> nouiSliderVersion
+)
+
 //
 lazy val bootstrapnative = project.in(file("bootstrapnative")) enablePlugins (ScalaJSBundlerPlugin) settings(
   scalaJsDom,
@@ -158,7 +160,7 @@ lazy val bootstrapDemo = project.in(file("bootstrapDemo")) enablePlugins (ScalaJ
     IO.copyDirectory(demoResource, target.value)
 
   }
-) dependsOn(ace, bootstrapnative, tools, highlightjs)
+) dependsOn(ace, bootstrapnative, tools, highlightjs, nouislider)
 
 
 lazy val runSVGDemo = taskKey[Unit]("runSVGDemo")

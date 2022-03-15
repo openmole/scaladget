@@ -68,6 +68,7 @@ object App {
               NavBarDemo.elementDemo,
               ToastDemo.elementDemo,
               TableDemo.elementDemo,
+              SliderDemo.elementDemo,
               PlayGround.elementDemo,
             )
           } yield {
