@@ -17,8 +17,14 @@ package demo
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import com.raquo.laminar.DomApi
 import scaladget.ace._
 import com.raquo.laminar.api.L._
+import com.raquo.laminar.nodes.ReactiveElement
+import org.scalajs.dom.HTMLDivElement
+import scaladget.bootstrapnative.bsn._
+import scaladget.bootstrapnative.Popup._
+import scaladget.bootstrapnative.Tools.MyPopoverBuilder
 
 import scalajs.js
 
@@ -35,12 +41,18 @@ object AceDemo extends Demo {
     val editor = ace.edit(editorDiv.ref)
     val session = editor.getSession()
 
+    session.setBreakpoint(4)
+    session.setBreakpoint(1)
+
+
     scalamode
     githubtheme
     extLanguageTools
 
     session.setMode("ace/mode/scala")
     editor.setTheme("ace/theme/github")
+
+    session.on("changeScrollTop", (y: Any) => println("scrolled " + y))
 
     editor.container.style.lineHeight = s"${lineHeight}px"
     editor.renderer.updateFontSize()
@@ -50,10 +62,30 @@ object AceDemo extends Demo {
       "enableBasicAutocompletion" -> true,
       "enableLiveAutocompletion" -> true
     ))
+
+    def buildBP = {
+
+      val breakpoints = scaladget.ace.Utils.getBreakPointElements(editorDiv).toSeq
+      breakpoints.foreach { bp =>
+
+        val clickableElement = div(height := "13", width := "41", marginTop := "-13", marginLeft := "-19")
+
+        render(bp._1, clickableElement)
+
+        MyPopoverBuilder(
+          clickableElement,
+          div("popover ! " + bp._2, color := "black"),
+        ).render
+      }
+    }
+
+
     div(
       div("Youhou !", fontWeight.bold),
-      editorDiv
+      editorDiv,
+      button(btn_primary_outline, "Build", onClick --> { _ => buildBP })
     )
+
   }
 
   val elementDemo = new ElementDemo {

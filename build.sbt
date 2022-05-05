@@ -94,7 +94,7 @@ lazy val ace = project.in(file("ace")) enablePlugins (ScalaJSBundlerPlugin) sett
   scalaJsDom,
   jsext,
   Compile / npmDependencies += "ace-builds" -> aceVersion
-)
+) dependsOn (bootstrapnative)
 //
 //lazy val aceDiff = project.in(file("acediff")) enablePlugins (ScalaJSBundlerPlugin) dependsOn (ace) settings(
 //  scalaJsDom,

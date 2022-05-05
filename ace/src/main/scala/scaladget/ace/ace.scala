@@ -436,7 +436,12 @@ trait IEditSession extends js.Object {
   def getScreenLength(): Double = js.native
 
   def addGutterDecoration(row: Double, className: String): js.Dynamic = js.native
+
   def removeGutterDecoration(row: Double, className: String): js.Dynamic = js.native
+
+  def setBreakpoint(row: Int): js.Dynamic = js.native
+
+  def clearBreakpoint(row: Int): js.Dynamic = js.native
 }
 
 @JSGlobal

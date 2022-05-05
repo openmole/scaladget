@@ -120,7 +120,7 @@ trait BootstrapTags {
 
 
   //TOGGLE BUTTON
-  case class ToggleState(text: String, cls: String, todo: () => Unit)
+  case class ToggleState(text: String, cls: String, todo: () => Unit = () => {})
 
   case class ToggleButtonState(state: ToggleState, activeState: Boolean, unactiveState: ToggleState, onToggled: () => Unit, modifiers: HESetters, withCaret: Boolean) {
 
@@ -131,8 +131,10 @@ trait BootstrapTags {
         if (t) state.cls
         else unactiveState.cls
       ),
-      child <-- toggled.signal.map { t => div(if (t) state.text else unactiveState.text,
-        if(withCaret) span(bootstrapnative.bsn.glyph_right_caret) else emptyMod) },
+      child <-- toggled.signal.map { t =>
+        div(if (t) state.text else unactiveState.text,
+          if (withCaret) span(bootstrapnative.bsn.glyph_right_caret) else emptyMod)
+      },
       onClick --> { _ =>
         toggled.update(!_)
         onToggled()
@@ -141,7 +143,7 @@ trait BootstrapTags {
 
   }
 
-  def toggle(activeState: ToggleState, default: Boolean, unactiveState: ToggleState, onToggled: () => Unit, modifiers: HESetters = emptySetters, withCaret: Boolean = true) =
+  def toggle(activeState: ToggleState, default: Boolean, unactiveState: ToggleState, onToggled: () => Unit = () => {}, modifiers: HESetters = emptySetters, withCaret: Boolean = true) =
     ToggleButtonState(activeState, default, unactiveState, onToggled, modifiers, withCaret)
 
 
@@ -236,7 +238,7 @@ trait BootstrapTags {
                          modalFooter: HtmlElement,
                          modifiers: HESetters = emptySetters,
                          onopen: () => Unit = () => {},
-                         onclose: () => Unit = ()=> {}) {
+                         onclose: () => Unit = () => {}) {
 
     lazy val render = {
       val d = div(
@@ -271,8 +273,8 @@ trait BootstrapTags {
 
   }
 
-//  def modalDialog(modalHeader: HtmlElement, modalBody: HtmlElement, modalFooter: HtmlElement, onopen: () => Unit, onclose: () => Unit, modifiers: HESetters = emptySetters) =
-//    ModalDialog(modalHeader, modalBody, modalFooter, modifiers, onopen, onclose)
+  //  def modalDialog(modalHeader: HtmlElement, modalBody: HtmlElement, modalFooter: HtmlElement, onopen: () => Unit, onclose: () => Unit, modifiers: HESetters = emptySetters) =
+  //    ModalDialog(modalHeader, modalBody, modalFooter, modifiers, onopen, onclose)
 
 
   // NAVS
@@ -547,7 +549,12 @@ trait BootstrapTags {
     if (!initialTabs.map(_.active).exists(_ == true))
       setFirstActive
 
-    def activeTab = tabs.now().filter(_.active).headOption
+    //def activeTab = tabs.now().filter(_.active).headOption
+    val activeTab = tabs.signal.map { t => t.filter {
+      _.active
+    }
+    }
+
 
     def setFirstActive = tabs.now().headOption.foreach { t =>
       setActive(t.tabID)
