@@ -36,7 +36,7 @@ object AceDemo extends Demo {
     val editorHeight = "200"
     val lineHeight = "13"
 
-    val editorDiv = div(idAttr := "editor", height := editorHeight, paddingRight := "20")
+    val editorDiv = div(idAttr := "editor", height := editorHeight, paddingRight := "20", zIndex := 1000)
 
     val editor = ace.edit(editorDiv.ref)
     val session = editor.getSession()
@@ -68,9 +68,14 @@ object AceDemo extends Demo {
       val breakpoints = scaladget.ace.Utils.getBreakPointElements(editorDiv).toSeq
       breakpoints.foreach { bp =>
 
-        val clickableElement = div(height := "13", width := "41", marginTop := "-13", marginLeft := "-19")
+        val parent = bp._1.parentNode.asInstanceOf[org.scalajs.dom.Element]
 
-        render(bp._1, clickableElement)
+        val clickableElement = new ReactiveElement[org.scalajs.dom.Element] {
+          val ref: org.scalajs.dom.Element = bp._1
+          override val tag = div
+        }
+        parent.removeChild(bp._1)
+        render(parent, clickableElement)
 
         MyPopoverBuilder(
           clickableElement,

@@ -1,12 +1,13 @@
 package scaladget.bootstrapnative
 
 import com.raquo.laminar.api.L._
+import com.raquo.laminar.nodes.ReactiveElement
 import scaladget.bootstrapnative.Popup.{Bottom, HoverPopup, PopupPosition, PopupType}
 
 object Tools {
 
 
-  case class MyPopoverBuilder(element: HtmlElement,
+  case class MyPopoverBuilder(element: ReactiveElement[org.scalajs.dom.Element],
                               popoverElement: HtmlElement,
                               position: PopupPosition = Popup.Right,
                               trigger: PopupType = HoverPopup) {
@@ -39,6 +40,7 @@ object Tools {
           div(cls := "left-arrow"),
           cls := "mypopover bs-fade",
           opacity <-- open.signal.map { o => if (o) 1 else 0 },
+          zIndex <-- open.signal.map{o => if(o) 1000 else 0},
           popoverElement
         )
         com.raquo.laminar.api.L.render(org.scalajs.dom.document.body, ppWithArrow)
