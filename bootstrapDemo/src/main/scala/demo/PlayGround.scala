@@ -29,7 +29,7 @@ object PlayGround {
     def fileTable(rows: Seq[(Seq[HtmlElement], Int)]) = {
       div(
         rows.map { case (r, id) ⇒
-          div(display.flex, flexDirection.column, width:= "200px",
+          div(display.flex, flexDirection.column, width := "200px",
             div(display.flex, alignItems.center,
               r.zipWithIndex.map { case (e, c) ⇒
                 e.amend(cls := s"col$c")
@@ -58,9 +58,36 @@ object PlayGround {
     val dirs = Seq("one", "two", "trestrestrestrestrestrestrestrestrestreslong")
 
 
-    fileTable(dirs.zipWithIndex.map { case (d, id) =>
-      (Seq(div(dirBox), div(d), div("4.00KB"), gear(id)), id)
-    })
+    //tagging buttons
+    type TagBadge = Span
+    val tags: Var[Seq[TagBadge]] = Var(Seq())
+
+    def buildTag(text: String) = {
+      span(text,
+        badge_secondary, margin := "3px", fontSize := "14px", padding := "10px",
+        inContext(thisNode =>
+          span(cls := "close-button bi-x", paddingLeft := "10", cursor.pointer,
+            onClick --> { _ => tags.update { t => t.filterNot(_ == thisNode) } })
+        )
+      )
+    }
+
+    val tagTextInput = inputTag("").amend(onMountFocus, placeholder := "your tag here")
+
+    val tagPanel = div( marginTop := "30px",
+      form(tagTextInput, onSubmit.preventDefault --> { _ =>
+        tags.update { ts => ts :+ buildTag(tagTextInput.ref.value) }
+        tagTextInput.ref.value = ""
+      }),
+      div(display.flex, flexDirection.row, flexWrap.wrap, width := "500px", children <-- tags.signal)
+    )
+
+    div(
+      fileTable(dirs.zipWithIndex.map { case (d, id) =>
+        (Seq(div(dirBox), div(d), div("4.00KB"), gear(id)), id)
+      }),
+      tagPanel
+    )
   }
 
   val elementDemo = new ElementDemo {
