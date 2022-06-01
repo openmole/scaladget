@@ -29,9 +29,9 @@ name := "scaladget"
 
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
-ThisBuild / scalaVersion := "3.1.0"
+ThisBuild / scalaVersion := "3.1.2"
 
-ThisBuild / crossScalaVersions := Seq("2.13.7", "3.0.0")
+ThisBuild / crossScalaVersions := Seq("2.13.8", "3.0.0")
 
 ThisBuild / pomIncludeRepository := { _ => false }
 

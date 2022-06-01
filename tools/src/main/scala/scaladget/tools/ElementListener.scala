@@ -37,10 +37,10 @@ package object utils {
 
     type ID = String
 
-    def uuID: ID = java.util.UUID.randomUUID.toString
+    def uuID: ID = scala.util.Random.alphanumeric.take(10).mkString
 
     implicit class ShortID(id: ID) {
-      def short: String = id.split('-').head
+      def short: String = id.take(5)
 
       def short(prefix: String): String = s"$prefix$short"
     }
