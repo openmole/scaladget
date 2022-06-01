@@ -177,7 +177,8 @@ package stylesheet {
     lazy val badge_info = toBadge("badge-info")
     lazy val badge_warning = toBadge("badge-warning")
     lazy val badge_danger = toBadge("badge-danger")
-    lazy val black_badge = toBadge("black-badge")
+    lazy val badge_dark = toBadge("badge-dark")
+    lazy val badge_secondary = toBadge("badge-secondary")
 
     lazy val controlLabel = cls("control-label")
 
@@ -191,6 +192,9 @@ package stylesheet {
     lazy val btn_primary_string = "btn btn-primary"
     lazy val btn_outline_primary_string = "btn btn-outline-primary"
     lazy val btn_primary = toButton(s"btn $btn_primary_string")
+
+    lazy val btn_light = toButton("btn btn-light")
+    lazy val btn_light_outline = toButton("btn btn-outline-light")
 
     lazy val btn_success_string = "btn-success"
     lazy val btn_success = toButton(s"btn $btn_success_string")
