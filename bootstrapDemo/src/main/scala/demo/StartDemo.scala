@@ -55,7 +55,6 @@ object App {
         Tabs.tabs(
           for {
             demo <- Seq(
-              AceDemo.elementDemo,
               LabelDemo.elementDemo,
               ButtonDemo.elementDemo,
               ModalDialogDemo.elementDemo,
@@ -69,6 +68,7 @@ object App {
               ToastDemo.elementDemo,
               TableDemo.elementDemo,
               SliderDemo.elementDemo,
+              AceDemo.elementDemo,
               PlayGround.elementDemo,
             )
           } yield {

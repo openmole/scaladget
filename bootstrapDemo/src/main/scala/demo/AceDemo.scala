@@ -21,7 +21,7 @@ import com.raquo.laminar.DomApi
 import scaladget.ace._
 import com.raquo.laminar.api.L._
 import com.raquo.laminar.nodes.ReactiveElement
-import org.scalajs.dom.HTMLDivElement
+import org.scalajs.dom.{HTMLDivElement, MouseEvent}
 import scaladget.bootstrapnative.bsn._
 import scaladget.bootstrapnative.Popup._
 import scaladget.bootstrapnative.Tools.MyPopoverBuilder
@@ -36,7 +36,7 @@ object AceDemo extends Demo {
     val editorHeight = "200"
     val lineHeight = "13"
 
-    val editorDiv = div(idAttr := "editor", height := editorHeight, paddingRight := "20", zIndex := 1000)
+    val editorDiv = div(idAttr := "editor", height := editorHeight, paddingRight := "20", zIndex := 0)
 
     val editor = ace.edit(editorDiv.ref)
     val session = editor.getSession()
@@ -57,36 +57,34 @@ object AceDemo extends Demo {
     editor.container.style.lineHeight = s"${lineHeight}px"
     editor.renderer.updateFontSize()
 
-    session.setValue("def fib(n):\rval axx = 7\nval b = 8\nval c = a*b\n\nprintln(c)")
+    session.setValue("def fib(n):\rval axx = 7\nval b = 8\nval c = a*b\n\nprintln(c)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAA\n\n\n\n")
     editor.setOptions(js.Dynamic.literal(
       "enableBasicAutocompletion" -> true,
       "enableLiveAutocompletion" -> true
     ))
 
+    val errorMessage: Var[Option[String]] = Var(None)
+
     def buildBP = {
 
       val breakpoints = scaladget.ace.Utils.getBreakPointElements(editorDiv).toSeq
       breakpoints.foreach { bp =>
-
-        val parent = bp._1.parentNode.asInstanceOf[org.scalajs.dom.Element]
-
-        val clickableElement = new ReactiveElement[org.scalajs.dom.Element] {
-          val ref: org.scalajs.dom.Element = bp._1
-          override val tag = div
-        }
-        parent.removeChild(bp._1)
-        render(parent, clickableElement)
-
-        MyPopoverBuilder(
-          clickableElement,
-          div("popover ! " + bp._2, color := "black"),
-        ).render
+        bp._1.addEventListener("click", { (e: MouseEvent) =>
+          errorMessage.update(m =>
+            m match {
+              case None => Some("45ableBasi45ableBasicAutocompletinn45ableBasicAutocompletinn" + bp._2)
+              case _ => None
+            })
+        })
       }
     }
 
 
     div(
       div("Youhou !", fontWeight.bold),
+      errorMessage.signal.map { x => x.isDefined }.expand(div(child <-- errorMessage.signal.map {
+        m=> div(m.getOrElse(""))
+      }, backgroundColor := "orange", color := "white", height := "50")),
       editorDiv,
       button(btn_primary_outline, "Build", onClick --> { _ => buildBP })
     )
