@@ -25,14 +25,30 @@ object CollapseDemo extends Demo {
 
   val sc = sourcecode.Text {
 
-    val onoff = Var(true)
+    val onoff: Var[Option[Int]] = Var(None)
+
+    def onoffUpdate(currentId: Option[Int], id: Int) = {
+      if (Some(id) == currentId) None
+      else Some(id)
+    }
+
+    def expandAction(i: Option[Int], butId: Int) = {
+      i match {
+        case Some(ii: Int) =>
+          if (ii == butId) true
+          else false
+        case None => false
+      }
+    }
 
     div(
       button(" Trigger !", btn_primary, marginBottom := "10", glyph_settings).expandOnclick(
         div(child.text <-- onoff.signal.map(oo => "My text in detail " + oo)).amend(width := "400", height := "200")
       ),
-      button("Set Var", btn_danger, onClick --> { _ => onoff.update(!_) }),
-      onoff.signal.expand(div("Yes", backgroundColor := "orange", height := "150"))
+      button("Set Var", btn_danger, onClick --> { _ => onoff.update(i => onoffUpdate(i, 1)) }),
+      onoff.signal.map(oo => expandAction(oo, 1)).expand(div("Yes", backgroundColor := "orange", height := "150")),
+      button("Set Var", btn_danger, onClick --> { _ => onoff.update(i => onoffUpdate(i, 2)) }),
+      onoff.signal.map(oo => expandAction(oo, 2)).expand(div("Yes", backgroundColor := "orange", height := "150"))
     )
   }
 
