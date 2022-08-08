@@ -415,18 +415,18 @@ trait BootstrapTags {
                        position: PopupPosition = Bottom,
                        condition: () => Boolean = () => true) {
 
-    lazy val render: HtmlElement = {
+    val render: HtmlElement = {
       if (condition())
         element.amend(
           dataAttr("placement") := position.value,
           dataAttr("toggle") := "tooltip",
           dataAttr("original-title") := text,
-          onMouseOver --> { _ => tooltip }
+          onMouseOver --> { _ => tooltip.show }
         )
       else element
     }
 
-    lazy val tooltip = new BSN.Tooltip(render.ref)
+    val tooltip = new BSN.Tooltip(render.ref)
 
     def hide = tooltip.hide()
   }
