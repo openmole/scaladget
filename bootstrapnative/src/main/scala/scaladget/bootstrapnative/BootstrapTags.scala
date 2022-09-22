@@ -25,7 +25,7 @@ import scaladget.tools.Utils._
 import com.raquo.laminar.api.L._
 import bsn.spacing._
 import scaladget.bootstrapnative
-import scaladget.bootstrapnative.Table.Row
+import scaladget.bootstrapnative.Table.{DataTableBuilder, ElementTableBuilder, Row}
 
 import scalajs.js.|
 

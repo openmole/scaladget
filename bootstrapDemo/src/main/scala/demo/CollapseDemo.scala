@@ -26,6 +26,7 @@ object CollapseDemo extends Demo {
   val sc = sourcecode.Text {
 
     val onoff: Var[Option[Int]] = Var(None)
+    val onoffBottom: Var[Boolean] = Var(false)
 
     def onoffUpdate(currentId: Option[Int], id: Int) = {
       if (Some(id) == currentId) None
@@ -48,7 +49,9 @@ object CollapseDemo extends Demo {
       button("Set Var", btn_danger, onClick --> { _ => onoff.update(i => onoffUpdate(i, 1)) }),
       onoff.signal.map(oo => expandAction(oo, 1)).expand(div("Yes", backgroundColor := "orange", height := "150")),
       button("Set Var", btn_danger, onClick --> { _ => onoff.update(i => onoffUpdate(i, 2)) }),
-      onoff.signal.map(oo => expandAction(oo, 2)).expand(div("Yes", backgroundColor := "orange", height := "150"))
+      onoff.signal.map(oo => expandAction(oo, 2)).expand(div("Yes", backgroundColor := "orange", height := "150")),
+      button("Set Var", btn_danger, onClick --> { _ => onoffBottom.update(!_) }),
+      div("Yes", backgroundColor := "orange", cls <-- onoffBottom.signal.map{oo=> if (oo) "collapse-bottom" else "collapse-bottom close"})
     )
   }
 

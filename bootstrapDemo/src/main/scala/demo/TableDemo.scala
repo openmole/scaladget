@@ -77,6 +77,22 @@ object TableDemo extends Demo {
       .addHeaders("Data 1", "Data 2", "Data 3")
       .addRow("0.0", "0.103", "88.6")
       .addRow("309", "3.14", "2218")
+      .addRow("0.0", "0.103", "88.6")
+      .addRow("309", "3.14", "2218")
+      .addRow("0.0", "0.103", "88.6")
+      .addRow("309", "3.14", "2218")
+      .addRow("0.0", "0.103", "88.6")
+      .addRow("309", "3.14", "2218")
+      .addRow("0.0", "0.103", "88.6")
+      .addRow("309", "3.14", "2218")
+      .addRow("0.0", "0.103", "88.6")
+      .addRow("309", "3.14", "2218")
+      .addRow("0.0", "0.103", "88.6")
+      .addRow("309", "3.14", "2218")
+      .addRow("0.0", "0.103", "88.6")
+      .addRow("309", "3.14", "2218")
+      .addRow("0.0", "0.103", "88.6")
+      .addRow("309", "3.14", "2218")
       .style(inverse_table)
       .sortable
       .render
@@ -94,7 +110,7 @@ object TableDemo extends Demo {
       tableWithSubs.render,
       filterInput,
       tableWithData.render,
-      tableWithDataDark.render
+      div(height := "200px", overflow.auto, tableWithDataDark.render)
     )
 
   }
