@@ -11,7 +11,7 @@ val bootstrapIcons = "1.4.0"
 val bootstrapSliderVersion = "10.4.0"
 val nouiSliderVersion = "15.5.0"
 val highlightVersion = "10.4.1"
-val lunrVersion = "2.3.9"
+val lunrVersion = "2.1.5"
 
 //2.13
 val jsextVersion = "0.10"
@@ -125,9 +125,9 @@ lazy val highlightjs = project.in(file("highlightjs")) enablePlugins (ScalaJSBun
   Compile / npmDependencies += "highlight.js" -> highlightVersion
 )
 
-//lazy val lunr = project.in(file("lunr")) enablePlugins (ScalaJSBundlerPlugin) settings (
-//  npmDependencies in Compile += "lunr" -> "2.1.5"
-//  )
+lazy val lunr = project.in(file("lunr")) enablePlugins (ScalaJSBundlerPlugin) settings (
+  Compile / npmDependencies += "lunr" -> lunrVersion
+  )
 
 lazy val svg = project.in(file("svg")) enablePlugins (ScalaJSPlugin) settings(
   laminar,
@@ -160,7 +160,7 @@ lazy val bootstrapDemo = project.in(file("bootstrapDemo")) enablePlugins (ScalaJ
     IO.copyDirectory(demoResource, target.value)
 
   }
-) dependsOn(ace, bootstrapnative, tools, highlightjs, nouislider)
+) dependsOn(ace, bootstrapnative, tools, highlightjs, nouislider, lunr)
 
 
 lazy val runSVGDemo = taskKey[Unit]("runSVGDemo")

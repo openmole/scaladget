@@ -22,8 +22,7 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation._
 
 @js.native
-@JSGlobal
-class EventEmitter extends js.Object {
+trait EventEmitter extends js.Object {
   def addListener(eventName: String, handler: js.Function): Unit = js.native
 
   def addListener(eventName: String, eventName2: String, handler: js.Function): Unit = js.native
@@ -51,9 +50,8 @@ trait IPipelineFunction extends js.Object {
 }
 
 @js.native
-@JSGlobal
-class Pipeline extends js.Object {
-  var registeredFunctions: js.Dictionary[js.Function] = js.native
+trait Pipeline extends js.Object {
+  def registeredFunctions: js.Dictionary[js.Function] = js.native
 
   def registerFunction(fn: IPipelineFunction, label: String): Unit = js.native
 
@@ -72,18 +70,13 @@ class Pipeline extends js.Object {
   def reset(): Unit = js.native
 
   def toJSON(): js.Dynamic = js.native
-}
 
-@js.native
-@JSGlobal
-object Pipeline extends js.Object {
   def load(serialised: js.Any): Pipeline = js.native
 }
 
 @js.native
-@JSGlobal
-class Vector extends js.Object {
-  var list: Node = js.native
+trait Vector extends js.Object {
+  def list: Node = js.native
 
   def magnitude(): Double = js.native
 
@@ -93,20 +86,19 @@ class Vector extends js.Object {
 }
 
 @js.native
-@JSGlobal
-class Node protected() extends js.Object {
-  def this(idx: Double, `val`: Double, next: Node) = this()
+trait Node extends js.Object {
+  def idx: Double = js.native
 
-  var idx: Double = js.native
-  var `val`: Double = js.native
-  var next: Node = js.native
+  def `val`: Double = js.native
+
+  def next: Node = js.native
 }
 
 @js.native
-@JSGlobal
-class SortedSet[T] extends js.Object {
-  var elements: js.Array[T] = js.native
-  var length: Double = js.native
+trait SortedSet[T] extends js.Object {
+  def elements: js.Array[T] = js.native
+
+  def length: Double = js.native
 
   def add(values: T*): Unit = js.native
 
@@ -116,9 +108,9 @@ class SortedSet[T] extends js.Object {
 
   def forEach(fn: js.Function, ctx: js.Any): js.Dynamic = js.native
 
-  def indexOf(elem: T, start: Double = ???, end: Double = ???): Double = js.native
+  def indexOf(elem: T, start: Double, end: Double): Double = js.native
 
-  def locationFor(elem: T, start: Double = ???, end: Double = ???): Double = js.native
+  def locationFor(elem: T, start: Double, end: Double): Double = js.native
 
   def intersect(otherSet: SortedSet[T]): SortedSet[T] = js.native
 
@@ -127,37 +119,44 @@ class SortedSet[T] extends js.Object {
   //def clone(): SortedSet[T] = js.native
 
   def toJSON(): js.Dynamic = js.native
-}
 
-@js.native
-@JSGlobal
-object SortedSet extends js.Object {
   def load[T](serialisedData: js.Array[T]): SortedSet[T] = js.native
 }
 
 @js.native
 trait IIndexField extends js.Object {
-  var name: String = js.native
-  var boost: Double = js.native
+  def name: js.UndefOr[String] = js.native
+
+  def boost: js.UndefOr[Double] = js.native
 }
 
 @js.native
 trait IIndexSearchResult extends js.Object {
-  var ref: String = js.native
-  var score: Double = js.native
+  def ref: String = js.native
+
+  def score: Double = js.native
 }
 
 @js.native
-@JSGlobal
-class Index extends js.Object {
-  var eventEmitter: EventEmitter = js.native
-  var documentStore: Store[String] = js.native
-  var tokenStore: TokenStore = js.native
-  var corpusTokens: SortedSet[String] = js.native
-  var pipeline: Pipeline = js.native
-  var _fields: js.Array[IIndexField] = js.native
-  var _ref: String = js.native
-  var _idfCache: js.Dictionary[String] = js.native
+trait Index extends js.Object {
+
+  def min: js.UndefOr[Double] = js.native
+
+  def eventEmitter: js.UndefOr[EventEmitter] = js.native
+
+  def documentStore: Store[String] = js.native
+
+  def tokenStore: TokenStore = js.native
+
+  def corpusTokens: SortedSet[String] = js.native
+
+  def pipeline: Pipeline = js.native
+
+  def _fields: js.Array[IIndexField] = js.native
+
+  def _ref: js.Array[String] = js.native
+
+  def _idfCache: js.Array[js.Dictionary[String]] = js.native
 
   def on(eventName: String, handler: js.Function): Unit = js.native
 
@@ -171,15 +170,15 @@ class Index extends js.Object {
 
   def off(eventName: String, handler: js.Function): Unit = js.native
 
-  def field(fieldName: String, options: js.Any = ???): Index = js.native
+  def field(fieldName: String, options: js.Any): Index = js.native
 
   def ref(refName: String): Index = js.native
 
-  def add(doc: js.Any, emitEvent: Boolean = ???): Unit = js.native
+  def add(doc: js.Any, emitEvent: Boolean = false): Unit = js.native
 
-  def remove(doc: js.Any, emitEvent: Boolean = ???): Unit = js.native
+  def remove(doc: js.Any, emitEvent: Boolean = false): Unit = js.native
 
-  def update(doc: js.Any, emitEvent: Boolean = ???): Unit = js.native
+  def update(doc: js.Any, emitEvent: Boolean = false): Unit = js.native
 
   def idf(token: String): String = js.native
 
@@ -190,19 +189,15 @@ class Index extends js.Object {
   def toJSON(): js.Dynamic = js.native
 
   def use(plugin: js.Function, args: js.Any*): Unit = js.native
-}
 
-@js.native
-@JSGlobal
-object Index extends js.Object {
   def load(serialisedData: js.Any): Index = js.native
 }
 
 @js.native
-@JSGlobal
-class Store[T] extends js.Object {
-  var store: js.Dictionary[SortedSet[T]] = js.native
-  var length: Double = js.native
+trait Store[T] extends js.Object {
+  def store: js.Dictionary[SortedSet[T]] = js.native
+
+  def length: Double = js.native
 
   def set(id: String, tokens: SortedSet[T]): Unit = js.native
 
@@ -213,26 +208,24 @@ class Store[T] extends js.Object {
   def remove(id: String): Unit = js.native
 
   def toJSON(): js.Dynamic = js.native
-}
 
-@js.native
-@JSGlobal
-object Store extends js.Object {
   def load[T](serialisedData: js.Any): Store[T] = js.native
 }
 
 @js.native
 trait ITokenDocument extends js.Object {
-  var ref: Double = js.native
-  var tf: Double = js.native
+  def ref: Double = js.native
+
+  def tf: Double = js.native
 }
 
 @js.native
-@JSGlobal
-class TokenStore extends js.Object {
-  var root: js.Dictionary[TokenStore] = js.native
-  var docs: js.Dictionary[ITokenDocument] = js.native
-  var length: Double = js.native
+trait TokenStore extends js.Object {
+  def root: js.Dictionary[TokenStore] = js.native
+
+  def docs: js.Dictionary[ITokenDocument] = js.native
+
+  def length: Double = js.native
 
   def add(token: String, doc: ITokenDocument, root: TokenStore = ???): Unit = js.native
 
@@ -249,18 +242,13 @@ class TokenStore extends js.Object {
   def expand(token: String, memo: js.Array[String] = ???): js.Array[String] = js.native
 
   def toJSON(): js.Dynamic = js.native
-}
 
-@js.native
-@JSGlobal
-object TokenStore extends js.Object {
   def load(serialisedData: js.Any): TokenStore = js.native
 }
 
-@JSGlobal
 @js.native
-object Lunr extends js.Object {
-  var version: String = js.native
+trait Lunr extends js.Object {
+  def version: String = js.native
 
   def tokenizer(token: String): String = js.native
 
@@ -271,15 +259,17 @@ object Lunr extends js.Object {
   def trimmer(token: String): String = js.native
 }
 
-@JSGlobal
 @js.native
-object StopWordFilter extends js.Object {
-  var stopWords: SortedSet[String] = js.native
+trait StopWordFilter extends js.Object {
+  def stopWords: SortedSet[String] = js.native
 }
 
 
-@JSGlobalScope
-@js.native
-object Importedjs extends js.Object {
+object Importedjs {
+
+  @js.native
+  @JSImport("lunr", JSImport.Namespace)
   def lunr(config: js.Function): Index = js.native
+
+  // def version: String = js.native
 }
