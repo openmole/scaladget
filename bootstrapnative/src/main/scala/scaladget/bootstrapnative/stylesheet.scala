@@ -196,17 +196,17 @@ package stylesheet {
     lazy val btn_light = toButton("btn btn-light")
     lazy val btn_light_outline = toButton("btn btn-outline-light")
 
-    lazy val btn_success_string = "btn-success"
-    lazy val btn_success = toButton(s"btn $btn_success_string")
+    lazy val btn_success_string = "btn btn-success"
+    lazy val btn_success = toButton(btn_success_string)
 
-    lazy val btn_info_string = "btn-info"
-    lazy val btn_info = toButton(s"btn $btn_info_string")
+    lazy val btn_info_string = "btn btn-info"
+    lazy val btn_info = toButton(btn_info_string)
 
-    lazy val btn_warning_string = "btn-warning"
-    lazy val btn_warning = toButton(s"btn $btn_warning_string")
+    lazy val btn_warning_string = "btn btn-warning"
+    lazy val btn_warning = toButton(btn_warning_string)
 
-    lazy val btn_danger_string = "btn-danger"
-    lazy val btn_danger = toButton(s"btn $btn_danger_string")
+    lazy val btn_danger_string = "btn btn-danger"
+    lazy val btn_danger = toButton(btn_danger_string)
 
     lazy val btn_primary_outline = toButton("btn-outline-primary")
     lazy val btn_secondary_outline = toButton("btn-outline-secondary")
