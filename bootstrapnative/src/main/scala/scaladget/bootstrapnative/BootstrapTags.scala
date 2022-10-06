@@ -143,8 +143,10 @@ trait BootstrapTags {
 
   }
 
-  def toggle(activeState: ToggleState, default: Boolean, unactiveState: ToggleState, onToggled: () => Unit = () => {}, modifiers: HESetters = emptySetters, withCaret: Boolean = true) =
+  def toggle(activeState: ToggleState, default: Boolean, unactiveState: ToggleState, onToggled: () => Unit = () => {}, modifiers: HESetters = emptySetters, withCaret: Boolean = true) = {
+    println("TOGGHLE init")
     ToggleButtonState(activeState, default, unactiveState, onToggled, modifiers, withCaret)
+  }
 
 
   case class RadioButtons(states: Seq[ToggleState], activeStates: Seq[ToggleState], unactiveStateClass: String, modifiers: HESetters = emptySetters) {
@@ -177,29 +179,40 @@ trait BootstrapTags {
 
 
   // RADIO
-  case class ExclusiveRadioButtons(buttons: Seq[ToggleState], unactiveStateClass: String, defaultToggle: ToggleState, radioButtonsModifiers: HESetters) {
+  case class ExclusiveRadioButtons(buttons: Seq[ToggleState], unactiveStateClass: String, defaultToggles: Seq[Int], radioButtonsModifiers: HESetters) {
 
-    val active = Var(defaultToggle)
+    val actives: Var[Seq[ToggleState]] = Var(defaultToggles.map{buttons(_)})
 
+    println("buttons  " + buttons.length)
     lazy val element = div(bsnsheet.btnGroup, bsnsheet.btnGroupToggle, dataAttr("toggle") := "buttons",
-      for ((rb, index) <- buttons.zipWithIndex) yield {
-        val isActive = active.signal.map(_ == rb)
-        label(
-          cls <-- isActive.map { a => if (a) rb.cls else unactiveStateClass },
-          cls.toggle("focus active") <-- isActive,
-          input(`type` := "radio", name := "options", idAttr := s"option${index + 1}", checked <-- isActive),
-          rb.text,
-          onClick --> { _ =>
-            active.set(rb)
-            rb.todo()
-          }
-        )
+      buttons.zipWithIndex.map { case (rb, index) =>
+        println("YIELD " + index)
+        child <-- actives.signal.map { a =>
+          val isActive = a.contains(rb)
+
+          label(
+            cls := {if (isActive) rb.cls else unactiveStateClass },
+            cls.toggle("focus active") := isActive,
+            input(`type` := "radio", name := "options", idAttr := s"option${index + 1}", checked := isActive),
+            rb.text,
+            onClick --> { _ =>
+              println("Actives0 " + actives.now())
+              actives.update(as => (as :+ rb).drop(1))
+              println("Actives " + actives.now())
+              rb.todo()
+            }
+          )
+        }
       }
     )
   }
 
-  def exclusiveRadio(buttons: Seq[ToggleState], unactiveStateClass: String, defaultToggle: ToggleState, radioButtonsModifiers: HESetters = emptySetters) =
-    ExclusiveRadioButtons(buttons, unactiveStateClass, defaultToggle, radioButtonsModifiers).element
+  def exclusiveRadio(buttons: Seq[ToggleState], unactiveStateClass: String, defaultToggle: Int, radioButtonsModifiers: HESetters = emptySetters) =
+    exclusiveRadios(buttons, unactiveStateClass, Seq(defaultToggle), radioButtonsModifiers)
+
+  def exclusiveRadios(buttons: Seq[ToggleState], unactiveStateClass: String, defaultToggles: Seq[Int], radioButtonsModifiers: HESetters = emptySetters) =
+    ExclusiveRadioButtons(buttons, unactiveStateClass, defaultToggles, radioButtonsModifiers).element
+
 
   //Label decorators to set the label size
   implicit class TypedTagLabel(badge: Span) {
@@ -550,9 +563,10 @@ trait BootstrapTags {
       setFirstActive
 
     //def activeTab = tabs.now().filter(_.active).headOption
-    val activeTab = tabs.signal.map { t => t.filter {
-      _.active
-    }
+    val activeTab = tabs.signal.map { t =>
+      t.filter {
+        _.active
+      }
     }
 
 

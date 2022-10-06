@@ -47,7 +47,7 @@ object TableDemo extends Demo {
       exclusiveRadio(
         Seq(ToggleState("One", btn_primary_string, ()=> println("ONE")), ToggleState("Two", btn_primary_string, ()=> println("TWO")), ToggleState("Three", btn_primary_string, ()=> println("THREE"))),
         btn_secondary_string,
-        ToggleState("Two", btn_primary_string, ()=> println("TWO"))
+        1
       )
     )
 

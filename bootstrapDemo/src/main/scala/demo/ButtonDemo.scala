@@ -41,12 +41,13 @@ object ButtonDemo {
     val female = ToggleState("Female", btn_danger_string, ()=> println("FEMALE"))
     val pizza = ToggleState("Pizza", btn_primary_string, ()=> println("PIZZA"))
     val couscous = ToggleState("Couscous", btn_primary_string, ()=> println("COUSCOUS"))
+    val falafel = ToggleState("Falafel", btn_primary_string, ()=> println("FALAFEL"))
 
-    lazy val exRadio = exclusiveRadio(Seq(male,female, ToggleState("Other", btn_danger_string, ()=> println("OTHER"))), btn_secondary_string, male)
+    lazy val exRadio = exclusiveRadio(Seq(male,female, ToggleState("Other", btn_danger_string, ()=> println("OTHER"))), btn_secondary_string, 0)
     lazy val unique = toggle(yes, true, no, ()=> {println("toggled")})
     lazy val uniqueSquared = toggle(yesOutline, true, noOutline, ()=> {println("toggled")}, withCaret = false)
-    lazy val theRadio = radio(Seq(pizza, couscous, ToggleState("Falafel", btn_primary_string, ()=> println("FALAFEL"))), Seq(pizza, couscous), btn_secondary_string)
-
+    lazy val theRadio = radio(Seq(pizza, couscous, falafel), Seq(pizza, couscous), btn_secondary_string)
+    val only2 = exclusiveRadios(Seq(pizza, couscous, falafel), btn_secondary_string, Seq(0,2))
     div(
       h4("Buttons"),
       button("Primary", clickAction("primary"), span(glyph_edit, paddingLeft := "10"), buttonStyle, btn_primary),
@@ -72,6 +73,8 @@ object ButtonDemo {
       h4("Radio", paddingTop := "30"),
       unique.element,
       uniqueSquared.element.amend(width := "50", height := "50", marginLeft := "20"),
+      h4("2 exclusive radio buttons", paddingTop := "30"),
+      only2,
       h4("Exclusive radio buttons", paddingTop := "30"),
       exRadio,
       h4("Toggle buttons", paddingTop := "30"),
