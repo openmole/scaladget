@@ -33,21 +33,26 @@ object ButtonDemo {
 
     def clickAction(tag: String) = onClick --> { _ => clicked.set(tag) }
 
-    val yes = ToggleState("Yes", btn_primary_string, ()=> println("YES"))
-    val no = ToggleState("No", btn_secondary_string, ()=> println("NO"))
-    val yesOutline = ToggleState("Yes", btn_outline_primary_string, ()=> println("YES"))
-    val noOutline = ToggleState("No", btn_outline_secondary_string, ()=> println("NO"))
-    val male = ToggleState("Male", btn_danger_string, ()=> println("MALE"))
-    val female = ToggleState("Female", btn_danger_string, ()=> println("FEMALE"))
-    val pizza = ToggleState("Pizza", btn_primary_string, ()=> println("PIZZA"))
-    val couscous = ToggleState("Couscous", btn_primary_string, ()=> println("COUSCOUS"))
-    val falafel = ToggleState("Falafel", btn_primary_string, ()=> println("FALAFEL"))
+    sealed trait Food
+    object Couscous extends Food
+    object Falafel extends Food
+    object Pizza extends Food
 
-    lazy val exRadio = exclusiveRadio(Seq(male,female, ToggleState("Other", btn_danger_string, ()=> println("OTHER"))), btn_secondary_string, 0)
+    val yes = ToggleState("Yes","Yes", btn_primary_string, ()=> println("YES"))
+    val no = ToggleState("No","No", btn_secondary_string, ()=> println("NO"))
+    val yesOutline = ToggleState("Yes","Yes", btn_outline_primary_string, ()=> println("YES"))
+    val noOutline = ToggleState("No","No", btn_outline_secondary_string, ()=> println("NO"))
+    val male = ToggleState("Male","Male", btn_danger_string, ()=> println("MALE"))
+    val female = ToggleState("Male","Female", btn_danger_string, ()=> println("FEMALE"))
+    val pizza = ToggleState[Food](Pizza,"Pizza", btn_primary_string, ()=> println("PIZZA"))
+    val couscous = ToggleState[Food](Couscous,"Couscous", btn_primary_string, ()=> println("COUSCOUS"))
+    val falafel = ToggleState[Food](Falafel, "Falafel", btn_primary_string, ()=> println("FALAFEL"))
+
+    lazy val exRadio = exclusiveRadio(Seq(male,female, ToggleState("Other", "Other", btn_danger_string, ()=> println("OTHER"))), btn_secondary_string, 0).element
     lazy val unique = toggle(yes, true, no, ()=> {println("toggled")})
     lazy val uniqueSquared = toggle(yesOutline, true, noOutline, ()=> {println("toggled")}, withCaret = false)
-    lazy val theRadio = radio(Seq(pizza, couscous, falafel), Seq(pizza, couscous), btn_secondary_string)
-    val only2 = exclusiveRadios(Seq(pizza, couscous, falafel), btn_secondary_string, Seq(0,2))
+    lazy val theRadio = radio[Food](Seq(pizza, couscous, falafel), Seq(pizza, couscous), btn_secondary_string)
+    val only2 = exclusiveRadios[Food](Seq(pizza, couscous, falafel), btn_secondary_string, Seq(0,2)).element
     div(
       h4("Buttons"),
       button("Primary", clickAction("primary"), span(glyph_edit, paddingLeft := "10"), buttonStyle, btn_primary),

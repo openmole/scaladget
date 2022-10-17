@@ -120,9 +120,9 @@ trait BootstrapTags {
 
 
   //TOGGLE BUTTON
-  case class ToggleState(text: String, cls: String, todo: () => Unit = () => {})
+  case class ToggleState[T](t: T, text: String, cls: String, todo: () => Unit = () => {})
 
-  case class ToggleButtonState(state: ToggleState, activeState: Boolean, unactiveState: ToggleState, onToggled: () => Unit, modifiers: HESetters, withCaret: Boolean) {
+  case class ToggleButtonState[T](state: ToggleState[T], activeState: Boolean, unactiveState: ToggleState[T], onToggled: () => Unit, modifiers: HESetters, withCaret: Boolean) {
 
     val toggled = Var(activeState)
 
@@ -143,13 +143,12 @@ trait BootstrapTags {
 
   }
 
-  def toggle(activeState: ToggleState, default: Boolean, unactiveState: ToggleState, onToggled: () => Unit = () => {}, modifiers: HESetters = emptySetters, withCaret: Boolean = true) = {
-    println("TOGGHLE init")
+  def toggle[T](activeState: ToggleState[T], default: Boolean, unactiveState: ToggleState[T], onToggled: () => Unit = () => {}, modifiers: HESetters = emptySetters, withCaret: Boolean = true) = {
     ToggleButtonState(activeState, default, unactiveState, onToggled, modifiers, withCaret)
   }
 
 
-  case class RadioButtons(states: Seq[ToggleState], activeStates: Seq[ToggleState], unactiveStateClass: String, modifiers: HESetters = emptySetters) {
+  case class RadioButtons[T](states: Seq[ToggleState[T]], activeStates: Seq[ToggleState[T]], unactiveStateClass: String, modifiers: HESetters = emptySetters) {
 
     lazy val active = Var(activeStates)
 
@@ -174,31 +173,33 @@ trait BootstrapTags {
   }
 
 
-  def radio(buttons: Seq[ToggleState], activeStates: Seq[ToggleState], unactiveStateClass: String, radioButtonsModifiers: HESetters = emptySetters) =
+  def radio[T](buttons: Seq[ToggleState[T]], activeStates: Seq[ToggleState[T]], unactiveStateClass: String, radioButtonsModifiers: HESetters = emptySetters) =
     RadioButtons(buttons, activeStates, unactiveStateClass, radioButtonsModifiers).element
 
 
   // RADIO
-  case class ExclusiveRadioButtons(buttons: Seq[ToggleState], unactiveStateClass: String, defaultToggles: Seq[Int], radioButtonsModifiers: HESetters) {
+  case class ExclusiveRadioButtons[T](buttons: Seq[ToggleState[T]], unactiveStateClass: String, defaultToggles: Seq[Int], radioButtonsModifiers: HESetters) {
 
-    val actives: Var[Seq[ToggleState]] = Var(defaultToggles.map{buttons(_)})
+    val selected: Var[Seq[ToggleState[T]]] = Var(defaultToggles.map(buttons(_)))
 
-    println("buttons  " + buttons.length)
     lazy val element = div(bsnsheet.btnGroup, bsnsheet.btnGroupToggle, dataAttr("toggle") := "buttons",
       buttons.zipWithIndex.map { case (rb, index) =>
-        println("YIELD " + index)
-        child <-- actives.signal.map { a =>
-          val isActive = a.contains(rb)
+        child <-- selected.signal.map { as =>
+          val isInSelection = as.filter(_ == rb) //.map(_.cls)
+
+          val bCls = isInSelection match {
+            case Seq() => unactiveStateClass
+            case _ => rb.cls
+          }
+          val isActive = rb == as.last
 
           label(
-            cls := {if (isActive) rb.cls else unactiveStateClass },
+            cls := bCls,
             cls.toggle("focus active") := isActive,
             input(`type` := "radio", name := "options", idAttr := s"option${index + 1}", checked := isActive),
             rb.text,
             onClick --> { _ =>
-              println("Actives0 " + actives.now())
-              actives.update(as => (as :+ rb).drop(1))
-              println("Actives " + actives.now())
+              selected.update(as => (as :+ rb).drop(1))
               rb.todo()
             }
           )
@@ -207,11 +208,11 @@ trait BootstrapTags {
     )
   }
 
-  def exclusiveRadio(buttons: Seq[ToggleState], unactiveStateClass: String, defaultToggle: Int, radioButtonsModifiers: HESetters = emptySetters) =
+  def exclusiveRadio[T](buttons: Seq[ToggleState[T]], unactiveStateClass: String, defaultToggle: Int, radioButtonsModifiers: HESetters = emptySetters) =
     exclusiveRadios(buttons, unactiveStateClass, Seq(defaultToggle), radioButtonsModifiers)
 
-  def exclusiveRadios(buttons: Seq[ToggleState], unactiveStateClass: String, defaultToggles: Seq[Int], radioButtonsModifiers: HESetters = emptySetters) =
-    ExclusiveRadioButtons(buttons, unactiveStateClass, defaultToggles, radioButtonsModifiers).element
+  def exclusiveRadios[T](buttons: Seq[ToggleState[T]], unactiveStateClass: String, defaultToggles: Seq[Int], radioButtonsModifiers: HESetters = emptySetters) =
+    ExclusiveRadioButtons(buttons, unactiveStateClass, defaultToggles, radioButtonsModifiers)
 
 
   //Label decorators to set the label size
