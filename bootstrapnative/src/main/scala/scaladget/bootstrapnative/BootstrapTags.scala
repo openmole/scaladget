@@ -120,7 +120,7 @@ trait BootstrapTags {
 
 
   //TOGGLE BUTTON
-  case class ToggleState[T](t: T, text: String, cls: String, todo: () => Unit = () => {})
+  case class ToggleState[T](t: T, text: String, cls: String, todo: T => Unit = (_: T) => {})
 
   case class ToggleButtonState[T](state: ToggleState[T], activeState: Boolean, unactiveState: ToggleState[T], onToggled: () => Unit, modifiers: HESetters, withCaret: Boolean) {
 
@@ -165,7 +165,7 @@ trait BootstrapTags {
               if (id == -1) ac.appended(rb)
               else ac.patch(id, Nil, 1)
             }
-            rb.todo()
+            rb.todo(rb.t)
           }
         )
       }
@@ -200,7 +200,7 @@ trait BootstrapTags {
             rb.text,
             onClick --> { _ =>
               selected.update(as => (as :+ rb).drop(1))
-              rb.todo()
+              rb.todo(rb.t)
             }
           )
         }
