@@ -37,6 +37,7 @@ object ButtonDemo {
     object Couscous extends Food
     object Falafel extends Food
     object Pizza extends Food
+    object Salad extends Food
 
     val yes = ToggleState("Yes", "Yes", btn_primary_string, (_: String) => println("YES"))
     val no = ToggleState("No", "No", btn_secondary_string, (_: String) => println("NO"))
@@ -47,6 +48,7 @@ object ButtonDemo {
     val pizza = ToggleState[Food](Pizza, "Pizza", btn_primary_string, (_: Food) => println("PIZZA"))
     val couscous = ToggleState[Food](Couscous, "Couscous", btn_primary_string, (_: Food) => println("COUSCOUS"))
     val falafel = ToggleState[Food](Falafel, "Falafel", btn_primary_string, (_: Food) => println("FALAFEL"))
+    val salad = ToggleState[Food](Salad, "Salad", btn_primary_string, (_: Food) => println("SALAD"))
 
     lazy val exRadio = exclusiveRadio(Seq(male, female, ToggleState("Other", "Other", btn_danger_string, (_: String) => println("OTHER"))), btn_secondary_string, 0).element
     lazy val unique = toggle(yes, true, no, () => {
@@ -56,7 +58,7 @@ object ButtonDemo {
       println("toggled")
     }, withCaret = false)
     lazy val theRadio = radio[Food](Seq(pizza, couscous, falafel), Seq(pizza, couscous), btn_secondary_string)
-    val only2 = exclusiveRadios[Food](Seq(pizza, couscous, falafel), btn_secondary_string, Seq(0, 2)).element
+    val only2 = exclusiveRadios[Food](Seq(pizza, couscous, falafel, salad), btn_secondary_string, Seq(0, 2), SelectionSize.Infinite).element
     div(
       h4("Buttons"),
       button("Primary", clickAction("primary"), span(glyph_edit, paddingLeft := "10"), buttonStyle, btn_primary),

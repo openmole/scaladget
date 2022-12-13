@@ -178,7 +178,10 @@ trait BootstrapTags {
 
 
   // RADIO
-  case class ExclusiveRadioButtons[T](buttons: Seq[ToggleState[T]], unactiveStateClass: String, defaultToggles: Seq[Int], radioButtonsModifiers: HESetters) {
+  enum SelectionSize:
+    case DefaultLength, Infinite
+
+  case class ExclusiveRadioButtons[T](buttons: Seq[ToggleState[T]], unactiveStateClass: String, defaultToggles: Seq[Int], selectionSize: SelectionSize = SelectionSize.DefaultLength, radioButtonsModifiers: HESetters) {
 
     val selected: Var[Seq[ToggleState[T]]] = Var(defaultToggles.map(buttons(_)))
 
@@ -199,7 +202,14 @@ trait BootstrapTags {
             input(`type` := "radio", name := "options", idAttr := s"option${index + 1}", checked := isActive),
             rb.text,
             onClick --> { _ =>
-              selected.update(as => (as :+ rb).drop(1))
+              selected.update(as => {
+                val li = (as :+ rb).distinct
+                selectionSize match {
+                  case SelectionSize.DefaultLength => if (li.size == defaultToggles.size) li else li.drop(1)
+                  case SelectionSize.Infinite => if (as.contains(rb)) as.filterNot(_ == rb) else li
+                }
+              }
+              )
               rb.todo(rb.t)
             }
           )
@@ -209,10 +219,10 @@ trait BootstrapTags {
   }
 
   def exclusiveRadio[T](buttons: Seq[ToggleState[T]], unactiveStateClass: String, defaultToggle: Int, radioButtonsModifiers: HESetters = emptySetters) =
-    exclusiveRadios(buttons, unactiveStateClass, Seq(defaultToggle), radioButtonsModifiers)
+    exclusiveRadios(buttons, unactiveStateClass, Seq(defaultToggle), SelectionSize.DefaultLength, radioButtonsModifiers)
 
-  def exclusiveRadios[T](buttons: Seq[ToggleState[T]], unactiveStateClass: String, defaultToggles: Seq[Int], radioButtonsModifiers: HESetters = emptySetters) =
-    ExclusiveRadioButtons(buttons, unactiveStateClass, defaultToggles, radioButtonsModifiers)
+  def exclusiveRadios[T](buttons: Seq[ToggleState[T]], unactiveStateClass: String, defaultToggles: Seq[Int], selectionSize: SelectionSize = SelectionSize.DefaultLength, radioButtonsModifiers: HESetters = emptySetters) =
+    ExclusiveRadioButtons(buttons, unactiveStateClass, defaultToggles, selectionSize, radioButtonsModifiers)
 
 
   //Label decorators to set the label size
