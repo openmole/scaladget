@@ -40,6 +40,7 @@ object ExecutionDemo extends Demo {
     sealed trait Expand
     object Console extends Expand
     object Script extends Expand
+    object ErrorLog extends Expand
 
     case class Simulation(id: Int, script: String, status: Status)
     val simulations = Seq(
@@ -50,12 +51,13 @@ object ExecutionDemo extends Demo {
     )
 
     val currentOpenSimulation: Var[Option[Simulation]] = Var(None)
-    val showScript = Var(false)
     val durationOnCores = Var(false)
-    val showConsole = Var(false)
     val showExpander: Var[Option[Expand]] = Var(None)
     val script = div("val a = Val[Double]\n\nval b = Val[Int]", cls := "script")
     val console = div("[INFO] Running script ...", cls := "console")
+    val errorLog = div("Error while interpreting imports: import org.openmole.core.dsl._; import org.openmole.core.workflow.builder.DefinitionScope.user._; " +
+      "import org.openmole.core.keyword._; " +
+      "import org.openmole.plugin.domain.bounds._; import org.openmole.plugin.domain.collection._; import ")
 
     def contextBlock(info: String, content: String) = {
       div(columnFlex, div(cls := "contextBlock", div(info, cls := "info"), div(content, cls := "infoContent")))
@@ -71,7 +73,7 @@ object ExecutionDemo extends Demo {
 
     def scriptBlock(scriptName: String) =
       div(columnFlex, div(cls := "contextBlock",
-        cls <-- showExpander.signal.map {exp=>
+        cls <-- showExpander.signal.map { exp =>
           if (exp == Some(Script)) "statusOpen"
           else ""
         },
@@ -113,6 +115,26 @@ object ExecutionDemo extends Demo {
         cursor.pointer
       )
 
+    def simulationStatusBlock(simulation: Simulation) =
+      div(columnFlex, div(cls := "statusBlockNoColor",
+        cls.toggle("", "statusOpen") <-- showExpander.signal.map {
+          _ == Some(ErrorLog)
+        },
+        div("Status", cls := "info"),
+        div(simulation.status.name, cls := {
+          if (simulation.status == Failed) "infoContentLink"
+          else "infoContent"
+        }),
+        onClick --> { _ =>
+          showExpander.update(exp =>
+            if (exp == Some(ErrorLog)) None
+            else Some(ErrorLog)
+          )
+        },
+        cursor.pointer
+      )
+      )
+
     def statusColor(status: Status) = status match {
       case Completed => "#00810a"
       case Failed => "#c8102e"
@@ -126,7 +148,7 @@ object ExecutionDemo extends Demo {
         cls := "simulationInfo",
         cls.toggle("statusOpenSim") <-- currentOpenSimulation.signal.map { os => os.map(_.id) == Some(s.id) },
         div("", cls := "simulationID", backgroundColor := statusColor(s.status)),
-        div(s.script),
+        div(s.script.replace(".oms", "")),
         cursor.pointer,
         onClick --> { _ =>
           currentOpenSimulation.update {
@@ -148,19 +170,19 @@ object ExecutionDemo extends Demo {
       durationBlock,
       statusBlock("Running", "245"),
       statusBlock("Completed", "14251"),
-      statusBlockFromDiv("Status", div(simulation.status.name, cls := "infoContent"), "statusBlockNoColor")
-        .amend(backgroundColor := statusColor(simulation.status)),
+      simulationStatusBlock(simulation).amend(backgroundColor := statusColor(simulation.status)),
       consoleBlock
     )
 
 
     val omrView = div(rowFlex, height := "300")
 
-    val expander = div( height := "150",
+    val expander = div(height := "150",
       child <-- showExpander.signal.map {
         _ match {
           case Some(Script) => script
           case Some(Console) => console
+          case Some(ErrorLog) => textArea(errorLog)
           case None => div()
         }
       }
