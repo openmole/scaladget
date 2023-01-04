@@ -42,34 +42,26 @@ object App {
     // println("Element " + element)
     lazy val content = {
       div(containerFluid, marginLeft := "15", marginTop := "25",
-        h3("Build"),
-        div(row,
-          div(colSM, "Details on construction on ", a(href := "https://github.com/openmole/scaladget", target := "_blank", "the Scaladet Github page"))
-        ),
-        h3("Imports"),
-        div(row,
-          div(colSM, pre(code(cls("scala"), imports))),
-          div(colSM, padding := "20", "This imports have to be done before using the following examples. Specific imports will be also sometimes specified.")
-        ),
         //  FormDemo.elementDemo.element
         Tabs.tabs(
           for {
             demo <- Seq(
-              LabelDemo.elementDemo,
-              ButtonDemo.elementDemo,
-              ModalDialogDemo.elementDemo,
-              CollapseDemo.elementDemo,
-              FormDemo.elementDemo,
-              SelectDemo.elementDemo,
-              PopoverDemo.elementDemo,
-              TabDemo.elementDemo,
-              TooltipDemo.elementDemo,
-              NavBarDemo.elementDemo,
-              ToastDemo.elementDemo,
+              ExecutionDemo.elementDemo,
+              //              LabelDemo.elementDemo,
+              //              ModalDialogDemo.elementDemo,
+              //              CollapseDemo.elementDemo,
+              //              FormDemo.elementDemo,
+              //              SelectDemo.elementDemo,
+              //              PopoverDemo.elementDemo,
+              //              TabDemo.elementDemo,
+              //              TooltipDemo.elementDemo,
+              //              NavBarDemo.elementDemo,
+              //              ToastDemo.elementDemo,
               TableDemo.elementDemo,
-              SliderDemo.elementDemo,
-              AceDemo.elementDemo,
-              PlayGround.elementDemo,
+              ButtonDemo.elementDemo,
+              //              SliderDemo.elementDemo,
+              //              AceDemo.elementDemo,
+              //              PlayGround.elementDemo,
             )
           } yield {
             Tab(demo, span(demo.title),
@@ -77,8 +69,7 @@ object App {
                 h3(demo.title),
                 div(containerFluid,
                   div(row, marginLeft := "15", marginTop := "25",
-                    div(colBS(demo.codeWidth), pre(code(cls := "scala", demo.cleanCode))),
-                    div(colBS(12 - demo.codeWidth), demo.element)
+                    demo.element
                   )
                 )
               )

@@ -109,7 +109,8 @@ object Table {
 
   case class ElementTable(initialRows: Seq[Row],
                           headers: Option[Table.Header] = None,
-                          bsTableStyle: BSTableStyle = Table.BSTableStyle(default_table)) {
+                          bsTableStyle: BSTableStyle = Table.BSTableStyle(default_table),
+                          showSelection: Boolean) {
 
 
     val rows = Var(initialRows)
@@ -130,7 +131,7 @@ object Table {
             backgroundColor <-- selected.signal.map {
               s => if (Some(initialRow.rowID) == s) bsTableStyle.selectionColor else ""
             },
-            onClick --> (_ => selected.set(Some(initialRow.rowID))),
+            onClick --> (_ => if (showSelection) selected.set(Some(initialRow.rowID))),
             children <-- rowStream.map(r => r.tds)
           )
         case er: ExpandedRow =>
@@ -227,7 +228,8 @@ object Table {
           s =>
             if (Some(initialRow.rowID) == s) bsTableStyle.selectionColor else ""
         },
-        onClick --> (_ => selected.set(Some(initialRow.rowID))),
+        onClick --> (_ =>
+          selected.set(Some(initialRow.rowID))),
         children <-- rowStream.map(r => r.tds)
       )
 
@@ -265,7 +267,8 @@ object Table {
 
   case class ElementTableBuilder(initialRows: Seq[Row],
                                  headers: Option[Table.Header] = None,
-                                 bsTableStyle: BSTableStyle = Table.BSTableStyle(bordered_table)) {
+                                 bsTableStyle: BSTableStyle = Table.BSTableStyle(bordered_table),
+                                 showSelection: Boolean = true) {
 
     def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
 
@@ -277,6 +280,8 @@ object Table {
       copy(bsTableStyle = BSTableStyle(tableStyle, headerStyle, rowStyle, selectionColor))
     }
 
+    def unshowSelection = copy(showSelection = false)
+
     def expandTo(element: HtmlElement, signal: Signal[Boolean]) = {
       val lastRow = initialRows.last
 
@@ -286,7 +291,7 @@ object Table {
       }
     }
 
-    lazy val render = ElementTable(initialRows, headers, bsTableStyle)
+    lazy val render = ElementTable(initialRows, headers, bsTableStyle, showSelection)
   }
 
 }

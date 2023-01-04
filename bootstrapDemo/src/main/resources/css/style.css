@@ -13,6 +13,14 @@ code.scala.hljs{
 /* styles the close button for the dismissible popovers */
 .popover .close { position: absolute; top: 7px; right: 10px; }
 
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  background-color: #0b5495;
+}
+
+a.nav-link {
+  color: #0b5495;
+}
+
 h3 {
     color: inherit;
     font-family: inherit;
@@ -276,4 +284,126 @@ overflow: hidden;
    height: 0;
  }
 
+ @font-face {
+    font-family: 'gi';
+    src: url('../fonts/gi.otf');
+    font-weight: normal;
+    font-style: normal;
+}
 
+@font-face {
+    font-family: 'agane';
+    src: url('../fonts/agane.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.simulationInfo {
+    min-width: 120px;
+    min-height: 80px;
+    font-size: 16px;
+    padding: 10px;
+    font-family: agane;
+    margin-bottom: 20px;
+    background-color: #373f46;
+    color: white;
+    transition: padding 0.5s;
+    display: flex;
+    justify-content: center;
+}
+
+.simulationID {
+     font-family: agane;
+     justify-content: center;
+     display: flex;
+     border-radius: 20px;
+     width: 20px;
+     height: 20px;
+     align-items: center;
+     color: white;
+     margin: 7px;
+}
+
+.infoContent {
+      font-size: 18px;
+      font-family: agane;
+      font-weight: bold;
+      padding: 10px;
+}
+
+.infoContentLink {
+      font-size: 18px;
+      font-family: agane;
+      font-weight: bold;
+      padding: 10px;
+      text-decoration: underline;
+}
+
+.info {
+     font-size: 12px;
+     font-family: agane;
+     justify-content: center;
+     display: flex;
+}
+
+.contextBlock {
+  background-color: #0b5495;
+  color: white;
+  padding: 10px;
+  margin-right:1px;
+  margin-top:1px;
+  min-height: 77px;
+}
+
+
+
+.statusBlockNoColor,
+.statusBlock{
+  color: white;
+  padding: 10px;
+  margin-right:1px;
+  margin-top:1px;
+  min-height: 77px;
+}
+
+.statusBlock {
+  background-color: #373f46;
+}
+
+.statusOpen {
+    opacity: 85%;
+    transition: opacity 0.5s;
+}
+
+.statusOpenSim {
+    padding: 30px;
+    opacity: 85%;
+    transition: padding 0.5s;
+}
+
+.console {
+    height: 150px;
+    background-color: #3f3d56;
+    color: white;
+    font-family: Sans Serif;
+    padding: 10px;
+    font-size: 10px;
+    margin-top: 10px;
+    width: 80%;
+}
+
+.script {
+    background-color:#e2e7ec;
+    height: 150px;
+    margin-top: 10px;
+    width: 80%;
+}
+
+.table#exec.table-bordered.table tr td{
+  border:0px;
+  padding:0px;
+}
+
+.table#exec.table-bordered.table {
+  border:0px;
+}
