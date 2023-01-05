@@ -19,6 +19,7 @@ package demo
 
 import scaladget.bootstrapnative.bsn._
 import com.raquo.laminar.api.L._
+import com.raquo.laminar.nodes.{ReactiveElement, ReactiveHtmlElement}
 import org.scalajs.dom.HTMLDivElement
 import scaladget.bootstrapnative.Table.{BSTableStyle, BasicRow}
 import scaladget.tools.Utils._
@@ -161,6 +162,20 @@ object ExecutionDemo extends Demo {
         }
       )
 
+
+    val showControls = Var(false)
+
+    val controls = div(cls := "execButtons",
+      child <-- showControls.signal.map { c =>
+        if (c)
+          div(
+            button("Stop", onClick --> { _ => println("Delete") }, btn_danger, cls := "controlButton", marginLeft := "20"),
+            button("Clean", onClick --> { _ => println("Clean") }, btn_secondary, cls := "controlButton"),
+          )
+        else div()
+      }
+    )
+
     // oms file, starting time,  algo type (when information is available)
     // // Execution status, nb jobs running, nb job completed, execution duration (effective / parallel), execution detail (errors, execution on remotes), play, stop, trash
     def executionRow(simulation: Simulation) = div(rowFlex,
@@ -171,7 +186,10 @@ object ExecutionDemo extends Demo {
       statusBlock("Running", "245"),
       statusBlock("Completed", "14251"),
       simulationStatusBlock(simulation).amend(backgroundColor := statusColor(simulation.status)),
-      consoleBlock
+      consoleBlock,
+      span(glyph_three_dots, cls := "execControls", onClick --> { _ => showControls.update(!_) }),
+      controls
+
     )
 
 
@@ -194,10 +212,6 @@ object ExecutionDemo extends Demo {
         .unshowSelection
         .render.render.amend(idAttr := "exec")
     }
-
-    //val executionTables = executions.map{buildExecution(_)}
-    //val summaries = executions.map{executionContextSummary(_)}
-
     div(columnFlex, width := "100%",
       div(rowFlex, justifyContent.center, simulations.map { s =>
         simulationBlock(s)

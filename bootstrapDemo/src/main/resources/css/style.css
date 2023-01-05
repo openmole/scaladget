@@ -300,11 +300,11 @@ overflow: hidden;
 
 .simulationInfo {
     min-width: 120px;
-    min-height: 80px;
+    min-height: 60px;
     font-size: 16px;
     padding: 10px;
-    font-family: agane;
-    margin-bottom: 20px;
+    font-family: gi;
+    margin-bottom: 50px;
     background-color: #373f46;
     color: white;
     transition: padding 0.5s;
@@ -313,7 +313,6 @@ overflow: hidden;
 }
 
 .simulationID {
-     font-family: agane;
      justify-content: center;
      display: flex;
      border-radius: 20px;
@@ -326,22 +325,22 @@ overflow: hidden;
 
 .infoContent {
       font-size: 18px;
-      font-family: agane;
-      font-weight: bold;
+      font-family: gi;
       padding: 10px;
+      font-weight: bold;
 }
 
 .infoContentLink {
       font-size: 18px;
-      font-family: agane;
+      font-family: gi;
       font-weight: bold;
       padding: 10px;
       text-decoration: underline;
 }
 
 .info {
-     font-size: 12px;
-     font-family: agane;
+     font-size: 14px;
+     font-family: gi;
      justify-content: center;
      display: flex;
 }
@@ -376,7 +375,7 @@ overflow: hidden;
 }
 
 .statusOpenSim {
-    padding: 30px;
+    padding: 20px;
     opacity: 85%;
     transition: padding 0.5s;
 }
@@ -399,6 +398,16 @@ overflow: hidden;
     width: 80%;
 }
 
+.controlButton {
+    width: 77px;
+    height: 77px;
+    margin-left: 10px;
+    font-family: gi;
+    font-size: 18px;
+    color: #c8102e;
+    cursor:pointer;
+}
+
 .table#exec.table-bordered.table tr td{
   border:0px;
   padding:0px;
@@ -406,4 +415,9 @@ overflow: hidden;
 
 .table#exec.table-bordered.table {
   border:0px;
+}
+
+.execControls {
+    font-size: 20px;
+    cursor: pointer;
 }
