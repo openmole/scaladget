@@ -151,6 +151,7 @@ lazy val bootstrapDemo = project.in(file("bootstrapDemo")) enablePlugins (ScalaJ
   sourceCode,
   scalaJSLinkerConfig := scalaJSLinkerConfig.value.withSourceMap(false),
   scalaJSUseMainModuleInitializer := true,
+  webpackNodeArgs := Seq("--openssl-legacy-provider"),
   Test / requireJsDomEnv := true,
   runBootstrapDemo := {
     val demoResource = (Compile / resourceDirectory).value
