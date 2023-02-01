@@ -118,7 +118,7 @@ package stylesheet {
     lazy val glyph_off = toGlyphicon("bi-off")
     lazy val glyph_lightning = toGlyphicon("bi-lightning")
     lazy val glyph_flag = toGlyphicon("bi-flag")
-    lazy val glyph_remove = toGlyphicon("bi-remove-sign")
+    lazy val glyph_remove = toGlyphicon("bi-x-square")
     lazy val glyph_road = toGlyphicon("bi-road")
     lazy val glyph_heart = toGlyphicon("bi-suit-heart-fill")
     lazy val glyph_list = toGlyphicon("bi-list")
@@ -149,6 +149,7 @@ package stylesheet {
     lazy val glyph_chevron_right = toGlyphicon("bi-chevron-right")
     lazy val glyph_menu_hamburger = toGlyphicon("bi-menu-hamburger")
     lazy val glyph_right_caret = toGlyphicon("bi-caret-right-fill")
+    lazy val glyph_three_dots = toGlyphicon("bi-three-dots-vertical")
 
     //NAVBARS
     lazy val nav = cls("nav")
