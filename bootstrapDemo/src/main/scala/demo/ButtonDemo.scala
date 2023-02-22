@@ -17,8 +17,9 @@ package demo
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import scaladget.bootstrapnative.bsn._
-import com.raquo.laminar.api.L._
+import scaladget.bootstrapnative.bsn.*
+import com.raquo.laminar.api.L.*
+import com.raquo.laminar.nodes.ReactiveElement.isActive
 
 object ButtonDemo {
   val sc = sourcecode.Text {
@@ -91,7 +92,16 @@ object ButtonDemo {
       h4("Toggle buttons", paddingTop := "30"),
       theRadio,
       h4("Check button"),
-      checkbox(true)
+      checkbox(true),
+      h4("Switch"),
+      div(display.flex, flexDirection.row, alignItems.center,
+        div("My switch", height := "34px", marginRight := "10px"),
+        label(cls := "switch",
+          input(`type` := "checkbox", checked := true),
+          span(cls := "slider round"
+          )
+        )
+      )
     )
   }
 
