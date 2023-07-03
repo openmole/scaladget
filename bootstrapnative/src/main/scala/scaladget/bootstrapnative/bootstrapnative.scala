@@ -18,7 +18,7 @@ package scaladget.bootstrapnative
  */
 
 
-import com.raquo.laminar.api.L._
+import com.raquo.laminar.api.L.{*, given}
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation._

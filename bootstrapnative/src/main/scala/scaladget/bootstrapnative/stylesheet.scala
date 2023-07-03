@@ -18,11 +18,11 @@ package scaladget.bootstrapnative
  */
 
 
-import com.raquo.laminar.api.L._
+import com.raquo.laminar.api.L.{*, given}
 
 package stylesheet {
 
-  import com.raquo.laminar.defs.ReactiveComplexHtmlKeys
+  //import com.raquo.laminar.defs.ReactiveComplexHtmlKeys
   import com.raquo.laminar.nodes
   import com.raquo.laminar.nodes.{ReactiveElement, ReactiveHtmlElement}
 

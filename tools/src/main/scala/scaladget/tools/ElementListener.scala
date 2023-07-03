@@ -18,7 +18,7 @@ package scaladget.tools
  */
 
 import org.scalajs.dom
-import org.scalajs.dom.raw.{Element, Event}
+import org.scalajs.dom.{Element, Event}
 
 object Utils extends utils.Utils
 

@@ -19,10 +19,9 @@ package scaladget.bootstrapnative
 
 //import net.scalapro.sortable.{EventS, Sortable, SortableOptions}
 
-import com.raquo.domtypes.generic.Modifier
 import scaladget.bootstrapnative.Popup.{Bottom, ClickPopup, HoverPopup, Manual, PopupPosition, PopupType}
 import scaladget.tools.Utils._
-import com.raquo.laminar.api.L._
+import com.raquo.laminar.api.L.{*, given}
 import bsn.spacing._
 import scaladget.bootstrapnative
 import scaladget.bootstrapnative.Table.{DataTableBuilder, ElementTableBuilder, Row}
@@ -199,7 +198,7 @@ trait BootstrapTags {
           label(
             cls := bCls,
             cls.toggle("focus active") := isActive,
-            input(`type` := "radio", name := "options", idAttr := s"option${index + 1}", checked := isActive),
+            input(`type` := "radio"/*, name := "options"*/, idAttr := s"option${index + 1}", checked := isActive),
             rb.text,
             onClick --> { _ =>
               selected.update(as => {
@@ -372,7 +371,7 @@ trait BootstrapTags {
         buildUL(sortedContents._1, bsmargin.l.auto)
       )
 
-      nav(bsn.navbar, bsn.navbar_expand_lg, classPair,
+      navTag(bsn.navbar, bsn.navbar_expand_lg, classPair,
         for {
           b <- brand
         } yield {

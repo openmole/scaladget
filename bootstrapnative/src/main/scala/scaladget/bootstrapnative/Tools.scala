@@ -1,6 +1,6 @@
 package scaladget.bootstrapnative
 
-import com.raquo.laminar.api.L._
+import com.raquo.laminar.api.L.{*, given}
 import com.raquo.laminar.nodes.ReactiveElement
 import scaladget.bootstrapnative.bsn._
 import scaladget.bootstrapnative.Popup.{Bottom, HoverPopup, PopupPosition, PopupType}

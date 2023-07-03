@@ -15,11 +15,9 @@ val lunrVersion = "2.1.5"
 
 //2.13
 val jsextVersion = "0.10"
-val laminarVersion = "0.14.2"
+val laminarVersion = "15.0.1"
 val scalaJSdomVersion = "2.0.0"
-//val sortableVersion = "1.13.0"
 val sourceCodeVersion = "0.2.7"
-val scalaJsMarkedVersion = "1.0.2"
 val scalaJSortableVersion = "0.8"
 
 
@@ -29,7 +27,7 @@ name := "scaladget"
 
 import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
-ThisBuild / scalaVersion := "3.1.2"
+ThisBuild / scalaVersion := "3.3.0"
 
 //ThisBuild / crossScalaVersions := Seq("2.13.8", "3.0.0")
 

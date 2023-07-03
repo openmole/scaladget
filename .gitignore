@@ -24,3 +24,4 @@ examples-opt.js
 examples-preopt.js
 .bsp/
 .bsp/*
+*package-lock.json

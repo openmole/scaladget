@@ -19,7 +19,7 @@ package scaladget.bootstrapnative
 
 import scaladget.bootstrapnative.bsn._
 import scaladget.tools.Utils._
-import com.raquo.laminar.api.L._
+import com.raquo.laminar.api.L.{*, given}
 import org.scalajs.dom.raw.Event
 
 object Selector {

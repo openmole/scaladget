@@ -1,7 +1,7 @@
 package scaladget.bootstrapnative
 
 import scaladget.bootstrapnative.bsn._
-import com.raquo.laminar.api.L._
+import com.raquo.laminar.api.L.{*, given}
 import scaladget.bootstrapnative.Table.Column
 import scaladget.tools.Utils._
 

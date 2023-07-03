@@ -3,7 +3,7 @@ package demo
 
 import scaladget.highlightjs.HighlightJS
 import scaladget.bootstrapnative.bsn._
-import com.raquo.laminar.api.L._
+import com.raquo.laminar.api.L.{*, given}
 import org.scalajs
 
 
@@ -89,9 +89,7 @@ object App {
 
     }
 
-    documentEvents.onDomContentLoaded.foreach { _ =>
-      render(scalajs.dom.document.body, content)
-    }(unsafeWindowOwner)
+    renderOnDomContentLoaded(scalajs.dom.document.body, content)
   }
 }
 

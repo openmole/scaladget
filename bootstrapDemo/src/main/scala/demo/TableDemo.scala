@@ -40,7 +40,7 @@ object TableDemo extends Demo {
     val subContent = div(
       height := "80", rowFlex, paddingLeft := "20",
       "I am a sub",
-      inputTag().amend(placeholder := "Your text here")
+      input().amend(placeholder := "Your text here")
     )
 
     val subContent2 = div(height := "80", padding := "15",

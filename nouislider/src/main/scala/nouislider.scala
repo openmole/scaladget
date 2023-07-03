@@ -3,8 +3,7 @@ package scaladget.nouislider
 
 import org.querki.jsext._
 import scaladget.nouislider.event.SliderEventType
-import com.raquo.laminar.api.L._
-
+import com.raquo.laminar.api.L.{*, given}
 import scala.scalajs.js
 import scala.scalajs.js.|
 import js.annotation._
