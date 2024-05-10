@@ -46,6 +46,7 @@ object App {
         Tabs.tabs(
           for {
             demo <- Seq(
+              ConnectDemo.elementDemo,
               ExecutionDemo.elementDemo,
               //              LabelDemo.elementDemo,
               //              ModalDialogDemo.elementDemo,

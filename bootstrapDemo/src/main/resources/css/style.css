@@ -328,6 +328,8 @@ overflow: hidden;
       font-family: gi;
       padding: 10px;
       font-weight: bold;
+      display: flex;
+      justify-content: center;
 }
 
 .infoContentLink {
@@ -363,10 +365,6 @@ overflow: hidden;
   margin-right:1px;
   margin-top:1px;
   min-height: 77px;
-}
-
-.statusBlock {
-  background-color: #373f46;
 }
 
 .statusOpen {
@@ -420,4 +418,67 @@ overflow: hidden;
 .execControls {
     font-size: 20px;
     cursor: pointer;
+}
+
+
+.statusBlock {
+  height: 90px;
+  background-color: #373f46;
+}
+
+.barBlock {
+    width:170px;
+}
+
+.centerolumnFlex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rowFlex {
+    display: flex;
+    flex-direction: row;
+}
+
+.centerRowFlex {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.columnFlex {
+    display: flex;
+    flex-direction: column;
+}
+
+.userBadge {
+    font-size: 15px;
+    margin: 10px;
+}
+
+.stacked-bar-graph {
+  width: 100%;
+  height: 38px;
+  color:#414042;
+  display: flex;
+
+  span {
+   height: 80%;
+   box-sizing: border-box;
+   float: left;
+   font-weight: bold;
+   font-family: gi;
+   padding-top: 3px;
+   padding-left: 10px;
+   color: white;
+  }
+  .bar-1 {
+    background: #17a2b8;
+  }
+  .bar-2 {
+    background: #17a2b8;
+    opacity: 0.5;
+  }
+
 }
