@@ -1,9 +1,9 @@
 package scaladget.bootstrapnative
 
-import scaladget.bootstrapnative.bsn._
+import scaladget.bootstrapnative.bsn.*
 import com.raquo.laminar.api.L.{*, given}
-import scaladget.bootstrapnative.Table.Column
-import scaladget.tools.Utils._
+import scaladget.bootstrapnative.Table.{Column, DataContent}
+import scaladget.tools.Utils.*
 
 import scala.util.Try
 
@@ -33,11 +33,11 @@ object Sorting {
   def sortString(seq: Seq[String]): Seq[Int] = seq.zipWithIndex.sortBy(_._1).map(_._2)
 
   def sort(s: Column): Seq[Int] = {
-    sortInt(s.values) match {
+    sortInt(s.values.map(DataContent.stringContent)) match {
       case Some(i: Seq[_]) => i
-      case None => sortDouble(s.values) match {
+      case None => sortDouble(s.values.map(DataContent.stringContent)) match {
         case Some(d: Seq[_]) => d
-        case None => sortString(s.values)
+        case None => sortString(s.values.map(DataContent.stringContent))
       }
     }
   }
@@ -82,11 +82,21 @@ object Table {
       )
   }
 
-  case class Column(values: Seq[String])
 
-  case class DataRow(values: Seq[String]) extends Row {
+  object DataContent:
+    given Conversion[String, DataContent] = s => DataContent(s, None)
+
+    def toHtml(c: DataContent) = c.html.getOrElse(span(c.value))
+    def stringContent(c: DataContent) = c.value
+
+  case class DataContent(value: String, html: Option[HtmlElement])
+
+  case class Column(values: Seq[DataContent])
+
+  case class DataRow(values: Seq[DataContent]) extends Row {
+
     def tds: Seq[HtmlElement] = values.map { v =>
-      td(span(v), centerCell)
+      td(DataContent.toHtml(v), centerCell)
     }
   }
 
@@ -246,14 +256,15 @@ object Table {
 
   }
 
-  case class DataTableBuilder(initialRows: Seq[Seq[String]],
+
+  case class DataTableBuilder(initialRows: Seq[Seq[DataContent]],
                               headers: Option[Table.Header] = None,
                               bsTableStyle: BSTableStyle = Table.BSTableStyle(bordered_table),
                               sorting: Boolean = false) {
 
     def addHeaders(hs: String*) = copy(headers = Some(Header(hs)))
 
-    def addRow(values: String*) = copy(initialRows = initialRows :+ values)
+    def addRow(values: DataContent*) = copy(initialRows = initialRows :+ values)
 
     def style(tableStyle: HESetter = default_table, headerStyle: HESetters = emptySetters, rowStyle: HESetters = emptySetters, selectionColor: String = SELECTION_COLOR) = {
       copy(bsTableStyle = BSTableStyle(tableStyle, headerStyle, rowStyle, selectionColor))

@@ -41,7 +41,7 @@ object App {
       )
     )
 
-    documentEvents.onDomContentLoaded.foreach { _ =>
+    documentEvents(_.onDomContentLoaded).foreach { _ =>
       render(scalajs.dom.document.body, content)
     }(unsafeWindowOwner)
 
