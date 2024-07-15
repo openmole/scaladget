@@ -89,7 +89,7 @@ object Table {
     def toHtml(c: DataContent) = c.html.getOrElse(span(c.value))
     def stringContent(c: DataContent) = c.value
 
-  case class DataContent(value: String, html: Option[HtmlElement])
+  case class DataContent(value: String, html: Option[HtmlElement] = None)
 
   case class Column(values: Seq[DataContent])
 
