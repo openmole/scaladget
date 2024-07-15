@@ -17,14 +17,12 @@ package demo
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.raquo.domtypes.jsdom.defs.events.TypedTargetMouseEvent
-
 import java.util.UUID
-import scaladget.bootstrapnative.bsn._
-import com.raquo.laminar.api.L._
+import scaladget.bootstrapnative.bsn.*
+import com.raquo.laminar.api.L.*
 import com.raquo.laminar.api.L.svg
 import org.scalajs
-import org.scalajs.dom.{KeyboardEvent, raw}
+import org.scalajs.dom.{KeyboardEvent, MouseEvent, raw}
 
 import scala.scalajs.js.Dynamic
 
@@ -122,7 +120,7 @@ class GraphCreator(_tasks: Seq[Task], _edges: Seq[Edge]) {
   val dragging: Var[Option[DragLine]] = Var(None)
 
 
-  def mousemove(me: TypedTargetMouseEvent[raw.Element]) = {
+  def mousemove(me: MouseEvent) = {
     Seq(mouseDownTask.now()).flatten.map {
       t ⇒
         val x = me.clientX
@@ -136,7 +134,7 @@ class GraphCreator(_tasks: Seq[Task], _edges: Seq[Edge]) {
     }
   }
 
-  def mouseup(me: TypedTargetMouseEvent[raw.Element]) = {
+  def mouseup(me: MouseEvent) = {
     // Hide the drag line
     if (me.shiftKey && !dragLine.dragging.now()) {
       val (x, y) = (me.clientX, me.clientY)

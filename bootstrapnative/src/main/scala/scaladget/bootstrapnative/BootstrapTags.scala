@@ -20,11 +20,11 @@ package scaladget.bootstrapnative
 //import net.scalapro.sortable.{EventS, Sortable, SortableOptions}
 
 import scaladget.bootstrapnative.Popup.{Bottom, ClickPopup, HoverPopup, Manual, PopupPosition, PopupType}
-import scaladget.tools.Utils._
+import scaladget.tools.Utils.*
 import com.raquo.laminar.api.L.{*, given}
-import bsn.spacing._
+import bsn.spacing.*
 import scaladget.bootstrapnative
-import scaladget.bootstrapnative.Table.{DataTableBuilder, ElementTableBuilder, Row}
+import scaladget.bootstrapnative.Table.{DataContent, DataTableBuilder, ElementTableBuilder, Row}
 
 import scalajs.js.|
 
@@ -699,7 +699,7 @@ trait BootstrapTags {
 
   def elementTable(rows: Seq[Row] = Seq()) = ElementTableBuilder(rows)
 
-  def dataTable(rows: Seq[Seq[String]] = Seq()) = DataTableBuilder(rows)
+  def dataTable(rows: Seq[Seq[DataContent]] = Seq()) = DataTableBuilder(rows)
 
   //  // FORMS
   trait FormTag {
